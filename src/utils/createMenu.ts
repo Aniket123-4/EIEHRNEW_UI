@@ -7,7 +7,7 @@ const getModulePath = (name: string) => {
     const { verifiedUser, selectedPackageId }: any = getUserInLocalStorage();
     switch (name) {
         case "User Management":
-            return "/list";
+            return "/user-management/list";
 
         case "Change Password":
             return "/UserManagement/change-password";
@@ -24,11 +24,11 @@ const getModulePath = (name: string) => {
         case "Seat Booking":
             return "/booking/institute-list";
 
-        case "Order":
+        case "Booking History":
             return "/booking/booking-order";
 
-        case "Institute User Profile":
-            return "/instituteUser/list";
+        case "Institute Candidate":
+            return "/instituteCandidate/list";
 
         case "Institute Search":
             return "/institute/list";
@@ -44,7 +44,6 @@ const getModulePath = (name: string) => {
 
         case "Room Master":
             return "/institute/list";
-            
 
         case "Booking Collection":
             return "/booking/BookingReport";
@@ -66,7 +65,7 @@ export const createMenu = async () => {
     const param: any = {
         userID: verifiedUser?.userID,
         orgID: verifiedUser?.orgID,
-        roleID: -1,
+        roleID:-1,
         packageID: getPackageId(),
         userTypeID: verifiedUser?.userTypeID,
         portalTypeID: -1,
@@ -95,12 +94,12 @@ export const createMenu = async () => {
                     path: getModulePath(formRight[j]['displayName']),
                 });
 
-                if (verifiedUser?.userCode !== "admin" && moduleRight[i]['mModuleName'] === "Booking") {
-                    menu[i]['routes'].push({
-                        name: "Order",
-                        path: getModulePath("Order"),
-                    });
-                }
+                // if (verifiedUser?.userCode !== "admin" && moduleRight[i]['mModuleName'] === "Booking") {
+                //     menu[i]['routes'].push({
+                //         name: "Order",
+                //         path: getModulePath("Order"),
+                //     });
+                // }
             }
         }
     }

@@ -68,7 +68,7 @@ const BookingReport: React.FC = () => {
   //const [loading, setLoading] = useState(false);
   const [size, setSize] = useState<SizeType>('large');
   const [expandable, setExpandable] = useState<ExpandableConfig<DataType> | undefined>(
-   
+
   );
   const [showTitle, setShowTitle] = useState(false);
   const [showHeader, setShowHeader] = useState(true);
@@ -82,50 +82,52 @@ const BookingReport: React.FC = () => {
   const [yScroll, setYScroll] = useState(false);
   const [xScroll, setXScroll] = useState<string>();
 
-  const defaultExpandable = { expandedRowRender: (record: DataType) => <table style={{overflow:'scrl',background:'white'}}>
-    <tr style={{background: '#40a9ff'}}>
-                <th>candName</th>
-                <th>instituteName</th>
-                <th>roomName</th>
-                <th>roomTypeName</th>
-                <th>slotName</th>
-                <th>fromDate</th>
-                <th>toDate</th>
-  
-                <th>totGrossAmt</th>
-                <th>cgstAmt</th>
-                <th>sgstAmt</th>
-                <th>disCountAmt</th>
-                <th>totNetAmt</th>
-                <th>actualPayAmt</th>
-                <th>balanceAmt</th>
-                <th>remark</th>
-    </tr>
-     {record.lstBookingbillListReport.map((val, key) => {
+  const defaultExpandable = {
+    expandedRowRender: (record: DataType) => <table style={{ overflow: 'scrl', background: 'white' }}>
+      <tr style={{ background: '#40a9ff' }}>
+        <th>candName</th>
+        <th>instituteName</th>
+        <th>roomName</th>
+        <th>roomTypeName</th>
+        <th>slotName</th>
+        <th>fromDate</th>
+        <th>toDate</th>
+
+        <th>totGrossAmt</th>
+        <th>cgstAmt</th>
+        <th>sgstAmt</th>
+        <th>disCountAmt</th>
+        <th>totNetAmt</th>
+        <th>actualPayAmt</th>
+        <th>balanceAmt</th>
+        <th>remark</th>
+      </tr>
+      {record.lstBookingbillListReport.map((val, key) => {
         return (
-            <tr key={key} style={{background: '#fff'}}>
-                <td> <a onClick={() => onView(val.candidateID)}> {val.candName} </a> </td>
-                <td>  <a onClick={() => onViewInstitute(val.instituteID)}>{val.instituteName}</a> </td>
-                <td>{val.roomName}</td>
-                <td>{val.roomTypeName}</td>
-                
-                <td>{val.slotName}</td>
-                <td>{val.fromDate}</td>
-                <td>{val.toDate}</td>
-  
-                <td style={{textAlign:"end"}}>{val.totGrossAmt}</td>
-                <td style={{textAlign:"end"}}>{val.cgstAmt}</td>
-                <td style={{textAlign:"end"}}>{val.sgstAmt}</td>
-                <td style={{textAlign:"end"}}>{val.disCountAmt}</td>
-                
-                <td style={{textAlign:"end"}}>{val.totNetAmt}</td>
-                <td style={{textAlign:"end"}}>{val.actualPayAmt}</td>
-                <td style={{textAlign:"end"}}>{val.balanceAmt}</td>
-                <td>{val.remark}</td>
-            </tr>
+          <tr key={key} style={{ background: '#fff' }}>
+            <td> <a onClick={() => onView(val.candidateID)}> {val.candName} </a> </td>
+            <td>  <a onClick={() => onViewInstitute(val.instituteID)}>{val.instituteName}</a> </td>
+            <td>{val.roomName}</td>
+            <td>{val.roomTypeName}</td>
+
+            <td>{val.slotName}</td>
+            <td>{val.fromDate}</td>
+            <td>{val.toDate}</td>
+
+            <td style={{ textAlign: "end" }}>{val.totGrossAmt}</td>
+            <td style={{ textAlign: "end" }}>{val.cgstAmt}</td>
+            <td style={{ textAlign: "end" }}>{val.sgstAmt}</td>
+            <td style={{ textAlign: "end" }}>{val.disCountAmt}</td>
+
+            <td style={{ textAlign: "end" }}>{val.totNetAmt}</td>
+            <td style={{ textAlign: "end" }}>{val.actualPayAmt}</td>
+            <td style={{ textAlign: "end" }}>{val.balanceAmt}</td>
+            <td>{val.remark}</td>
+          </tr>
         )
-    })} 
-  </table>  };
+      })}
+    </table>
+  };
 
   const showDeleteConfirm = () => {
     confirm({
@@ -147,7 +149,7 @@ const BookingReport: React.FC = () => {
     getRoomType();
     getRateType();
     institutelist();
-    
+
 
     setRowSelection(false ? {} : undefined);
     setExpandable(defaultExpandable);
@@ -194,7 +196,7 @@ const BookingReport: React.FC = () => {
       districtID: "-1",
       cityID: "-1",
       areaID: "-1",
-      smallerESTDDate: '2023-08-16T09:53:27.751Z',
+      smallerESTDDate: '1900-01-01',
       smallerThanRank: "0",
       greatorThanFaculty: "0",
       greatorThanStudent: "0",
@@ -206,7 +208,10 @@ const BookingReport: React.FC = () => {
       userID: "-1",
       formID: "-1",
       type: "1",
-      'token': initialState?.currentUser?.verifiedUser.token,
+
+      fromDate: '1900-01-01',
+      toDate: new Date(),
+      slotID: "-1",
     }
     const msg = await requestGetInstituteList(params);
     console.log(msg.data.institutelist2s)
@@ -227,19 +232,19 @@ const BookingReport: React.FC = () => {
   };
   const getBookingDetail = async (values: any) => {
     const { verifiedUser }: any = getUserInLocalStorage();
-console.log(values);
+    console.log(values);
     const params = {
       // "candidateID": verifiedUser?.userID,
- "fromDate": convertDate(values.fromDate),
-      "toDate": convertDate(values.toDate),
-       "instituteID": values.instituteID?values.instituteID:"-1",
-       "finYearID": "-1",
-       "roomTypeID": values.roomTypeID? values.roomTypeID+"":"-1",
-     "rateTypeID":values.rateTypeID ? values.rateTypeID+"":"-1",
+      "fromDate": moment(values.fromDate).format("YYYY-MM-DD"),
+      "toDate": moment(values.toDate).format("YYYY-MM-DD"),
+      "instituteID": values.instituteID ? values.instituteID : "-1",
+      "finYearID": "-1",
+      "roomTypeID": values.roomTypeID ? values.roomTypeID + "" : "-1",
+      "rateTypeID": values.rateTypeID ? values.rateTypeID + "" : "-1",
       "userID": "-1",
       "formID": "-1",
       "type": "1",
-      'token': initialState?.currentUser?.verifiedUser.token,
+
     };
     console.log(params);
     const res = await requestGetBookingReport(params);
@@ -264,7 +269,7 @@ console.log(values);
     const formattedDate = parsedDate.format('YYYY-MM-DDTHH:mm:ss.SSSZ');
     console.log(formattedDate);
     return formattedDate
-}
+  }
   const handleChange = (value: string) => {
     console.log(`selected ${value}`);
   };
@@ -296,13 +301,13 @@ console.log(values);
       });
   };
 
-  
+
   const columns1 = [
     {
       title: 'Pay Date',
       dataIndex: 'payDate',
       key: 'payDate',
-      render: (_, record) => <span >{moment(record.payDate).format("DD-MMM-YYYY")}</span>,
+      render: (_, record) => <span >{moment(record.payDate).format("DD-MM-YYYY")}</span>,
       //render: (text) => <a>{text}</a>,
     },
     {
@@ -314,31 +319,31 @@ console.log(values);
     {
       title: 'Total DisCount Amt',
       dataIndex: 'totDisCountAmt',
-     // key: 'totDisCountAmt',
+      // key: 'totDisCountAmt',
       align: 'right',
     },
     {
       title: 'Total CGST Amt',
       dataIndex: 'totCGSTAmt',
-     // key: 'totCGSTAmt',
+      // key: 'totCGSTAmt',
       align: 'right',
     },
     {
       title: 'Total SGST Amt',
       dataIndex: 'totSGSTAmt',
-     // key: 'totSGSTAmt',
+      // key: 'totSGSTAmt',
       align: 'right',
     },
     {
       title: 'Total NetAmt',
       dataIndex: 'totNetAmt',
-    //  key: 'totNetAmt',
+      //  key: 'totNetAmt',
       align: 'right',
     },
     {
       title: 'Total Actual PayAmt',
       dataIndex: 'totActualPayAmt',
-     // key: 'totActualPayAmt',
+      // key: 'totActualPayAmt',
       align: 'right',
     },
 
@@ -406,7 +411,7 @@ console.log(values);
       districtID: "-1",
       cityID: "-1",
       areaID: "-1",
-      smallerESTDDate: '2023-08-16T09:53:27.751Z',
+      smallerESTDDate: '1900-01-01',
       smallerThanRank: "0",
       greatorThanFaculty: "0",
       greatorThanStudent: "0",
@@ -418,7 +423,9 @@ console.log(values);
       userID: "-1",
       formID: "-1",
       type: "1",
-      'token': initialState?.currentUser?.verifiedUser.token,
+      fromDate: '1900-01-01',
+      toDate: moment(new Date()).format('YYYY-MM-DD'),
+      slotID: "-1",
     }
 
     const msg = await requestGetInstituteList(params);
@@ -434,8 +441,8 @@ console.log(values);
 
     const params = {
 
-      "fromDate": record.payDate,
-      "toDate": record.payDate,
+      "fromDate": moment(record.payDate).format('YYYY-MM-DD'),
+      "toDate": moment(record.payDate).format('YYYY-MM-DD'),
       "instituteID": "-1",
       "finYearID": "-1",
       "roomTypeID": "-1",
@@ -443,7 +450,7 @@ console.log(values);
       "userID": "-1",
       "formID": "-1",
       "type": "1",
-      'token': initialState?.currentUser?.verifiedUser.token,
+
     }
     const msg = await requestGetBookingReport(params);
 
@@ -452,7 +459,7 @@ console.log(values);
     //setSelectedRows(msg.data.bookBill)
     // setOpenViewBooking(true);
   };
-  
+
   const handleBorderChange = (enable: boolean) => {
     setBordered(enable);
   };
@@ -533,19 +540,22 @@ console.log(values);
   };
 
   return (
-    <PageContainer>
-     
+    <PageContainer
+      header={{
+        title: ``,
+      }}>
+
       <div style={contentStyle}>
         <Card>
-          <Form 
-          onFinish={async (values) => {
-            getBookingDetail(values)
-        }}
+          <Form
+            onFinish={async (values) => {
+              getBookingDetail(values)
+            }}
           >
-        <Row gutter={16}>
+            <Row gutter={16}>
 
-          
-          {/* <Col span={8}>
+
+              {/* <Col span={8}>
             <Form.Item
               name="FinancialYear :"
               label="Financial Year"
@@ -554,89 +564,89 @@ console.log(values);
               <Input placeholder="Please enter finantial Year" style={{ width: '90%' }} />
             </Form.Item>
           </Col> */}
-          <Col span={8}>
-            <Form.Item
-              name="fromDate"
-              label="FromDate"
-              rules={[{ required: true, message: 'Enter from date' }]}
-            >
-              <DatePicker   format={'DD-MMM-YYYY'}
-                                                getPopupContainer={(trigger) => trigger.parentElement!} style={{ width: '90%' }} />
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item
-              name="toDate"
-              label="To Date"
-              rules={[{ required: true, message: 'Enter To date' }]}
-            >
-              <DatePicker   format={'DD-MMM-YYYY'}
-                                                getPopupContainer={(trigger) => trigger.parentElement!} style={{ width: '90%' }} />
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item
-              name="instituteID"
-              label="Institute"
-              rules={[{  message: 'Please enter institute' }]}
-            >
-              <Select style={{ width: '90%' }}
-                showSearch
-                placeholder="Institute"
-                optionFilterProp="children"
-                options={InstituteId}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item
-              name="rateTypeID"
-              label="Rate Type"
-              rules={[{  message: 'Please enter Rate Type' }]} >
-              <Select style={{ width: '90%' }}
-                placeholder="Rate Type"
-                optionFilterProp="children"
-                options={rateType}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item
-              name="roomTypeID"
-              label="Room Type"
-              rules={[{ message: 'Please enter Room Type' }]} >
-              <Select style={{ width: '90%' }}
-                placeholder="Room Type"
-                optionFilterProp="children"
-                options={roomType}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={24} style={{ textAlign: 'center', width: '100%' }}>
-          
-            <Button type="primary" htmlType="submit" style={{ margin: '5px' }}>
-              Search
-            </Button>
-            <Button type="primary" htmlType="reset" style={{ margin: '5px' }}>
-              Reset
-            </Button>
-            <Button type="primary" htmlType="button" style={{ margin: '5px' }}>
-              Print
-            </Button>
-          </Col>
+              <Col span={8}>
+                <Form.Item
+                  name="fromDate"
+                  label="FromDate"
+                  rules={[{ required: true, message: 'Enter from date' }]}
+                >
+                  <DatePicker format={'DD-MMM-YYYY'}
+                    getPopupContainer={(trigger) => trigger.parentElement!} style={{ width: '90%' }} />
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item
+                  name="toDate"
+                  label="To Date"
+                  rules={[{ required: true, message: 'Enter To date' }]}
+                >
+                  <DatePicker format={'DD-MMM-YYYY'}
+                    getPopupContainer={(trigger) => trigger.parentElement!} style={{ width: '90%' }} />
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item
+                  name="instituteID"
+                  label="Institute"
+                  rules={[{ message: 'Please enter institute' }]}
+                >
+                  <Select style={{ width: '90%' }}
+                    showSearch
+                    placeholder="Institute"
+                    optionFilterProp="children"
+                    options={InstituteId}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item
+                  name="rateTypeID"
+                  label="Rate Type"
+                  rules={[{ message: 'Please enter Rate Type' }]} >
+                  <Select style={{ width: '90%' }}
+                    placeholder="Rate Type"
+                    optionFilterProp="children"
+                    options={rateType}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item
+                  name="roomTypeID"
+                  label="Room Type"
+                  rules={[{ message: 'Please enter Room Type' }]} >
+                  <Select style={{ width: '90%' }}
+                    placeholder="Room Type"
+                    optionFilterProp="children"
+                    options={roomType}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={24} style={{ textAlign: 'center', width: '100%' }}>
 
-        </Row>
-        </Form>
+                <Button type="primary" htmlType="submit" style={{ margin: '5px' }}>
+                  Search
+                </Button>
+                <Button type="primary" htmlType="reset" style={{ margin: '5px' }}>
+                  Reset
+                </Button>
+                <Button type="primary" htmlType="button" style={{ margin: '5px' }}>
+                  Print
+                </Button>
+              </Col>
+
+            </Row>
+          </Form>
         </Card>
         <Card>
-        <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+          <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
 
-          <Col className="gutter-row" span={24} style={{ marginTop: '10px' }}>
-            <Table columns={columns1} dataSource={list_totBookDate} pagination={false} />
-          </Col>
+            <Col className="gutter-row" span={24} style={{ marginTop: '10px' }}>
+              <Table columns={columns1} dataSource={list_totBookDate} pagination={false} />
+            </Col>
 
 
-        </Row>
+          </Row>
         </Card>
         {/* <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
           <Col className="gutter-row" span={24} style={{ marginTop: '10px' }}>
@@ -646,17 +656,18 @@ console.log(values);
 
 
 
-       {list_bookDate.length>0? <Card> <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-        
-           <Table
-        {...tableProps}
-        pagination={{ position: [top as TablePaginationPosition, bottom] }}
-        columns={columns1}
-        dataSource={hasData ? list_bookDate : []}
-        //scroll={scroll}
-      />
+        {list_bookDate.length > 0 ? <Card> 
+          <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
 
-        </Row></Card> : <Row></Row>}
+          <Table
+            {...tableProps}
+            pagination={{ position: [top as TablePaginationPosition, bottom] }}
+            columns={columns1}
+            dataSource={hasData ? list_bookDate : []}
+          //scroll={scroll}
+          />
+        </Row>
+        </Card> : <Row></Row>}
 
 
 

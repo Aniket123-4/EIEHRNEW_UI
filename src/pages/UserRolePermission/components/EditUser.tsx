@@ -335,8 +335,8 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
             console.log(staticParams);
 
             setLoading(true)
-            var token = initialState?.currentUser?.verifiedUser.token;
-            const msg = await requestAddUser({ ...values, ...staticParams ,token:token} );
+           
+            const msg = await requestAddUser({ ...values, ...staticParams } );
             setLoading(false)
             if (msg.isSuccess === true) {
                 //formRef.current?.resetFields();

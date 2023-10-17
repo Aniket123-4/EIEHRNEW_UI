@@ -93,7 +93,7 @@ const ChangePassword = ({ visible, onClose, selectedRows, isEditable, onSaveSucc
           //  const firstName = event.target.elements.firstName.value;
            
             setLoading(true)
-            var token = initialState?.currentUser?.verifiedUser.token;
+           
             const msg = await requestChangePassword( values  );
             setLoading(false)
             if (msg.isSuccess === "True") {

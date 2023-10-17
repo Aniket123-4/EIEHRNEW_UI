@@ -13,9 +13,8 @@ export default defineConfig({
     API_KEY: 'js3jhkj4n2kjnd',   
     // BASE_URL: 'http://103.20.213.26:8078/api/', 
     //BASE_URL: 'https://localhost:7181/api/', 
-   BASE_URL: 'https://ecscapi.mssplonline.in/api/',     
-    
-            
+    BASE_URL: 'https://ecscapi.mssplonline.in/api/',
+   
   },
   /**
    * @name 开启 hash 模式
@@ -108,7 +107,7 @@ export default defineConfig({
     default: 'en-US',
     antd: true,
     // default true, when it is true, will use `navigator.language` overwrite default
-    baseNavigator: true,
+    baseNavigator: false,
   },
   /**
    * @name antd 插件

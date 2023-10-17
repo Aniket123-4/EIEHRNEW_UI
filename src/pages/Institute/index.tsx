@@ -21,6 +21,8 @@ import AddRoom from '../Room/components/AddRoom';
 import { history } from '@umijs/max';
 import { getUserInLocalStorage } from '@/utils/common';
 import UploadInstituteImage from './components/UploadInstituteImage';
+import { convertDate } from '@/utils/helper';
+import moment from 'moment';
 
 const { Option } = Select;
 const { confirm } = Modal;
@@ -54,7 +56,7 @@ const Institute: React.FC = () => {
     {
       title: 'Established Date',
       dataIndex: 'estdDate',
-      valueType:'date',
+      valueType: 'date',
     },
     {
       title: 'Website',
@@ -69,7 +71,7 @@ const Institute: React.FC = () => {
           <Button type="primary" size={"small"} onClick={() => addInstituteImages(record)} icon={<FileAddOutlined />} />
           <Button type="primary" size={"small"} onClick={() => onView(record)} icon={<EyeOutlined />} />
           <Button type="primary" size={"small"} onClick={() => onEdit(record)} icon={<EditOutlined />} />
-          <Button type="primary" danger size={"small"} onClick={() => onDelete(record)} icon={<DeleteOutlined />} />
+          {/* <Button type="primary" danger size={"small"} onClick={() => onDelete(record)} icon={<DeleteOutlined />} /> */}
         </Space>
       ),
     },
@@ -156,7 +158,10 @@ const Institute: React.FC = () => {
   }
 
   return (
-    <PageContainer>
+    <PageContainer
+    header={{
+      title: ``,
+    }}>
       <ProTable<API.RuleListItem, API.PageParams>
         headerTitle={<Space align="baseline">{'Institute List'}
           <Button type="primary" onClick={addInstitute} icon={<PlusOutlined />}>
@@ -174,6 +179,7 @@ const Institute: React.FC = () => {
           // If you need to transform the parameters you can change them here
 
           const params = {
+
             instituteID: "-1",
             searchText: "",
             mobileNo: "",
@@ -183,18 +189,25 @@ const Institute: React.FC = () => {
             districtID: "-1",
             cityID: "-1",
             areaID: "-1",
-            smallerESTDDate: new Date(),
-            smallerThanRank: "",
-            greatorThanFaculty: "",
-            greatorThanStudent: "",
+            smallerESTDDate: '1900-01-01',
+            smallerThanRank: "0",
+            greatorThanFaculty: "0",
+            greatorThanStudent: "0",
             roomTypeID: "-1",
-            roomCapacityfrom: "",
-            roomCapacityTo: "",
+            roomCapacityfrom: "0",
+            roomCapacityTo: "0",
             roomRateFrom: "0",
-            roomRateTo: "9999",
+            roomRateTo: "0",
             userID: data?.verifiedUser?.userID,
             formID: "-1",
             type: "1",
+            
+            fromDate: '1900-01-01',
+            toDate: moment(new Date()).format('YYYY-MM-DDTHH:MM'),
+            slotID: "-1",
+
+
+            
           }
           const msg = await requestGetInstituteList(params);
           console.log(msg.data.institutelist2s)

@@ -4,13 +4,13 @@ import { request } from '@umijs/max';
 
 
 /**  POST /api/login/account */
-export async function requestAddUser(body: any, options?: { [key: string]: any },token?: string) {
+export async function requestAddUser(body: any, options?: { [key: string]: any }) {
   console.log("token " + JSON.stringify( body) )
   return request<any>('/Login/SaveUserInfo', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${body.token}`,
+      //'Authorization': `Bearer ${body.token}`,
     },
     data: body,
     ...(options || {}),
@@ -19,7 +19,7 @@ export async function requestAddUser(body: any, options?: { [key: string]: any }
 
 
 /**  POST /api/login/account */
-export async function requestAddUserRolePermission(body: any, options?: { [key: string]: any },token?: string) {
+export async function requestAddUserRolePermission(body: any, options?: { [key: string]: any }) {
   console.log("token " + JSON.stringify( body) )
   return request<any>('/Login/UpdateRoleBAction', {
     method: 'POST',
@@ -31,7 +31,7 @@ export async function requestAddUserRolePermission(body: any, options?: { [key: 
     ...(options || {}),
   });
 }
-export async function requestAddUserFormRight(body: any, options?: { [key: string]: any },token?: string) {
+export async function requestAddUserFormRight(body: any, options?: { [key: string]: any }) {
   console.log("token " + JSON.stringify( body) )
   return request<any>('/Login/UpdateFormRight', {
     method: 'POST',
@@ -46,7 +46,7 @@ export async function requestAddUserFormRight(body: any, options?: { [key: strin
 
 
 /**  POST /api/login/ChangePassword */
-export async function requestChangePassword(body: any, options?: { [key: string]: any },token?: string) {
+export async function requestChangePassword(body: any, options?: { [key: string]: any }) {
   console.log("token " + JSON.stringify( body) )
   return request<any>('/Login/ChangePassword', {
     method: 'POST',

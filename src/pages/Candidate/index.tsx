@@ -129,15 +129,18 @@ const Candidate: React.FC = () => {
   }
 
   return (
-    <PageContainer header={{
-      title: <Space direction="vertical">
-        <Title level={3}>{"Candidate List"}</Title>
-      </Space>,
-      breadcrumb: {
-        items: [],
-      },
-    }
-    }
+    <PageContainer
+    header={{
+      title: ``,
+    }}
+    // header={{
+    //   title: <Space direction="vertical">
+    //     <Title level={3}>{"Candidate List"}</Title>
+    //   </Space>,
+    //   breadcrumb: {
+    //     items: [],
+    //   },
+    // }}
     >
       <ProTable<API.RuleListItem, API.PageParams>
         actionRef={actionRef}

@@ -133,5 +133,6 @@ const InstituteList: React.FC = ({state}:any) => {
             /> */}
         </PageContainer>
     );
+    
 };
 export default InstituteList;

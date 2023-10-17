@@ -341,15 +341,13 @@ const section_array:{sectionID:any; sectionName:any; sectionCode:any; parentSect
                 type: "1",
                 otp: "",
 
-               
-               // Token: initialState?.currentUser?.verifiedUser.token,
             };
 
             console.log(staticParams);
 
             setLoading(true)
-            var token = initialState?.currentUser?.verifiedUser.token;
-            const msg = await requestAddUser({ ...values, ...staticParams ,token:token} );
+           
+            const msg = await requestAddUser({ ...values, ...staticParams } );
             setLoading(false)
             if (msg.isSuccess === true) {
                 //formRef.current?.resetFields();

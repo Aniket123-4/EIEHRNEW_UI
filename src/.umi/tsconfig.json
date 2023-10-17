@@ -27,7 +27,7 @@
         "src/.umi/*"
       ],
       "@umijs/max": [
-        "/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/node_modules/umi"
+        "/Users/rahuldev/Documents/codebase/reactJs/msspl/eCSCApp/node_modules/umi"
       ],
       "@umijs/max/typings": [
         "src/.umi/typings"

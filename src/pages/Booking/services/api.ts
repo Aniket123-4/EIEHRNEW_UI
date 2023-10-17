@@ -59,7 +59,7 @@ export async function requestGetBookingReport(body: any, options?: { [key: strin
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-       'Authorization': `Bearer ${body.token}`,
+      
     },
     data: body,
     ...(options || {}),

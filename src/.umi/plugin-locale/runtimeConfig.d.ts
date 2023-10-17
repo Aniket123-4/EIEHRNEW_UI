@@ -3,7 +3,7 @@
 import {
   IntlCache,
   createIntl,
-} from '/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/node_modules/react-intl';
+} from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eCSCApp/node_modules/react-intl';
 type OptionalIntlConfig = Omit<Parameters<typeof createIntl>[0], 'locale' | 'defaultLocale'>;
 export interface IRuntimeConfig {
     locale?: {

@@ -123,7 +123,7 @@ const getRateType = async () => {
         districtID: "-1",
         cityID: "-1",
         areaID: "-1",
-        smallerESTDDate: '2023-08-16T09:53:27.751Z',
+        smallerESTDDate: new Date(),
         smallerThanRank: "0",
         greatorThanFaculty: "0",
         greatorThanStudent: "0",
@@ -135,7 +135,7 @@ const getRateType = async () => {
         userID: "-1",
         formID: "-1",
         type:"1",
-        'token':initialState?.currentUser?.verifiedUser.token,
+        
       }
       const msg = await requestGetInstituteList(params);
       console.log(msg.data.institutelist2s)
@@ -168,7 +168,7 @@ const getBookingDetail = async () => {
       "userID": "-1",
       "formID": "-1",
       "type": "1",
-      'token':initialState?.currentUser?.verifiedUser.token,
+      
   };
   const res = await requestGetBookingReport(params);
   console.log(res);
@@ -485,7 +485,7 @@ console.log(record);
     districtID: "-1",
     cityID: "-1",
     areaID: "-1",
-    smallerESTDDate: '2023-08-16T09:53:27.751Z',
+    smallerESTDDate: new Date(),
     smallerThanRank: "0",
     greatorThanFaculty: "0",
     greatorThanStudent: "0",
@@ -497,7 +497,7 @@ console.log(record);
     userID: "-1",
     formID: "-1",
     type:"1",
-    'token':initialState?.currentUser?.verifiedUser.token,
+    
   }
 
   const msg = await requestGetInstituteList(params);
@@ -527,7 +527,7 @@ const onViewBooking = async (record: any) => {
       "userID": "-1",
       "formID": "-1",
       "type": "1",
-      'token':initialState?.currentUser?.verifiedUser.token,
+      
     }
     const msg = await requestGetBookingReport(params);
     

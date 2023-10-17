@@ -8,7 +8,7 @@ import moment from 'moment';
 import AddRoom from '@/pages/Room/components/AddRoom';
 import { ConsoleSqlOutlined, DotChartOutlined, PlusOutlined } from '@ant-design/icons';
 import { requestGetSlot } from '@/services/apiRequest/dropdowns';
-import { getAvailableRoomDate, getUserInLocalStorage, setAvailableRoomDate } from '@/utils/common';
+import { getAvailableRoomDate, getUserInLocalStorage, getUserType, setAvailableRoomDate } from '@/utils/common';
 const { Title, Text, Link } = Typography;
 import { ReactPhotoCollage } from "react-photo-collage";
 import FormDateAndSlotFilter from '@/components/FormDateAndSlotFilter';
@@ -26,6 +26,7 @@ const setting = {
 
 
 const InstituteDetails: FC = (props: any) => {
+  const userType = getUserType()
   const [loading, setLoading] = useState(false)
   const [instituteData, setInstituteData] = useState<any>([])
 
@@ -55,6 +56,7 @@ const InstituteDetails: FC = (props: any) => {
         toDate: convertDate(bookingFromDate),
         slotId: selectedSlot
       }
+      console.log({data:data})
       setAvailableRoomDate(data);
       getDetails(data?.fromDate, data?.toDate, data?.slotId);
     } else {
@@ -115,7 +117,7 @@ const InstituteDetails: FC = (props: any) => {
   }
 
   const addRoom = () => {
-    setSelectedRows({});
+    setSelectedRows(instituteData);
     setIsEditable(false)
     setOpenAddRoom(true);
   };
@@ -130,7 +132,7 @@ const InstituteDetails: FC = (props: any) => {
 
   const getBookingDetails = async (roomData: any, seatData: any) => {
     const { verifiedUser }: any = getUserInLocalStorage();
-
+    
 
     const params = {
       candidateID: verifiedUser?.userID,
@@ -139,8 +141,8 @@ const InstituteDetails: FC = (props: any) => {
       seatID: seatData?.seatID,
       slotID: seatData?.slotID,
       rateTypeID: roomData?.lstRoomRateLinkRespDTO[0]?.rateTypeID,
-      fromDate: bookingFromDate,
-      toDate: bookingToDate,
+      fromDate:  moment(bookingFromDate).format("YYYY-MM-DD"),
+      toDate: moment(bookingToDate).format("YYYY-MM-DD"),
       userID: verifiedUser?.userID,
       formID: -1,
       type: 2
@@ -204,7 +206,7 @@ const InstituteDetails: FC = (props: any) => {
                                 <Card style={{ background: seat?.isFree ? '#ffffff' : "#d2d2d2" }}>
                                   <h4>{`Seat ${seat?.seatID}`}</h4>
                                   <h5>{`${seat?.commonName}`}</h5>
-                                  <Button
+                                  {(userType!="Admin")&&<Button
                                     size='small'
                                     type="primary"
                                     disabled={seat?.isFree ? false : true}
@@ -213,7 +215,13 @@ const InstituteDetails: FC = (props: any) => {
                                     }}
                                   >
                                     {seat?.isFree ? "book" : "booked"}
-                                  </Button>
+                                  </Button>}
+                                  {(userType==="Admin")&&<Typography  
+                                    disabled={seat?.isFree ? false : true}
+                                  >
+                                    {!seat?.isFree&&"booked"}
+                                  </Typography>
+                                  }
                                 </Card>
                               </Col>
                             </>

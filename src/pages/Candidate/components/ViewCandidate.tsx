@@ -194,7 +194,7 @@ const ViewCandidate = ({ visible, onClose, selectedRows,editCandidate }: any) =>
                         },
                         {
                             title: 'Area',
-                            dataIndex: 'areaID',
+                            dataIndex: 'areaName',
                             span: 3
                         },
                         {

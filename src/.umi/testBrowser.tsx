@@ -3,14 +3,14 @@
 // DO NOT CHANGE IT MANUALLY!
 import React, { useEffect, useState } from 'react';
 import { ApplyPluginsType } from 'umi';
-import { renderClient, RenderClientOpts } from '/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/node_modules/@umijs/renderer-react';
+import { renderClient, RenderClientOpts } from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eCSCApp/node_modules/@umijs/renderer-react';
 import { createHistory } from './core/history';
 import { createPluginManager } from './core/plugin';
 import { getRoutes } from './core/route';
 import type { Location } from 'history';
 
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/src/global.less';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/src/global.tsx';
+import '/Users/rahuldev/Documents/codebase/reactJs/msspl/eCSCApp/src/global.less';
+import '/Users/rahuldev/Documents/codebase/reactJs/msspl/eCSCApp/src/global.tsx';
 import 'antd/dist/reset.css';
 const publicPath = '/';
 const runtimePublicPath = false;

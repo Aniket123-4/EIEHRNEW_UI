@@ -4,15 +4,8 @@
 import React from 'react';
 import { ConfigProvider } from 'antd';
 
-import moment from '/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/node_modules/dayjs';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/node_modules/dayjs/locale/bn-bd';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/node_modules/dayjs/locale/en';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/node_modules/dayjs/locale/fa';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/node_modules/dayjs/locale/id';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/node_modules/dayjs/locale/ja';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/node_modules/dayjs/locale/pt-br';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/node_modules/dayjs/locale/zh-cn';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/node_modules/dayjs/locale/zh-tw';
+import moment from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eCSCApp/node_modules/dayjs';
+import '/Users/rahuldev/Documents/codebase/reactJs/msspl/eCSCApp/node_modules/dayjs/locale/en';
 import { RawIntlProvider, getLocale, getDirection , setIntl, getIntl, localeInfo, event, LANG_CHANGE_EVENT } from './localeExports';
 
 

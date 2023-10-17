@@ -148,19 +148,22 @@ const BookingOrder: React.FC = () => {
 
   return (
     <PageContainer
-      header={{
-        title: 'Booking History',
-        breadcrumb: {
-          items: [
+    header={{
+      title: ``,
+    }}
+      // header={{
+      //   title: 'Booking History',
+      //   breadcrumb: {
+      //     items: [
 
-          ],
-        },
-      }}
-      content="You can see all the booking history here"
-      extra={[
-        <Button key="3">Operation</Button>,
-        <Button key="2">Operation</Button>,
-      ]}
+      //     ],
+      //   },
+      // }}
+      // content="You can see all the booking history here"
+      // extra={[
+      //   <Button key="3">Operation</Button>,
+      //   <Button key="2">Operation</Button>,
+      // ]}
      
     >
       {/* {filter()} */}

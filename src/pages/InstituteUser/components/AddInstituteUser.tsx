@@ -204,8 +204,8 @@ const AddInstituteUser = ({ visible, onClose, selectedRows, isEditable, onSaveSu
             };
 
             setLoading(true)
-            var token = initialState?.currentUser?.verifiedUser.token;
-            const msg = await requestAddInstituteUser({ ...values, ...staticParams, token: token });
+          
+            const msg = await requestAddInstituteUser({ ...values, ...staticParams });
             setLoading(false)
             if (msg.isSuccess === "True") {
                 formRef.current?.resetFields();

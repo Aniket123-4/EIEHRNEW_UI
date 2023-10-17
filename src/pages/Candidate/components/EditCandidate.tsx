@@ -211,7 +211,7 @@ console.log(selectedRows?.candidateID)
             > */}
 
                 <>
-                    <Spin tip="Please wait..." spinning={loading}>
+                   {visible&& <Spin tip="Please wait..." spinning={loading}>
                         <StepsForm
                             formRef={formRef}
                             onFinish={async (values) => {
@@ -609,7 +609,7 @@ console.log(selectedRows?.candidateID)
 
                             </StepsForm.StepForm>
                         </StepsForm>
-                    </Spin>
+                    </Spin>}
 
                 </>
 

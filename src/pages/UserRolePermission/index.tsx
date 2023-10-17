@@ -3,7 +3,7 @@ import {
   PageContainer,
     StepsForm,
 } from '@ant-design/pro-components';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Tabs } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form,Typography, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Tabs } from 'antd';
 
 import { SetStateAction, useEffect, useRef, useState } from 'react';
 import { requestAddUser, requestAddUserFormRight, requestAddUserRolePermission } from './services/api';
@@ -55,6 +55,7 @@ const UserRolePermission = ({ visible, onClose, selectedRows, isEditable, onSave
     const [input_OrgID,setInput_Org] =useState("1");
     const [input_Packages,setInput_Packages] =useState("-1");
     const [input_Module,setInput_Module] =useState("-1");
+    const [input_FormID,setInput_FormID] =useState("-1");
     const [activeTab, setActiveTab] = useState<any>("1");
     
     const contentStyle: React.CSSProperties = {
@@ -65,7 +66,7 @@ const UserRolePermission = ({ visible, onClose, selectedRows, isEditable, onSave
         // height: 300,
         width:"100%"
     };
-    
+    const { Title, Text, Link } = Typography;
     const [checkedList, setCheckedList] = useState(defaultCheckedList);
     const checkAll = plainOptions.length === checkedList.length;
     const indeterminate = checkedList.length > 0 && checkedList.length < plainOptions.length;
@@ -79,7 +80,13 @@ const UserRolePermission = ({ visible, onClose, selectedRows, isEditable, onSave
       { label: '__     User Form Right', children: '', key: '1' },
       { label: 'User Role Permission', children: '', key: '2' },
   ];
-
+  const [checkboxValues, setCheckboxValues] = useState({});
+//   const handleCheckboxChange = (id) => {
+//     setCheckboxValues((prevCheckboxValues) => ({
+//       ...prevCheckboxValues,
+//       [id]: !prevCheckboxValues[id] // Toggle the checkbox value
+//     }));
+//   };
     useEffect(() => {
         
         console.log("initialState");
@@ -243,12 +250,12 @@ const UserRolePermission = ({ visible, onClose, selectedRows, isEditable, onSave
             setRole(dataMaskForDropdown)
         }
     }
-    const getRoleBAction  = async (inputorg: string,inputpackage: string,inputmodule: string) => {
+    const getRoleBAction  = async (inputorg: string,inputpackage: string,inputmodule: string,inputform: string) => {
         const staticParams = {
             orgID: inputorg==""? "-1" : inputorg,
             packageID: inputpackage==""? "-1" :inputpackage,
             mModuleID: inputmodule==""? "-1" :inputmodule,
-            formID: "-1",
+            formID: inputform==""? "-1" :inputform ,
             type: "1"
         };
         const res = await requestGetRoleBAction(staticParams);
@@ -373,8 +380,8 @@ const UserRolePermission = ({ visible, onClose, selectedRows, isEditable, onSave
             console.log(staticParams);
 
             setLoading(true)
-            var token = initialState?.currentUser?.verifiedUser.token;
-            const msg = await requestAddUserRolePermission({ ...values, ...staticParams ,token:token} );
+           
+            const msg = await requestAddUserRolePermission({ ...values, ...staticParams } );
             setLoading(false)
             if (msg.isSuccess === true) {
                 //formRef.current?.resetFields();
@@ -453,14 +460,14 @@ const section_array:{rowID:any; rowValue:any; isSelected:any; }[] =[];
                 "type": "1",
                 "userID": "-1",
                 "userFormID": "-1",
-               // Token: initialState?.currentUser?.verifiedUser.token,
+               
             };
 
             console.log(staticParams);
 
             setLoading(true)
-            var token = initialState?.currentUser?.verifiedUser.token;
-            const msg = await requestAddUserFormRight(staticParams  );
+           
+            const msg = await requestAddUserFormRight(staticParams);
             setLoading(false)
             if (msg.isSuccess === true) {
                 //formRef.current?.resetFields();
@@ -489,13 +496,149 @@ const section_array:{rowID:any; rowValue:any; isSelected:any; }[] =[];
             message.error(defaultLoginFailureMessage);
         }
     };
-    
+    const numberToBoolean = (num) => {
+        return num !== 0;
+      };
+    const handleChange = async (e: { target: { name: any; checked: any;className:any }; },key: any) => {
+        const {name , checked,className} = e.target ;
+            console.log(className)
+            console.log(key)
+        if(name === "allSelect") {
+            let tempUser = roleBAction.map((roletem: any) => {
+                return {...roletem,isChecked: checked}
+            }) ;
+            setRoleBAction(tempUser) ;
+        }
+        else { 
+            console.log(name);
+            roleBAction[key]['header1']=1;
+            e.target.checked=1;
+            // let tempUser = roleBAction.map((roletem: { header1: any;rowType: any; }) =>{
+            //     if(roletem.rowType=="3")
+            //     {
+
+            //      console.log(roletem.header1 );
+            //     }
+            //      //roletem.header1 === name ? {...roletem, header1: checked} : roleBAction
+                
+            //     });
+            console.log(name);
+           // console.log(tempUser)
+            setRoleBAction(roleBAction) ;
+           // (tempUser) ;
+        }
+    }
+    const handleCheckboxChange = (id: any,header: string) => {
+        if(header=="header1"){
+        setRoleBAction((prevData) =>
+          prevData.map((item) =>
+            item.roleID === id ? { ...item, header1: item.header1=="1" ? "0":"1" } : item
+          )
+        );
+        } else  if(header=="header2"){
+            setRoleBAction((prevData) =>
+              prevData.map((item) =>
+                item.roleID === id ? { ...item, header2: item.header2=="1" ? "0":"1" } : item
+              )
+            );
+        } else  if(header=="header3"){
+                setRoleBAction((prevData) =>
+                  prevData.map((item) =>
+                    item.roleID === id ? { ...item, header3: item.header3=="1" ? "0":"1" } : item
+                  )
+                );
+         }  else  if(header=="header4"){
+                    setRoleBAction((prevData) =>
+                      prevData.map((item) =>
+                        item.roleID === id ? { ...item, header4: item.header4=="1" ? "0":"1" } : item
+                      )
+                    );
+        } else  if(header=="header5"){
+            setRoleBAction((prevData) =>
+              prevData.map((item) =>
+                item.roleID === id ? { ...item, header5: item.header5=="1" ? "0":"1" } : item
+              )
+            );
+        } else  if(header=="header6"){
+        setRoleBAction((prevData) =>
+          prevData.map((item) =>
+            item.roleID === id ? { ...item, header6: item.header6=="1" ? "0":"1" } : item
+          )
+        );
+        } else  if(header=="header7"){
+        setRoleBAction((prevData) =>
+          prevData.map((item) =>
+            item.roleID === id ? { ...item, header7: item.header7=="1" ? "0":"1" } : item
+          )
+         );
+        } 
+      };
+
+      const handleSelectAll = (header: string) => {
+        if(header=="header1"){
+        setRoleBAction((prevData) =>
+          prevData.map((item) =>
+          ({  ...item,
+              header1: item.roleID>0? "1":item.header1,
+           }) )
+        );
+        } else  if(header=="header2"){
+            setRoleBAction((prevData) =>
+            prevData.map((item) =>
+            ({  ...item,
+                header2: item.roleID>0? "1":item.header2,
+             }) )
+          );
+        } else  if(header=="header3"){
+            setRoleBAction((prevData) =>
+            prevData.map((item) =>
+            ({  ...item,
+                header3: item.roleID>0? "1":item.header3,
+             }) )
+          );
+         }  else  if(header=="header4"){
+            setRoleBAction((prevData) =>
+            prevData.map((item) =>
+            ({  ...item,
+                header4: item.roleID>0? "1":item.header4,
+             }) )
+          );
+        } else  if(header=="header5"){
+            setRoleBAction((prevData) =>
+          prevData.map((item) =>
+          ({  ...item,
+            header5: item.roleID>0? "1":item.header5,
+           }) )
+        );
+        } else  if(header=="header6"){
+            setRoleBAction((prevData) =>
+            prevData.map((item) =>
+            ({  ...item,
+                header6: item.roleID>0? "1":item.header6,
+             }) )
+          );
+        } else  if(header=="header7"){
+            setRoleBAction((prevData) =>
+            prevData.map((item) =>
+            ({  ...item,
+                header7: item.roleID>0? "1":item.header7,
+             }) )
+          );
+        } 
+      };
     const addCandidateForm = () => {
         return (
           
 
             <>
-            <PageContainer style={{width:"100%"}} >
+            <PageContainer style={{width:"100%"}}  header={{
+        title: <Space direction="vertical">
+           <Title>{'User Management'}</Title> 
+        </Space>,
+        breadcrumb: {
+          items: [],
+        },
+      }} >
             <Card>
                 <Spin tip="Please wait..." spinning={loading}>
             <Form
@@ -550,9 +693,12 @@ const section_array:{rowID:any; rowValue:any; isSelected:any; }[] =[];
                                        onSelect={(e)=>{
                                         console.log(packages)
                                         console.log(e)
+                                       
                                         setInput_Org(e)
                                         getPackages();
-                                        getRoleBAction(e,input_Packages,input_Module);
+                                        form?.resetFields(['packageID'])
+                                     
+                                        getRoleBAction(e,input_Packages,input_Module,input_FormID);
                                         // const filtered = packages.filter((pkge: { packageID: string; }) => {
                                         //     return pkge.packageID === e;
                                         //   });
@@ -580,9 +726,10 @@ const section_array:{rowID:any; rowValue:any; isSelected:any; }[] =[];
                                         onSelect={(e)=>{
                                             console.log(packages)
                                             console.log(e)
+                                            form?.resetFields(['mModuleID'])
                                             setInput_Packages(e)
                                             getMmodule(e);
-                                            getRoleBAction(input_OrgID,e,input_Module);
+                                            getRoleBAction(input_OrgID,e,input_Module,input_FormID);
                                             // const filtered = packages.filter((pkge: { packageID: string; }) => {
                                             //     return pkge.packageID === e;
                                             //   });
@@ -607,9 +754,10 @@ const section_array:{rowID:any; rowValue:any; isSelected:any; }[] =[];
                                         onSelect={(e)=>{
                                             console.log(mmodule)
                                             console.log(e)
+                                            form?.resetFields(['FormID'])
                                             setInput_Module(e)
                                             getForm(e);
-                                            getRoleBAction(input_OrgID,input_Packages,e);
+                                            getRoleBAction(input_OrgID,input_Packages,e,input_FormID);
                                             // const filtered = packages.filter((pkge: { packageID: string; }) => {
                                             //     return pkge.packageID === e;
                                             //   });
@@ -640,6 +788,7 @@ const section_array:{rowID:any; rowValue:any; isSelected:any; }[] =[];
                                             //   });
                                             //   console.log(filtered)
                                            // packages.filter(data => data.id === e)
+                                           getRoleBAction(input_OrgID,input_Packages,input_Module,e);
                                         }}
                                     />
                                 </Form.Item>
@@ -663,7 +812,7 @@ const section_array:{rowID:any; rowValue:any; isSelected:any; }[] =[];
 
 { roleBAction.map((val, key) => {
         return ( <>
-          { key ==0 || key ==1  ? <tr key={key} style={{border: "1px solid black",fontSize: "2.7vh",fontWeight: "600",background: "#5f9ea0",color: "white",}}>
+          { key ==0  ? <tr key={key} style={{border: "1px solid black",fontSize: "2.7vh",fontWeight: "600",background: "#5f9ea0",color: "white",}}>
               
                 <td style={{padding: "10px"}}>   {val.roleName} </td>
                 <td> {val.header1}   </td>
@@ -676,18 +825,72 @@ const section_array:{rowID:any; rowValue:any; isSelected:any; }[] =[];
                 <td > {val.header6} </td>
                 <td > {val.header7} </td>
                 
-            </tr> : <tr key={key} style={{background: key==0? '#b4efea' : '#fff'}}>
+            </tr> : key ==1  ? <tr key={key} style={{border: "1px solid black",fontSize: "2.7vh",fontWeight: "600",background: "#5f9ea0",color: "white",}}>
               
-            <td>   {val.roleName} </td>
-            <td> <Input type='checkbox' onClick={()=>{  if(roleBAction[key]['header1']==0){roleBAction[key]['header1']=1; } else{ roleBAction[key]['header1']=0; }   }}   name='header1' className='header1' />  </td>
-            
-            <td> <Input type='checkbox' onClick={()=>{  if(roleBAction[key]['header2']==0){roleBAction[key]['header2']=1; } else{ roleBAction[key]['header2']=0; }   }}  name='header2' className='header2' /> </td>
-            <td> <Input type='checkbox' onClick={()=>{  if(roleBAction[key]['header3']==0){roleBAction[key]['header3']=1; } else{ roleBAction[key]['header3']=0; }   }}  name='header3' className='header3' /> </td>
-            <td> <Input type='checkbox' onClick={()=>{  if(roleBAction[key]['header4']==0){roleBAction[key]['header4']=1; } else{ roleBAction[key]['header4']=0; }   }}  name='header4' className='header4' /> </td>
+              <td style={{padding: "10px"}}>   {val.roleName} </td>
+              <td>  <input
+              type="checkbox"
+              checked={roleBAction.every((item) =>  numberToBoolean(parseInt(item.header1)))}
+              onChange={()=>handleSelectAll('header1')}
+            />   </td>
+              
+              <td>  <input
+              type="checkbox"
+              checked={roleBAction.every((item) => numberToBoolean(parseInt(item.header2)))}
+              onChange={()=>handleSelectAll('header2')}
+            /> </td>
+              <td>  <input
+              type="checkbox"
+              checked={roleBAction.every((item) => numberToBoolean(parseInt(item.header3)))}
+              onChange={()=>handleSelectAll('header3')}
+            /> </td>
+              <td>  <input
+              type="checkbox"
+              checked={roleBAction.every((item) => numberToBoolean(parseInt(item.header4)))}
+              onChange={()=>handleSelectAll('header4')}
+            /> </td>
 
-            <td > <Input type='checkbox' onClick={()=>{  if(roleBAction[key]['header5']==0){roleBAction[key]['header5']=1; } else{ roleBAction[key]['header5']=0; }   }}  name='header5' className='header5' /></td>
-            <td > <Input type='checkbox' onClick={()=>{  if(roleBAction[key]['header6']==0){roleBAction[key]['header6']=1; } else{ roleBAction[key]['header6']=0; }   }}  name='header6' className='header6' /></td>
-            <td > <Input type='checkbox' onClick={()=>{  if(roleBAction[key]['header7']==0){roleBAction[key]['header7']=1; } else{ roleBAction[key]['header7']=0; }   }}  name='header7' className='header7' /> </td>
+              <td >  <input
+              type="checkbox"
+              checked={roleBAction.every((item) => numberToBoolean(parseInt(item.header5)))}
+              onChange={()=>handleSelectAll('header5')}
+            /> </td>
+              <td >  <input
+              type="checkbox"
+              checked={roleBAction.every((item) => numberToBoolean(parseInt(item.header6)))}
+              onChange={()=>handleSelectAll('header6')}
+            /> </td>
+              <td > <input
+              type="checkbox"
+              checked={roleBAction.every((item) => numberToBoolean(parseInt(item.header7)))}
+              onChange={()=>handleSelectAll('header7')}
+            /> </td>
+              
+          </tr>: <tr key={key} style={{background: key==0? '#b4efea' : '#fff'}}>
+              
+            <td>   {val.roleName  } </td>
+            <td> <Input type='checkbox' 
+            //    onChange={()=>{  if(roleBAction[key]['header1']=="0"){roleBAction[key]['header1']="1"; } else{ roleBAction[key]['header1']="0"; } console.log(roleBAction); console.log(roleBAction[key]['header1']); console.log(roleBAction);  
+            //    console.log(numberToBoolean(parseInt( roleBAction[key]['header1'])));
+            //  }} 
+            onChange={() => handleCheckboxChange(val.roleID,'header1')}
+             checked={numberToBoolean(parseInt(roleBAction[key]['header1']))  ? true : false}    
+             
+             name='header1' className='header1' />  </td>
+            
+            <td> <Input type='checkbox'  onChange={() => handleCheckboxChange(val.roleID,'header2')}
+             checked={numberToBoolean(parseInt(roleBAction[key]['header2']))  ? true : false}   name='header2' className='header2' /> </td>
+            <td> <Input type='checkbox'  onChange={() => handleCheckboxChange(val.roleID,'header3')}
+             checked={numberToBoolean(parseInt(roleBAction[key]['header3']))  ? true : false}  name='header3' className='header3' /> </td>
+            <td> <Input type='checkbox'  onChange={() => handleCheckboxChange(val.roleID,'header4')}
+             checked={numberToBoolean(parseInt(roleBAction[key]['header4']))  ? true : false}  name='header4' className='header4' /> </td>
+
+            <td > <Input type='checkbox'  onChange={() => handleCheckboxChange(val.roleID,'header5')}
+             checked={numberToBoolean(parseInt(roleBAction[key]['header5']))  ? true : false}  name='header5' className='header5' /></td>
+            <td > <Input type='checkbox'  onChange={() => handleCheckboxChange(val.roleID,'header6')}
+             checked={numberToBoolean(parseInt(roleBAction[key]['header6']))  ? true : false}  name='header6' className='header6' /></td>
+            <td > <Input type='checkbox'  onChange={() => handleCheckboxChange(val.roleID,'header7')}
+             checked={numberToBoolean(parseInt(roleBAction[key]['header7']))  ? true : false}  name='header7' className='header7' /> </td>
             
         </tr> }</>
         )

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../styles/addRoom.css';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
 import { requestAddRoom } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
@@ -36,13 +36,16 @@ const AddRoom = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId }:
     useEffect(() => {
         getRoomType();
         getRateType();
-        getInstituteList();
+        // getInstituteList();
         setInstitute([{ value: selectedRows.instituteID, label: selectedRows.instituteName }])
+        console.log({ institute: instituteId })
+
+
     }, [])
 
     const getInstituteList = async () => {
         const params = {
-            instituteID: "-1",
+            instituteID: instituteId ? instituteId: "-1",
             searchText: "",
             mobileNo: "",
             emailID: "",
@@ -51,7 +54,7 @@ const AddRoom = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId }:
             districtID: "-1",
             cityID: "-1",
             areaID: "-1",
-            smallerESTDDate: '2023-08-16T09:53:27.751Z',
+            smallerESTDDate: '1900-01-16T09:53:27.751Z',
             smallerThanRank: "0",
             greatorThanFaculty: "0",
             greatorThanStudent: "0",
@@ -70,12 +73,12 @@ const AddRoom = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId }:
                 return { value: item.instituteID, label: item.instituteName }
             })
             setInstitute(dataMaskForDropdown)
-            console.log({ instituteId });
-            if (instituteId) {
-                form.current?.setFieldsValue({
-                    instituteID: instituteId
-                })
-            }
+            // console.log({ instituteId });
+            // if (instituteId) {
+            //     form.setFieldsValue({
+            //         instituteID: instituteId
+            //     })
+            // }
         }
     }
     const getRoomType = async () => {
@@ -99,15 +102,25 @@ const AddRoom = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId }:
     }
 
     const onRowEnter = (e: any) => {
-        console.log(e.target.value)
         setRow(e.target.value)
         setCapacity((e.target.value) * col)
-        console.log(capacity)
-        console.log(institute)
+        let roomCapacity1 = (e.target.value) * col
+        form.setFieldsValue({
+            roomCapacity: roomCapacity1
+        })
+    }
+    const onColumnEnter = (e: any) => {
+        setCol(e.target.value)
+        setCapacity((e.target.value) * row)
+        let roomCapacity1 = (e.target.value) * row
+        form.setFieldsValue({
+            roomCapacity: roomCapacity1
+        })
     }
 
 
     const addRoom = async (values: any) => {
+        console.log(values);
         try {
             const staticParams = {
                 "roomID": "-1",
@@ -156,6 +169,7 @@ const AddRoom = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId }:
                                 name="instituteID"
                                 label="Institute"
                                 rules={[{ required: true, message: 'Please enter institute' }]}
+                                // initialValue={institute}
                             >
                                 <Select
                                     showSearch
@@ -167,6 +181,7 @@ const AddRoom = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId }:
                         </Col>
                         <Col span={8}>
                             <Form.Item
+                                // initialValue={institute}
                                 name="roomTypeID"
                                 label="Room Type"
                                 rules={[{ required: true, message: 'Please enter Room Type' }]}
@@ -182,40 +197,43 @@ const AddRoom = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId }:
                             <Form.Item
                                 name="roomName"
                                 label="Room Name"
-                                rules={[{ required: true, message: 'Please enter Room Name' }]}
+                                rules={[{ required: true, message: 'Please enter room name' }]}
                             >
-                                <Input placeholder="Please enter roomName" />
+                                <Input placeholder="Please enter room name" />
                             </Form.Item>
                         </Col>
                     </Row>
                     <Row gutter={16}>
                         <Col span={8}>
                             <Form.Item
-                                name="roomCapacity"
-                                label="Room Capacity"
-                                rules={[{ required: true, message: 'Please enter Room Capacity' }]}
+                                name="noOfRow"
+                                label="No of rows"
+                                rules={[{ required: true, message: 'Please enter no of row' }]}
                             >
-                                <Input placeholder="Please enter Room Capacity" />
+                                <Input type='number' onChange={onRowEnter} placeholder="Please enter no of rows" />
                             </Form.Item>
                         </Col>
-
-
                         <Col span={8}>
                             <Form.Item
                                 name="noOfCol"
-                                label="No Of Col"
-                                rules={[{ required: true, message: 'Please enter No Of Col' }]}
+                                label="No of columns"
+                                rules={[{ required: true, message: 'Please enter no of columns' }]}
                             >
-                                <Input onChange={(e: any) => setCol(e.target.value)} type='number' placeholder="Please enter No Of Col" />
+                                <Input onChange={onColumnEnter} type='number' placeholder="Please enter no of columns" />
                             </Form.Item>
                         </Col>
+
                         <Col span={8}>
+                            {/* <Typography style={{ alignSelf: 'left', justifyContent: 'left' }}> {'Room Capacity'}</Typography>
+                            <Input type='number' placeholder="Please enter Room Capacity" value={capacity} /> */}
+
                             <Form.Item
-                                name="noOfRow"
-                                label="No Of Row"
-                                rules={[{ required: true, message: 'Please enter No Of Row' }]}
+                                name="roomCapacity"
+                                label="Room Capacity"
+                                rules={[{ required: true, message: 'Please enter Room Capacity' }]}
+                                initialValue={capacity}
                             >
-                                <Input type='number' onChange={onRowEnter} placeholder="Please enter No Of Row" />
+                                <Input disabled={true} type='number' placeholder="Please enter Room Capacity"/>
                             </Form.Item>
                         </Col>
 

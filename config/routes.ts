@@ -120,21 +120,22 @@ export default [
     ],
   },
   {
-    name: 'Institute User',
+    name: 'Institute Candidate',
+    path:"/instituteCandidate",
     routes: [
       {
-        name: 'InstituteUser',
-        path: '/instituteUser/list',
+        name: 'Institute Candidate',
+        path: '/instituteCandidate/list',
         component: './InstituteUser',
       },
       {
         name: 'Report',
-        path: '/instituteUser/report',
+        path: '/instituteCandidate/report',
         component: './Report/Report'
       },
       {
-        name: 'add-instituteuser',
-        path: '/instituteUser/candidate/add',
+        name: 'add-instituteCandidate',
+        path: '/instituteCandidate/candidate/add',
         component: './InstituteUser/components/Registration',
       },
 
@@ -183,14 +184,24 @@ export default [
     ],
   },
   {
-    name: 'User Management',
+    name: 'User Management2',
+    path: '/user-management',
     routes: [
       {
-        name: 'UserManagement',
-        path: '/list',
+        name: 'User Management1',
+        path: '/user-management/list',
         component: './UserManagement',
       },
-     
+      {
+        name: 'User Management3',
+        path: 'list',
+        component: './UserManagement',
+      },
+      {
+        name: 'UserRolePermission',
+        path: '/user-management/userrole',
+        component: './UserRolePermission',
+      },
     ],
   },
   {
@@ -200,8 +211,7 @@ export default [
         name: 'UserRolePermission',
         path: '/userrole',
         component: './UserRolePermission',
-      },
-     
+      }
     ],
   },
  

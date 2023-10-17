@@ -366,7 +366,7 @@ const AddInstitute = ({ visible, onClose, selectedRows, isEditable, onSaveSucces
                                             >
                                                 <DatePicker
                                                     style={{ width: '100%' }}
-                                                    getPopupContainer={(trigger) => trigger.parentElement!}
+                                                    // getPopupContainer={(trigger) => trigger.parentElement!}
                                                 />
                                             </Form.Item>
                                         </Col>

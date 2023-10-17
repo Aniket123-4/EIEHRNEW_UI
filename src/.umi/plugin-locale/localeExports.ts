@@ -5,11 +5,11 @@ import {
   createIntl,
   IntlShape,
   MessageDescriptor,
-} from '/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/node_modules/react-intl';
+} from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eCSCApp/node_modules/react-intl';
 import { getPluginManager } from '../core/plugin';
-import EventEmitter from '/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/node_modules/event-emitter';
+import EventEmitter from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eCSCApp/node_modules/event-emitter';
 // @ts-ignore
-import warning from '/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/node_modules/@umijs/plugins/node_modules/warning';
+import warning from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eCSCApp/node_modules/@umijs/plugins/node_modules/warning';
 
 export {
   createIntl,
@@ -34,7 +34,7 @@ export {
   defineMessages,
   injectIntl,
   useIntl,
-} from '/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/node_modules/react-intl';
+} from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eCSCApp/node_modules/react-intl';
 
 let g_intl: IntlShape;
 
@@ -45,34 +45,10 @@ export const event = new EventEmitter();
 
 export const LANG_CHANGE_EVENT = Symbol('LANG_CHANGE');
 
-import bnBD0 from 'antd/es/locale/bn_BD';
-import lang_bnBD0 from "/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/src/locales/bn-BD.ts";
 import enUS0 from 'antd/es/locale/en_US';
-import lang_enUS0 from "/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/src/locales/en-US.ts";
-import faIR0 from 'antd/es/locale/fa_IR';
-import lang_faIR0 from "/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/src/locales/fa-IR.ts";
-import idID0 from 'antd/es/locale/id_ID';
-import lang_idID0 from "/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/src/locales/id-ID.ts";
-import jaJP0 from 'antd/es/locale/ja_JP';
-import lang_jaJP0 from "/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/src/locales/ja-JP.ts";
-import ptBR0 from 'antd/es/locale/pt_BR';
-import lang_ptBR0 from "/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/src/locales/pt-BR.ts";
-import zhCN0 from 'antd/es/locale/zh_CN';
-import lang_zhCN0 from "/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/src/locales/zh-CN.ts";
-import zhTW0 from 'antd/es/locale/zh_TW';
-import lang_zhTW0 from "/Users/rahuldev/Documents/codebase/reactJs/msspl/medicalwebapp/src/locales/zh-TW.ts";
+import lang_enUS0 from "/Users/rahuldev/Documents/codebase/reactJs/msspl/eCSCApp/src/locales/en-US.ts";
 
 export const localeInfo: {[key: string]: any} = {
-  'bn-BD': {
-    messages: {
-      ...lang_bnBD0,
-    },
-    locale: 'bn-BD',
-    antd: {
-      ...bnBD0,
-    },
-    momentLocale: 'bn-bd',
-  },
   'en-US': {
     messages: {
       ...lang_enUS0,
@@ -82,66 +58,6 @@ export const localeInfo: {[key: string]: any} = {
       ...enUS0,
     },
     momentLocale: 'en',
-  },
-  'fa-IR': {
-    messages: {
-      ...lang_faIR0,
-    },
-    locale: 'fa-IR',
-    antd: {
-      ...faIR0,
-    },
-    momentLocale: 'fa',
-  },
-  'id-ID': {
-    messages: {
-      ...lang_idID0,
-    },
-    locale: 'id-ID',
-    antd: {
-      ...idID0,
-    },
-    momentLocale: 'id',
-  },
-  'ja-JP': {
-    messages: {
-      ...lang_jaJP0,
-    },
-    locale: 'ja-JP',
-    antd: {
-      ...jaJP0,
-    },
-    momentLocale: 'ja',
-  },
-  'pt-BR': {
-    messages: {
-      ...lang_ptBR0,
-    },
-    locale: 'pt-BR',
-    antd: {
-      ...ptBR0,
-    },
-    momentLocale: 'pt-br',
-  },
-  'zh-CN': {
-    messages: {
-      ...lang_zhCN0,
-    },
-    locale: 'zh-CN',
-    antd: {
-      ...zhCN0,
-    },
-    momentLocale: 'zh-cn',
-  },
-  'zh-TW': {
-    messages: {
-      ...lang_zhTW0,
-    },
-    locale: 'zh-TW',
-    antd: {
-      ...zhTW0,
-    },
-    momentLocale: 'zh-tw',
   },
 };
 
@@ -256,11 +172,6 @@ export const getLocale = () => {
         : '';
   // support baseNavigator, default true
   let browserLang;
-  const isNavigatorLanguageValid =
-    typeof navigator !== 'undefined' && typeof navigator.language === 'string';
-  browserLang = isNavigatorLanguageValid
-    ? navigator.language.split('-').join('-')
-    : '';
   return lang || browserLang || "en-US";
 };
 

@@ -36,7 +36,7 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
     const [designationDef, setDesignationDef] = useState<any>([])
     const [sectionDef, setSectionDef] = useState<any>([])
 
-    const [rank, setRank] = useState<any>([]);
+    const [rank, setRank] = useState<any>([{ value: -1, label: "All" }]);
     const [userType, setUserType] = useState<any>([]);
     const [gender, setGender] = useState<any>([])
     const [marital, setMarital] = useState<any>([])
@@ -115,6 +115,14 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
             console.log(dataMaskForDropdown);
             setGender(dataMaskForDropdown)
         }
+
+       
+         
+        setTimeout(() => {
+            form?.setFieldsValue({ 
+                genderID:selectedRows.genderID
+            })
+        }, 500)
     }
 
 
@@ -126,16 +134,28 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
             })
             setUserType(dataMaskForDropdown)
         }
+       
+        setTimeout(() => {
+            form?.setFieldsValue({ 
+                userTypeID:selectedRows.userTypeID
+            })
+        }, 500)
     }
 
     const getRank = async () => {
         const res = await requestGetRank();
         if (res.data.length > 0) {
             const dataMaskForDropdown = res?.data?.map((item: any) => {
-                return { value: item.genderID, label: item.genderName }
+                return { value: item.rankID, label: item.rankName }
             })
             setRank(dataMaskForDropdown)
         }
+        setTimeout(() => {
+            form?.setFieldsValue({ 
+                rankID:selectedRows.rankID
+            })
+        }, 500)
+      
     }
 
     const getSection = async () => {
@@ -155,9 +175,12 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
                 sectionT1.push(item.sectionID);
                 
             })
-            form?.setFieldsValue({ 
-                sectionT:sectionT1
-            })
+            setTimeout(() => {
+                form?.setFieldsValue({ 
+                    sectionT:sectionT1
+                })
+            }, 500)
+           
         }
     }
     const getDesignation  = async () => {
@@ -177,9 +200,12 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
                 desigT1.push(item.desigID);
                 
             })
-            form?.setFieldsValue({ 
-                desigT:desigT1
-            })
+            setTimeout(() => {
+                form?.setFieldsValue({ 
+                    desigT:desigT1
+                })
+            }, 500)
+           
         }
     }
 
@@ -198,9 +224,12 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
             await  selectedRows?.roleT?.map((item: any) => {
                 roleT1.push(item.roleID);
             })
-            form?.setFieldsValue({ 
-                roleT:roleT1
-            })
+            setTimeout(() => {
+                form?.setFieldsValue({ 
+                    roleT:roleT1
+                })
+            }, 500)
+           
         }
     }
     
@@ -226,10 +255,13 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
              
             })
        
-         
-        form?.setFieldsValue({ 
-            packageT:packageT1
-        })
+            console.log(JSON.stringify(packageT1))
+             setTimeout(() => {
+                form?.setFieldsValue({ 
+                    packageT:packageT1
+                })
+                 }, 500)
+        
             
               
         }
@@ -261,10 +293,10 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
         //console.log(initialState.data.formRight.length)
     }
 
-    const handleChange = (values: any) => {
-        // Update default values whenever the selection changes
-        setPackagesDef(values);
-      };
+    // const handleChange = (values: any) => {
+    //     // Update default values whenever the selection changes
+    //     setPackagesDef(values);
+    //   };
 
     const addCandidate =async (values: any) => {
         try {
@@ -315,33 +347,39 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
 
             const staticParams = {
                 userID: selectedRows.userID,
-                //userID: getuserid(),
+                //userID: getuserid(),7
                 //formID: getformidbyname('Institute User Profile'),
                 "sectionT": section_array,
                 "desigT": designstion_array,
                 "roleT": role_array,
                 "packageT":packaget_array,
-                "rankID": values.rankID==""?values.rankIDvalues.rankID:"-1",
+                "rankID": "-1",//values.rankID==""?values.rankIDvalues.rankID:
                 shortName :"",
-                genderID :values.genderID.value,
+                genderID :values.genderID,
                  // UserTypeID:"-1",
                 stringName:"",
                 formID: "-1",
                 type: "1",
                 otp: "",
-               // Token: initialState?.currentUser?.verifiedUser.token,
+             
             };
 
             console.log(staticParams);
 
             setLoading(true)
-            var token = initialState?.currentUser?.verifiedUser.token;
-            const msg = await requestAddUser({ ...values, ...staticParams ,token:token} );
+        
+            const msg = await requestAddUser({ ...values, ...staticParams } );
             setLoading(false)
             if (msg.isSuccess === true) {
                 //formRef.current?.resetFields();
                 form.resetFields();
                 message.success(msg.msg);
+                setCandidateData({ ...values, ...staticParams })
+                // const urlParams = new URL(window.location.href).searchParams;
+                 // setTimeout(() => {
+                 //     history.push(urlParams.get('redirect') || '/list');
+                 // }, 1000)
+                 onClose();
                 //setOTPVisible(true);
                 //setCandidateData({ ...values, ...staticParams })
                 const urlParams = new URL(window.location.href).searchParams;
@@ -451,7 +489,7 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
                onFinish={async (values) => {
                 addCandidate(values)
             }}
-            initialValues={{packageT:packagesDef, desigT:designationDef,roleT:roleDef,sectionT:sectionDef}}
+            initialValues={{packageT:packagesDef, desigT:designationDef,roleT:roleDef,sectionT:sectionDef,genderID:selectedRows?.genderID}}
                 // onSubmit={event =>
                 //     addCandidate(
                 //         event
@@ -596,7 +634,7 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
                             <Col span={8}>
                                 <Form.Item
                                  labelCol={{ span: 24 }}
-                                    initialValue={selectedRows?.genderID}
+                                   // initialValue={selectedRows?.genderID}
                                     name="genderID"
                                     label="Gender"
                                     rules={[{ required: false, message: 'Please choose the Gender' }]}
@@ -604,16 +642,17 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
                                     <Select
                                   
                                         placeholder="Please choose the Gender"
+                                         style= {{ width: '100%',textAlign:'start' }}
                                         options={gender}
                                     />
                                 </Form.Item>
                             </Col>
 
                             <Col span={8}>
-                                
+                                    
                                 <Form.Item
                                  labelCol={{ span: 24 }}
-                                 initialValue={packagesDef}
+                                 //initialValue={packagesDef}
                                     name="packageT"
                                     label="Packages"
                                     rules={[{ required: true, message: 'Please choose the Packages', type: 'array' }]}
@@ -625,7 +664,7 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
                                         style= {{ width: '100%', }}
                                         maxTagCount= 'responsive'
                                         options={packages}
-                                        onChange={handleChange}
+                                       // onChange={handleChange}
                                         onSelect={(e)=>{
                                             console.log(packages)
                                             console.log(e)
@@ -643,7 +682,7 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
                             <Col span={8}>
                                 <Form.Item
                                  labelCol={{ span: 24 }}
-                                // initialValue={roleDef}
+                                 //initialValue={roleDef}
                                     name="roleT"
                                     label="Role"
                                     rules={[{ required: true, message: 'Please choose the Role' }]}
@@ -665,7 +704,7 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
                             
                                 <Form.Item
                                  labelCol={{ span: 24 }}
-                               // initialValue={designationDef}
+                                //initialValue={designationDef}
                                     name="desigT"
                                     label="Designation"
                                    
@@ -692,7 +731,7 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
                                     rules={[{ required: true, message: 'Please choose the Section' }]}
                                 >
                                     <Select
-                                  //  defaultValue={sectionDef}
+                                    //defaultValue={sectionDef}
                                   style= {{ width: '100%', }}
                                   maxTagCount= 'responsive'
                                     mode="multiple"
@@ -702,23 +741,23 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
                                     />
                                 </Form.Item>
                             </Col>
-                            <Col span={8}>
+                            {/* <Col span={8}>
                                 <Form.Item
                                  labelCol={{ span: 24 }}
-                                initialValue={selectedRows?.rankID}
+                                //initialValue={selectedRows?.rankID}
                                     name="rankID"
                                     label="Rank"
                                     rules={[{ required: false, message: 'Please choose the Rank' }]}
                                 >
                                     <Select
-                                       defaultValue={selectedRows?.rankID}
+                                      // defaultValue={selectedRows?.rankID}
                                         placeholder="Please choose the Rank"
                                         style= {{ width: '100%',textAlign:'start' }}
                                         options={rank}
                                        
                                     />
                                 </Form.Item>
-                            </Col>
+                            </Col> */}
                             <Col span={8}>
                                 <Form.Item
                                   initialValue={selectedRows?.userTypeID}
@@ -737,12 +776,21 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
                                 </Form.Item>
                             </Col>
 
-                            <Col span={8}>
+                            <Col span={4}>
                                  <Form.Item
-                                  labelCol={{ span: 24 }}
-                                  label=" "
+                                 label=" "
+                                 labelCol={{ span: 24 }}
                                  >
+                                    
                         <Button type="primary" htmlType="submit"> Update User</Button>
+                    </Form.Item>
+                            </Col> <Col span={4}>
+                                 <Form.Item
+                                 label=" "
+                                 labelCol={{ span: 24 }}
+                                 >
+                                    
+                        <Button type="primary" htmlType="reset" onClick={form.resetFields()}  > Reset</Button>
                     </Form.Item>
                             </Col>
                         </Row>

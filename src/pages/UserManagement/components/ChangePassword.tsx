@@ -93,7 +93,7 @@ const ChangePassword = ({ visible, onClose, selectedRows, isEditable, onSaveSucc
           //  const firstName = event.target.elements.firstName.value;
            
             setLoading(true)
-            var token = initialState?.currentUser?.verifiedUser.token;
+            
             const msg = await requestChangePassword( values  );
             setLoading(false)
             if (msg.isSuccess === "True") {
@@ -181,7 +181,7 @@ const ChangePassword = ({ visible, onClose, selectedRows, isEditable, onSaveSucc
                     }}
                 > */}
                     <div style={contentStyle}>
-                        <Row gutter={16}>
+                        <Row gutter={24}>
                         {/* <Col span={6}>
                                 <Form.Item
                                     name="userID"
@@ -194,6 +194,7 @@ const ChangePassword = ({ visible, onClose, selectedRows, isEditable, onSaveSucc
                           
                             <Col span={12}>
                                 <Form.Item
+                                  labelCol={{ span: 24 }}
                                     name="LoginName"
                                     label="Login Name"
                                     rules={[{ required: true, message: 'Please enter Login Name' }]}
@@ -203,6 +204,7 @@ const ChangePassword = ({ visible, onClose, selectedRows, isEditable, onSaveSucc
                             </Col>
                               <Col span={12}>
                                 <Form.Item
+                                  labelCol={{ span: 24 }}
                                     name="OldPwd"
                                     label="Old Password"
                                     rules={[{ required: true, message: 'Please enter Old Password' }]}
@@ -212,6 +214,7 @@ const ChangePassword = ({ visible, onClose, selectedRows, isEditable, onSaveSucc
                             </Col> 
                             <Col span={12}>
                                 <Form.Item
+                                  labelCol={{ span: 24 }}
                                     name="NewPwd"
                                     label="New Password"
                                     
@@ -222,8 +225,11 @@ const ChangePassword = ({ visible, onClose, selectedRows, isEditable, onSaveSucc
                             </Col>
                            
                             
-                            <Col span={12}>
-                                 <Form.Item>
+                            <Col span={4}>
+                                 <Form.Item
+                                 label="&nbsp;"
+                                 labelCol={{ span: 24 }}
+                                 >
                         <Button type="primary" htmlType="submit"> Change Password</Button>
                     </Form.Item>
                             </Col>

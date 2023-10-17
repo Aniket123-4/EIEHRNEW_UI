@@ -31,7 +31,7 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
     const [role, setRole] = useState<any>([])
     const [designation, setDesignation] = useState<any>([])
     const [section, setSection] = useState<any>([])
-    const [rank, setRank] = useState<any>([]);
+    const [rank, setRank] = useState<any>([{ value: -1, label: "All" }]);
     const [userType, setUserType] = useState<any>([]);
 
     const [gender, setGender] = useState<any>([])
@@ -121,7 +121,7 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
         const res = await requestGetRank();
         if (res.data.length > 0) {
             const dataMaskForDropdown = res?.data?.map((item: any) => {
-                return { value: item.genderID, label: item.genderName }
+                return { value: item.rankID, label: item.rankName }
             })
             setRank(dataMaskForDropdown)
         }
@@ -283,23 +283,25 @@ const section_array:{sectionID:any; sectionName:any; sectionCode:any; parentSect
                   "desigT": designstion_array,
                   "roleT": role_array,
                   "packageT":packaget_array,
-                  "rankID": values.rankID?values.rankIDvalues.rankID:"-1",
+                  "rankID":"-1",// values.rankID?values.rankIDvalues.rankID:
                   ShortName :"",
                   UserTypeID:"-1",
                   stringName:"",
+                  "middleName":values.middleName,
+                  
                 formID: "-1",
                 type: "1",
                 otp: "",
 
                
-               // Token: initialState?.currentUser?.verifiedUser.token,
+              
             };
 
             console.log(staticParams);
 
             setLoading(true)
-            var token = initialState?.currentUser?.verifiedUser.token;
-            const msg = await requestAddUser({ ...values, ...staticParams ,token:token} );
+          
+            const msg = await requestAddUser({ ...values, ...staticParams} );
             setLoading(false)
             if (msg.isSuccess === true) {
                 //formRef.current?.resetFields();
@@ -560,6 +562,7 @@ const section_array:{sectionID:any; sectionName:any; sectionCode:any; parentSect
                                 >
                                     <Select
                                         placeholder="Please choose the Gender"
+                                        style= {{ width: '100%',textAlign:'start' }}
                                         options={gender}
                                     />
                                 </Form.Item>
@@ -648,7 +651,7 @@ const section_array:{sectionID:any; sectionName:any; sectionCode:any; parentSect
                                     />
                                 </Form.Item>
                             </Col>
-                            <Col span={8}>
+                            {/* <Col span={8}>
                                 <Form.Item
                                 labelCol={{ span: 24 }}
                                     name="rankID"
@@ -662,7 +665,7 @@ const section_array:{sectionID:any; sectionName:any; sectionCode:any; parentSect
                                        
                                     />
                                 </Form.Item>
-                            </Col>
+                            </Col> */}
                             <Col span={8}>
                                 <Form.Item
                                 labelCol={{ span: 24 }}
@@ -681,13 +684,21 @@ const section_array:{sectionID:any; sectionName:any; sectionCode:any; parentSect
                             </Col>
 
 
-                            <Col span={8}>
+                            <Col span={4}>
                                  <Form.Item
                                  label=" "
                                  labelCol={{ span: 24 }}
                                  >
                                     
                         <Button type="primary" htmlType="submit"> Submit</Button>
+                    </Form.Item>
+                            </Col> <Col span={4}>
+                                 <Form.Item
+                                 label=" "
+                                 labelCol={{ span: 24 }}
+                                 >
+                                    
+                        <Button type="primary" htmlType="reset" onClick={form.resetFields()}  > Reset</Button>
                     </Form.Item>
                             </Col>
                         </Row>

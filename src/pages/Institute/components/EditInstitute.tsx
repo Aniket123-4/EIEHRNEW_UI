@@ -468,7 +468,7 @@ const EditInstitute = ({ visible, onClose, selectedRows, isEditable, onSaveSucce
                                         </Col>
                                         <Col span={8}>
                                             <Form.Item
-                                                initialValue={selectedRows?.areaID}
+                                                initialValue={selectedRows?.areaName}
                                                 name="areaID"
                                                 label="Area"
                                                 rules={[{ required: false, message: 'Please choose the Area' }]}

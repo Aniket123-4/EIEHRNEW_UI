@@ -16,9 +16,8 @@ import { queryFakeList } from './service';
 import { requestGetCity, requestGetDistrict, requestGetRoomType, requestGetState } from '@/services/apiRequest/dropdowns';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
 import { getAvailableRoomDate, getUserInLocalStorage, setAvailableRoomDate } from '@/utils/common';
-import { PageContainer } from '@ant-design/pro-components';
+import { PageContainer, ProSkeleton } from '@ant-design/pro-components';
 import { SliderMarks } from 'antd/es/slider';
-import { ProSkeleton } from '@ant-design/pro-skeleton';
 import FormDateAndSlotFilter from '@/components/FormDateAndSlotFilter';
 import { convertDate } from '@/utils/helper';
 import moment from 'moment';
@@ -172,7 +171,7 @@ export const Applications: FC<Record<string, any>> = () => {
       setRoomType(dataMaskForDropdown)
     }
   }
-  const getInstituteList = async ({ roomTypeID, roomRateTo, roomRateFrom, roomCapacityTo, roomCapacityfrom, dateAndSlotVal }: any) => {
+  const getInstituteList = async ({ searchText,roomTypeID, roomRateTo, roomRateFrom, roomCapacityTo, roomCapacityfrom, dateAndSlotVal }: any) => {
     try {
       const params = {
         instituteID: "-1",
@@ -184,7 +183,7 @@ export const Applications: FC<Record<string, any>> = () => {
         districtID: "-1",
         cityID: "-1",
         areaID: "-1",
-        smallerESTDDate: new Date(),
+        smallerESTDDate: '1900-01-01',
         smallerThanRank: "",
         greatorThanFaculty: "",
         greatorThanStudent: "",
@@ -196,7 +195,7 @@ export const Applications: FC<Record<string, any>> = () => {
         userID: data?.verifiedUser?.userID,
         formID: "-1",
         type: "1",
-        slotID: -1,
+        slotID: selectedSlot,
         fromDate: convertDate(moment()),
         toDate: convertDate(moment()),
         ...dateAndSlotVal
@@ -222,7 +221,7 @@ export const Applications: FC<Record<string, any>> = () => {
   };
   const getInstituteList1 = (value: any) => {
     console.log({ searchText });
-    getInstituteList({ roomRateFrom: roomRateFrom, roomRateTo: roomRateFrom, searchText: searchText, roomTypeID: roomTypeId, roomCapacityTo: roomCapacityTo, roomCapacityfrom: roomCapacityfrom, dateAndSlotVal: dateAndSlotVal });
+    getInstituteList({ roomRateFrom: roomRateFrom, roomRateTo: roomRateFrom, searchText: value, roomTypeID: roomTypeId, roomCapacityTo: roomCapacityTo, roomCapacityfrom: roomCapacityfrom, dateAndSlotVal: dateAndSlotVal });
   };
 
   const onRoomRateChange = (value: string | [number, number]) => {
@@ -238,8 +237,9 @@ export const Applications: FC<Record<string, any>> = () => {
     getInstituteList({ roomCapacityfrom: value[0].toString(), roomCapacityTo: value[1].toString(), roomRateFrom: roomRateFrom, roomRateTo: roomRateTo, searchText: searchText, roomTypeID: roomTypeId, dateAndSlotVal: dateAndSlotVal });
   };
   const onTextChange = (value: any) => {
+    console.log({value:value.target.value})
     setSearchText(value.target.value)
-    getInstituteList1("")
+    getInstituteList1(value.target.value)
   };
   const selectRoomType = (value: string) => {
     setRoomTypeId(value.toString())

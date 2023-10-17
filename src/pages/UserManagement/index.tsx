@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './index.css';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, Modal, message, InputRef } from 'antd';
+import { Button, Col, DatePicker, Drawer, Typography, Form, Input, Row, Select, Space, Modal, message, InputRef } from 'antd';
 import {
   FooterToolbar,
   ModalForm,
@@ -15,7 +15,7 @@ import {
 
 import { requestAddUser, requestGetUserList, requestGetUserinfo } from './services/api';
 import { EditOutlined, DeleteOutlined, ExclamationCircleFilled, EyeOutlined } from '@ant-design/icons';
-import { FormattedMessage, history, SelectLang, useIntl , useModel, Helmet } from '@umijs/max';
+import { FormattedMessage, history, SelectLang, useIntl, useModel, Helmet } from '@umijs/max';
 
 import ViewUser from './components/ViewUser';
 import EditUser from './components/EditUser';
@@ -25,7 +25,7 @@ import type { ColumnType, ColumnsType } from 'antd/es/table';
 import Highlighter from 'react-highlight-words';
 import { requestGetDesignation, requestGetSectionTree } from '@/services/apiRequest/dropdowns';
 
-
+const { Title, Text, Link } = Typography;
 const { Option } = Select;
 const { confirm } = Modal;
 interface DataType {
@@ -48,53 +48,53 @@ const UserManagement: React.FC = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [filtertype, setFiltertype] = useState('0');
-  const [commonID, setCommonID] = useState('0');
+  const [commonID, setCommonID] = useState('-1');
   const searchInput = useRef<InputRef>(null);
   const [designation, setDesignation] = useState<any>([])
-    const [section, setSection] = useState<any>([])
-    const [form] = Form.useForm();
-    useEffect(() => {
-        
-      console.log("initialState");
-      console.log(initialState);
-    
-     
-   
-      getDesignation();
-      getSection();
-     
+  const [section, setSection] = useState<any>([])
+  const [form] = Form.useForm();
+  useEffect(() => {
 
-     // getformidbyname()
+    console.log("initialState");
+    console.log(initialState);
+
+
+
+    getDesignation();
+    getSection();
+
+
+    // getformidbyname()
 
   }, [])
 
   const getSection = async () => {
     const staticParams = {
-          "sectionID": "-1",
-          "type": "1"
+      "sectionID": "-1",
+      "type": "1"
     };
 
     const res = await requestGetSectionTree(staticParams);
     if (res.length > 0) {
-        const dataMaskForDropdown = res?.map((item: any) => {
-            return { value: item.sectionID, label: item.sectionName , sectionID: item.sectionID, sectionName: item.sectionName , plainSectionName: item.plainSectionName, sectionCode: item.sectionCode, parentSectionID: item.parentSectionID, mainSectionID: item.mainSectionID, parentMainSectionID: item.parentMainSectionID, rowID: item.rowID, depthLevel:item.depthLevel, sectionTree:item.sectionTree, sectionIDTree:item.sectionIDTree }
-        })
-        setSection(dataMaskForDropdown)
+      const dataMaskForDropdown = res?.map((item: any) => {
+        return { value: item.sectionID, label: item.sectionName, sectionID: item.sectionID, sectionName: item.sectionName, plainSectionName: item.plainSectionName, sectionCode: item.sectionCode, parentSectionID: item.parentSectionID, mainSectionID: item.mainSectionID, parentMainSectionID: item.parentMainSectionID, rowID: item.rowID, depthLevel: item.depthLevel, sectionTree: item.sectionTree, sectionIDTree: item.sectionIDTree }
+      })
+      setSection(dataMaskForDropdown)
     }
-}
-const getDesignation  = async () => {
+  }
+  const getDesignation = async () => {
 
     const staticParams = {
-        DesigID: "-1",
+      DesigID: "-1",
     };
     const res = await requestGetDesignation(staticParams);
     if (res.data.length > 0) {
-        const dataMaskForDropdown = res?.data?.map((item: any) => {
-            return { value: item.desigID, label: item.desigName , desigID: item.desigID , desigName: item.desigName , desigCode: item.desigCode , isActive: item.isActive , priority: item.priority , desigType: item.desigType }
-        })
-        setDesignation(dataMaskForDropdown)
+      const dataMaskForDropdown = res?.data?.map((item: any) => {
+        return { value: item.desigID, label: item.desigName, desigID: item.desigID, desigName: item.desigName, desigCode: item.desigCode, isActive: item.isActive, priority: item.priority, desigType: item.desigType }
+      })
+      setDesignation(dataMaskForDropdown)
     }
-}
+  }
 
   const handleSearch = (
     selectedKeys: string[],
@@ -199,7 +199,7 @@ const getDesignation  = async () => {
       title: 'Email',
       dataIndex: 'eMail',
       ...getColumnSearchProps('eMail'),
-     // valueType: 'textarea',
+      // valueType: 'textarea',
     },
     {
       title: 'Mobile No',
@@ -223,7 +223,7 @@ const getDesignation  = async () => {
         <Space size="middle">
           <Button type="primary" size={"small"} onClick={() => onView(record)} icon={<EyeOutlined />} />
           <Button type="primary" size={"small"} onClick={() => onEdit(record)} icon={<EditOutlined />} />
-          <Button type="primary" danger size={"small"} onClick={() => onDelete(record)} icon={<DeleteOutlined />} />
+          {/* <Button type="primary" danger size={"small"} onClick={() => onDelete(record)} icon={<DeleteOutlined />} /> */}
         </Space>
       ),
     },
@@ -237,10 +237,10 @@ const getDesignation  = async () => {
       "desigID": record.desigID,
       "userID": record.userID,
       "type": 1
-     }
+    }
 
-     const msg = await requestGetUserinfo(params);
-     console.log(msg)
+    const msg = await requestGetUserinfo(params);
+    console.log(msg)
     setSelectedRows(msg.data[0])
     setIsEditable(true)
     setOpenEditUser(true);
@@ -248,16 +248,16 @@ const getDesignation  = async () => {
 
   const onView = async (record: any) => {
     console.log(record)
-    
+
     const params = {
       "sectionID": -1,
       "desigID": record.desigID,
       "userID": record.userID,
       "type": 1
-     }
+    }
 
-     const msg = await requestGetUserinfo(params);
-     console.log(msg.data)
+    const msg = await requestGetUserinfo(params);
+    console.log(msg.data)
     //  return Promise.resolve({
     //    data: msg.data,
     //    success: true,
@@ -269,18 +269,18 @@ const getDesignation  = async () => {
   };
 
   const onDelete = (record: any) => {
-console.log(record)
+    console.log(record)
     setSelectedRows(record)
     showDeleteConfirm(record.userID);
   };
 
   const addCandidate = () => {
-    
+
     setOpenAddUser(true);
     console.log(openAddUser)
     setSelectedRows({});
     setIsEditable(false)
-    
+
   };
 
   const onCloseAddCandidate = () => {
@@ -299,104 +299,104 @@ console.log(record)
     setOpenViewUser(true)
   }
 
-  const delUser =async (userID: any) => {
+  const delUser = async (userID: any) => {
     try {
-        
+
       //  const firstName = event.target.elements.firstName.value;
-       
 
-      
-       console.log(userID)
-       // const content = event.target.elements.content.value;
-       // values['dob'] = convertDate(values['dob']);
 
-        const staticParams = {
-          "userID": userID,
-          "userTypeID": "-1",
-          "rankID": '-1',
-          "surName": "",
-          "firstName": "",
-          "middleName": "",
-          "shortName": "",
-          "userCode": "",
-          "dob": "2023-09-21T06:55:32.722Z",
-          "curMobile": "",
-          "eMail": "",
-          "genderID": '-1',
-          "sectionT": [
-            {
-              "sectionID": 0,
-              "sectionNameTree": "",
-              "sectionName": "",
-              "sectionCode": "",
-              "parentSectionID": 0,
-              "mainSectionID": 0,
-              "depthLevel": 0,
-              "rowID": 0,
-              "sectionIDTree": ""
-            }
-          ],
-          "desigT": [
-            {
-              "desigID": 0,
-              "desigName": "",
-              "desigCode": "",
-              "isActive": true,
-              "priority": 0,
-              "desigType": 0
-            }
-          ],
-          "roleT": [
-            {
-              "roleID": 0,
-              "type": 0
-            }
-          ],
-          "packageT": [
-            {
-              "orgID": 0,
-              "packageID": 0,
-              "packageName": "",
-              "packageURL": ""
-            }
-          ],
-          "userLogin": "",
-          "userPassword": "",
-          "type": "3",
-          "formID": "1"
 
-           
-           // Token: initialState?.currentUser?.verifiedUser.token,
-        };
+      console.log(userID)
+      // const content = event.target.elements.content.value;
+      // values['dob'] = convertDate(values['dob']);
 
-        console.log(staticParams);
+      const staticParams = {
+        "userID": userID,
+        "userTypeID": "-1",
+        "rankID": '-1',
+        "surName": "",
+        "firstName": "",
+        "middleName": "",
+        "shortName": "",
+        "userCode": "",
+        "dob": "2023-09-21T06:55:32.722Z",
+        "curMobile": "",
+        "eMail": "",
+        "genderID": '-1',
+        "sectionT": [
+          {
+            "sectionID": 0,
+            "sectionNameTree": "",
+            "sectionName": "",
+            "sectionCode": "",
+            "parentSectionID": 0,
+            "mainSectionID": 0,
+            "depthLevel": 0,
+            "rowID": 0,
+            "sectionIDTree": ""
+          }
+        ],
+        "desigT": [
+          {
+            "desigID": 0,
+            "desigName": "",
+            "desigCode": "",
+            "isActive": true,
+            "priority": 0,
+            "desigType": 0
+          }
+        ],
+        "roleT": [
+          {
+            "roleID": 0,
+            "type": 0
+          }
+        ],
+        "packageT": [
+          {
+            "orgID": 0,
+            "packageID": 0,
+            "packageName": "",
+            "packageURL": ""
+          }
+        ],
+        "userLogin": "",
+        "userPassword": "",
+        "type": "3",
+        "formID": "1"
 
-        setLoading(true)
-        var token = initialState?.currentUser?.verifiedUser.token;
-        const msg = await requestAddUser({ staticParams ,token:token} );
-        setLoading(false)
-        if (msg.isSuccess === true) {
-            //formRef.current?.resetFields();
-            message.success(msg.msg);
-            //setOTPVisible(true);
-            const urlParams = new URL(window.location.href).searchParams;
-            history.push(urlParams.get('redirect') || '/list');
-            //requestForOTP({ ...values, ...staticParams })
-            return;
-        } else {
-            message.error(msg.msg);
-        }
+
+
+      };
+
+      console.log(staticParams);
+
+      setLoading(true)
+
+      const msg = await requestAddUser({ staticParams });
+      setLoading(false)
+      if (msg.isSuccess === true) {
+        //formRef.current?.resetFields();
+        message.success(msg.msg);
+        //setOTPVisible(true);
+        const urlParams = new URL(window.location.href).searchParams;
+        history.push(urlParams.get('redirect') || '/list');
+        //requestForOTP({ ...values, ...staticParams })
+        return;
+      } else {
+        message.error(msg.msg);
+      }
 
     } catch (error) {
-        setLoading(false)
-        const defaultLoginFailureMessage = intl.formatMessage({
-            id: 'pages.login.failure',
-            defaultMessage: 'Login failed, please try again!',
-        });
-        console.log({ error });
-        message.error(defaultLoginFailureMessage);
+      setLoading(false)
+      const defaultLoginFailureMessage = intl.formatMessage({
+        id: 'pages.login.failure',
+        defaultMessage: 'Login failed, please try again!',
+      });
+      console.log({ error });
+      message.error(defaultLoginFailureMessage);
     }
-};
+  };
 
 
 
@@ -422,25 +422,29 @@ console.log(record)
     actionRef.current.reload();
   }
 
-  const getuserlist =async (values: any) => {
+  const getuserlist = async (values: any) => {
     try {
-        
-      actionRef.current.reload(); 
+
+      actionRef.current.reload();
 
     } catch (error) {
-        setLoading(false)
-        const defaultLoginFailureMessage = intl.formatMessage({
-            id: 'pages.login.failure',
-            defaultMessage: 'Login failed, please try again!',
-        });
-        console.log({ error });
-        message.error(defaultLoginFailureMessage);
+      setLoading(false)
+      const defaultLoginFailureMessage = intl.formatMessage({
+        id: 'pages.login.failure',
+        defaultMessage: 'Login failed, please try again!',
+      });
+      console.log({ error });
+      message.error(defaultLoginFailureMessage);
     }
-};
+  };
 
 
   return (
-    <PageContainer >
+    <PageContainer
+
+
+    >
+
       {/* <Space align="baseline">
         <Button type="primary" onClick={addCandidate} icon={<PlusOutlined />}>
           New Institute User 
@@ -450,105 +454,105 @@ console.log(record)
       <br /> */}
 
 
-<Form
-             form={form}
-         
-               onFinish={async (values) => {
-                getuserlist(values)
-            }} >
-      <Row gutter={24}>
-      <Col span={4}>
-                                <Form.Item
-                                initialValue={['0']}
-                                labelCol={{ span: 24 }}
-                                    name="filtertype"
-                                    label="Filter Type"
-                                    
-                                   // rules={[{ required: true, message: 'Please choose the Designation' }]}
-                                >
-                                    <Select
-                                        // mode="multiple"
-                                        // style= {{ width: '100%', }}
-                                        // maxTagCount= 'responsive'
-                                        // allowClear
-                                        defaultValue={["0"]}
-                                        placeholder="Please choose the Designation"
-                                        options={[{value:'0',label:'All User'},{value:'1',label:'Section'},{value:'2',label:'Designation'}]}
-                                        onSelect={(e)=>{
-                                          console.log(e)
-                                          setFiltertype(e);
-                                        }}
-                                    />
-                                </Form.Item>
-                            </Col>
+      <Form
+        form={form}
 
-    {filtertype=='2'?  <Col span={10}>
-                                <Form.Item
-                                labelCol={{ span: 24 }}
-                                    name="desigT"
-                                    label="Designation"
-                                    
-                                   // rules={[{ required: true, message: 'Please choose the Designation' }]}
-                                >
-                                    <Select
-                                        // mode="multiple"
-                                        // style= {{ width: '100%', }}
-                                        // maxTagCount= 'responsive'
-                                        // allowClear
-                                        placeholder="Please choose the Designation"
-                                        options={designation}
-                                        onSelect={(e)=>{
-                                          console.log(e);
-                                          setCommonID(e); 
-                                        }}
-                                    />
-                                </Form.Item>
-                            </Col> :""}
-                           {filtertype=='1'? <Col span={10}>
-                                <Form.Item
-                                labelCol={{ span: 24 }}
-                                    name="sectionT"
-                                    label="Section"
-                                    
-                                    //rules={[{ required: true, message: 'Please choose the Section' }]}
-                                >
-                                    <Select
-                                  style= {{ width: '100%', }}
-                                  // maxTagCount= 'responsive'
-                                  //   mode="multiple"
-                                    
-                                   // allowClear
-                                        placeholder="Please choose the Section"
-                                        options={section}
-                                        onSelect={(e)=>{
-                                          console.log(e);
-                                          setCommonID(e); 
-                                        }}
-                                    />
-                                </Form.Item>
-                            </Col> :"" }
-                            <Col span={4}>
-                                 <Form.Item
-                                 label=" "
-                                 labelCol={{ span: 24 }}
-                                 >
-                                    
-                        <Button type="primary" htmlType="submit"> Search</Button>
-                    </Form.Item>
-                            </Col>
-      </Row>
+        onFinish={async (values) => {
+          getuserlist(values)
+        }} >
+        <Row gutter={24}>
+          <Col span={4}>
+            <Form.Item
+              initialValue={['0']}
+              labelCol={{ span: 24 }}
+              name="filtertype"
+              label="Filter Type"
 
-            </Form>
-   
+            // rules={[{ required: true, message: 'Please choose the Designation' }]}
+            >
+              <Select
+                // mode="multiple"
+                // style= {{ width: '100%', }}
+                // maxTagCount= 'responsive'
+                // allowClear
+                defaultValue={["0"]}
+                placeholder="Please choose the Designation"
+                options={[{ value: '0', label: 'All User' }, { value: '1', label: 'Section' }, { value: '2', label: 'Designation' }]}
+                onSelect={(e) => {
+                  console.log(e)
+                  setFiltertype(e);
+                }}
+              />
+            </Form.Item>
+          </Col>
 
-      
+          {filtertype == '2' ? <Col span={10}>
+            <Form.Item
+              labelCol={{ span: 24 }}
+              name="desigT"
+              label="Designation"
+
+            // rules={[{ required: true, message: 'Please choose the Designation' }]}
+            >
+              <Select
+                // mode="multiple"
+                // style= {{ width: '100%', }}
+                // maxTagCount= 'responsive'
+                // allowClear
+                placeholder="Please choose the Designation"
+                options={designation}
+                onSelect={(e) => {
+                  console.log(e);
+                  setCommonID(e);
+                }}
+              />
+            </Form.Item>
+          </Col> : ""}
+          {filtertype == '1' ? <Col span={10}>
+            <Form.Item
+              labelCol={{ span: 24 }}
+              name="sectionT"
+              label="Section"
+
+            //rules={[{ required: true, message: 'Please choose the Section' }]}
+            >
+              <Select
+                style={{ width: '100%', }}
+                // maxTagCount= 'responsive'
+                //   mode="multiple"
+
+                // allowClear
+                placeholder="Please choose the Section"
+                options={section}
+                onSelect={(e) => {
+                  console.log(e);
+                  setCommonID(e);
+                }}
+              />
+            </Form.Item>
+          </Col> : ""}
+          <Col span={4}>
+            <Form.Item
+              label=" "
+              labelCol={{ span: 24 }}
+            >
+
+              <Button type="primary" htmlType="submit"> Search</Button>
+            </Form.Item>
+          </Col>
+        </Row>
+
+      </Form>
+
+
+
       <ProTable<API.RuleListItem, API.PageParams>
-          headerTitle={<Space align="baseline">{'User List'}
+        headerTitle={<Space align="baseline">{'User List'}
           <Button type="primary" onClick={addCandidate} icon={<PlusOutlined />}>
             {'New User'}
           </Button>
         </Space>}
-       // headerTitle={'Institute User List'}
+        // headerTitle={'Institute User List'}
         actionRef={actionRef}
         rowKey="key"
         search={false}
@@ -558,10 +562,10 @@ console.log(record)
           // Here you need to return a Promise, and you can transform the data before returning it
           // If you need to transform the parameters you can change them here
           const params = {
-           "CommonID":commonID,
+            "CommonID": commonID,
             "type": filtertype
           }
-console.log(params);
+          console.log(params);
           const msg = await requestGetUserList(params);
           console.log(msg.data)
           return Promise.resolve({
@@ -576,7 +580,7 @@ console.log(params);
         onClose={onCloseAddCandidate}
         onSaveSuccess={reloadTable}
         selectedRows={selectedRows}
-       // isdrawer={true}
+      // isdrawer={true}
       />
       <EditUser
         visible={openEditUser}
