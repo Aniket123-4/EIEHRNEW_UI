@@ -6,6 +6,12 @@ import { getPackageId, getUserInLocalStorage, setMenu } from "./common";
 const getModulePath = (name: string) => {
     const { verifiedUser, selectedPackageId }: any = getUserInLocalStorage();
     switch (name) {
+        case "Complaint Master":
+            return "/complaints/addComplaint";
+
+        case "Disease Master":
+            return "/complaints/addDisease";
+
         case "User Management":
             return "/user-management/list";
 
