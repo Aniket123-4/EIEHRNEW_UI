@@ -1,10 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
+import './styles/AddComplaint.css';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card } from 'antd';
-import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
+import { requestGetComplaintType, requestGetRateType } from '@/services/apiRequest/dropdowns';
 import { requestAddComplaint } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
 import { PageContainer } from '@ant-design/pro-components';
+import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
+
+
 
 const { Option } = Select;
 
@@ -28,23 +32,30 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
         textAlign: 'center',
         color: token.colorTextTertiary,
         borderRadius: token.borderRadiusLG,
-        marginTop: 20,
-        height: 350
+        // marginTop: 20,
+        // height: 350
     };
 
 
     useEffect(() => {
         getComplaintType();
-        getRateType();
+        // getRateType();
     }, [])
 
     const getComplaintType = async () => {
-        const res = await requestGetRoomType({});
-        if (res.length > 0) {
-            const dataMaskForDropdown = res?.map((item: any) => {
-                return { value: item.roomTypeID, label: item.roomTypeName }
+        const staticParams = {
+            "complaintTypeID": "-1",
+            "isActive": "1",
+            "type": "1"
+        }
+        const res = await requestGetComplaintType(staticParams);
+        // console.log(res.result);
+        if (res.result.length > 0) {
+            const dataMaskForDropdown = res?.result?.map((item: any) => {
+                return { value: item.complaintTypeID, label: item.complaintTypeName }
             })
             setComplaintType(dataMaskForDropdown)
+            // console.log(dataMaskForDropdown)
         }
     }
 
@@ -73,6 +84,9 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
         form.setFieldsValue({
             roomCapacity: roomCapacity1
         })
+    }
+    const goBack = () => {
+        history.push("/")
     }
 
 
@@ -123,46 +137,56 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
             >
                 {/* Basic Information */}
                 <>
-                    <Col span={100}>
-                        <Row gutter={1}>
-                            <Form.Item
-                                name="complaintTypeName"
-                                label="Complaint name"
-                                rules={[{ required: true, message: 'Please enter complaint name' }]}
-                            // initialValue={institute}
-                            >
-                                <Input placeholder="Please enter complaint name" />
-                            </Form.Item>
-                        </Row>
-                        <Row gutter={1}>
-                            <Form.Item
+                    <div className="gutter-example">
+                        <Row gutter={16}>
+                            <Col className="gutter-row" span={8}  >
+                                <Form.Item
+                                    // required={true}
+                                    name="complaintTypeName"
+                                    label="Complaint name *"
+                                    rules={[{ required: true, message: 'Please enter complaint name' }]}
                                 // initialValue={institute}
-                                name="complaintTypeID"
-                                label="Complaint Type"
-                                rules={[{ required: true, message: 'Please select complaint Type' }]}
-                            >
-                                <Select
-                                    placeholder="Complaint Type"
-                                    optionFilterProp="children"
-                                    options={complaintType}
-                                />
-                            </Form.Item>
+                                >
+                                    <Input style={{height: 40,fontSize:16}} placeholder="Please enter complaint name" />
+                                </Form.Item>
+                            </Col>
+                            <Col className="gutter-row" span={8}>
+                                <Form.Item
+                                    // initialValue={institute}
+                                    name="complaintTypeID"
+                                    label="Complaint Type *"
+                                    rules={[{ required: true, message: 'Please select complaint Type' }]}
+                                >
+                                    <Select
+                                    className='.ant-select-selection'
+                                    dropdownStyle={{height: 40}}
+                                    style={{height: 40}}
+                                        placeholder="Complaint Type"
+                                        optionFilterProp="children"
+                                        options={complaintType}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col className="gutter-row" span={8}>
+                                <Form.Item
+                                    name="complaintTypeCode"
+                                    label="Complaint code *"
+                                    rules={[{ required: true, message: 'Please enter complaint code' }]}
+                                >
+                                    <Input style={{height: 40,fontSize:16}} placeholder="Please enter complaint code" />
+                                </Form.Item>
+                            </Col>
+                            
                         </Row>
-                        <Row gutter={1}>
-                            <Form.Item
-                                name="complaintTypeCode"
-                                label="Complaint code"
-                                rules={[{ required: true, message: 'Please enter complaint code' }]}
-                            >
-                                <Input placeholder="Please enter complaint code" />
-                            </Form.Item>
-                        </Row>
-                        <Row>
-                            <Button type="primary" htmlType="submit">
+                        <Col style={{justifyContent:'flex-end'}}>
+                            <Button style={{padding:5,width:100,height:40}}  type="primary" htmlType="submit">
                                 Submit
                             </Button>
-                        </Row>
-                    </Col>
+                            <Button  onClick={goBack} style={{marginLeft:10, padding:5,width:100,height:40}} type="default" >
+                                Cancel
+                            </Button>
+                        </Col>
+                    </div>
 
                 </>
             </Form>
@@ -170,12 +194,10 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
     }
 
     return (
-        <PageContainer>
+        <PageContainer style={{ backgroundColor: '#4874dc', height: 120}}>
             <Card
+                style={{ height: '100%', width: '100%', boxShadow: '2px 2px 2px #4874dc' }}
                 title="Create a new complaint master"
-                width={1000}
-                onClose={onClose}
-                open={true}
                 bodyStyle={{ paddingBottom: 80 }}
             >
                 <Spin tip="Please wait..." spinning={loading}>

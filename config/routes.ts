@@ -84,6 +84,11 @@ export default [
         path: '/complaints/addDisease',
         component: './Complaint/components/AddDisease',
       },
+      {
+        name: 'InvGroup master',
+        path: '/complaints/addInvGroup',
+        component: './Complaint/components/AddInvGroup',
+      },
     ],
   },
   {

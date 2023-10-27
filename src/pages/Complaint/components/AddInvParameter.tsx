@@ -2,16 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
-import { requestAddComplaint, requestAddDisease } from '../services/api';
+import { requestAddComplaint, requestAddDisease, requestAddInvParameter } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
-
 
 const { Option } = Select;
 
 
-const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId }: any) => {
+const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId }: any) => {
     const formRef = useRef<any>();
     const { token } = theme.useToken();
     const [current, setCurrent] = useState(0);
@@ -30,13 +28,14 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
         textAlign: 'center',
         color: token.colorTextTertiary,
         borderRadius: token.borderRadiusLG,
-        // marginTop: 20,
-        // height: 350
+        marginTop: 20,
+        height: 350
     };
 
 
     useEffect(() => {
-        //getComplaintType();
+        getComplaintType();
+        getRateType();
     }, [])
 
     const getComplaintType = async () => {
@@ -48,38 +47,53 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
             setDiseaseType(dataMaskForDropdown)
         }
     }
-    const goBack = () => {
-        history.push("/")
+
+    const getRateType = async () => {
+        const res = await requestGetRateType({});
+        if (res.length > 0) {
+            const dataMaskForDropdown = res?.map((item: any) => {
+                return { label: item.rateTypeName, value: item.rateTypeID }
+            })
+            setRateType(dataMaskForDropdown)
+        }
     }
 
-    const addDisease = async (values: any) => {
+    const addInvParameter = async (values: any) => {
         console.log(values);
         try {
             const staticParams = {
-                // "diseaseTypeID": "string",
-                // "diseaseTypeName": "string",
-                // "diseaseTypeCode": "string",
-                // "specialTypeID": "string",
-                "sortOrder": 1,
-                "diseasesID": "-1",
-                "isActive": "1",
-                "formID": -1,
-                "type": 1
-
+                "invParameterID": "string",
+                "invName": "string",
+                "invCode": "string",
+                "isRangeRequired": "string",
+                "invGroupID": "string",
+                "isEditorReq": "string",
+                "invRange": "string",
+                "unitID": "string",
+                "invNameML": "string",
+                "isVATApplicable": true,
+                "vatPercent": 0,
+                "cgstPercent": 0,
+                "sgstPercent": 0,
+                "invRate": 0,
+                "isActive": true,
+                "formID": 0,
+                "type": 0
             };
 
             setLoading(true)
-            const msg = await requestAddDisease({ ...values, ...staticParams });
+            const msg = await requestAddInvParameter({ ...values, ...staticParams });
             setLoading(false)
-            if (msg.isSuccess === "True") {
-                form.resetFields();
-                onClose();
-                message.success(msg.msg);
-                onSaveSuccess(msg);
-                return;
-            } else {
-                message.error(msg.msg);
-            }
+            console.log(msg);
+            // if (msg.isSuccess === "True") {
+            //     form.resetFields();
+            //     onClose();
+            //     message.success(msg.msg);
+            //     onSaveSuccess(msg);
+            //     return;
+            // } else {
+            //     message.error(msg.msg);
+            // }
 
         } catch (error) {
             setLoading(false)
@@ -95,79 +109,74 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                 layout="vertical"
                 hideRequiredMark
                 form={form}
-                onFinish={addDisease}
+                onFinish={addInvParameter}
                 initialValues={{
                 }}
             >
                 {/* Basic Information */}
                 <>
-                    <div className="gutter-example">
-                        <Row gutter={16}>
-                            <Col className="gutter-row" span={8}>
+                    <Col span={100}>
+                        <Row gutter={1}>
                             <Form.Item
-                                name="diseaseTypeName"
-                                label="Disease name *"
-                                rules={[{ required: true, message: 'Please enter disease name' }]}
+                                name="invName"
+                                label="Investigation name"
+                                rules={[{ required: true, message: 'Please enter investigation name' }]}
                             // initialValue={institute}
                             >
-                                <Input style={{height: 40,fontSize:16}} placeholder="Please enter disease type name" />
+                                <Input placeholder="Please enter investigation name" />
                             </Form.Item>
-                            </Col>
-                            <Col className="gutter-row" span={8}>
+                        </Row>
+                        <Row gutter={1}>
                             <Form.Item
                                 // initialValue={institute}
-                                name="diseaseTypeID"
-                                label="Disease Type *"
+                                name="invCode"
+                                label="investigation code"
                                 rules={[{ required: true, message: 'Please select disease type' }]}
                             >
                                 <Select
-                                    direction="ltr" style={{ height: 40,padding: '5px' }}
                                     placeholder="Complaint Type"
                                     optionFilterProp="children"
                                     options={diseaseType}
                                 />
                             </Form.Item>
-                            </Col>
-                            <Col className="gutter-row" span={8}>
+                        </Row>
+                        <Row gutter={1}>
                             <Form.Item
-                                name="diseaseTypeCode"
-                                label="Disease code *"
-                                rules={[{ required: true, message: 'Please enter disease code' }]}
+                                name="invCode"
+                                label="investigation code"
+                                rules={[{ required: true, message: 'Please enter investigation code' }]}
                             >
-                                <Input style={{height: 40,fontSize:16}} placeholder="Please enter disease code" />
+                                <Input placeholder="Please enter investigation code" />
                             </Form.Item>
-                            </Col>
-                            <Col className="gutter-row" span={8}>
+                        </Row>
+                        <Row gutter={1}>
                             <Form.Item
                                 name="specialTypeID"
-                                label="Special type *"
+                                label="special type"
                                 rules={[{ required: true, message: 'Please enter special type' }]}
                             >
-                                <Input style={{height: 40,fontSize:16}} placeholder="Please enter special type" />
+                                <Input placeholder="Please enter special type" />
                             </Form.Item>
-                        </Col>
-                            
                         </Row>
-                        <Col style={{justifyContent:'flex-end'}}>
-                            <Button style={{padding:5,width:100,height:40}}  type="primary" htmlType="submit">
+                        <Row>
+                            <Button type="primary" htmlType="submit">
                                 Submit
                             </Button>
-                            <Button  onClick={goBack}
-                                style={{marginLeft:10, padding:5,width:100,height:40}} type="default" >
-                                Cancel
-                            </Button>
-                        </Col>
-                    </div>
+                        </Row>
+                    </Col>
+
                 </>
             </Form>
         )
     }
 
     return (
-        <PageContainer style={{backgroundColor:'#4874dc',height: 120, }}>
+        <PageContainer>
             <Card
-                style={{ height: '100%', width: '100%', boxShadow: '2px 2px 2px #4874dc' }}
-                title="Create a new disease master"
+                title="Create a new Investigation"
+                width={1000}
+                onClose={onClose}
+                open={true}
                 bodyStyle={{ paddingBottom: 80 }}
             >
                 <Spin tip="Please wait..." spinning={loading}>
@@ -180,4 +189,4 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
     );
 };
 
-export default AddDisease;
+export default AddInvParameter;

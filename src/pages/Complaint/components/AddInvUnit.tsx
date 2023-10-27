@@ -11,7 +11,7 @@ import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
 const { Option } = Select;
 
 
-const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId }: any) => {
+const AddInvUnit = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId }: any) => {
     const formRef = useRef<any>();
     const { token } = theme.useToken();
     const [current, setCurrent] = useState(0);
@@ -56,13 +56,11 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
         console.log(values);
         try {
             const staticParams = {
-                // "diseaseTypeID": "string",
-                // "diseaseTypeName": "string",
-                // "diseaseTypeCode": "string",
-                // "specialTypeID": "string",
-                "sortOrder": 1,
-                "diseasesID": "-1",
-                "isActive": "1",
+                // "invUnitID": "string",
+                // "invUnitName": "string",
+                // "invUnitCode": "string",
+                // "invUnitType": "string",
+                "isActive": true,
                 "formID": -1,
                 "type": 1
 
@@ -105,20 +103,20 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                         <Row gutter={16}>
                             <Col className="gutter-row" span={8}>
                             <Form.Item
-                                name="diseaseTypeName"
-                                label="Disease name *"
-                                rules={[{ required: true, message: 'Please enter disease name' }]}
+                                name="invUnitID"
+                                label="Investigation unit id *"
+                                rules={[{ required: true, message: 'Please enter investigation unit id' }]}
                             // initialValue={institute}
                             >
-                                <Input style={{height: 40,fontSize:16}} placeholder="Please enter disease type name" />
+                                <Input style={{height: 40,fontSize:16}} placeholder="Please enter investigation unit id" />
                             </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={8}>
                             <Form.Item
                                 // initialValue={institute}
-                                name="diseaseTypeID"
-                                label="Disease Type *"
-                                rules={[{ required: true, message: 'Please select disease type' }]}
+                                name="invUnitType"
+                                label="Investigation unit Type *"
+                                rules={[{ required: true, message: 'Please select investigation type' }]}
                             >
                                 <Select
                                     direction="ltr" style={{ height: 40,padding: '5px' }}
@@ -130,20 +128,20 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                             </Col>
                             <Col className="gutter-row" span={8}>
                             <Form.Item
-                                name="diseaseTypeCode"
-                                label="Disease code *"
-                                rules={[{ required: true, message: 'Please enter disease code' }]}
+                                name="invUnitCode"
+                                label="investigation unit code *"
+                                rules={[{ required: true, message: 'Please enter investigation code' }]}
                             >
-                                <Input style={{height: 40,fontSize:16}} placeholder="Please enter disease code" />
+                                <Input style={{height: 40,fontSize:16}} placeholder="Please enter investigation code" />
                             </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={8}>
                             <Form.Item
-                                name="specialTypeID"
-                                label="Special type *"
-                                rules={[{ required: true, message: 'Please enter special type' }]}
+                                name="invUnitName"
+                                label="investigation unit name *"
+                                rules={[{ required: true, message: 'Please enter investigation unit name' }]}
                             >
-                                <Input style={{height: 40,fontSize:16}} placeholder="Please enter special type" />
+                                <Input style={{height: 40,fontSize:16}} placeholder="Please enter investigation unit name" />
                             </Form.Item>
                         </Col>
                             
@@ -180,4 +178,4 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
     );
 };
 
-export default AddDisease;
+export default AddInvUnit;
