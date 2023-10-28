@@ -71,13 +71,23 @@ export default [
     ],
   },
   {
-    name: 'room',
-    path: '/room',
+    name: 'complaints',
+    path: '/complaints',
     routes: [
       {
-        name: 'room',
-        path: '/room/list',
-        component: './Room',
+        name: 'complaint master',
+        path: '/complaints/addComplaint',
+        component: './Complaint/components/AddComplaint',
+      },
+      {
+        name: 'disease master',
+        path: '/complaints/addDisease',
+        component: './Complaint/components/AddDisease',
+      },
+      {
+        name: 'InvGroup master',
+        path: '/complaints/addInvGroup',
+        component: './Complaint/components/AddInvGroup',
       },
     ],
   },

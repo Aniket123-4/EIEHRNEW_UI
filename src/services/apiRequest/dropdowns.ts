@@ -219,6 +219,16 @@ export async function requestGetRoomType(body: any, options?: { [key: string]: a
     ...(options || {}),
   });
 }
+export async function requestGetComplaintType(body: any, options?: { [key: string]: any }) {
+  return request<any>('/MasterForm/api/GetComplaintType', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
 
 export async function requestGetRateType(body: any, options?: { [key: string]: any }) {
   return request<any>('Common/GetrateType?RateTypeID=-1&IsActive=-1&UserID=-1&FormID=-1&Type=1', {
