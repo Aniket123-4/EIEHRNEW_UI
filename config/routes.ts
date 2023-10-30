@@ -92,105 +92,29 @@ export default [
     ],
   },
   {
-    name: 'Institute',
-    path: '/institute',
+    name: 'investigation',
+    path: '/investigation',
     routes: [
       {
-        name: 'Institute',
-        path: '/institute/list',
-        component: './Institute',
+        name: 'Investigation',
+        path: '/investigation/AddInvParameter',
+        component: './Investigation/components/AddInvParameter',
       },
       {
-        name: 'edit-institute',
-        path: '/institute/edit',
-        component: './Candidate/components/EditCandidate',
+        name: 'InvGroup master',
+        path: '/investigation/addInvGroup',
+        component: './Investigation/components/AddInvGroup',
       },
       {
-        name: 'Institute Search',
-        path: '/institute/list',
-        component: './Institute/components/applications/index',
+        name: 'InvGroup master',
+        path: '/investigation/list',
+        component: './Investigation/components/InvestigationList',
       },
       {
-        name: 'institute-details',
-        path: '/institute/institute-details/:id',
-        component: './Booking/components/InstituteDetails',
+        name: 'InvGroup master',
+        path: '/investigation/group-list',
+        component: './Investigation/components/InvestigationGroupList',
       },
-    ],
-  },
-  {
-    path: '/instituteUser',
-    layout: false,
-    routes: [
-      {
-        name: 'add-instituteuser',
-        path: '/instituteUser/candidate/add',
-        component: './InstituteUser/components/Registration',
-      },
-
-    ],
-  },
-  {
-    name: 'Institute Candidate',
-    path:"/instituteCandidate",
-    routes: [
-      {
-        name: 'Institute Candidate',
-        path: '/instituteCandidate/list',
-        component: './InstituteUser',
-      },
-      {
-        name: 'Report',
-        path: '/instituteCandidate/report',
-        component: './Report/Report'
-      },
-      {
-        name: 'add-instituteCandidate',
-        path: '/instituteCandidate/candidate/add',
-        component: './InstituteUser/components/Registration',
-      },
-
-    ],
-  },
-  {
-    name: 'booking',
-    path: '/booking',
-    routes: [
-      {
-        name: 'booking',
-        path: '/booking/list',
-        component: './Booking',
-      },
-      {
-        name: 'Institute Search',
-        path: '/booking/institute-list',
-        component: './Institute/components/applications/index',
-      },
-      {
-        name: 'institute-details',
-        path: '/booking/institute-details/:id',
-        component: './Booking/components/InstituteDetails',
-      },
-      {
-        name: 'room-booking',
-        path: '/booking/room-booking',
-        component: './Booking/components/RoomBooking',
-      },
-      {
-        name: 'booking-orders',
-        path: '/booking/booking-order',
-        component: './Booking/components/BookingOrder',
-      },
-      {
-        name: 'booking-orders-details',
-        path: '/booking/booking-order-details/:id',
-        component: './Booking/components/BookingOrderDetails',
-      },
-      {
-        name: 'Booking Report',
-        path: '/booking/BookingReport',
-        component: './Booking/components/BookingReport',
-      }
-
     ],
   },
   {
@@ -224,7 +148,6 @@ export default [
       }
     ],
   },
- 
   {
     name: 'Change Password',
     routes: [

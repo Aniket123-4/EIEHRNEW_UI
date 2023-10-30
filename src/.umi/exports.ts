@@ -4,21 +4,21 @@
 export { defineApp } from './core/defineApp'
 export type { RuntimeConfig } from './core/defineApp'
 // @umijs/renderer-*
-export { createBrowserHistory, createHashHistory, createMemoryHistory, Helmet, HelmetProvider, createSearchParams, generatePath, matchPath, matchRoutes, Navigate, NavLink, Outlet, resolvePath, useLocation, useMatch, useNavigate, useOutlet, useOutletContext, useParams, useResolvedPath, useRoutes, useSearchParams, useAppData, useClientLoaderData, useRouteProps, useSelectedRoutes, useServerLoaderData, renderClient, __getRoot, Link, useRouteData, __useFetcher, withRouter } from 'D:/Rohit ssd/Msspl/NodejsProject/eiehrapp/node_modules/@umijs/renderer-react';
-export type {  History } from 'D:/Rohit ssd/Msspl/NodejsProject/eiehrapp/node_modules/@umijs/renderer-react'
+export { createBrowserHistory, createHashHistory, createMemoryHistory, Helmet, HelmetProvider, createSearchParams, generatePath, matchPath, matchRoutes, Navigate, NavLink, Outlet, resolvePath, useLocation, useMatch, useNavigate, useOutlet, useOutletContext, useParams, useResolvedPath, useRoutes, useSearchParams, useAppData, useClientLoaderData, useRouteProps, useSelectedRoutes, useServerLoaderData, renderClient, __getRoot, Link, useRouteData, __useFetcher, withRouter } from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/@umijs/renderer-react';
+export type {  History } from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/@umijs/renderer-react'
 // umi/client/client/plugin
-export { ApplyPluginsType, PluginManager } from 'D:/Rohit ssd/Msspl/NodejsProject/eiehrapp/node_modules/umi/client/client/plugin.js';
+export { ApplyPluginsType, PluginManager } from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/umi/client/client/plugin.js';
 export { history, createHistory } from './core/history';
 export { terminal } from './core/terminal';
 export { TestBrowser } from './testBrowser';
 export const useServerInsertedHTML: Function = () => {};
 // plugins
-export { Access, useAccess, useAccessMarkedRoutes } from 'D:/Rohit ssd/Msspl/NodejsProject/eiehrapp/src/.umi/plugin-access';
-export { addLocale, setLocale, getLocale, getIntl, useIntl, injectIntl, formatMessage, FormattedMessage, getAllLocales, FormattedDate, FormattedDateParts, FormattedDisplayName, FormattedHTMLMessage, FormattedList, FormattedNumber, FormattedNumberParts, FormattedPlural, FormattedRelativeTime, FormattedTime, FormattedTimeParts, IntlProvider, RawIntlProvider, SelectLang } from 'D:/Rohit ssd/Msspl/NodejsProject/eiehrapp/src/.umi/plugin-locale';
-export { Provider, useModel } from 'D:/Rohit ssd/Msspl/NodejsProject/eiehrapp/src/.umi/plugin-model';
-export { useRequest, UseRequestProvider, request, getRequestInstance } from 'D:/Rohit ssd/Msspl/NodejsProject/eiehrapp/src/.umi/plugin-request';
+export { Access, useAccess, useAccessMarkedRoutes } from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/src/.umi/plugin-access';
+export { addLocale, setLocale, getLocale, getIntl, useIntl, injectIntl, formatMessage, FormattedMessage, getAllLocales, FormattedDate, FormattedDateParts, FormattedDisplayName, FormattedHTMLMessage, FormattedList, FormattedNumber, FormattedNumberParts, FormattedPlural, FormattedRelativeTime, FormattedTime, FormattedTimeParts, IntlProvider, RawIntlProvider, SelectLang } from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/src/.umi/plugin-locale';
+export { Provider, useModel } from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/src/.umi/plugin-model';
+export { useRequest, UseRequestProvider, request, getRequestInstance } from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/src/.umi/plugin-request';
 // plugins types.d.ts
-export * from 'D:/Rohit ssd/Msspl/NodejsProject/eiehrapp/src/.umi/plugin-access/types.d';
-export * from 'D:/Rohit ssd/Msspl/NodejsProject/eiehrapp/src/.umi/plugin-antd/types.d';
-export * from 'D:/Rohit ssd/Msspl/NodejsProject/eiehrapp/src/.umi/plugin-layout/types.d';
-export * from 'D:/Rohit ssd/Msspl/NodejsProject/eiehrapp/src/.umi/plugin-request/types.d';
+export * from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/src/.umi/plugin-access/types.d';
+export * from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/src/.umi/plugin-antd/types.d';
+export * from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/src/.umi/plugin-layout/types.d';
+export * from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/src/.umi/plugin-request/types.d';
