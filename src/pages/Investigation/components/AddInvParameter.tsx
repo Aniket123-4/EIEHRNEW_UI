@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card } from 'antd';
+import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space } from 'antd';
 import { PageContainer } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
+import InvestigationGroupList from './InvestigationGroupList';
+import InvestigationList from './InvestigationList';
 
 const { Option } = Select;
 
@@ -188,24 +190,20 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
     return (
         <PageContainer
             style={{ backgroundColor: '#4874dc', height: 120 }}
-
         >
-            <Card
-                title="Create investigation"
-                style={{ boxShadow: '2px 2px 2px #4874dc' }}
-                extra={[
-                    <Button key="rest" onClick={() => {
-                        history.push("/investigation/list")
-                    }}
-                    >List</Button>,
-                ]}
-            >
-                <Spin tip="Please wait..." spinning={loading}>
-                    <div style={contentStyle}>
-                        {addForm()}
-                    </div>
-                </Spin>
-            </Card>
+            <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                <Card
+                    title="Create investigation"
+                    style={{ boxShadow: '2px 2px 2px #4874dc' }}
+                >
+                    <Spin tip="Please wait..." spinning={loading}>
+                        <div style={contentStyle}>
+                            {addForm()}
+                        </div>
+                    </Spin>
+                </Card>
+                <InvestigationList />
+            </Space>
         </PageContainer>
     );
 };

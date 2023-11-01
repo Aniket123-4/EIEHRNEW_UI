@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card, InputNumber } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
 import { requestAddComplaint, requestAddDisease, requestAddInvGroup, requestAddInvParameter } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
+import { constant } from 'lodash';
+import { BOOLEAN_CHOICES } from '@/utils/constant';
+import InvestigationGroupList from './InvestigationGroupList';
 
 const { Option } = Select;
 
@@ -61,31 +64,15 @@ const AddInvGroup = ({ visible, onClose, onSaveSuccess, selectedRows, instituteI
         console.log(values);
         try {
             const staticParams = {
-                // "invGroupID": "string",
-                // "invGroupName": "string",
-                // "invGroupCode": "string",
-                // "invGroupDesc": "string",
-                // "discountParameterID": 0,
-                "isActive": true,
-                "formID": -1,
-                "type": 1,
-                //"isService": 1
+                isService: true,
+                formID: -1,
+                type: 1,
             };
 
             setLoading(true)
             const msg = await requestAddInvGroup({ ...values, ...staticParams });
             setLoading(false)
             console.log(msg);
-            // if (msg.isSuccess === "True") {
-            //     form.resetFields();
-            //     onClose();
-            //     message.success(msg.msg);
-            //     onSaveSuccess(msg);
-            //     return;
-            // } else {
-            //     message.error(msg.msg);
-            // }
-
         } catch (error) {
             setLoading(false)
             console.log({ error });
@@ -109,70 +96,63 @@ const AddInvGroup = ({ visible, onClose, onSaveSuccess, selectedRows, instituteI
                             <Col className="gutter-row" span={8}  >
                                 <Form.Item
                                     name="invGroupName"
-                                    label="Investigation group name"
+                                    label="Group name"
                                     rules={[{ required: true, message: 'Please enter group name' }]}
                                 >
-                                    <Input size={'large'} placeholder="Please enter investigation group name" />
+                                    <Input size={'large'} placeholder="Please enter" />
                                 </Form.Item>
                             </Col>
+
                             <Col className="gutter-row" span={8}>
                                 <Form.Item
-                                    name="invGroupID"
-                                    label="investigation group"
-                                    rules={[{ required: true, message: 'Please select investigation group' }]}
+                                    name="invGroupCode"
+                                    label="Code"
+                                    rules={[{ required: true, message: 'Please enter' }]}
                                 >
-                                    <Select
-                                        placeholder="Investigation group"
-                                        optionFilterProp="children"
-                                        options={diseaseType}
-                                        size={'large'}
-                                    />
+                                    <Input size={'large'} placeholder="Please enter" />
                                 </Form.Item>
                             </Col>
+
+
                             <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     name="discountParameterID"
                                     label="Discount"
-                                    rules={[{ required: true, message: 'Please select discount' }]}
+                                    rules={[{ required: true, message: 'Please enter' }]}
                                 >
-                                    <Select
-                                        placeholder="Discount"
-                                        optionFilterProp="children"
-                                        options={diseaseType}
-                                        size={'large'}
-                                    />
+                                    <InputNumber style={{ width: "100%" }} size={'large'} placeholder="Please enter" />
                                 </Form.Item>
                             </Col>
 
                         </Row>
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={8}>
-                                <Form.Item
-                                    name="invGroupCode"
-                                    label="investigation group code"
-                                    rules={[{ required: true, message: 'Please enter investigation group code' }]}
-                                >
-                                    <Input size={'large'} placeholder="Please enter investigation group code" />
-                                </Form.Item>
-                            </Col>
-                            <Col className="gutter-row" span={8}>
-                                <Form.Item
-                                    name="invGroupDesc"
-                                    label="Investigation group description"
-                                    rules={[{ required: true, message: 'Please enter investigation group description' }]}
-                                >
-                                    <Input size={'large'} placeholder="Please enter investigation group description" />
-                                </Form.Item>
-                            </Col>
+
                             <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     name="isService"
-                                    label="Is this a service"
-                                    rules={[{ required: true, message: 'Please enter 0/1' }]}
+                                    label="Is Service"
+                                    rules={[{ required: true, message: 'Please select' }]}
                                 >
-                                    <Input size={'large'} placeholder="Please enter isService" />
+                                    <Select
+                                        placeholder="Please select"
+                                        optionFilterProp="children"
+                                        options={BOOLEAN_CHOICES}
+                                        size={'large'}
+                                    />
                                 </Form.Item>
                             </Col>
+
+                            <Col className="gutter-row" span={8}>
+                                <Form.Item
+                                    name="invGroupDesc"
+                                    label="Description"
+                                    rules={[{ required: true, message: 'Please enter' }]}
+                                >
+                                    <Input.TextArea size={'large'} placeholder="Please enter" />
+                                </Form.Item>
+                            </Col>
+
+
                         </Row>
                         <Col style={{ justifyContent: 'flex-end' }}>
                             <Button style={{ padding: 5, width: 100, height: 40 }} type="primary" htmlType="submit">
@@ -190,23 +170,23 @@ const AddInvGroup = ({ visible, onClose, onSaveSuccess, selectedRows, instituteI
 
     return (
         <PageContainer style={{ backgroundColor: '#4874dc', height: 120 }}>
-            <Card
-                title="Investigation Groups"
-                style={{ boxShadow: '2px 2px 2px #4874dc' }}
-                bodyStyle={{ paddingBottom: 80 }}
-                extra={[
-                    <Button key="rest" onClick={() => {
-                        history.push("/investigation/group-list")
-                    }}
-                    >List</Button>,
-                ]}
-            >
-                <Spin tip="Please wait..." spinning={loading}>
-                    <div style={contentStyle}>
-                        {addForm()}
-                    </div>
-                </Spin>
-            </Card>
+
+            <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                <Card
+                    title="Investigation Group"
+                    style={{ boxShadow: '2px 2px 2px #4874dc' }}
+                    bodyStyle={{ paddingBottom: 80 }}
+                >
+                    <Spin tip="Please wait..." spinning={loading}>
+                        <div style={contentStyle}>
+                            {addForm()}
+                        </div>
+                    </Spin>
+                </Card>
+
+                <InvestigationGroupList />
+            </Space>
+
         </PageContainer>
     );
 };

@@ -163,9 +163,9 @@ const Login: React.FC = () => {
     <div
     >
       <LoginFormPage
-        backgroundImageUrl="http://blogs.bodleian.ox.ac.uk/ssl/wp-content/uploads/sites/136/2021/04/Bodleian_Libraries_by_John_Cairns_28.6.19-227.jpg"
-        title="ECSC Portal"
-        subTitle="Book a seat online"
+        backgroundImageUrl="https://www.shutterstock.com/shutterstock/photos/1401561251/display_1500/stock-photo-modern-microscope-for-operations-in-surgery-room-at-the-hospital-background-1401561251.jpg"
+        title="EIEHR Portal"
+        subTitle="Medical portal"
         actions={
           <div
             style={{

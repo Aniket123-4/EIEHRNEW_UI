@@ -286,18 +286,14 @@ const InvestigationList = ({ visible, onClose, onSaveSuccess, selectedRows, inst
     }
 
     return (
-        <PageContainer
-            style={{ backgroundColor: '#4874dc', height: 120 }}
+        <Card
+            title="Investigation List"
+            style={{ boxShadow: '2px 2px 2px #4874dc' }}
         >
-            <Card
-                title="Investigation List"
-                style={{ boxShadow: '2px 2px 2px #4874dc' }}
-            >
-                <div style={contentStyle}>
-                    <Table columns={columns} dataSource={data} />
-                </div>
-            </Card>
-        </PageContainer>
+            <div style={contentStyle}>
+                <Table columns={columns} dataSource={data} />
+            </div>
+        </Card>
     );
 };
 
