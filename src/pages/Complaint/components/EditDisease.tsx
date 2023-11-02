@@ -11,7 +11,7 @@ import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
 const { Option } = Select;
 
 
-const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId }: any) => {
+const EditDisease = ({ visible,  selectedRows}: any) => {
     const formRef = useRef<any>();
     const { token } = theme.useToken();
     const [current, setCurrent] = useState(0);
@@ -73,9 +73,8 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
             setLoading(false)
             if (msg.isSuccess === "True") {
                 form.resetFields();
-                onClose();
                 message.success(msg.msg);
-                onSaveSuccess(msg);
+                // onSaveSuccess(msg);
                 return;
             } else {
                 message.error(msg.msg);
@@ -105,10 +104,10 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                         <Row gutter={16}>
                             <Col className="gutter-row" span={6}>
                             <Form.Item
+                                initialValue={selectedRows?.diseaseTypeName}
                                 name="diseaseTypeName"
                                 label="Disease name"
                                 rules={[{ required: true, message: 'Please enter disease name' }]}
-                            // initialValue={institute}
                             >
                                 <Input size={'large'} placeholder="Please enter disease type name" />
                             </Form.Item>
@@ -186,4 +185,4 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
     );
 };
 
-export default AddDisease;
+export default EditDisease;

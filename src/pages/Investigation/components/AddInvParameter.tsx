@@ -125,7 +125,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                     <Select
                                         placeholder="VAT Applicable"
                                         optionFilterProp="children"
-                                        options={[{ name: 'True', id: '1' }]}
+                                        options={[{ label: 'True', value: '1' }]}
                                         size={'large'}
                                     />
                                 </Form.Item>

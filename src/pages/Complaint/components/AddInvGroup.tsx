@@ -20,7 +20,7 @@ const AddInvGroup = ({ visible, onClose, onSaveSuccess, selectedRows, instituteI
     const [capacity, setCapacity] = useState(1);
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false)
-    const [diseaseType, setDiseaseType] = useState<any>([{ value: "1", label: "Type 1" }])
+    const [isService, setIsService] = useState<any>([{ value: "1", label: "Yes" },{ value: "0", label: "Yes" }])
     const [rateType, setRateType] = useState<any>([])
     const [institute, setInstitute] = useState<any>([])
 
@@ -135,21 +135,21 @@ const AddInvGroup = ({ visible, onClose, onSaveSuccess, selectedRows, instituteI
                                     <Select
                                         placeholder="Investigation group"
                                         optionFilterProp="children"
-                                        options={diseaseType}
+                                        options={isService}
                                     />
                                 </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     // initialValue={institute}
-                                    name="discountParameterID"
-                                    label="Discount"
-                                    rules={[{ required: true, message: 'Please select discount' }]}
+                                    name="isService"
+                                    label="Is this a service"
+                                    rules={[{ required: true, message: 'Please select' }]}
                                 >
                                     <Select
-                                        placeholder="Discount"
+                                        placeholder="Yes"
                                         optionFilterProp="children"
-                                        options={diseaseType}
+                                        options={isService}
                                     />
                                 </Form.Item>
                             </Col>
@@ -176,11 +176,11 @@ const AddInvGroup = ({ visible, onClose, onSaveSuccess, selectedRows, instituteI
                             </Col>
                             <Col className="gutter-row" span={8}>
                                 <Form.Item
-                                    name="isService"
-                                    label="Is this a service"
-                                    rules={[{ required: true, message: 'Please enter 0/1' }]}
+                                    name="discountParameterID"
+                                    label="Discount"
+                                    rules={[{ required: true, message: 'Please enter discount' }]}
                                 >
-                                    <Input style={{height: 40,fontSize:16}} placeholder="Please enter isService" />
+                                    <Input style={{height: 40,fontSize:16}} placeholder="Please enter discount" />
                                 </Form.Item>
                             </Col>
                         </Row>

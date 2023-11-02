@@ -11,8 +11,9 @@ export default defineConfig({
 
   define: {
     API_KEY: 'js3jhkj4n2kjnd',
-    //BASE_URL: 'http://103.20.213.26:8078/api/', 
-    BASE_URL: 'https://ecscapi.mssplonline.in/api/',                      
+    //BASE_URL: 'http://103.20.213.26:8078/api/',        
+    BASE_URL: 'http://103.12.1.132:8056/api/', 
+
   },
   /**
    * @name 开启 hash 模式

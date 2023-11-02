@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
-import { requestAddComplaint, requestAddDisease } from '../services/api';
+import { requestAddComplaint, requestAddDisease, requestAddInvUnit } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
@@ -52,7 +52,7 @@ const AddInvUnit = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
         history.push("/")
     }
 
-    const addDisease = async (values: any) => {
+    const addInvUnit = async (values: any) => {
         console.log(values);
         try {
             const staticParams = {
@@ -67,7 +67,7 @@ const AddInvUnit = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
             };
 
             setLoading(true)
-            const msg = await requestAddDisease({ ...values, ...staticParams });
+            const msg = await requestAddInvUnit({ ...values, ...staticParams });
             setLoading(false)
             if (msg.isSuccess === "True") {
                 form.resetFields();
@@ -91,9 +91,9 @@ const AddInvUnit = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
         return (
             <Form
                 layout="vertical"
-                hideRequiredMark
+                // hideRequiredMark
                 form={form}
-                onFinish={addDisease}
+                onFinish={addInvUnit}
                 initialValues={{
                 }}
             >
@@ -104,7 +104,7 @@ const AddInvUnit = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                             <Col className="gutter-row" span={8}>
                             <Form.Item
                                 name="invUnitID"
-                                label="Investigation unit id *"
+                                label="Investigation unit id"
                                 rules={[{ required: true, message: 'Please enter investigation unit id' }]}
                             // initialValue={institute}
                             >
@@ -113,13 +113,12 @@ const AddInvUnit = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                             </Col>
                             <Col className="gutter-row" span={8}>
                             <Form.Item
-                                // initialValue={institute}
                                 name="invUnitType"
-                                label="Investigation unit Type *"
+                                label="Investigation unit Type"
                                 rules={[{ required: true, message: 'Please select investigation type' }]}
                             >
                                 <Select
-                                    direction="ltr" style={{ height: 40,padding: '5px' }}
+                                    size={'large'}
                                     placeholder="Complaint Type"
                                     optionFilterProp="children"
                                     options={diseaseType}
@@ -132,7 +131,7 @@ const AddInvUnit = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                                 label="investigation unit code *"
                                 rules={[{ required: true, message: 'Please enter investigation code' }]}
                             >
-                                <Input style={{height: 40,fontSize:16}} placeholder="Please enter investigation code" />
+                                <Input size={'large'} placeholder="Please enter investigation code" />
                             </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={8}>
@@ -141,17 +140,18 @@ const AddInvUnit = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                                 label="investigation unit name *"
                                 rules={[{ required: true, message: 'Please enter investigation unit name' }]}
                             >
-                                <Input style={{height: 40,fontSize:16}} placeholder="Please enter investigation unit name" />
+                                <Input size={'large'} placeholder="Please enter investigation unit name" />
                             </Form.Item>
                         </Col>
                             
                         </Row>
                         <Col style={{justifyContent:'flex-end'}}>
-                            <Button style={{padding:5,width:100,height:40}}  type="primary" htmlType="submit">
+                            <Button size={'large'}  type="primary" htmlType="submit">
                                 Submit
                             </Button>
                             <Button  onClick={goBack}
-                                style={{marginLeft:10, padding:5,width:100,height:40}} type="default" >
+                                size={'large'}
+                                style={{marginLeft:10}} type="default" >
                                 Cancel
                             </Button>
                         </Col>
