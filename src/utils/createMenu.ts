@@ -7,17 +7,26 @@ const getModulePath = (name: string) => {
     const { verifiedUser, selectedPackageId }: any = getUserInLocalStorage();
 
     switch (name) {
+        case "Disease Master":
+            return "/complaints/addDisease";
+
         case "Complaint Master":
             return "/complaints/addComplaint";
 
-        case "Disease Master":
-            return "/complaints/addDisease";
+        case "Investigation Parameter":
+            return "/investigation/AddInvParameter";
 
         case "InfraStructure":
             return "/investigation/addInvGroup";
 
-        case "Investigation Parameter":
-            return "/investigation/AddInvParameter";
+        case "Item Master":
+            return "/complaints/AddOnlineLogin";
+
+        case "Direct Item Receipt":
+            return "/complaints/AddInvUnit";
+
+        case "Item Status":
+            return "/complaints/AddPatRequest";
 
         case "User Management":
             return "/user-management/list";

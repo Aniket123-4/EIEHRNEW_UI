@@ -96,12 +96,11 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
             const staticParams = {
                 // "complaintTypeID": "1",
                 // "complaintTypeName": "",
-                // "complaintTypeCode": "1",
+                // "complaintTypeCode": "1", 
                 "sortOrder": "",
                 "isActive": "1",
                 "formID": -1,
                 "type": 1,
-
             };
 
             setLoading(true)
@@ -129,7 +128,6 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
         return (
             <Form
                 layout="vertical"
-                hideRequiredMark
                 form={form}
                 onFinish={addComplaint}
                 initialValues={{
@@ -143,37 +141,36 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
                                 <Form.Item
                                     // required={true}
                                     name="complaintTypeName"
-                                    label="Complaint name *"
+                                    label="Complaint Name"
                                     rules={[{ required: true, message: 'Please enter complaint name' }]}
                                 // initialValue={institute}
                                 >
-                                    <Input style={{height: 40,fontSize:16}} placeholder="Please enter complaint name" />
+                                    <Input size={'large'}  placeholder="Please enter complaint name" />
                                 </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     // initialValue={institute}
                                     name="complaintTypeID"
-                                    label="Complaint Type *"
-                                    rules={[{ required: true, message: 'Please select complaint Type' }]}
+                                    label="Complaint Type"
+                                    rules={[{ required: true, message: 'Please select complaint type' }]}
                                 >
                                     <Select
-                                    className='.ant-select-selection'
-                                    dropdownStyle={{height: 40}}
-                                    style={{height: 40}}
-                                        placeholder="Complaint Type"
+                                        size={'large'}
+                                        placeholder="Complaint type"
                                         optionFilterProp="children"
                                         options={complaintType}
+                                        
                                     />
                                 </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     name="complaintTypeCode"
-                                    label="Complaint code *"
+                                    label="Complaint Code"
                                     rules={[{ required: true, message: 'Please enter complaint code' }]}
                                 >
-                                    <Input style={{height: 40,fontSize:16}} placeholder="Please enter complaint code" />
+                                    <Input size={'large'} placeholder="Please enter complaint code" />
                                 </Form.Item>
                             </Col>
                             
@@ -194,11 +191,16 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
     }
 
     return (
-        <PageContainer style={{ backgroundColor: '#4874dc', height: 120}}>
+        <PageContainer style={{}}>
             <Card
                 style={{ height: '100%', width: '100%', boxShadow: '2px 2px 2px #4874dc' }}
                 title="Create a new complaint master"
-                bodyStyle={{ paddingBottom: 80 }}
+                extra={[
+                    <Button key="rest" onClick={() => {
+                        history.push("/complaints/list")
+                    }}
+                    >List</Button>,
+                ]}
             >
                 <Spin tip="Please wait..." spinning={loading}>
                     <div style={contentStyle}>

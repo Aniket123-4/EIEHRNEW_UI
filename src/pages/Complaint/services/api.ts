@@ -35,6 +35,26 @@ export async function requestAddInvParameter(body: any, options?: { [key: string
     ...(options || {}),
   });
 }
+export async function requestAddInvUnit(body: any, options?: { [key: string]: any }) {
+  return request<any>('MasterForm/api/AddUpdateInvUnit', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestDiseaseList(body: any, options?: { [key: string]: any }) {
+  return request<any>('/MasterForm/api/GetDisease', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
 export async function requestAddInvGroup(body: any, options?: { [key: string]: any }) {
   return request<any>('MasterForm/api/AddUpdateInvGroup', {
     method: 'POST',

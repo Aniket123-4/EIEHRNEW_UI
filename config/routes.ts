@@ -80,6 +80,11 @@ export default [
         component: './Complaint/components/AddComplaint',
       },
       {
+        name: 'complaint list',
+        path: '/complaints/list',
+        component: './Complaint/components/ComplaintList',
+      },
+      {
         name: 'disease master',
         path: '/complaints/addDisease',
         component: './Complaint/components/AddDisease',
@@ -88,6 +93,31 @@ export default [
         name: 'InvGroup master',
         path: '/complaints/addInvGroup',
         component: './Complaint/components/AddInvGroup',
+      },
+      {
+        name: 'InvUnit master',
+        path: '/complaints/addInvUnit',
+        component: './Complaint/components/AddInvUnit',
+      },
+      {
+        name: 'AddInvUnit', 
+        path: '/complaints/AddInvUnit',
+        component: './Complaint/components/AddInvUnit',
+      },
+      {
+        name: 'DiseaseList', 
+        path: '/complaints/DiseaseList',
+        component: './Complaint/components/DiseaseList',
+      },
+      {
+        name: 'AddOnlineLogin',
+        path: '/complaints/AddOnlineLogin',
+        component: './Online/components/AddOnlineLogin',
+      },
+      {
+        name: 'AddPatRequest', 
+        path: '/complaints/AddPatRequest',
+        component: './Online/components/AddPatRequest',
       },
     ],
   },
