@@ -118,9 +118,9 @@ const ComplaintList = ({ visible }: any) => {
     }
 
     return (
-        <PageContainer
-            style={{ backgroundColor: '#4874dc', height: 120 }}
-        >
+        // <PageContainer
+        //     style={{ backgroundColor: '#4874dc', height: 120 }}
+        // >
             <Card
                 title="Investigation List"
                 style={{ boxShadow: '2px 2px 2px #4874dc' }}
@@ -129,7 +129,7 @@ const ComplaintList = ({ visible }: any) => {
                     {complaintList&&<Table columns={columns} dataSource={complaintList} />}
                 </div>
             </Card>
-        </PageContainer>
+        // </PageContainer>
     );
 };
 

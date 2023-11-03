@@ -45,6 +45,26 @@ export async function requestAddInvGroup(body: any, options?: { [key: string]: a
     ...(options || {}),
   });
 }
+export async function requestGetInvGroup(body: any, options?: { [key: string]: any }) {
+  return request<any>('MasterForm/api/GetInvGroup', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetInvUnit(body: any, options?: { [key: string]: any }) {
+  return request<any>('MasterForm/api/GetInvestigationUnit', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
 
 
 /**  POST /api/login/account */

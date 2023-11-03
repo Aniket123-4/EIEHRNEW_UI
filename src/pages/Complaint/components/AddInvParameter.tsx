@@ -171,21 +171,21 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
     }
 
     return (
-        <PageContainer>
-            <Card
-                title="Create a new Investigation"
-                width={1000}
-                onClose={onClose}
-                open={true}
-                bodyStyle={{ paddingBottom: 80 }}
-            >
+        // <PageContainer>
+        //     <Card
+        //         title="Create a new Investigation"
+        //         width={1000}
+        //         onClose={onClose}
+        //         open={true}
+        //         bodyStyle={{ paddingBottom: 80 }}
+        //     >
                 <Spin tip="Please wait..." spinning={loading}>
                     <div style={contentStyle}>
                         {addForm()}
                     </div>
                 </Spin>
-            </Card>
-        </PageContainer>
+            //  </Card>
+        // </PageContainer> 
     );
 };
 

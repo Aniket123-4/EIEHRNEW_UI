@@ -1,109 +1,73 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Popconfirm, Typography } from 'antd';
-import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
-import { requestAddComplaint, requestAddDisease, requestAddInvParameter, requestDiseaseList } from '../services/api';
-import { requestGetInstituteList } from '@/pages/Institute/services/api';
-import { PageContainer } from '@ant-design/pro-components';
-import { Table, Tag } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
-
-const { Option } = Select;
-
-
-interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
-    editing: boolean;
-    diseaseID: string;
-    diseaseName: string;
-    isActive: boolean;
-    diseaseTypeName: string;
-    specialTypeName: string;
-    //   "diseaseCodeICD": "",
-    //   "diseaseTypeID": "1",
-    //   "sortOrder": "1",
-    //   "specialTypeID": "2",
-}
-
+import React, { useEffect, useState } from 'react';
+import { Card, Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd';
+import { requestDiseaseList } from '../services/api';
 
 interface Item {
     key: string;
     name: string;
     age: number;
     address: string;
-  }
-const DiseaseList = ({ visible }: any) => {
-    const formRef = useRef<any>();
+}
+
+const originData: Item[] = [];
+for (let i = 0; i < 100; i++) {
+    originData.push({
+        key: i.toString(),
+        name: `Edward ${i}`,
+        age: 32,
+        address: `London Park no. ${i}`,
+    });
+}
+interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
+    editing: boolean;
+    dataIndex: string;
+    title: any;
+    inputType: 'number' | 'text';
+    record: Item;
+    index: number;
+    children: React.ReactNode;
+}
+
+const EditableCell: React.FC<EditableCellProps> = ({
+    editing,
+    dataIndex,
+    title,
+    inputType,
+    record,
+    index,
+    children,
+    ...restProps
+
+}) => {
+    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+
+    return (
+        <td {...restProps}>
+            {editing ? (
+                <Form.Item
+                    name={dataIndex}
+                    style={{ margin: 0 }}
+                    rules={[
+                        {
+                            required: true,
+                            message: `Please Input ${title}!`,
+                        },
+                    ]}
+                >
+                    {inputNode}
+                </Form.Item>
+            ) : (
+                children
+            )}
+        </td>
+    );
+};
+
+const DiseaseList: React.FC = () => {
     const [form] = Form.useForm();
-    const [loading, setLoading] = useState(false)
-    const [diseaseList, setDiseaseList] = useState<any>([])
-    const { token } = theme.useToken();
-
-    const [data, setData] = useState();
+    const [data, setData] = useState(originData);
     const [editingKey, setEditingKey] = useState('');
-
-
-    useEffect(() => {
-        getDiseaseList();
-    }, [])
-    const contentStyle: React.CSSProperties = {
-        color: token.colorTextTertiary,
-        borderRadius: token.borderRadiusLG,
-    };
-
-    const columns: ColumnsType<EditableCellProps> = [
-        {
-            title: 'Name',
-            dataIndex: 'diseaseName',
-            // key: 'name',
-            render: (text) => <a>{text}</a>,
-            editable: true
-        },
-        {
-            title: 'Active',
-            dataIndex: 'isActive',
-            key: 'isActive',
-            editable: true
-        },
-        {
-            title: 'Disease Type',
-            dataIndex: 'diseaseTypeName',
-            key: 'diseaseTypeName',
-            editable: true
-        },
-        {
-            title: 'DiseaseTypeName',
-            key: 'specialTypeName',
-            dataIndex: 'specialTypeName',
-            editable: true
-        },
-        {
-            title: 'Action',
-            key: 'action',
-            // render: (_, record) => (
-            //     <Space size="middle">
-            //         <a onClick={(i)=>console.log(i)}>View</a>
-            //         <a>Edit</a>
-            //     </Space>
-            // ),
-            render: (_: any, record: Item) => {
-                const editable = isEditing(record);
-                return editable ? (
-                    <span>
-                        <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
-                            Save
-                        </Typography.Link>
-                        <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-                            <a>Cancel</a>
-                        </Popconfirm>
-                    </span>
-                ) : (
-                    <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-                        Edit
-                    </Typography.Link>
-                );
-            },
-        },
-    ];
+    const [diseaseList, setDiseaseList] = useState([]);
 
     const isEditing = (record: Item) => record.key === editingKey;
 
@@ -115,6 +79,29 @@ const DiseaseList = ({ visible }: any) => {
     const cancel = () => {
         setEditingKey('');
     };
+    useEffect(() => {
+        getDiseaseList();
+    }, [])
+
+    const getDiseaseList = async () => {
+        const params = {
+            "diseaseID": "-1",
+            "diseaseTypeID": "-1",
+            "specialTypeID": "2",
+            "isActive": "1",
+            "type": 1
+        }
+        const res = await requestDiseaseList(params);
+        if (res.length> 0) {
+            console.log(res.result.length);
+            const dataMaskForDropdown = res?.map((item: any) => {
+                return { value: item.roomTypeID, label: item.roomTypeName }
+            })
+            console.log(res.result);
+
+        }
+        setDiseaseList(res.result)
+    }
 
     const save = async (key: React.Key) => {
         try {
@@ -139,85 +126,93 @@ const DiseaseList = ({ visible }: any) => {
             console.log('Validate Failed:', errInfo);
         }
     };
-    const formSubmit = async (values: any) => {
-        console.log(values);
-    }
-    const getDiseaseList = async () => {
-        const params = {
-            "diseaseID": "-1",
-            "diseaseTypeID": "-1",
-            "specialTypeID": "2",
-            "isActive": "1",
-            "type": 1
-        }
-        const res = await requestDiseaseList(params);
-        // console.log(res.result);
-        if (res.length > 0) {
-            const dataMaskForDropdown = res?.map((item: any) => {
-                return { value: item.roomTypeID, label: item.roomTypeName }
-            })
-            console.log(res.result);
 
-        }
-        setDiseaseList(res.result)
-    }
-
-
-    const EditableCell: React.FC<EditableCellProps> = ({
-        editing,
-        dataIndex,
-        title,
-        inputType,
-        record,
-        index,
-        children,
-        ...restProps
-    }) => {
-        const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
-
-        return (
-            <td {...restProps}>
-                {editing ? (
-                    <Form.Item
-                        name={dataIndex}
-                        style={{ margin: 0 }}
-                        rules={[
-                            {
-                                required: true,
-                                message: `Please Input ${title}!`,
-                            },
-                        ]}
-                    >
-                        {inputNode}
-                    </Form.Item>
+    const columns = [
+        {
+            title: 'Name',
+            dataIndex: 'diseaseName',
+            // render: (text) => <a>{text}</a>,
+            editable: true
+        },
+        {
+            title: 'Active',
+            dataIndex: 'isActive',
+            key: 'isActive',
+            editable: true
+        },
+        {
+            title: 'Disease Type',
+            dataIndex: 'diseaseTypeName',
+            key: 'diseaseTypeName',
+            editable: true
+        },
+        {
+            title: 'DiseaseTypeName',
+            key: 'specialTypeName',
+            dataIndex: 'specialTypeName',
+            editable: true
+        },
+        {
+            title: 'Action',
+            dataIndex: 'operation',
+            render: (_: any, record: Item) => {
+                const editable = isEditing(record);
+                return editable ? (
+                    <span>
+                        <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
+                            Save
+                        </Typography.Link>
+                        <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+                            <a>Cancel</a>
+                        </Popconfirm>
+                    </span>
                 ) : (
-                    children
-                )}
-            </td>
-        );
-    };
+                    <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                        Edit
+                    </Typography.Link>
+                );
+            },
+        },
+    ];
+
+    const mergedColumns = columns.map((col) => {
+        if (!col.editable) {
+            return col;
+        }
+        return {
+            ...col,
+            onCell: (record: Item) => ({
+                record,
+                inputType: col.dataIndex === 'age' ? 'number' : 'text',
+                dataIndex: col.dataIndex,
+                title: col.title,
+                editing: isEditing(record),
+            }),
+        };
+    });
+
     return (
-        <PageContainer
-            style={{  }}
-        >
+        <Form form={form} component={false}>
             <Card
-                title="Disease List"
+                title="Investigation List"
                 style={{ boxShadow: '2px 2px 2px #4874dc' }}
             >
-                <div style={contentStyle}>
-                    {diseaseList && 
-                    <Table
-                        components={{
-                            body: {
-                                cell: EditableCell,
-                            },
-                        }}
-                        bordered
-                        rowClassName="editable-row"
-                        columns={columns} dataSource={diseaseList} />}
-                </div>
+            <Table
+                components={{
+                    body: {
+                        cell: EditableCell,
+                    },
+                }}
+                
+                dataSource={diseaseList}
+                columns={mergedColumns}
+                rowClassName="editable-row"
+                pagination={{   
+                    onChange: cancel,
+                }}
+            />
             </Card>
-        </PageContainer>
+        </Form>
     );
 };
 

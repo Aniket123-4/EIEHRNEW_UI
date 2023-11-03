@@ -1,9 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space } from 'antd';
+import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox } from 'antd';
 import { PageContainer } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import InvestigationGroupList from './InvestigationGroupList';
 import InvestigationList from './InvestigationList';
+import { PlusCircleFilled,PlusOutlined } from '@ant-design/icons';
+import { requestGetInvGroup, requestGetInvUnit } from '../services/api';
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
+import AddInvGroup from '@/pages/Complaint/components/AddInvGroup';
+import AddInvUnit from '@/pages/Complaint/components/AddInvUnit';
 
 const { Option } = Select;
 
@@ -11,8 +16,12 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
     const formRef = useRef<any>();
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false)
-    const [diseaseType, setDiseaseType] = useState<any>([{ value: "1", label: "Type 1" }])
+    const [unitType, setUnitType] = useState<any>([{ value: "1", label: "" }])
+    const [groupList, setGroupList] = useState<any>([{ value: "1", label: "" }])
     const { token } = theme.useToken();
+    const [open, setOpen] = useState(false);
+    const [openAddUnit, setOpenAddUnit] = useState(false);
+    const [vatApplicable, setVatApplicable] = useState(false);
 
     const contentStyle: React.CSSProperties = {
         color: token.colorTextTertiary,
@@ -26,10 +35,66 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
     const goBack = () => {
         history.push("/")
     }
+    const addGroup = () => {
+        setOpen(true);
+    }
+    const hideModal = () => {
+        setOpen(false);
+    };
+    useEffect(() => {
+        getInvGroupList();
+        getInvUnitList();
+    }, [])
+
+    const getInvGroupList = async () => {
+        const params = {
+            "invGroupID": -1,
+            "discountParameterID": 1,
+            "isActive": 1,
+            "formID": -1,
+            "type": 1
+        }
+        const res = await requestGetInvGroup(params);
+        console.log(res.result.length > 0);
+        if (res.result.length > 0) {
+            const dataMaskForDropdown = res?.result?.map((item: any) => {
+                return { value: item.invGroupID, label: item.invGroupName }
+            })
+            setGroupList(dataMaskForDropdown)
+        }
+    }
+    const getInvUnitList = async () => {
+        const params = {
+            "invUnitID": "-1",
+            "invUnitType": "",
+            "isActive": "1",
+            "type": 1
+        }
+        const res = await requestGetInvUnit(params);
+        console.log(res.result.length > 0);
+        if (res.result.length > 0) {
+            const dataMaskForDropdown = res?.result?.map((item: any) => {
+                return { value: item.invUnitID, label: item.invUnitName }
+            })
+            setUnitType(dataMaskForDropdown)
+            console.log(unitType)
+        }
+    }
+
+    const onChange = (e: CheckboxChangeEvent) => {
+        formRef.current?.setFieldsValue({
+            isVATApplicable: e.target.checked
+        })
+        setVatApplicable(e.target.checked)
+    };
+
+    const filterOption = (input: string, option?: { label: string; value: string }) =>
+        (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
     const addForm = () => {
         return (
             <Form
+                ref={formRef}
                 layout="vertical"
                 form={form}
                 onFinish={formSubmit}
@@ -41,7 +106,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
 
                     <div className="gutter-example">
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={8}  >
+                            <Col className="gutter-row" span={6}  >
                                 <Form.Item
                                     name="invGroupName"
                                     label="Name"
@@ -50,7 +115,41 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                     <Input size={'large'} placeholder="Please enter investigation group name" />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={8}>
+
+                            <Col className="gutter-row" span={5}>
+                                <Form.Item
+                                    name="invGroupID"
+                                    label="Group"
+                                    rules={[{ required: true, message: 'Please select group' }]}
+
+                                >
+                                    <Select
+                                        showSearch
+                                        filterOption={filterOption}
+                                        style={{ width: "121%" }}
+                                        placeholder="Group"
+                                        optionFilterProp="children"
+                                        options={groupList}
+                                        size={'large'}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col span={1}>
+                                <PlusOutlined  onClick={addGroup} size={25} />
+                                <Modal
+                                    title="Add Group"
+                                    open={open}
+                                    onOk={hideModal}
+                                    onCancel={hideModal}
+                                    okText="Submit"
+                                    cancelText=""
+                                >
+                                    <AddInvUnit/>
+                                </Modal>
+
+                            </Col>
+
+                            <Col className="gutter-row" span={6}>
                                 <Form.Item
                                     name="invCode"
                                     label="Code"
@@ -60,26 +159,10 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                 </Form.Item>
                             </Col>
 
-                            <Col className="gutter-row" span={8}>
-                                <Form.Item
-                                    name="invGroupID"
-                                    label="Group"
-                                    rules={[{ required: true, message: 'Please select group' }]}
-                                >
-                                    <Select
-                                        placeholder="Group"
-                                        optionFilterProp="children"
-                                        options={diseaseType}
-                                        size={'large'}
-                                    />
-                                </Form.Item>
-                            </Col>
+                            {/* </Row> */}
+                            {/* <Row gutter={16}> */}
 
-
-                        </Row>
-                        <Row gutter={16}>
-
-                            <Col className="gutter-row" span={8}  >
+                            <Col className="gutter-row" span={6}  >
                                 <Form.Item
                                     name="invRange"
                                     label="Range"
@@ -89,25 +172,42 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                 </Form.Item>
                             </Col>
 
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={5}>
                                 <Form.Item
                                     name="unitID"
                                     label="Unit"
                                     rules={[{ required: true, message: 'Please select unit' }]}
                                 >
                                     <Select
+                                        style={{ width: "121%" }}
+                                        showSearch
+                                        filterOption={filterOption}
                                         placeholder="Unit"
                                         optionFilterProp="children"
-                                        options={diseaseType}
+                                        options={unitType}
                                         size={'large'}
                                     />
                                 </Form.Item>
                             </Col>
+                            <Col span={1}>
+                                <PlusCircleFilled onClick={addGroup}/>
+                                <Modal
+                                    title="Add Unit"
+                                    open={openAddUnit}
+                                    onOk={hideModal}
+                                    onCancel={hideModal}
+                                    okText="Submit"
+                                    cancelText=""
+                                >
+                                    <AddInvGroup />
+                                </Modal>
 
-                            <Col className="gutter-row" span={8}>
+                            </Col>
+
+                            <Col className="gutter-row" span={6}>
                                 <Form.Item
                                     name="invNameML"
-                                    label="Name ML"
+                                    label="Name in Other Language"
                                     rules={[{ required: true, message: 'Please enter name ml' }]}
                                 >
                                     <Input size={'large'} placeholder="Please enter name ml" />
@@ -116,23 +216,24 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
 
 
 
-                        </Row>
-                        <Row gutter={16}>
-                            <Col className="gutter-row" span={8}>
+                            {/* </Row> */}
+                            {/* <Row gutter={16}> */}
+                            <Col className="gutter-row" span={6}>
                                 <Form.Item
                                     name="isVATApplicable"
                                     label="VAT Applicable"
-                                    rules={[{ required: true, message: 'Please select' }]}
                                 >
-                                    <Select
+                                    <Checkbox onChange={onChange}>VAT Applicable</Checkbox>
+                                    {/* <Select
                                         placeholder="VAT Applicable"
                                         optionFilterProp="children"
                                         options={[{ label: 'True', value: '1' }]}
                                         size={'large'}
-                                    />
+                                    /> */}
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={8}>
+                            {vatApplicable && 
+                            <Col className="gutter-row" span={6}>
                                 <Form.Item
                                     name="vatPercent"
                                     label="VAT Percent"
@@ -140,9 +241,9 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                 >
                                     <InputNumber style={{ width: '100%' }} size={'large'} placeholder="Please enter" />
                                 </Form.Item>
-                            </Col>
+                            </Col>}
 
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={6}>
                                 <Form.Item
                                     name="cgstPercent"
                                     label="CGST Percent"
@@ -152,7 +253,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                 </Form.Item>
                             </Col>
 
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={6}>
                                 <Form.Item
                                     name="sgstPercent"
                                     label="SGST Percent"
@@ -162,7 +263,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                 </Form.Item>
                             </Col>
 
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={6}>
                                 <Form.Item
                                     name="invRate"
                                     label="Rate"
@@ -189,7 +290,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
 
     return (
         <PageContainer
-            style={{ backgroundColor: '#4874dc', height: 120 }}
+            // style={{ backgroundColor: '#4874dc', height: 120 }}
         >
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
                 <Card

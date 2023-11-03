@@ -6,6 +6,7 @@ import { requestAddComplaint, requestAddDisease } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
+import DiseaseList from './DiseaseList';
 
 
 const { Option } = Select;
@@ -26,8 +27,8 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
 
 
     const contentStyle: React.CSSProperties = {
-        lineHeight: '260px',
-        textAlign: 'center',
+        // lineHeight: '260px',
+        // textAlign: 'center',
         color: token.colorTextTertiary,
         borderRadius: token.borderRadiusLG,
         // marginTop: 20,
@@ -104,55 +105,55 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                     <div className="gutter-example">
                         <Row gutter={16}>
                             <Col className="gutter-row" span={6}>
-                            <Form.Item
-                                name="diseaseTypeName"
-                                label="Disease name"
-                                rules={[{ required: true, message: 'Please enter disease name' }]}
-                            // initialValue={institute}
-                            >
-                                <Input size={'large'} placeholder="Please enter disease type name" />
-                            </Form.Item>
+                                <Form.Item
+                                    name="diseaseTypeName"
+                                    label="Disease name"
+                                    rules={[{ required: true, message: 'Please enter disease name' }]}
+                                // initialValue={institute}
+                                >
+                                    <Input size={'large'} placeholder="Please enter disease type name" />
+                                </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={6}>
-                            <Form.Item
-                                name="diseaseTypeID"
-                                label="Disease Type"
-                                rules={[{ required: true, message: 'Please select disease type' }]}
-                            >
-                                <Select
-                                    size={'large'} 
-                                    placeholder="Complaint Type"
-                                    optionFilterProp="children"
-                                    options={diseaseType}
-                                />
-                            </Form.Item>
+                                <Form.Item
+                                    name="diseaseTypeID"
+                                    label="Disease Type"
+                                    rules={[{ required: true, message: 'Please select disease type' }]}
+                                >
+                                    <Select
+                                        size={'large'}
+                                        placeholder="Complaint Type"
+                                        optionFilterProp="children"
+                                        options={diseaseType}
+                                    />
+                                </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={6}>
-                            <Form.Item
-                                name="diseaseTypeCode"
-                                label="Disease code"
-                                rules={[{ required: true, message: 'Please enter disease code' }]}
-                            >
-                                <Input size={'large'} placeholder="Please enter disease code" />
-                            </Form.Item>
+                                <Form.Item
+                                    name="diseaseTypeCode"
+                                    label="Disease code"
+                                    rules={[{ required: true, message: 'Please enter disease code' }]}
+                                >
+                                    <Input size={'large'} placeholder="Please enter disease code" />
+                                </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={6}>
-                            <Form.Item
-                                name="specialTypeID"
-                                label="Special type"
-                                rules={[{message: 'Please enter special type' }]}
-                            >
-                                <Input size={'large'} placeholder="Please enter special type" />
-                            </Form.Item>
-                        </Col>
-                            
+                                <Form.Item
+                                    name="specialTypeID"
+                                    label="Special type"
+                                    rules={[{ message: 'Please enter special type' }]}
+                                >
+                                    <Input size={'large'} placeholder="Please enter special type" />
+                                </Form.Item>
+                            </Col>
+
                         </Row>
-                        <Col style={{justifyContent:'flex-end'}}>
-                            <Button style={{padding:5,width:100,height:40}}  type="primary" htmlType="submit">
+                        <Col style={{ justifyContent: 'flex-end' }}>
+                            <Button style={{ padding: 5, width: 100, height: 40 }} type="primary" htmlType="submit">
                                 Submit
                             </Button>
-                            <Button  onClick={goBack}
-                                style={{marginLeft:10, padding:5,width:100,height:40}} type="default" >
+                            <Button onClick={goBack}
+                                style={{ marginLeft: 10, padding: 5, width: 100, height: 40 }} type="default" >
                                 Cancel
                             </Button>
                         </Col>
@@ -164,24 +165,27 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
 
     return (
         <PageContainer
-        title=" "
-        style={{}}>
-            <Card
-                style={{ height: '100%', boxShadow: '2px 2px 2px #4874dc' }}
-                title="Create a new disease master"
-                extra={[
-                    <Button key="rest" onClick={() => {
-                        history.push("/complaints/DiseaseList")
-                    }}
-                    >List</Button>,
-                ]}
-            >
-                <Spin tip="Please wait..." spinning={loading}>
-                    <div style={contentStyle}>
-                        {addForm()}
-                    </div>
-                </Spin>
-            </Card>
+            title=" "
+            style={{}}>
+            <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                <Card
+                    style={{ height: '100%', boxShadow: '2px 2px 2px #4874dc' }}
+                    title="Create a new disease master"
+                    extra={[
+                        <Button key="rest" onClick={() => {
+                            history.push("/complaints/DiseaseList")
+                        }}
+                        >List</Button>,
+                    ]}
+                >
+                    <Spin tip="Please wait..." spinning={loading}>
+                        <div style={contentStyle}>
+                            {addForm()}
+                        </div>
+                    </Spin>
+                </Card>
+                <DiseaseList />
+            </Space>
         </PageContainer>
     );
 };
