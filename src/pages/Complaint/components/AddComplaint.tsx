@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './styles/AddComplaint.css';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card, Checkbox } from 'antd';
 import { requestGetComplaintType, requestGetRateType } from '@/services/apiRequest/dropdowns';
 import { requestAddComplaint } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
+import ComplaintList from './ComplaintList';
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 
 
@@ -123,10 +125,16 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
         }
     };
 
+    const onChangeServiceStatus = (e: CheckboxChangeEvent) => {
+        formRef.current?.setFieldsValue({
+            isService: e.target.checked ? "true" :"false"})
+            // setVatApplicable(e.target.checked)
+    };
 
     const addForm = () => {
         return (
             <Form
+                ref={formRef}
                 layout="vertical"
                 form={form}
                 onFinish={addComplaint}
@@ -137,7 +145,7 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
                 <>
                     <div className="gutter-example">
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={8}  >
+                            <Col className="gutter-row" span={6}  >
                                 <Form.Item
                                     // required={true}
                                     name="complaintTypeName"
@@ -145,10 +153,10 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
                                     rules={[{ required: true, message: 'Please enter complaint name' }]}
                                 // initialValue={institute}
                                 >
-                                    <Input size={'large'}  placeholder="Please enter complaint name" />
+                                    <Input size={'large'} placeholder="Please enter complaint name" />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={6}>
                                 <Form.Item
                                     // initialValue={institute}
                                     name="complaintTypeID"
@@ -160,11 +168,11 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
                                         placeholder="Complaint type"
                                         optionFilterProp="children"
                                         options={complaintType}
-                                        
+
                                     />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={6}>
                                 <Form.Item
                                     name="complaintTypeCode"
                                     label="Complaint Code"
@@ -173,13 +181,22 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
                                     <Input size={'large'} placeholder="Please enter complaint code" />
                                 </Form.Item>
                             </Col>
-                            
+                            <Col className="gutter-row" span={6}>
+                                <Form.Item
+                                    name="isService"
+                                    label="Is this a service"
+                                    rules={[{ required: true, message: 'Please check' }]}
+                                >
+                                    <Checkbox  onChange={onChangeServiceStatus}>isService</Checkbox>
+                                </Form.Item>
+                            </Col>
+
                         </Row>
-                        <Col style={{justifyContent:'flex-end'}}>
-                            <Button style={{padding:5,width:100,height:40}}  type="primary" htmlType="submit">
+                        <Col style={{ justifyContent: 'flex-end' }}>
+                            <Button style={{ padding: 5, width: 100, height: 40 }} type="primary" htmlType="submit">
                                 Submit
                             </Button>
-                            <Button  onClick={goBack} style={{marginLeft:10, padding:5,width:100,height:40}} type="default" >
+                            <Button onClick={goBack} style={{ marginLeft: 10, padding: 5, width: 100, height: 40 }} type="default" >
                                 Cancel
                             </Button>
                         </Col>
@@ -191,23 +208,28 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
     }
 
     return (
-        <PageContainer style={{}}>
-            <Card
-                style={{ height: '100%', width: '100%', boxShadow: '2px 2px 2px #4874dc' }}
-                title="Create a new complaint master"
-                extra={[
-                    <Button key="rest" onClick={() => {
-                        history.push("/complaints/list")
-                    }}
-                    >List</Button>,
-                ]}
-            >
-                <Spin tip="Please wait..." spinning={loading}>
-                    <div style={contentStyle}>
-                        {addForm()}
-                    </div>
-                </Spin>
-            </Card>
+        <PageContainer 
+        title=" "
+            style={{}}>
+            <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                <Card
+                    style={{height: '100%', boxShadow: '2px 2px 2px #4874dc' }}
+                    title="Create a new complaint master"
+                    // extra={[
+                    //     <Button key="rest" onClick={() => {
+                    //         history.push("/complaints/list")
+                    //     }}
+                    //     >List</Button>,
+                    // ]}
+                >
+                    <Spin tip="Please wait..." spinning={loading}>
+                        <div style={contentStyle}>
+                            {addForm()}
+                        </div>
+                    </Spin>
+                </Card>
+            <ComplaintList />
+            </Space>
         </PageContainer>
     );
 };
