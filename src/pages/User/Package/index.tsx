@@ -115,7 +115,7 @@ const Package: React.FC = () => {
 
           </Row>
         </Content>
-        <Footer style={footerStyle}>eCSC Portal</Footer>
+        <Footer style={footerStyle}>EIEHR Portal</Footer>
       </Layout>
     </Space>
   )

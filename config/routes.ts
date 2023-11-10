@@ -110,9 +110,14 @@ export default [
         component: './Complaint/components/DiseaseList',
       },
       {
-        name: 'AddOnlineLogin',
+        name: 'Patient Registration',
         path: '/complaints/AddOnlineLogin',
         component: './Online/components/AddOnlineLogin',
+      },
+      {
+        name: 'Search Patient',
+        path: '/complaints/Patient',
+        component: './Online',
       },
       {
         name: 'AddPatRequest', 

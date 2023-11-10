@@ -38,26 +38,14 @@ const UpdateProfileImage: React.FC = () => {
 
     const getUserDetails = async () => {
         const params = {
-            "candidateID": verifiedUser?.userID,
-            "uniqueNo": "",
-            "emailID": "",
-            "mobileNo": "",
-            "dob": "",
-            "panNo": "",
-            "aadhaarNo": "",
-            "genderID": "-1",
-            "stateID": "-1",
-            "districtID": "-1",
-            "cityID": "-1",
-            "areaID": "-1",
-            "searchText": "",
-            "userID": verifiedUser?.userID,
-            "formID": "-1",
-            "type": "2"
+            "onlinePatientID": verifiedUser?.userID,
+            "userID": -1,
+            "formID": -1,
+            "type": 1
         }
         const res = await requestGetCandidateList(params);
         console.log({ res })
-        setSelectedRows(res.data[0])
+        setSelectedRows(res.result[0])
     }
 
     const onPreview = async (file: UploadFile) => {

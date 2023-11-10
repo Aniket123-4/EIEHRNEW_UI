@@ -19,25 +19,14 @@ const CandidateDashboard: React.FC = () => {
     const { verifiedUser } = getUserInLocalStorage();
 
     const params = {
-      "candidateID": verifiedUser?.userID,
-      "uniqueNo": "",
-      "emailID": "",
-      "mobileNo": "",
-      "dob": "",
-      "panNo": "",
-      "aadhaarNo": "",
-      "genderID": "-1",
-      "stateID": "-1",
-      "districtID": "-1",
-      "cityID": "-1",
-      "areaID": "-1",
-      "searchText": "",
-      "userID": verifiedUser?.userID,
-      "formID": "-1",
-      "type": "2"
+      "onlinePatientID": verifiedUser?.userID,
+      "userID": -1,
+      "formID": -1,
+      "type": 1
     }
     const msg = await requestGetCandidateList(params);
-    setSelectedRows(msg.data[0])
+    
+    setSelectedRows(msg.result[0])
   }
 
   return (
@@ -67,7 +56,7 @@ const CandidateDashboard: React.FC = () => {
             } />
           </Space>
           <Space align="center" size={24}>
-            <Title>{`${selectedRows?.firstName ? selectedRows?.firstName : ""} ${selectedRows?.middleName ? selectedRows?.middleName : ""} ${selectedRows?.lastName ? selectedRows?.lastName : ""}`}</Title>
+            <Title>{`${selectedRows?.fName ? selectedRows?.fName : ""} ${selectedRows?.mName ? selectedRows?.mName : ""} ${selectedRows?.lName ? selectedRows?.lName : ""}`}</Title>
           </Space>
         </div>
 
@@ -79,29 +68,29 @@ const CandidateDashboard: React.FC = () => {
           columns={[
             {
               title: 'First Name',
-              dataIndex: 'firstName',
+              dataIndex: 'fName',
               span: 3
             },
             {
               title: 'Middle Name',
-              dataIndex: 'middleName',
+              dataIndex: 'mName',
               span: 3
             },
             {
               title: 'Last Name',
-              dataIndex: 'lastName',
+              dataIndex: 'lName',
               span: 3
             },
             {
               title: 'Mobile No',
-              dataIndex: 'mobileNo',
+              dataIndex: 'curMobileNo',
               span: 2
             },
-            {
-              title: 'Email ID',
-              dataIndex: 'emailID',
-              span: 2
-            },
+            // {
+            //   title: 'Email ID',
+            //   dataIndex: 'emailID',
+            //   span: 2
+            // },
             {
               title: 'DOB',
               key: 'date',
@@ -114,73 +103,20 @@ const CandidateDashboard: React.FC = () => {
           ]}
         />
 
-        <Divider orientation="left"><h4>Identity Information</h4></Divider>
-        <ProDescriptions
-          dataSource={selectedRows}
-          bordered={true}
-          size={'small'}
-          columns={[
-
-            {
-              title: 'PAN No',
-              dataIndex: 'panNo',
-              span: 2
-            },
-            {
-              title: 'Aadhaar No',
-              dataIndex: 'aadhaarNo',
-              span: 2
-            },
-            {
-              title: 'Marital Status',
-              dataIndex: 'maritalStatusName',
-              span: 2
-            },
-            {
-              title: 'Gender',
-              dataIndex: 'genderName',
-              span: 2
-            }
-
-          ]}
-        />
-
         <Divider orientation="left"><h4>Address Information</h4></Divider>
         <ProDescriptions
           dataSource={selectedRows}
           bordered={true}
           size={'small'}
           columns={[
-
             {
-              title: 'State',
-              dataIndex: 'stateName',
-              span: 3
-            },
-
-            {
-              title: 'District',
-              dataIndex: 'districtName',
+              title: 'Address',
+              dataIndex: 'curAddress',
               span: 3
             },
             {
-              title: 'City',
-              dataIndex: 'cityName',
-              span: 3
-            },
-            {
-              title: 'Area',
-              dataIndex: 'areaID',
-              span: 3
-            },
-            {
-              title: 'Landmark',
-              dataIndex: 'landmark',
-              span: 3
-            },
-            {
-              title: 'Candidate Address',
-              dataIndex: 'candidateAddress',
+              title: 'Profile Complete percent',
+              dataIndex: 'profilePercentage',
               span: 3
             }
 

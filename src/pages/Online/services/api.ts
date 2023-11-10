@@ -5,7 +5,7 @@ import { request } from '@umijs/max';
 
 /**  POST /api/login/account */
 export async function requestAddOnlineLogin(body: any, options?: { [key: string]: any }) {
-  return request<any>('AddOnlineLogin', {
+  return request<any>('Online/AddOnlineLogin', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -25,7 +25,17 @@ export async function requestAddPatient(body: any, options?: { [key: string]: an
   });
 }
 export async function requestGetAppointData(body: any, options?: { [key: string]: any }) {
-  return request<any>('GetAppointData', {
+  return request<any>('Online/GetAppointData', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetPatientList(body: any, options?: { [key: string]: any }) {
+  return request<any>('Online/GetAppointData', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

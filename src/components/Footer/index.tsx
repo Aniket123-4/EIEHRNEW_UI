@@ -20,8 +20,8 @@ const Footer: React.FC = () => {
       copyright={`${currentYear} MSSPL`}
       links={[
         {
-          key: 'eSSC',
-          title: 'eCSC',
+          key: 'eIEHR',
+          title: 'eIEHR',
           href: 'https://google.com/',
           blankTarget: true,
         },
