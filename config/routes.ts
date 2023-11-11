@@ -33,7 +33,7 @@ export default [
       {
         name: 'add-candidate',
         path: '/user/candidate/add',
-        component: './Candidate/components/Registration',
+        component: './Online/components/AddOnlineLogin',
       },
       {
         name: 'instituteuser-activation',
@@ -109,11 +109,11 @@ export default [
         path: '/complaints/DiseaseList',
         component: './Complaint/components/DiseaseList',
       },
-      {
-        name: 'Patient Registration',
-        path: '/complaints/AddOnlineLogin',
-        component: './Online/components/AddOnlineLogin',
-      },
+      // {
+      //   name: 'Patient Registration',
+      //   path: '/complaints/AddOnlineLogin',
+      //   component: './Online/components/AddOnlineLogin',
+      // },
       {
         name: 'Search Patient',
         path: '/complaints/Patient',

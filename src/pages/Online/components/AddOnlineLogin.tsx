@@ -93,8 +93,7 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
                 // "curMobileNoCC": "string",
                 // "eMail": emailID,
                 // "curMobileNo": mobileNo,
-                "genderID": 0,
-
+                "genderID": 1,
                 "fNameML": "",
                 "dob": "2023-11-06T09:11:58.560Z",
                 "nationalityID": 0,
@@ -309,7 +308,7 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
 
     return (
         <PageContainer
-            title=" "
+            title="Create a new OnlineLogin "
             header={{
                 // ghost: true,
                 breadcrumb: {
@@ -325,8 +324,8 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
 
         >
             <Card
-                style={{ marginTop: -35, boxShadow: '2px 2px 2px #4874dc' }}
-                title="Create a new OnlineLogin"
+                style={{ marginTop: 10, boxShadow: '2px 2px 2px #4874dc' }}
+                title=""
                 bodyStyle={{ paddingBottom: 80 }}
             >
                 <Spin tip="Please wait..." spinning={loading}>

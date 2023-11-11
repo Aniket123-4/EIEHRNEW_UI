@@ -10,6 +10,7 @@ import { FormattedMessage, history, SelectLang, useIntl, useParams } from '@umij
 import moment from 'moment';
 import dayjs from 'dayjs';
 import { getUserInLocalStorage } from '@/utils/common';
+import TextArea from 'antd/es/input/TextArea';
 
 
 
@@ -70,10 +71,10 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                 // "fName": "string",
                 // "mName": "string",
                 // "lName": "string",
-                "eMail": "string",
-                // "password": "string",
+                "eMail": "",
+                "password": "",
                 "curMobileNoCC": "+91",
-                "curMobileNo": "string",
+                // "curMobileNo": selectedRows?.curMobileNo,
                 // "genderID": 0,
 
                 // "fNameML": "string",
@@ -151,28 +152,11 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                     <Input size={'large'} placeholder="Please enter last name" />
                                 </Form.Item>
                             </Col>
-                            {/* <Col className="gutter-row" span={6}>
-                                <Form.Item
-                                    name="eMail"
-                                    label="Email"
-                                    rules={[{ required: true, message: 'Please enter email' }]}
-                                >
-                                    <Input type="email" size={'large'} placeholder="Please enter email" />
-                                </Form.Item>
-                            </Col> */}
+                            
                             <Col className="gutter-row" span={6}>
-                                <Form.Item
-                                    initialValue={selectedRows?.candPassword}
-                                    name="password"
-                                    label="Password"
-                                    rules={[{ required: true, message: 'Please enter password' }]}
-                                >
-                                    <Input.Password type="password" size={'large'} placeholder="Please enter password" />
-                                </Form.Item>
-                            </Col>
-                            {/* <Col className="gutter-row" span={6}>
                                 <Space.Compact>
                                 <Form.Item
+                                    initialValue={selectedRows?.curMobileNoCC}
                                     style={{ width: '20%' }}
                                     name="curMobileNoCC"
                                     label="  CC"
@@ -199,7 +183,7 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                 
                                 </Space.Compact>
                                 
-                            </Col> */}
+                            </Col>
                             <Col className="gutter-row" span={6}>
                                 <Form.Item
                                     initialValue={selectedRows?.genderID}
@@ -290,7 +274,8 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                     label="Address"
                                     rules={[{ required: true, message: 'Please enter address ' }]}
                                 >
-                                    <Input size={'large'} placeholder="Please enter address" />
+                                    {/* <Input size={'large'} placeholder="Please enter address" /> */}
+                                    <TextArea  placeholder="Address" />
                                 </Form.Item>
                             </Col>
 
@@ -329,7 +314,7 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
         // >
         <Card
             style={{ marginTop: -35, height: '100%', width: '100%', boxShadow: '2px 2px 2px #4874dc' }}
-            title="Create a new OnlineLogin"
+            title="Edit Profile"
             bodyStyle={{ paddingBottom: 80 }}
         >
             <Spin tip="Please wait..." spinning={loading}>

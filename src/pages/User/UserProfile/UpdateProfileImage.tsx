@@ -104,12 +104,26 @@ const UpdateProfileImage: React.FC = () => {
     return (
         <>
             <Space align="center" size={24}>
-                <Avatar size={100} icon={
+                {/* <Avatar size={100} icon={
                     <Image
                         src={`data:image/png;base64,${selectedRows?.profileImage}`}
                         width={200}
                     />
-                } />
+                } /> */}
+                <Avatar size={120} 
+                // icon={
+                //     <Image
+                //         style={{borderColor:'red',borderWidth:5}}
+                //         src={selectedRows?.profileImage ?
+                //             `data:image/png;base64,${selectedRows?.profileImage}`
+                //         : "https://bootdey.com/img/Content/avatar/avatar6.png"}
+                //         width={200}
+                //     />
+                // }
+                src={selectedRows?.profileImage ?
+                    `data:image/png;base64,${selectedRows?.profileImage}`
+                : "https://bootdey.com/img/Content/avatar/avatar6.png"}
+                />
                 <Upload
                     name="avatar"
                     listType="picture-circle"

@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { PageContainer, ProDescriptions } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { Card, theme, Image, Divider, Space, Avatar, Typography, Row, Col } from 'antd';
+import { Card, theme, Image, Divider, Space, Avatar, Typography, Row, Col, Progress } from 'antd';
 import { getUserInLocalStorage } from '@/utils/common';
 import { requestGetCandidateList } from './Candidate/services/api';
 import { UserOutlined } from '@ant-design/icons';
@@ -48,12 +48,24 @@ const CandidateDashboard: React.FC = () => {
         }}>
 
           <Space align="center" size={24}>
-            <Avatar size={160} icon={
-              <Image
-                src={`data:image/png;base64,${selectedRows?.profileImage}`}
-                width={200}
-              />
-            } />
+            {/* <Avatar size={160} 
+              src={selectedRows?.profileImage ?
+                            `data:image/png;base64,${selectedRows?.profileImage}`
+                        : "https://bootdey.com/img/Content/avatar/avatar6.png"}
+            /> */}
+            <Progress size={160} type="circle" percent={selectedRows?.profilePercentage} 
+            format={() => <Avatar size={145} 
+              //icon={
+              // <Image
+              //   src={`data:image/png;base64,${selectedRows?.profileImage}`}
+              //   width={200}
+              // />}
+              src={selectedRows?.profileImage ?
+                            `data:image/png;base64,${selectedRows?.profileImage}`
+                        : "https://bootdey.com/img/Content/avatar/avatar6.png"}
+            />} >
+
+            </Progress>
           </Space>
           <Space align="center" size={24}>
             <Title>{`${selectedRows?.fName ? selectedRows?.fName : ""} ${selectedRows?.mName ? selectedRows?.mName : ""} ${selectedRows?.lName ? selectedRows?.lName : ""}`}</Title>
@@ -112,13 +124,22 @@ const CandidateDashboard: React.FC = () => {
             {
               title: 'Address',
               dataIndex: 'curAddress',
-              span: 3
+              span: 1
             },
+
+          ]}
+        />
+        <Divider orientation="left"><h4>APPOINTMENT DATA</h4></Divider>
+        <ProDescriptions
+          dataSource={selectedRows}
+          bordered={true}
+          size={'small'}
+          columns={[
             {
-              title: 'Profile Complete percent',
-              dataIndex: 'profilePercentage',
-              span: 3
-            }
+              title: 'Address',
+              dataIndex: 'curAddress',
+              span: 1
+            },
 
           ]}
         />
