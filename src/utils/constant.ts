@@ -8,3 +8,5 @@ export const BOOLEAN_CHOICES = [
         label: 'No'
     },
 ]
+
+export const dateFormat = "DD MMM YYYY";

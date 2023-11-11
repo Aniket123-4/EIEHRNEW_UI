@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card, InputNumber } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card, InputNumber, Checkbox } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
 import { requestAddComplaint, requestAddDisease, requestAddInvGroup, requestAddInvParameter } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
@@ -15,16 +15,9 @@ const { Option } = Select;
 const AddInvGroup = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId }: any) => {
     const formRef = useRef<any>();
     const { token } = theme.useToken();
-    const [current, setCurrent] = useState(0);
-    const [row, setRow] = useState(1);
-    const [col, setCol] = useState(1);
-    const [capacity, setCapacity] = useState(1);
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false)
-    const [diseaseType, setDiseaseType] = useState<any>([{ value: "1", label: "Type 1" }])
-    const [rateType, setRateType] = useState<any>([])
-    const [institute, setInstitute] = useState<any>([])
-
+    const investigationGroupListRef = useRef();
 
     const contentStyle: React.CSSProperties = {
         color: token.colorTextTertiary,
@@ -32,39 +25,15 @@ const AddInvGroup = ({ visible, onClose, onSaveSuccess, selectedRows, instituteI
     };
 
 
-    useEffect(() => {
-        // getComplaintType();
-        // getRateType();
-    }, [])
-
-    const getComplaintType = async () => {
-        const res = await requestGetRoomType({});
-        if (res.length > 0) {
-            const dataMaskForDropdown = res?.map((item: any) => {
-                return { value: item.roomTypeID, label: item.roomTypeName }
-            })
-            setDiseaseType(dataMaskForDropdown)
-        }
-    }
-
-    const getRateType = async () => {
-        const res = await requestGetRateType({});
-        if (res.length > 0) {
-            const dataMaskForDropdown = res?.map((item: any) => {
-                return { label: item.rateTypeName, value: item.rateTypeID }
-            })
-            setRateType(dataMaskForDropdown)
-        }
-    }
     const goBack = () => {
         history.push("/")
     }
 
     const addInvGroup = async (values: any) => {
-        console.log(values);
         try {
             const staticParams = {
-                isService: true,
+                invGroupID: "-1",
+                isService: +values.isService,
                 formID: -1,
                 type: 1,
             };
@@ -73,10 +42,20 @@ const AddInvGroup = ({ visible, onClose, onSaveSuccess, selectedRows, instituteI
             const msg = await requestAddInvGroup({ ...values, ...staticParams });
             setLoading(false)
             console.log(msg);
+
+            if (msg?.isSuccess) {
+                message.success(msg?.msg);
+                form.resetFields();
+                if (investigationGroupListRef.current) {
+                    investigationGroupListRef.current.getGroupList();
+                }
+            } else {
+                message.error(msg?.msg);
+            }
         } catch (error) {
             setLoading(false)
             console.log({ error });
-            message.error('please try again');
+            message.error(error);
         }
     };
 
@@ -120,27 +99,22 @@ const AddInvGroup = ({ visible, onClose, onSaveSuccess, selectedRows, instituteI
                                     label="Discount"
                                     rules={[{ required: true, message: 'Please enter' }]}
                                 >
-                                    <InputNumber style={{ width: "100%" }} size={'large'} placeholder="Please enter" />
+                                    <InputNumber
+                                        min={0}
+                                        max={100}
+                                        style={{ width: "100%" }}
+                                        size={'large'}
+                                        placeholder="Please enter"
+                                        formatter={(value) => `${value}%`}
+                                        parser={(value) => value!.replace('%', '')}
+
+                                    />
                                 </Form.Item>
                             </Col>
 
                         </Row>
                         <Row gutter={16}>
 
-                            <Col className="gutter-row" span={8}>
-                                <Form.Item
-                                    name="isService"
-                                    label="Is Service"
-                                    rules={[{ required: true, message: 'Please select' }]}
-                                >
-                                    <Select
-                                        placeholder="Please select"
-                                        optionFilterProp="children"
-                                        options={BOOLEAN_CHOICES}
-                                        size={'large'}
-                                    />
-                                </Form.Item>
-                            </Col>
 
                             <Col className="gutter-row" span={8}>
                                 <Form.Item
@@ -153,6 +127,19 @@ const AddInvGroup = ({ visible, onClose, onSaveSuccess, selectedRows, instituteI
                             </Col>
 
 
+
+                        </Row>
+                        <Row gutter={16}>
+                            <Col className="gutter-row" span={8}>
+                                <Form.Item
+                                    name="isService"
+                                    rules={[{ required: false, message: 'Please select' }]}
+                                    valuePropName="checked"
+                                    initialValue={true}
+                                >
+                                    <Checkbox>Is Service</Checkbox>
+                                </Form.Item>
+                            </Col>
                         </Row>
                         <Col style={{ justifyContent: 'flex-end' }}>
                             <Button style={{ padding: 5, width: 100, height: 40 }} type="primary" htmlType="submit">
@@ -184,7 +171,7 @@ const AddInvGroup = ({ visible, onClose, onSaveSuccess, selectedRows, instituteI
                     </Spin>
                 </Card>
 
-                <InvestigationGroupList />
+                <InvestigationGroupList ref={investigationGroupListRef} />
             </Space>
 
         </PageContainer>

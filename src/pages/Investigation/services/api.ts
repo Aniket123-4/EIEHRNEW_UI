@@ -55,6 +55,18 @@ export async function requestGetInvGroup(body: any, options?: { [key: string]: a
     ...(options || {}),
   });
 }
+
+export async function requestGetInvestigation(body: any, options?: { [key: string]: any }) {
+  return request<any>('MasterForm/api/GetInvParameterMasterList', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 export async function requestGetInvUnit(body: any, options?: { [key: string]: any }) {
   return request<any>('MasterForm/api/GetInvestigationUnit', {
     method: 'POST',
@@ -66,10 +78,8 @@ export async function requestGetInvUnit(body: any, options?: { [key: string]: an
   });
 }
 
-
-/**  POST /api/login/account */
-export async function requestGetRoomList(body: any, options?: { [key: string]: any }) {
-  return request<any>('/Room/RoomList', {
+export async function requestGetInvParameter(body: any, options?: { [key: string]: any }) {
+  return request<any>('MasterForm/api/GetInvParameter', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -78,6 +88,18 @@ export async function requestGetRoomList(body: any, options?: { [key: string]: a
     ...(options || {}),
   });
 }
+
+export async function requestGetPatientType(options?: { [key: string]: any }) {
+  return request<any>('MasterForm/vPatientType', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+
 
 
 

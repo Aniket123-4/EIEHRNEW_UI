@@ -20,7 +20,7 @@ interface DataType {
     rate: string;
 }
 
-const InvestigationList = React.forwardRef((props) => {
+const DoctorSlotBookingList = React.forwardRef((props) => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false)
     const { token } = theme.useToken();
@@ -121,7 +121,7 @@ const InvestigationList = React.forwardRef((props) => {
 
     return (
         <Card
-            title="Investigation List"
+            title="Booking List"
             style={{ boxShadow: '2px 2px 2px #4874dc' }}
         >
             <div style={contentStyle}>
@@ -131,4 +131,4 @@ const InvestigationList = React.forwardRef((props) => {
     );
 });
 
-export default InvestigationList;
+export default DoctorSlotBookingList;

@@ -33,7 +33,7 @@ export async function requestGetRank(options?: { [key: string]: any }) {
 }
 
 export async function requestGetRole(body: API.GetRole, options?: { [key: string]: any }) {
-  return request<any>('/Login/GetRole?RoleID='+body.RoleID, {
+  return request<any>('/Login/GetRole?RoleID=' + body.RoleID, {
     method: 'GET',
     // headers: {
     //   'Content-Type': 'application/json',
@@ -84,19 +84,6 @@ export async function requestGetMmodule(body: API.GetOrg, options?: { [key: stri
   });
 }
 
-
-
-export async function requestGetSection(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<any>('/Login/GetSection', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-    
-  });
-}
 export async function requestGetSectionTree(body: API.LoginParams, options?: { [key: string]: any }) {
   return request<any>('/Login/GetSectionTree', {
     method: 'POST',
@@ -105,18 +92,18 @@ export async function requestGetSectionTree(body: API.LoginParams, options?: { [
     },
     data: body,
     ...(options || {}),
-    
+
   });
 }
 export async function requestGetDesignation(body: API.GetDesignation, options?: { [key: string]: any }) {
-  return request<any>('/Login/GetDesignation?DesigID='+body.DesigID, {
+  return request<any>('/Login/GetDesignation?DesigID=' + body.DesigID, {
     method: 'GET',
     // headers: {
     //   'Content-Type': 'application/json',
     // },
     data: body,
     ...(options || {}),
-    
+
   });
 }
 export async function requestGetPackages(body: API.LoginParams, options?: { [key: string]: any }) {
@@ -127,7 +114,7 @@ export async function requestGetPackages(body: API.LoginParams, options?: { [key
     },
     data: body,
     ...(options || {}),
-    
+
   });
 }
 
@@ -244,6 +231,38 @@ export async function requestGetRateType(body: any, options?: { [key: string]: a
 export async function requestGetSlot(options?: { [key: string]: any }) {
   return request<any>('/Common/GetSlot', {
     method: 'GET',
+    ...(options || {}),
+  });
+}
+
+
+
+export async function requestGetSection(body: any, options?: { [key: string]: any }) {
+  return request<any>('/MasterForm/GetSection', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+export async function requestGetUserList(
+  params: {
+    // query
+    CommonID?: number;
+    /** 页面的容量 */
+    Type?: number;
+  },
+  options?: { [key: string]: any },
+) {
+  console.log(params)
+  return request<any>('/Login/GetUserList', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
     ...(options || {}),
   });
 }

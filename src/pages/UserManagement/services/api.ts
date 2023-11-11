@@ -17,7 +17,6 @@ export async function requestAddUser(body: any, options?: { [key: string]: any }
   });
 }
 
-
 /**  POST /api/login/ChangePassword */
 export async function requestChangePassword(body: any, options?: { [key: string]: any }) {
   console.log("token " + JSON.stringify( body) )

@@ -148,6 +148,17 @@ export default [
     ],
   },
   {
+    name: 'booking',
+    path: '/booking',
+    routes: [
+      {
+        name: 'Investigation',
+        path: '/booking/doctor-slot-booking',
+        component: './Booking/components/AddDoctorSlotBooking',
+      }
+    ],
+  },
+  {
     name: 'User Management2',
     path: '/user-management',
     routes: [
