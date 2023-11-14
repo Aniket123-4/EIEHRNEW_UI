@@ -40,7 +40,7 @@ export async function mo(body: API.LoginParams, options?: { [key: string]: any }
 
 
 export async function requestGetCandidateList(body: any, options?: { [key: string]: any }) {
-  return request<any>('/Candidate/GetCandidateList', {
+  return request<any>('Online/GetOnlinePatient', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { PageContainer, ProDescriptions } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { Card, theme, Image, Divider, Space, Avatar, Typography, Row, Col } from 'antd';
+import { Card, theme, Image, Divider, Space, Avatar, Typography, Row, Col, Progress } from 'antd';
 import { getUserInLocalStorage } from '@/utils/common';
 import { requestGetCandidateList } from './Candidate/services/api';
 import { UserOutlined } from '@ant-design/icons';
@@ -19,25 +19,14 @@ const CandidateDashboard: React.FC = () => {
     const { verifiedUser } = getUserInLocalStorage();
 
     const params = {
-      "candidateID": verifiedUser?.userID,
-      "uniqueNo": "",
-      "emailID": "",
-      "mobileNo": "",
-      "dob": "",
-      "panNo": "",
-      "aadhaarNo": "",
-      "genderID": "-1",
-      "stateID": "-1",
-      "districtID": "-1",
-      "cityID": "-1",
-      "areaID": "-1",
-      "searchText": "",
-      "userID": verifiedUser?.userID,
-      "formID": "-1",
-      "type": "2"
+      "onlinePatientID": verifiedUser?.userID,
+      "userID": -1,
+      "formID": -1,
+      "type": 1
     }
     const msg = await requestGetCandidateList(params);
-    setSelectedRows(msg.data[0])
+    
+    setSelectedRows(msg.result[0])
   }
 
   return (
@@ -59,15 +48,27 @@ const CandidateDashboard: React.FC = () => {
         }}>
 
           <Space align="center" size={24}>
-            <Avatar size={160} icon={
-              <Image
-                src={`data:image/png;base64,${selectedRows?.profileImage}`}
-                width={200}
-              />
-            } />
+            {/* <Avatar size={160} 
+              src={selectedRows?.profileImage ?
+                            `data:image/png;base64,${selectedRows?.profileImage}`
+                        : "https://bootdey.com/img/Content/avatar/avatar6.png"}
+            /> */}
+            <Progress size={160} type="circle" percent={selectedRows?.profilePercentage} 
+            format={() => <Avatar size={145} 
+              //icon={
+              // <Image
+              //   src={`data:image/png;base64,${selectedRows?.profileImage}`}
+              //   width={200}
+              // />}
+              src={selectedRows?.profileImage ?
+                            `data:image/png;base64,${selectedRows?.profileImage}`
+                        : "https://bootdey.com/img/Content/avatar/avatar6.png"}
+            />} >
+
+            </Progress>
           </Space>
           <Space align="center" size={24}>
-            <Title>{`${selectedRows?.firstName ? selectedRows?.firstName : ""} ${selectedRows?.middleName ? selectedRows?.middleName : ""} ${selectedRows?.lastName ? selectedRows?.lastName : ""}`}</Title>
+            <Title>{`${selectedRows?.fName ? selectedRows?.fName : ""} ${selectedRows?.mName ? selectedRows?.mName : ""} ${selectedRows?.lName ? selectedRows?.lName : ""}`}</Title>
           </Space>
         </div>
 
@@ -79,29 +80,29 @@ const CandidateDashboard: React.FC = () => {
           columns={[
             {
               title: 'First Name',
-              dataIndex: 'firstName',
+              dataIndex: 'fName',
               span: 3
             },
             {
               title: 'Middle Name',
-              dataIndex: 'middleName',
+              dataIndex: 'mName',
               span: 3
             },
             {
               title: 'Last Name',
-              dataIndex: 'lastName',
+              dataIndex: 'lName',
               span: 3
             },
             {
               title: 'Mobile No',
-              dataIndex: 'mobileNo',
+              dataIndex: 'curMobileNo',
               span: 2
             },
-            {
-              title: 'Email ID',
-              dataIndex: 'emailID',
-              span: 2
-            },
+            // {
+            //   title: 'Email ID',
+            //   dataIndex: 'emailID',
+            //   span: 2
+            // },
             {
               title: 'DOB',
               key: 'date',
@@ -114,75 +115,31 @@ const CandidateDashboard: React.FC = () => {
           ]}
         />
 
-        <Divider orientation="left"><h4>Identity Information</h4></Divider>
-        <ProDescriptions
-          dataSource={selectedRows}
-          bordered={true}
-          size={'small'}
-          columns={[
-
-            {
-              title: 'PAN No',
-              dataIndex: 'panNo',
-              span: 2
-            },
-            {
-              title: 'Aadhaar No',
-              dataIndex: 'aadhaarNo',
-              span: 2
-            },
-            {
-              title: 'Marital Status',
-              dataIndex: 'maritalStatusName',
-              span: 2
-            },
-            {
-              title: 'Gender',
-              dataIndex: 'genderName',
-              span: 2
-            }
-
-          ]}
-        />
-
         <Divider orientation="left"><h4>Address Information</h4></Divider>
         <ProDescriptions
           dataSource={selectedRows}
           bordered={true}
           size={'small'}
           columns={[
-
             {
-              title: 'State',
-              dataIndex: 'stateName',
-              span: 3
+              title: 'Address',
+              dataIndex: 'curAddress',
+              span: 1
             },
 
+          ]}
+        />
+        <Divider orientation="left"><h4>APPOINTMENT DATA</h4></Divider>
+        <ProDescriptions
+          dataSource={selectedRows}
+          bordered={true}
+          size={'small'}
+          columns={[
             {
-              title: 'District',
-              dataIndex: 'districtName',
-              span: 3
+              title: 'Address',
+              dataIndex: 'curAddress',
+              span: 1
             },
-            {
-              title: 'City',
-              dataIndex: 'cityName',
-              span: 3
-            },
-            {
-              title: 'Area',
-              dataIndex: 'areaID',
-              span: 3
-            },
-            {
-              title: 'Landmark',
-              dataIndex: 'landmark',
-              span: 3
-            },
-            {
-              title: 'Candidate Address',
-              dataIndex: 'candidateAddress',
-              span: 3
-            }
 
           ]}
         />

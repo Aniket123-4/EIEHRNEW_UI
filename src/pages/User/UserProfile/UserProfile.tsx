@@ -15,6 +15,7 @@ import ViewCandidate from '@/pages/Candidate/components/ViewCandidate';
 import EditCandidate from '@/pages/Candidate/components/EditCandidate';
 import UpdateProfileImage from './UpdateProfileImage';
 import UpdateDocsUpload from './UpdateDocsUpload';
+import EditOnlineLogin from '@/pages/Online/components/EditOnlineLogin';
 
 const { Option } = Select;
 
@@ -118,15 +119,15 @@ const UserProfile = () => {
             setLoading(false)
             if (msg.isSuccess === "True") {
                 formRef.current?.resetFields();
-                console.log('data 1 '+JSON.stringify(data))
+                console.log('data 1 ' + JSON.stringify(data))
 
                 //localStorage.setItem('user', JSON.stringify(msg));
                 // data.firstName=values['firstName'];
                 // data.middleName=values['middleName'];
                 // data.surName=values['surName'];
                 // data.dob=values['dob'];
-                console.log('data 2 '+JSON.stringify(data))
-               onClose();
+                console.log('data 2 ' + JSON.stringify(data))
+                onClose();
                 message.success(msg.msg);
                 // onSaveSuccess(msg);
                 return;
@@ -202,29 +203,18 @@ const UserProfile = () => {
     const getCandidateList = async () => {
         try {
             const params = {
-                "candidateID": user?.verifiedUser?.userID,
-                "uniqueNo": "",
-                "emailID": "",
-                "mobileNo": "",
-                "dob": "",
-                "panNo": "",
-                "aadhaarNo": "",
-                "genderID": "-1",
-                "stateID": "-1",
-                "districtID": "-1",
-                "cityID": "-1",
-                "areaID": "-1",
-                "searchText": "",
-                "userID": "-1",
-                "formID": "-1",
-                "type": "1"
+                "onlinePatientID": user?.verifiedUser?.userID,
+                "userID": -1,
+                "formID": -1,
+                "type": 1
             }
 
             setLoading(true)
             const msg = await requestGetCandidateList(params);
-            setSelectedRows(msg.data[0])
+            setSelectedRows(msg.result[0])
+            console.log(msg.result[0])
             setLoading(false)
-            if (msg.isSuccess === "True") {
+            if (msg.isSuccess === true) {
                 formRef.current?.resetFields();
                 message.success(msg.msg);
                 return;
@@ -244,8 +234,8 @@ const UserProfile = () => {
     };
 
     const reloadTable = () => {
-       // actionRef.current.reload();
-      }
+        // actionRef.current.reload();
+    }
     const editInformation = () => {
         return (
             <>
@@ -279,7 +269,7 @@ const UserProfile = () => {
                                     <Row gutter={16}>
                                         <Col span={8}>
                                             <Form.Item
-                                                initialValue={data?.firstName}
+                                                initialValue={data?.fName}
                                                 name="firstName"
                                                 label="First Name"
                                                 rules={[{ required: true, message: 'Please enter First Name' }]}
@@ -289,7 +279,7 @@ const UserProfile = () => {
                                         </Col>
                                         <Col span={8}>
                                             <Form.Item
-                                                initialValue={data?.middleName}
+                                                initialValue={data?.mName}
                                                 name="middleName"
                                                 label="Middle Name"
                                                 rules={[{ required: false, message: 'Please enter Middle Name' }]}
@@ -300,7 +290,7 @@ const UserProfile = () => {
 
                                         <Col span={8}>
                                             <Form.Item
-                                                initialValue={data?.surName}
+                                                initialValue={data?.sName}
                                                 name="surName"
                                                 label="SurName"
                                                 rules={[{ required: false, message: 'Please enter Surname' }]}
@@ -311,13 +301,13 @@ const UserProfile = () => {
 
                                         <Col span={8}>
                                             <Form.Item
-                                                 initialValue={dayjs(data?.dob,'YYYY/MM/DD')}
+                                                initialValue={dayjs(data?.dob, 'YYYY/MM/DD')}
                                                 name="dob"
                                                 label="Date of Birth"
                                                 rules={[{ required: true, message: 'Please choose the Date of Birth' }]}
                                             >
                                                 <DatePicker
-                                                    defaultValue={dayjs(data?.dob,'YYYY/MM/DD')}
+                                                    defaultValue={dayjs(data?.dob, 'YYYY/MM/DD')}
                                                     style={{ width: '100%' }}
                                                     getPopupContainer={(trigger) => trigger.parentElement!}
                                                 />
@@ -333,7 +323,7 @@ const UserProfile = () => {
                 }
                 {datatype === 'Candidate' && <>
 
-                    <EditCandidate
+                    <EditOnlineLogin
                         visible={openViewCandidate}
                         onClose={onCloseViewCandidate}
                         isEditable={isEditable}

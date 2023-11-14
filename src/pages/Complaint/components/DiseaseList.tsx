@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd';
-import { requestDiseaseList } from '../services/api';
+import { Card, Form, Input, InputNumber, Popconfirm, Table, Typography, message } from 'antd';
+import { requestAddDisease, requestDiseaseList } from '../services/api';
 
 interface Item {
     key: string;
@@ -68,11 +68,13 @@ const DiseaseList: React.FC = () => {
     const [data, setData] = useState(originData);
     const [editingKey, setEditingKey] = useState('');
     const [diseaseList, setDiseaseList] = useState([]);
+    const [loading, setLoading] = useState(false)
 
     const isEditing = (record: Item) => record.key === editingKey;
 
     const edit = (record: Partial<Item> & { key: React.Key }) => {
-        form.setFieldsValue({ name: '', age: '', address: '', ...record });
+        console.log(record.key)
+        form.setFieldsValue({ diseaseName: '', isActive: '', diseaseTypeName: '', ...record });
         setEditingKey(record.key);
     };
 
@@ -92,15 +94,14 @@ const DiseaseList: React.FC = () => {
             "type": 1
         }
         const res = await requestDiseaseList(params);
-        if (res.length> 0) {
-            console.log(res.result.length);
-            const dataMaskForDropdown = res?.map((item: any) => {
-                return { value: item.roomTypeID, label: item.roomTypeName }
-            })
+        if (res.result.length> 0) {
             console.log(res.result);
-
+            const dataMaskForDropdown = res?.result?.map((item: any,index:string) => {
+                return { key: index, ...item }
+            })
+            setDiseaseList(dataMaskForDropdown)
+            console.log(dataMaskForDropdown);
         }
-        setDiseaseList(res.result)
     }
 
     const save = async (key: React.Key) => {
@@ -126,6 +127,43 @@ const DiseaseList: React.FC = () => {
             console.log('Validate Failed:', errInfo);
         }
     };
+    const saveDisease = async (key: any) => {
+        const editValues = (await form.validateFields()) as Item;
+        const index:any = diseaseList.find((item) => key === item.key);
+        // console.log(index); 
+        // console.log(editValues);
+        try {
+            const staticParams = {
+                "DiseaseTypeCode":index?.diseaseCodeICD,
+                "SpecialTypeID":index?.specialTypeID,
+                "diseaseTypeID":index?.diseaseTypeID,
+                "sortOrder": 1,
+                "diseasesID": "-1",
+                "isActive": "1",
+                "formID": -1,
+                "type": 1
+            };
+
+            setLoading(true)
+            const msg = await requestAddDisease({ ...editValues, ...staticParams });
+            setLoading(false)
+            if (msg.isSuccess === true) {
+                setEditingKey('');
+                message.success(msg.msg);
+                return;
+            } else {
+                message.error(msg.msg);
+                setEditingKey('');
+
+            }
+
+        } catch (error) {
+            setLoading(false)
+            console.log({ error });
+            message.error('please try again');
+        }
+    };
+
 
     const columns = [
         {
@@ -138,7 +176,9 @@ const DiseaseList: React.FC = () => {
             title: 'Active',
             dataIndex: 'isActive',
             key: 'isActive',
-            editable: true
+            editable: true,
+            render: (text:any ) => <Typography>{text.toString}</Typography>,
+
         },
         {
             title: 'Disease Type',
@@ -158,8 +198,8 @@ const DiseaseList: React.FC = () => {
             render: (_: any, record: Item) => {
                 const editable = isEditing(record);
                 return editable ? (
-                    <span>
-                        <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
+                    <span style={{width:60,}}>
+                        <Typography.Link onClick={() => saveDisease(record?.key)} style={{ marginRight: 8 }}>
                             Save
                         </Typography.Link>
                         <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
@@ -167,7 +207,7 @@ const DiseaseList: React.FC = () => {
                         </Popconfirm>
                     </span>
                 ) : (
-                    <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                    <Typography.Link style={{width:100}} disabled={editingKey !== ''} onClick={() => edit(record)}>
                         Edit
                     </Typography.Link>
                 );
@@ -192,7 +232,10 @@ const DiseaseList: React.FC = () => {
     });
 
     return (
-        <Form form={form} component={false}>
+        <Form 
+        // initialValues={{diseaseTypeID:diseaseList?.diseaseTypeID}}
+        form={form} 
+        component={false}>
             <Card
                 title="Investigation List"
                 style={{ boxShadow: '2px 2px 2px #4874dc' }}

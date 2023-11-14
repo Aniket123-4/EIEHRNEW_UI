@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card, Checkbox } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
 import { requestAddComplaint, requestAddDisease } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
 import DiseaseList from './DiseaseList';
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 
 const { Option } = Select;
@@ -24,6 +25,8 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
     const [diseaseType, setDiseaseType] = useState<any>([{ value: "1", label: "Type 1" }])
     const [rateType, setRateType] = useState<any>([])
     const [institute, setInstitute] = useState<any>([])
+    const [isActive, setIsActive] = useState(false);
+
 
 
     const contentStyle: React.CSSProperties = {
@@ -57,13 +60,13 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
         console.log(values);
         try {
             const staticParams = {
-                // "diseaseTypeID": "string",
+                "diseaseTypeID": "-1",
                 // "diseaseTypeName": "string",
                 // "diseaseTypeCode": "string",
                 // "specialTypeID": "string",
+                // "isActive": "1",
                 "sortOrder": 1,
                 "diseasesID": "-1",
-                "isActive": "1",
                 "formID": -1,
                 "type": 1
 
@@ -88,6 +91,12 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
             message.error('please try again');
         }
     };
+    const onChange = (e: CheckboxChangeEvent) => {
+        formRef.current?.setFieldsValue({
+            isActive: e.target.checked
+        })
+        setIsActive(e.target.checked)
+    };
 
 
     const addForm = () => {
@@ -104,7 +113,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                 <>
                     <div className="gutter-example">
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     name="diseaseTypeName"
                                     label="Disease name"
@@ -114,21 +123,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                                     <Input size={'large'} placeholder="Please enter disease type name" />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={6}>
-                                <Form.Item
-                                    name="diseaseTypeID"
-                                    label="Disease Type"
-                                    rules={[{ required: true, message: 'Please select disease type' }]}
-                                >
-                                    <Select
-                                        size={'large'}
-                                        placeholder="Complaint Type"
-                                        optionFilterProp="children"
-                                        options={diseaseType}
-                                    />
-                                </Form.Item>
-                            </Col>
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     name="diseaseTypeCode"
                                     label="Disease code"
@@ -137,7 +132,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                                     <Input size={'large'} placeholder="Please enter disease code" />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     name="specialTypeID"
                                     label="Special type"
@@ -148,6 +143,15 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                             </Col>
 
                         </Row>
+                        <Col className="gutter-row" span={6}>
+                            <Form.Item
+                                name="isActive"
+                                // label="isActive"
+                                rules={[{ message: 'Please select disease type' }]}
+                            >
+                                <Checkbox onChange={onChange}>isService</Checkbox>
+                            </Form.Item>
+                        </Col>
                         <Col style={{ justifyContent: 'flex-end' }}>
                             <Button style={{ padding: 5, width: 100, height: 40 }} type="primary" htmlType="submit">
                                 Submit
@@ -171,12 +175,12 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                 <Card
                     style={{ height: '100%', boxShadow: '2px 2px 2px #4874dc' }}
                     title="Create a new disease master"
-                    extra={[
-                        <Button key="rest" onClick={() => {
-                            history.push("/complaints/DiseaseList")
-                        }}
-                        >List</Button>,
-                    ]}
+                // extra={[
+                //     <Button key="rest" onClick={() => {
+                //         history.push("/complaints/DiseaseList")
+                //     }}
+                //     >List</Button>,
+                // ]}
                 >
                     <Spin tip="Please wait..." spinning={loading}>
                         <div style={contentStyle}>

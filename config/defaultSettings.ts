@@ -15,7 +15,7 @@ const Settings: LayoutSettings & {
   fixedHeader: true,
   fixSiderbar: true,
   colorWeak: false,
-  title: 'ECSC Portal',
+  title: 'EIEHR Portal',
   pwa: true,
   iconfontUrl: '',
 };

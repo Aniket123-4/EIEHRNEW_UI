@@ -38,26 +38,14 @@ const UpdateProfileImage: React.FC = () => {
 
     const getUserDetails = async () => {
         const params = {
-            "candidateID": verifiedUser?.userID,
-            "uniqueNo": "",
-            "emailID": "",
-            "mobileNo": "",
-            "dob": "",
-            "panNo": "",
-            "aadhaarNo": "",
-            "genderID": "-1",
-            "stateID": "-1",
-            "districtID": "-1",
-            "cityID": "-1",
-            "areaID": "-1",
-            "searchText": "",
-            "userID": verifiedUser?.userID,
-            "formID": "-1",
-            "type": "2"
+            "onlinePatientID": verifiedUser?.userID,
+            "userID": -1,
+            "formID": -1,
+            "type": 1
         }
         const res = await requestGetCandidateList(params);
         console.log({ res })
-        setSelectedRows(res.data[0])
+        setSelectedRows(res.result[0])
     }
 
     const onPreview = async (file: UploadFile) => {
@@ -116,12 +104,26 @@ const UpdateProfileImage: React.FC = () => {
     return (
         <>
             <Space align="center" size={24}>
-                <Avatar size={100} icon={
+                {/* <Avatar size={100} icon={
                     <Image
                         src={`data:image/png;base64,${selectedRows?.profileImage}`}
                         width={200}
                     />
-                } />
+                } /> */}
+                <Avatar size={120} 
+                // icon={
+                //     <Image
+                //         style={{borderColor:'red',borderWidth:5}}
+                //         src={selectedRows?.profileImage ?
+                //             `data:image/png;base64,${selectedRows?.profileImage}`
+                //         : "https://bootdey.com/img/Content/avatar/avatar6.png"}
+                //         width={200}
+                //     />
+                // }
+                src={selectedRows?.profileImage ?
+                    `data:image/png;base64,${selectedRows?.profileImage}`
+                : "https://bootdey.com/img/Content/avatar/avatar6.png"}
+                />
                 <Upload
                     name="avatar"
                     listType="picture-circle"

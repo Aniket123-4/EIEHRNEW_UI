@@ -14,9 +14,10 @@ import { requestGetArea, requestGetCity, requestGetDistrict, requestGetGender, r
 
 const { Option } = Select;
 
-const dateFormat = 'YYYY/MM/DD';
+const dateFormat = 'DD MMM YYYY';
 
 const EditCandidate = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess }: any) => {
+    console.log(selectedRows)
     const formRef = useRef<ProFormInstance>();
     const { token } = theme.useToken();
     const intl = useIntl();
@@ -39,7 +40,7 @@ const EditCandidate = ({ visible, onClose, selectedRows, isEditable, onSaveSucce
     };
 
     useEffect(() => {
-
+        console.log(dayjs(selectedRows?.dob, dateFormat).toISOString())
     }, [])
 
 
@@ -48,16 +49,16 @@ const EditCandidate = ({ visible, onClose, selectedRows, isEditable, onSaveSucce
         console.log({ selectedRows })
         if (isEditable) {
 
-            getState();
-            getDistrict(selectedRows?.stateID, { value: selectedRows?.stateID, label: selectedRows?.stateID });
-            getCity(selectedRows?.districtID, { value: selectedRows?.districtID, label: selectedRows?.districtID });
-            getArea(selectedRows?.cityID, { value: selectedRows?.cityID, label: selectedRows?.cityID });
-            getGender();
-            getMarital();
+            // getState();
+            // getDistrict(selectedRows?.stateID, { value: selectedRows?.stateID, label: selectedRows?.stateID });
+            // getCity(selectedRows?.districtID, { value: selectedRows?.districtID, label: selectedRows?.districtID });
+            // getArea(selectedRows?.cityID, { value: selectedRows?.cityID, label: selectedRows?.cityID });
+            // getGender();
+            // getMarital();
 
 
             formRef.current?.setFieldsValue({
-                firstName: selectedRows?.firstName,
+                firstName: selectedRows?.fName,
                 middleName: selectedRows?.middleName,
                 lastName: selectedRows?.lastName ? selectedRows?.lastName : "-",
                 candPassword: selectedRows?.candPassword ? selectedRows?.candPassword : "-",
@@ -213,7 +214,7 @@ console.log(selectedRows?.candidateID)
                 <>
                    {visible&& <Spin tip="Please wait..." spinning={loading}>
                         <StepsForm
-                            formRef={formRef}
+                            // formRef={formRef}
                             onFinish={async (values) => {
                                 addCandidate(values)
                             }}
@@ -240,7 +241,7 @@ console.log(selectedRows?.candidateID)
                                     <Row gutter={16}>
                                         <Col span={8}>
                                             <Form.Item
-                                                initialValue={selectedRows?.firstName}
+                                                initialValue={selectedRows?.fName}
                                                 name="firstName"
                                                 label="First Name"
                                                 rules={[{ required: true, message: 'Please enter First Name' }]}
@@ -250,7 +251,7 @@ console.log(selectedRows?.candidateID)
                                         </Col>
                                         <Col span={8}>
                                             <Form.Item
-                                                initialValue={selectedRows?.middleName}
+                                                initialValue={selectedRows?.mName}
                                                 name="middleName"
                                                 label="Middle Name"
                                                 rules={[{ required: false, message: 'Please enter Middle Name' }]}
@@ -260,7 +261,7 @@ console.log(selectedRows?.candidateID)
                                         </Col>
                                         <Col span={8}>
                                             <Form.Item
-                                                initialValue={selectedRows?.lastName}
+                                                initialValue={selectedRows?.lName}
                                                 name="lastName"
                                                 label="Last Name"
                                                 rules={[{ required: false, message: 'Please enter Last Name' }]}
@@ -280,7 +281,7 @@ console.log(selectedRows?.candidateID)
                                         </Col>
                                         <Col span={8}>
                                             <Form.Item
-                                                initialValue={selectedRows?.mobileNo}
+                                                initialValue={selectedRows?.curMobileNo}
                                                 name="mobileNo"
                                                 label="Mobile No"
                                                 rules={[{ required: false, message: 'Please enter Mobile No' }]}
@@ -300,11 +301,13 @@ console.log(selectedRows?.candidateID)
                                         </Col>
                                         <Col span={8}>
                                             <Form.Item
+                                                // initialValue={dayjs(selectedRows?.dob, dateFormat)}
                                                 name="dob"
                                                 label="DOB"
                                                 rules={[{ required: false, message: 'Please choose the DOB' }]}
                                             >
                                                 <DatePicker
+                                                    defaultValue={dayjs(selectedRows?.dob, dateFormat)} format={"DD-MMM-YYYY"}
                                                     style={{ width: '100%' }}
                                                     getPopupContainer={(trigger) => trigger.parentElement!}
                                                 />

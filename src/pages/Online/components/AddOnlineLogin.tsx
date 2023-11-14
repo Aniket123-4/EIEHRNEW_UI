@@ -9,6 +9,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, history, SelectLang, useIntl, useParams } from '@umijs/max';
 import moment from 'moment';
 import dayjs from 'dayjs';
+import { values } from 'lodash';
 
 
 
@@ -16,19 +17,17 @@ import dayjs from 'dayjs';
 const { Option } = Select;
 
 
-const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId }: any,props:any) => {
+const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId }: any, props: any) => {
     const formRef = useRef<any>();
     const { token } = theme.useToken();
-    const [current, setCurrent] = useState(0);
-    const [row, setRow] = useState(1);
-    const [col, setCol] = useState(1);
-    const [capacity, setCapacity] = useState(1);
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false)
     const [complaintType, setComplaintType] = useState<any>([{ value: "1", label: "Type 1" }])
-    const [rateType, setRateType] = useState<any>([])
-    const [institute, setInstitute] = useState<any>([])
+    const [ccListOptions, setCcListOptions] = useState<any>([{ value: "+91", label: "+91" }])
     const [gender, setGender] = useState<any>([])
+    const [isOtpVisible, setOTPVisible] = useState(false);
+    const [emailID, setEmailID] = useState<string>("");
+    const [mobileNo, setMobileNo] = useState<string>("");
 
 
     const contentStyle: React.CSSProperties = {
@@ -78,40 +77,43 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
     }
 
     const PostForm = () => {
-        console.log(props)  
+        console.log(props)
     }
 
-    const addOnlineLogin = async (values: any) => {
+    const addOnlineLogin = async (values: any, type: any = 1) => {
         console.log(values);
+
         try {
             const staticParams = {
                 // "fName": "string",
                 // "mName": "string",
                 // "lName": "string",
-                // "eMail": "string",
                 // "password": "string",
+                // "otp":"",
                 // "curMobileNoCC": "string",
-                // "curMobileNo": "string",
-                // "genderID": 0,
-                // "fNameML": "string",
-                // "dob": "2023-10-28T08:46:25.580Z",
-                // "nationalityID": 0,
-                // "uniqueID": 0,
-                // "uniqueName": "",
-                // "curAddress": "",
-                "onlinePatientID": "-1",
-                "formID": "-1",
-                "type": "1"
+                // "eMail": emailID,
+                // "curMobileNo": mobileNo,
+                "genderID": 1,
+                "fNameML": "",
+                "dob": "2023-11-06T09:11:58.560Z",
+                "nationalityID": 0,
+                "uniqueID": 0,
+                "uniqueName": "",
+                "curAddress": "",
+                "onlinePatientID": -1,
+                "formID": -1,
+                "type": type,
             };
 
             setLoading(true)
             const msg = await requestAddOnlineLogin({ ...values, ...staticParams });
             setLoading(false)
-            if (msg.isSuccess === "True") {
+            if (msg.isSuccess === true) {
                 form.resetFields();
-                onClose();
                 message.success(msg.msg);
-                onSaveSuccess(msg);
+                setMobileNo(values['curMobileNo'])
+                setEmailID(values['eMail'])
+                setOTPVisible(true);
                 return;
             } else {
                 message.error(msg.msg);
@@ -133,6 +135,9 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
                 form={form}
                 onFinish={addOnlineLogin}
                 initialValues={{
+                    curMobileNoCC: ccListOptions[0].value,
+                    eMail: emailID,
+                    curMobileNo: mobileNo
                 }}
             >
                 {/* Basic Information */}
@@ -185,13 +190,19 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
                                     <Input type="password" size={'large'} placeholder="Please enter password" />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={2}>
                                 <Form.Item
                                     name="curMobileNoCC"
-                                    label="Mobile number cc*"
+                                    label="CC"
                                     rules={[{ required: true, message: 'Please enter Mobile number cc' }]}
                                 >
-                                    <Input size={'large'} placeholder="Please enter MobileNoCC" />
+                                    <Select
+                                        size={'large'}
+                                        placeholder="Select CC"
+                                        optionFilterProp="children"
+                                        options={ccListOptions}
+                                    />
+                                    {/* <Input size={'large'} placeholder="Please enter MobileNoCC" /> */}
                                 </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={6}>
@@ -223,75 +234,7 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
                                     />
                                 </Form.Item>
                             </Col>
-                            <Col span={6}>
-                                <Form.Item
-                                    name="dob"
-                                    label="DOB (Min age 12 years old)"
-                                    rules={[{ required: false, message: 'Please choose the DOB' }]}
-                                >
-                                    {/* 12 age min DD-MMM-YYYY */}
-                                    <DatePicker
-                                        size={'large'}
-                                        style={{ width: '100%' }}
-                                        format={'DD-MMM-YYYY'}
-                                        disabledDate={(current) => {
-                                            let customDate = moment().format("YYYY-MM-DD");
-                                            return current && current > dayjs().subtract(12, 'year');
-                                        }}
-                                        getPopupContainer={(trigger) => trigger.parentElement!}
-                                    />
-                                </Form.Item>
-                            </Col>
-                            <Col className="gutter-row" span={6}>
-                                <Form.Item
-                                    name="nationalityID"
-                                    label="Nationality"
-                                    rules={[{ required: true, message: 'Please select Nationality' }]}
-                                >
-                                    <Select
-                                        size={'large'}
-                                        placeholder="Select nationality"
-                                        optionFilterProp="children"
-                                        options={[{ label: 'Indian', value: '1' },{ label: 'Other', value: '2' }]}
-                                    />
-                                </Form.Item>
-                            </Col>
-                            <Col className="gutter-row" span={6}>
-                                <Form.Item
-                                    name="uniqueID"
-                                    label="Unique Id"
-                                    rules={[{ required: true, message: 'Please enter unique Id ' }]}
-                                >
-                                    <Input type="number" size={'large'} placeholder="Please enter unique Id" />
-                                </Form.Item>
-                            </Col>
-                            <Col className="gutter-row" span={6}>
-                                <Form.Item
-                                    name="fNameML"
-                                    label="First name ml"
-                                    rules={[{ message: 'Please enter first name ML ' }]}
-                                >
-                                    <Input size={'large'} placeholder="Please enter first name ML" />
-                                </Form.Item>
-                            </Col>
-                            <Col className="gutter-row" span={6}>
-                                <Form.Item
-                                    name="uniqueName"
-                                    label="Unique name"
-                                    rules={[{ required: true, message: 'Please enter unique Name ' }]}
-                                >
-                                    <Input size={'large'} placeholder="Please enter unique name" />
-                                </Form.Item>
-                            </Col>
-                            <Col className="gutter-row" span={6}>
-                                <Form.Item
-                                    name="curAddress"
-                                    label="Address"
-                                    rules={[{ required: true, message: 'Please enter address ' }]}
-                                >
-                                    <Input size={'large'} placeholder="Please enter address" />
-                                </Form.Item>
-                            </Col>
+
 
                         </Row>
                         <Col style={{ justifyContent: 'flex-end' }}>
@@ -309,9 +252,63 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
         )
     }
 
+    const onFinish = (values: any) => {
+        console.log('Received values of form: ', values);
+        // requestForValidateOTP(values);
+    };
+
+    const addOtpForm = () => {
+        return (
+            <>
+                <Form
+                    name="normal_login"
+                    className="login-form"
+                    initialValues={{
+                        eMail: emailID,
+                        curMobileNo: mobileNo
+                    }}
+                    onFinish={(v) => addOnlineLogin({
+                        eMail: emailID,
+                        curMobileNo: mobileNo,
+                        otp: v.otp,
+                        "password": "25",
+                        "curMobileNoCC": "",
+                        "fName": "sk",
+                        "mName": "km",
+                        "lName": "singh",
+                        "fNameML": "",
+                        "userID": "-1",
+                    }, 5)}
+                >
+                    <h2>{'OTP Verification'}</h2>
+                    <Form.Item
+                        name="otp"
+                        rules={[{ required: true, message: 'Please input your valid otp!' }]}
+                    >
+                        <Input placeholder="Enter the otp here" />
+                    </Form.Item>
+
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" className="login-form-button">
+                            Verify
+                        </Button>
+                    </Form.Item>
+                    <Form.Item>
+                        <Button onClick={(v) => addOnlineLogin({
+                            eMail: emailID,
+                            curMobileNo: mobileNo
+                        }, 4)} type="link" className="login-form-button">
+                            Resend the OTP
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </>
+        )
+    }
+
     return (
         <PageContainer
-            title=" "
+            title="Create a new OnlineLogin "
             header={{
                 // ghost: true,
                 breadcrumb: {
@@ -323,20 +320,24 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
                     ],
                 },
             }}
-            style={{ backgroundColor: '#4874dc', height: 90}}
-            
->
-    <Card
-        style={{ marginTop: -35, height: '100%', width: '100%', boxShadow: '2px 2px 2px #4874dc' }}
-        title="Create a new OnlineLogin"
-        bodyStyle={{ paddingBottom: 80 }}
-    >
-        <Spin tip="Please wait..." spinning={loading}>
-            <div style={contentStyle}>
+            style={{}}
+
+        >
+            <Card
+                style={{ marginTop: 10, boxShadow: '2px 2px 2px #4874dc' }}
+                title=""
+                bodyStyle={{ paddingBottom: 80 }}
+            >
+                <Spin tip="Please wait..." spinning={loading}>
+                    {/* <div style={contentStyle}>
                 {addForm()}
-            </div>
-        </Spin>
-    </Card>
+            </div> */}
+
+                    <Row justify="space-around" align="middle">
+                        {!isOtpVisible ? addForm() : addOtpForm()}
+                    </Row>
+                </Spin>
+            </Card>
         </PageContainer >
     );
 };
