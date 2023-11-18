@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card, Checkbox } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
-import { requestAddComplaint, requestAddDisease } from '../services/api';
+import { requestAddComplaint, requestAddDisease, requestDiseaseList } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
@@ -23,9 +23,8 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false)
     const [diseaseType, setDiseaseType] = useState<any>([{ value: "1", label: "Type 1" }])
-    const [rateType, setRateType] = useState<any>([])
-    const [institute, setInstitute] = useState<any>([])
-    const [isActive, setIsActive] = useState(false);
+    const [isActive, setIsActive] = useState(true);
+    const [specialList, setSpecialist] = useState([]);
 
 
 
@@ -40,16 +39,24 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
 
 
     useEffect(() => {
-        //getComplaintType();
+        getSpecialType();
     }, [])
 
-    const getComplaintType = async () => {
-        const res = await requestGetRoomType({});
-        if (res.length > 0) {
-            const dataMaskForDropdown = res?.map((item: any) => {
-                return { value: item.roomTypeID, label: item.roomTypeName }
+    const getSpecialType = async () => {
+        const params = {
+            "diseaseID": "-1",
+            "diseaseTypeID": "-1",
+            "specialTypeID": "2",
+            "isActive": "1",
+            "type": 1
+        }
+        const res = await requestDiseaseList(params);
+        console.log(res);
+        if (res?.result?.length > 0) {
+            const dataMaskForDropdown = res?.result?.map((item: any) => {
+                return { value: item.specialTypeID, label: item.specialTypeName }
             })
-            setDiseaseType(dataMaskForDropdown)
+            setSpecialist(dataMaskForDropdown)
         }
     }
     const goBack = () => {
@@ -64,7 +71,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                 // "diseaseTypeName": "string",
                 // "diseaseTypeCode": "string",
                 // "specialTypeID": "string",
-                // "isActive": "1",
+                "isActive": isActive.toString(),
                 "sortOrder": 1,
                 "diseasesID": "-1",
                 "formID": -1,
@@ -75,11 +82,9 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
             setLoading(true)
             const msg = await requestAddDisease({ ...values, ...staticParams });
             setLoading(false)
-            if (msg.isSuccess === "True") {
+            if (msg.isSuccess === true) {
                 form.resetFields();
-                onClose();
                 message.success(msg.msg);
-                onSaveSuccess(msg);
                 return;
             } else {
                 message.error(msg.msg);
@@ -136,9 +141,15 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                                 <Form.Item
                                     name="specialTypeID"
                                     label="Special type"
-                                    rules={[{ message: 'Please enter special type' }]}
+                                    rules={[{ required: true,  message: 'Please enter special type' }]}
                                 >
-                                    <Input size={'large'} placeholder="Please enter special type" />
+                                    <Select
+                                        size={'large'}
+                                        placeholder="Select Special Type"
+                                        optionFilterProp="children"
+                                        options={specialList}
+                                    />
+                                    {/* <Input size={'large'} placeholder="Please enter special type" /> */}
                                 </Form.Item>
                             </Col>
 
@@ -149,7 +160,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                                 // label="isActive"
                                 rules={[{ message: 'Please select disease type' }]}
                             >
-                                <Checkbox onChange={onChange}>isService</Checkbox>
+                                <Checkbox checked={isActive} onChange={onChange}>isActive</Checkbox>
                             </Form.Item>
                         </Col>
                         <Col style={{ justifyContent: 'flex-end' }}>

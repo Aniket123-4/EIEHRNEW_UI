@@ -44,4 +44,24 @@ export async function requestGetPatientList(body: any, options?: { [key: string]
     ...(options || {}),
   });
 }
+export async function requestGetAppointmentSearchList(body: any, options?: { [key: string]: any }) {
+  return request<any>('Online/GetAppointmentSearch', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetDoctorList(body: any, options?: { [key: string]: any }) {
+  return request<any>('Login/GetUserList?CommonID=-1&Type=3', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
 

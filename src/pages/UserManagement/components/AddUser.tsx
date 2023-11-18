@@ -56,7 +56,7 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
       
        
         getGender()
-        getMarital()
+       // getMarital()
         getPackages();
         getRole();
         getDesignation();
@@ -261,7 +261,7 @@ const section_array:{sectionID:any; sectionName:any; sectionCode:any; parentSect
                 const filtered = section.filter((sections: { sectionID: string; }) => {
                     return sections.sectionID === sect;
                   });
-                  section_array.push({ sectionID: filtered[0].sectionID, sectionName: filtered[0].sectionName, sectionCode: filtered[0].sectionCode, parentSectionID:filtered[0].parentSectionID, mainSectionID:filtered[0].mainSectionID, parentMainSectionID:filtered[0].parentMainSectionID, depthLevel:filtered[0].depthLevel+""})
+                  section_array.push({ sectionID: filtered[0].sectionID+"", sectionName: filtered[0].sectionName, sectionCode: filtered[0].sectionCode, parentSectionID:filtered[0].parentSectionID, mainSectionID:filtered[0].mainSectionID+"", parentMainSectionID:filtered[0].parentMainSectionID, depthLevel:filtered[0].depthLevel+""})
             })
             values.roleT.forEach((rl, index) => {
                 console.log(role)
@@ -283,7 +283,7 @@ const section_array:{sectionID:any; sectionName:any; sectionCode:any; parentSect
                   "desigT": designstion_array,
                   "roleT": role_array,
                   "packageT":packaget_array,
-                  "rankID":"-1",// values.rankID?values.rankIDvalues.rankID:
+                  "rankID": values.rankID?values.rankID+"":"-1",
                   ShortName :"",
                   UserTypeID:"-1",
                   stringName:"",
@@ -651,7 +651,7 @@ const section_array:{sectionID:any; sectionName:any; sectionCode:any; parentSect
                                     />
                                 </Form.Item>
                             </Col>
-                            {/* <Col span={8}>
+                            <Col span={8}>
                                 <Form.Item
                                 labelCol={{ span: 24 }}
                                     name="rankID"
@@ -665,7 +665,7 @@ const section_array:{sectionID:any; sectionName:any; sectionCode:any; parentSect
                                        
                                     />
                                 </Form.Item>
-                            </Col> */}
+                            </Col>
                             <Col span={8}>
                                 <Form.Item
                                 labelCol={{ span: 24 }}

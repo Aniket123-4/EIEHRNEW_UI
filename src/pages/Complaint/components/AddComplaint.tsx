@@ -27,6 +27,8 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
     const [complaintType, setComplaintType] = useState<any>([{ value: "1", label: "Type 1" }])
     const [rateType, setRateType] = useState<any>([])
     const [institute, setInstitute] = useState<any>([])
+    const [isActive, setIsActive] = useState(true);
+
 
 
     const contentStyle: React.CSSProperties = {
@@ -108,7 +110,7 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
             setLoading(true)
             const msg = await requestAddComplaint({ ...values, ...staticParams });
             setLoading(false)
-            if (msg.isSuccess === "True") {
+            if (msg.isSuccess === true) {
                 form.resetFields();
                 onClose();
                 message.success(msg.msg);
@@ -128,7 +130,9 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
     const onChangeServiceStatus = (e: CheckboxChangeEvent) => {
         formRef.current?.setFieldsValue({
             isService: e.target.checked ? "true" :"false"})
+            setIsActive(e.target.checked)
             // setVatApplicable(e.target.checked)
+            
     };
 
     const addForm = () => {
@@ -141,38 +145,36 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
                 initialValues={{
                 }}
             >
-                {/* Basic Information */}
                 <>
                     <div className="gutter-example">
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={6}  >
+                            <Col className="gutter-row" span={8}  >
                                 <Form.Item
                                     // required={true}
                                     name="complaintTypeName"
                                     label="Complaint Name"
                                     rules={[{ required: true, message: 'Please enter complaint name' }]}
-                                // initialValue={institute}
                                 >
                                     <Input size={'large'} placeholder="Please enter complaint name" />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     // initialValue={institute}
                                     name="complaintTypeID"
-                                    label="Complaint Type"
+                                    label="Complaint TypeID"
                                     rules={[{ required: true, message: 'Please select complaint type' }]}
                                 >
-                                    <Select
+                                    <Input size={'large'} placeholder="Please enter complaint typeId" />
+                                    {/* <Select
                                         size={'large'}
                                         placeholder="Complaint type"
                                         optionFilterProp="children"
                                         options={complaintType}
-
-                                    />
+                                    /> */}
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     name="complaintTypeCode"
                                     label="Complaint Code"
@@ -181,13 +183,13 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
                                     <Input size={'large'} placeholder="Please enter complaint code" />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" >
                                 <Form.Item
                                     name="isService"
-                                    label="Is this a service"
+                                    // label="Is this a service"
                                     rules={[{ required: true, message: 'Please check' }]}
                                 >
-                                    <Checkbox  onChange={onChangeServiceStatus}>isService</Checkbox>
+                                    <Checkbox checked={isActive}  onChange={onChangeServiceStatus}>isService</Checkbox>
                                 </Form.Item>
                             </Col>
 

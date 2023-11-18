@@ -36,7 +36,7 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
     const [designationDef, setDesignationDef] = useState<any>([])
     const [sectionDef, setSectionDef] = useState<any>([])
 
-    const [rank, setRank] = useState<any>([{ value: -1, label: "All" }]);
+    const [rank, setRank] = useState<any>([{ value: "-1", label: "All" }]);
     const [userType, setUserType] = useState<any>([]);
     const [gender, setGender] = useState<any>([])
     const [marital, setMarital] = useState<any>([])
@@ -148,6 +148,7 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
             const dataMaskForDropdown = res?.data?.map((item: any) => {
                 return { value: item.rankID, label: item.rankName }
             })
+            console.log(dataMaskForDropdown)
             setRank(dataMaskForDropdown)
         }
         setTimeout(() => {
@@ -333,7 +334,7 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
                            const filtered = section.filter((sections: { sectionID: string; }) => {
                                return sections.sectionID === sect;
                              });
-                             section_array.push({ sectionID: filtered[0].sectionID, sectionName: filtered[0].sectionName, sectionCode: filtered[0].sectionCode, parentSectionID:filtered[0].parentSectionID, mainSectionID:filtered[0].mainSectionID, parentMainSectionID:filtered[0].parentMainSectionID, depthLevel:filtered[0].depthLevel+""})
+                             section_array.push({ sectionID: filtered[0].sectionID+"", sectionName: filtered[0].sectionName, sectionCode: filtered[0].sectionCode, parentSectionID:filtered[0].parentSectionID, mainSectionID:filtered[0].mainSectionID+"", parentMainSectionID:filtered[0].parentMainSectionID, depthLevel:filtered[0].depthLevel+""})
                        })
                        values.roleT.forEach((rl, index) => {
                            console.log(role)
@@ -353,7 +354,7 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
                 "desigT": designstion_array,
                 "roleT": role_array,
                 "packageT":packaget_array,
-                "rankID": "-1",//values.rankID==""?values.rankIDvalues.rankID:
+                "rankID": values.rankID==""?values.rankID+"":"-1",
                 shortName :"",
                 genderID :values.genderID,
                  // UserTypeID:"-1",
@@ -382,8 +383,8 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
                  onClose();
                 //setOTPVisible(true);
                 //setCandidateData({ ...values, ...staticParams })
-                const urlParams = new URL(window.location.href).searchParams;
-                history.push(urlParams.get('redirect') || '/list');
+                //const urlParams = new URL(window.location.href).searchParams;
+               // history.push(urlParams.get('redirect') || '/list');
                 //requestForOTP({ ...values, ...staticParams })
                 return;
             } else {
@@ -741,23 +742,23 @@ const AddUser = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess, is
                                     />
                                 </Form.Item>
                             </Col>
-                            {/* <Col span={8}>
+                            <Col span={8}>
                                 <Form.Item
                                  labelCol={{ span: 24 }}
-                                //initialValue={selectedRows?.rankID}
+                                initialValue={selectedRows?.rankID}
                                     name="rankID"
                                     label="Rank"
                                     rules={[{ required: false, message: 'Please choose the Rank' }]}
                                 >
                                     <Select
-                                      // defaultValue={selectedRows?.rankID}
+                                       defaultValue={selectedRows?.rankID}
                                         placeholder="Please choose the Rank"
                                         style= {{ width: '100%',textAlign:'start' }}
                                         options={rank}
                                        
                                     />
                                 </Form.Item>
-                            </Col> */}
+                            </Col>
                             <Col span={8}>
                                 <Form.Item
                                   initialValue={selectedRows?.userTypeID}
