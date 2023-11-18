@@ -124,6 +124,11 @@ export default [
         path: '/complaints/AddPatRequest',
         component: './Online/components/AddPatRequest',
       },
+      {
+        name: 'Manage Appointments',  
+        path: '/complaints/ManageAppointment',
+        component: './Online/components/SearchAppointment',
+      },
     ],
   },
   {

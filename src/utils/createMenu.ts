@@ -30,6 +30,9 @@ const getModulePath = (name: string) => {
 
         case "Item Status":
             return "/complaints/AddPatRequest";
+       
+        case "Manage Appointment":
+            return "/complaints/ManageAppointment";
 
         case "User Management":
             return "/user-management/list";

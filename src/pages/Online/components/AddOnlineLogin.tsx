@@ -86,13 +86,13 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
         try {
             const staticParams = {
                 // "fName": "string",
-                // "mName": "string",
                 // "lName": "string",
                 // "password": "string",
                 // "otp":"",
                 // "curMobileNoCC": "string",
                 // "eMail": emailID,
                 // "curMobileNo": mobileNo,
+                "mName": values?.mName ? values?.mName: "" ,
                 "genderID": 1,
                 "fNameML": "",
                 "dob": "2023-11-06T09:11:58.560Z",

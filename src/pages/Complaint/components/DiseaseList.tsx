@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Form, Input, InputNumber, Popconfirm, Table, Typography, message } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { Card, Checkbox, Form, Input, InputNumber, Popconfirm, Table, Typography, message } from 'antd';
 import { requestAddDisease, requestDiseaseList } from '../services/api';
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 interface Item {
     key: string;
@@ -28,6 +29,33 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     children: React.ReactNode;
 }
 
+
+const DiseaseList: React.FC = ({}) => {
+    const formRef = useRef<any>();
+    const [form] = Form.useForm();
+    const [data, setData] = useState(originData);
+    const [editingKey, setEditingKey] = useState('');
+    const [diseaseList, setDiseaseList] = useState([]);
+    const [loading, setLoading] = useState(false)
+    const [isActive, setIsActive] = useState(true);
+
+
+    const isEditing = (record: Item) => record.key === editingKey;
+
+    const edit = (record: Partial<Item> & { key: React.Key }) => {
+        console.log(record.key)
+        form.setFieldsValue({ diseaseName: '', isActive: '', diseaseTypeName: '', ...record });
+        setEditingKey(record.key);
+    };
+    const onChangeServiceStatus = (e: CheckboxChangeEvent) => {
+        formRef.current?.setFieldsValue({
+            isService: e.target.checked ? "true" : "false"
+        })
+        setIsActive(e.target.checked)
+        // setVatApplicable(e.target.checked)
+    };
+
+    
 const EditableCell: React.FC<EditableCellProps> = ({
     editing,
     dataIndex,
@@ -39,7 +67,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
     ...restProps
 
 }) => {
-    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+    const inputNode = inputType === 'text' ? 
+    <Checkbox checked={isActive} onChange={onChangeServiceStatus}>IsActive</Checkbox> : <Input />;
 
     return (
         <td {...restProps}>
@@ -62,22 +91,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
         </td>
     );
 };
-
-const DiseaseList: React.FC = () => {
-    const [form] = Form.useForm();
-    const [data, setData] = useState(originData);
-    const [editingKey, setEditingKey] = useState('');
-    const [diseaseList, setDiseaseList] = useState([]);
-    const [loading, setLoading] = useState(false)
-
-    const isEditing = (record: Item) => record.key === editingKey;
-
-    const edit = (record: Partial<Item> & { key: React.Key }) => {
-        console.log(record.key)
-        form.setFieldsValue({ diseaseName: '', isActive: '', diseaseTypeName: '', ...record });
-        setEditingKey(record.key);
-    };
-
     const cancel = () => {
         setEditingKey('');
     };
@@ -89,8 +102,8 @@ const DiseaseList: React.FC = () => {
         const params = {
             "diseaseID": "-1",
             "diseaseTypeID": "-1",
-            "specialTypeID": "2",
-            "isActive": "1",
+            "specialTypeID": "-1",
+            "isActive": "-1",
             "type": 1
         }
         const res = await requestDiseaseList(params);
@@ -131,12 +144,12 @@ const DiseaseList: React.FC = () => {
         const editValues = (await form.validateFields()) as Item;
         const index:any = diseaseList.find((item) => key === item.key);
         // console.log(index); 
-        // console.log(editValues);
+        console.log(editValues);
         try {
             const staticParams = {
-                "DiseaseTypeCode":index?.diseaseCodeICD,
-                "SpecialTypeID":index?.specialTypeID,
-                "diseaseTypeID":index?.diseaseTypeID,
+                // "DiseaseTypeCode":editValues?.diseasetypecode,
+                // "SpecialTypeID":editValues?.specialTypeID,
+                // "diseaseTypeID":editValues?.diseaseTypeID,
                 "sortOrder": 1,
                 "diseasesID": "-1",
                 "isActive": "1",
@@ -170,31 +183,40 @@ const DiseaseList: React.FC = () => {
             title: 'Name',
             dataIndex: 'diseaseName',
             // render: (text) => <a>{text}</a>,
-            editable: true
+            editable: true,
+            width:'25%'
         },
         {
             title: 'Active',
             dataIndex: 'isActive',
             key: 'isActive',
             editable: true,
-            render: (text:any ) => <Typography>{text.toString}</Typography>,
+            width:'15%',
+            render: (text:any ) => <Typography align="center" style={{
+                width: '80%',
+                backgroundColor: text==true ?'#00FF00' : '#EBEBE4', justifyContent: 'center', borderRadius: 10,
+            }}>
+                {text=="true" ? 'Active' : 'InActive'}</Typography>,
 
         },
         {
             title: 'Disease Type',
             dataIndex: 'diseaseTypeName',
             key: 'diseaseTypeName',
-            editable: true
+            editable: true,
+            width:'20%'
         },
         {
-            title: 'DiseaseTypeName',
+            title: 'Special Type Name',
             key: 'specialTypeName',
             dataIndex: 'specialTypeName',
-            editable: true
+            editable: true,
+            width:'20%'
         },
         {
             title: 'Action',
             dataIndex: 'operation',
+            width:'20%',
             render: (_: any, record: Item) => {
                 const editable = isEditing(record);
                 return editable ? (
@@ -223,7 +245,7 @@ const DiseaseList: React.FC = () => {
             ...col,
             onCell: (record: Item) => ({
                 record,
-                inputType: col.dataIndex === 'age' ? 'number' : 'text',
+                inputType: col.dataIndex === 'isActive' ? 'text' : 'string',
                 dataIndex: col.dataIndex,
                 title: col.title,
                 editing: isEditing(record),
@@ -237,7 +259,7 @@ const DiseaseList: React.FC = () => {
         form={form} 
         component={false}>
             <Card
-                title="Investigation List"
+                title="Disease List"
                 style={{ boxShadow: '2px 2px 2px #4874dc' }}
             >
             <Table

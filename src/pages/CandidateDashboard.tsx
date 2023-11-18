@@ -10,23 +10,25 @@ const { Title, Text, Link } = Typography;
 const CandidateDashboard: React.FC = () => {
 
   const [selectedRows, setSelectedRows] = useState<Object>({});
+  const [appointmentHistory, setAppointmentHistory] = useState<Object>({});
 
   useEffect(() => {
-    getUserDetails();
+    getOnlinePatient(1);
+    getOnlinePatient(2);
   }, [])
 
-  const getUserDetails = async () => {
+  const getOnlinePatient = async (type:any=1) => {
     const { verifiedUser } = getUserInLocalStorage();
 
     const params = {
       "onlinePatientID": verifiedUser?.userID,
       "userID": -1,
       "formID": -1,
-      "type": 1
+      "type": type
     }
     const msg = await requestGetCandidateList(params);
     
-    setSelectedRows(msg.result[0])
+    type==1 ? setSelectedRows(msg.result[0]) :setAppointmentHistory(msg.result[0]);
   }
 
   return (
@@ -131,16 +133,57 @@ const CandidateDashboard: React.FC = () => {
         />
         <Divider orientation="left"><h4>APPOINTMENT DATA</h4></Divider>
         <ProDescriptions
-          dataSource={selectedRows}
+          dataSource={appointmentHistory}
           bordered={true}
           size={'small'}
           columns={[
             {
-              title: 'Address',
-              dataIndex: 'curAddress',
-              span: 1
+              title: 'DoctorName',
+              dataIndex: 'doctorName',
+              span: 2
             },
-
+            {
+              title: 'WeekName',
+              dataIndex: 'weekName',
+              span: 2
+            },
+            {
+              title: 'PatientNo',
+              dataIndex: 'patientNo',
+              span: 2
+            },
+            {
+              title: 'SlotDate',
+              dataIndex: 'slotDate',
+              span: 2
+            },
+          ]}
+        />
+        <ProDescriptions
+          dataSource={appointmentHistory}
+          bordered={true}
+          size={'small'}
+          columns={[
+            {
+              title: 'PatientID',
+              dataIndex: 'doctorName',
+              span: 2
+            },
+            {
+              title: 'PatientCaseNo',
+              dataIndex: 'patientCaseNo',
+              span: 2
+            },
+            {
+              title: 'AdmNo',
+              dataIndex: 'admNo',
+              span: 2
+            },
+            {
+              title: 'DoctorName',
+              dataIndex: 'slotDate',
+              span: 2
+            },
           ]}
         />
       </Card>
