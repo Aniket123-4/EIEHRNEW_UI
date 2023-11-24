@@ -7,6 +7,10 @@ const getModulePath = (name: string) => {
     const { verifiedUser, selectedPackageId }: any = getUserInLocalStorage();
 
     switch (name) {
+
+        case "Appoint Doctor":
+            return "/booking/doctor-slot-booking";
+
         case "Disease Master":
             return "/complaints/addDisease";
 

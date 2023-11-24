@@ -100,12 +100,12 @@ export default [
         component: './Complaint/components/AddInvUnit',
       },
       {
-        name: 'AddInvUnit', 
+        name: 'AddInvUnit',
         path: '/complaints/AddInvUnit',
         component: './Complaint/components/AddInvUnit',
       },
       {
-        name: 'DiseaseList', 
+        name: 'DiseaseList',
         path: '/complaints/DiseaseList',
         component: './Complaint/components/DiseaseList',
       },
@@ -115,7 +115,7 @@ export default [
         component: './Online/components/AddOnlineLogin',
       },
       {
-        name: 'AddPatRequest', 
+        name: 'AddPatRequest',
         path: '/complaints/AddPatRequest',
         component: './Online/components/AddPatRequest',
       },
@@ -155,6 +155,11 @@ export default [
         name: 'Investigation',
         path: '/booking/doctor-slot-booking',
         component: './Booking/components/AddDoctorSlotBooking',
+      },
+      {
+        name: 'Appoint Details List',
+        path: '/booking/doctor-slot-booking-details/:id/:id/:id/:id/:id',
+        component: './Booking/components/DoctorSlotAppointListDetails',
       }
     ],
   },
