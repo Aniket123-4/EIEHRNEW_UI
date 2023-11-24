@@ -9,6 +9,7 @@ import { dateFormat } from '@/utils/constant';
 import { convertDate, convertTime } from '@/utils/helper';
 import dayjs from 'dayjs';
 import { requestAddPatDocAppointments } from '../services/api';
+import DoctorSlotBookingList from './DoctorSlotBookingList';
 
 const { RangePicker } = DatePicker;
 
@@ -205,8 +206,8 @@ const AddDoctorSlotBooking = () => {
             slotToDate,
             fromHrs,
             toHrs,
-            isActive: 1,
-            isForDelete: 1,
+            isActive: true,
+            isForDelete: true,
             userWeekSlotID: "-1",
             formID: -1,
             type: 1,
@@ -459,6 +460,8 @@ const AddDoctorSlotBooking = () => {
                         </div>
                     </Spin>
                 </Card>
+
+                <DoctorSlotBookingList />
             </Space>
         </PageContainer>
     );

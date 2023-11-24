@@ -14,3 +14,13 @@ export async function requestAddPatDocAppointments(body: any, options?: { [key: 
   });
 }
 
+export async function requestGetPatDocAppointment(body: any, options?: { [key: string]: any }) {
+  return request<any>('/Online/GetPatDocAppointment', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
