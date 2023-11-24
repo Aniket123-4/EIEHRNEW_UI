@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Typography, Popconfirm, Checkbox } from 'antd';
 import { requestGetComplaintType, requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
@@ -14,7 +14,7 @@ const { Option } = Select;
 interface Item {
     key: string;
     name: string;
-    isActive: boolean;
+    isActive: any;
     address: string;
 }
 
@@ -29,7 +29,7 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 
-const ComplaintList = ({ visible }: any) => {
+const ComplaintList = ({ refresh }: any) => {
     const formRef = useRef<any>();
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false)
@@ -42,7 +42,7 @@ const ComplaintList = ({ visible }: any) => {
 
     useEffect(() => {
         getComplaintList();
-    }, [])
+    }, [refresh])
 
     const EditableCell: React.FC<EditableCellProps> = ({
         editing,
@@ -56,31 +56,27 @@ const ComplaintList = ({ visible }: any) => {
 
     }) => {
         const inputNode = inputType === 'text' ?
-            // <Select
-            //     // defaultValue={selectedRows?.genderID}
-            //     placeholder="Select gender"
-            //     optionFilterProp="children"
-            //     options={isActive}
-            // />
-            <Checkbox checked={isActive} onChange={onChangeServiceStatus}>IsActive</Checkbox>
+            <Checkbox >IsActive</Checkbox>
             : <Input style={{ width: '100%' }} size='large' />;
-        console.log(inputType)
-
         return (
             <td {...restProps}>
                 {editing ? (
+                    <>
+                    {console.log(record.isActive)}
                     <Form.Item
+                        valuePropName={dataIndex=='isActive' ? 'checked' :'value'}
                         name={dataIndex}
                         style={{ width: '100%' }}
                         rules={[
                             {
                                 required: true,
-                                message: `Please Input ${title}!`,
+                                message: `Please Input ${title}`,
                             },
                         ]}
                     >
                         {inputNode}
                     </Form.Item>
+                    </>
                 ) : (
                     children
                 )}
@@ -93,7 +89,6 @@ const ComplaintList = ({ visible }: any) => {
         })
         setIsActive(e.target.checked)
         // setVatApplicable(e.target.checked)
-
     };
     const contentStyle: React.CSSProperties = {
         color: token.colorTextTertiary,
@@ -130,7 +125,7 @@ const ComplaintList = ({ visible }: any) => {
             editable: true
         },
         {
-            title: 'Type',
+            title: 'Complaint Code',
             dataIndex: 'complaintTypeCode',
             key: 'TypeCode',
             editable: true,
@@ -185,12 +180,15 @@ const ComplaintList = ({ visible }: any) => {
     const saveComplaint = async (key: any) => {
         const editValues = (await form.validateFields()) as Item;
         const index: any = complaintList.find((item: any) => key === item.key);
+        editValues['isActive'] = editValues.isActive.toString();
+
+        console.log(editValues);
         try {
             const staticParams = {
                 "complaintTypeID": index?.complaintTypeID,
                 // "complaintTypeName": index?.complaintTypeName,
                 // "complaintTypeCode": index?.complaintTypeCode,
-                // "isActive": index?.isActive,
+                // "isActive": isActive,
                 "sortOrder": "",
                 "formID": -1,
                 "type": 1,
@@ -203,6 +201,7 @@ const ComplaintList = ({ visible }: any) => {
             if (msg.isSuccess === true) {
                 setEditingKey('');
                 message.success(msg.msg);
+                getComplaintList();
                 return;
             } else {
                 message.error(msg.msg);
@@ -229,9 +228,9 @@ const ComplaintList = ({ visible }: any) => {
             "isActive": "-1",
             "type": "1"
         }
+        setLoading(true)
         const res = await requestGetComplaintType(staticParams);
         if (res.result.length > 0) {
-            console.log(res.result);
             const dataMaskForDropdown = res?.result?.map((item: any, index: number) => {
                 return {
                     key: index,
@@ -244,24 +243,29 @@ const ComplaintList = ({ visible }: any) => {
                 }
             })
             setComplaintList(dataMaskForDropdown)
-            console.log(dataMaskForDropdown)
+            setLoading(false)
+            // console.log(dataMaskForDropdown)
+        }
+        else {        
+            setLoading(true)
         }
     }
-
     return (
         // <PageContainer
         //     style={{ backgroundColor: '#4874dc', height: 120 }}
         // >
         <Form
-            // initialValues={{diseaseTypeID:diseaseList?.diseaseTypeID}}
             form={form}
-            component={false}>
+            // initialValues={{isActive:"true"}}
+            component={false}
+            >
             <Card
                 title="ComplaintType List"
                 style={{ boxShadow: '2px 2px 2px #4874dc' }}
             >
                 <div style={contentStyle}>
                     {complaintList &&
+                    <Spin tip="Please wait..." spinning={loading}>
                         <Table
                             components={{
                                 body: {
@@ -274,7 +278,8 @@ const ComplaintList = ({ visible }: any) => {
                             pagination={{
                                 onChange: cancel,
                             }}
-                        />}
+                        />
+                        </Spin>}
                 </div>
             </Card>
         </Form>

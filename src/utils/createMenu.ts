@@ -12,31 +12,22 @@ const getModulePath = (name: string) => {
             return "/booking/doctor-slot-booking";
 
         case "Disease Master":
-            return "/complaints/addDisease";
+            return "/master/addDisease";
 
         case "Complaint Master":
-            return "/complaints/addComplaint";
+            return "/master/addComplaint";
 
         case "Investigation Parameter":
             return "/investigation/AddInvParameter";
 
-        case "InfraStructure":
-            return "/investigation/addInvGroup";
-
-        case "Patient Registration":
-            return "/complaints/AddOnlineLogin";
-
         case "Search Patient":
-            return "/complaints/Patient";
-
-        case "Direct Item Receipt":
-            return "/complaints/AddInvUnit";
-
-        case "Item Status":
-            return "/complaints/AddPatRequest";
+            return "/master/Patient";
        
         case "Manage Appointment":
-            return "/complaints/ManageAppointment";
+            return "/master/ManageAppointment";
+
+        case "Investigation Services":
+            return "/master/AddInvServices";
 
         case "User Management":
             return "/user-management/list";

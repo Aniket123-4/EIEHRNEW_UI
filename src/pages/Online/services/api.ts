@@ -64,4 +64,14 @@ export async function requestGetDoctorList(body: any, options?: { [key: string]:
     ...(options || {}),
   });
 }
+export async function requestSyncOnlinePatient(body: any, options?: { [key: string]: any }) {
+  return request<any>('/Online/SyncOnlinePatient', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
 
