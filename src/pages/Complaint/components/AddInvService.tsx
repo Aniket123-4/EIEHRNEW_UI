@@ -8,17 +8,15 @@ import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
 import DiseaseList from './DiseaseList';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
+import InvServiceList from './InvServiceList';
 
 
 const { Option } = Select;
 
 
-const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId }: any) => {
+const AddInvService = () => {
     const formRef = useRef<any>();
     const { token } = theme.useToken();
-    const [current, setCurrent] = useState(0);
-    const [row, setRow] = useState(1);
-    const [col, setCol] = useState(1);
     const [capacity, setCapacity] = useState(1);
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false)
@@ -142,69 +140,71 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                         <Row gutter={16}>
                             <Col className="gutter-row" span={6}>
                                 <Form.Item
-                                    name="diseaseTypeName"
-                                    label="Disease name"
-                                    rules={[{ required: true, message: 'Please enter disease name' }]}
+                                    name="serviceName"
+                                    label="Battery of Test Name"
+                                    rules={[{ required: true, message: 'Please enter service name' }]}
                                 // initialValue={institute}
                                 >
-                                    <Input size={'large'} placeholder="Please enter disease type name" />
+                                    <Input size={'large'} placeholder="Please enter service name" />
                                 </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={6}>
                                 <Form.Item
-                                    name="diseaseTypeCode"
-                                    label="Disease code"
-                                    rules={[{ required: true, message: 'Please enter disease code' }]}
+                                    name="serviceFrom"
+                                    label="Effective From Date"
+                                    rules={[{ required: true, message: 'Please Select From Date' }]}
                                 >
-                                    <Input size={'large'} placeholder="Please enter disease code" />
-                                </Form.Item>
-                            </Col>
-                            <Col className="gutter-row" span={6}>
-                                <Form.Item
-                                    name="diseaseTypeID"
-                                    label="Disease type"
-                                    rules={[{ required: true, message: 'Please select disease type' }]}
-                                >
-                                    <Select
-                                        showSearch
-                                        filterOption={filterOption}
+                                    <DatePicker
                                         size={'large'}
-                                        placeholder="Select Disease Type"
-                                        options={diseaseType}
-                                        dropdownRender={(menu) => (
-                                            <>
-                                                <Space style={{ padding: 4 }}>
-                                                    <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
-                                                        Add New
-                                                    </Button>
-                                                </Space>
-                                                <Divider style={{ margin: '8px 0' }} />
-                                                {menu}
-                                            </>
-                                        )}
+                                        style={{ width: '100%' }}
+                                        format={'DD-MMM-YYYY'}
                                     />
-
                                 </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={6}>
                                 <Form.Item
-                                    name="specialTypeID"
-                                    label="Special type"
-                                    rules={[{ required: true, message: 'Please enter special type' }]}
+                                    name="serviceTo"
+                                    label="Effective To Date"
+                                    rules={[{ required: true, message: 'Please select to date' }]}
                                 >
-                                    <Select
-                                        showSearch
+                                    <DatePicker
                                         size={'large'}
-                                        placeholder="Select Special Type"
-                                        optionFilterProp="children"
-                                        options={specialList}
-                                        filterOption={filterOption}
+                                        style={{ width: '100%' }}
+                                        format={'DD-MMM-YYYY'}
                                     />
-                                    {/* <Input size={'large'} placeholder="Please enter special type" /> */}
                                 </Form.Item>
                             </Col>
+                            
+                            <Col className="gutter-row" span={6}>
+                                <Form.Item
+                                    name="serviceCost"
+                                    label="Cost"
+                                    rules={[{ required: true, message: 'Please enter cost' }]}
+                                >
+                                    <Input size={'large'} placeholder="Please enter cost" />
+                                </Form.Item>
+                            </Col>
+                            <Col className="gutter-row" span={6}>
+                            <Form.Item
+                                name="CGSTPercent"
+                                rules={[{ required: false, message: 'Please select SGST Percent' }]}
+                                label="CGST"
+                            >
+                                <Input size={'large'} placeholder="Please enter CGST Percent" />
+                            </Form.Item>
+                        </Col>
+                        <Col className="gutter-row" span={6}>
+                            <Form.Item
+                                name="SGSTPercent"
+                                label="SGST"
+                                rules={[{ required: false, message: 'Please enter SGST Percent' }]}
+                            >
+                                <Input size={'large'} placeholder="Please enter SGST Percent" />
+                            </Form.Item>
+                        </Col>
 
                         </Row>
+                        
                         <Col className="gutter-row" span={6}>
                             <Form.Item
                                 name="isActive"
@@ -284,7 +284,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
                 <Card
                     style={{ height: '100%', boxShadow: '2px 2px 2px #4874dc' }}
-                    title="Create a new disease master"
+                    title="Add new Investigation Service"
                 // extra={[
                 //     <Button key="rest" onClick={() => {
                 //         history.push("/complaints/DiseaseList")
@@ -298,10 +298,10 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                         </div>
                     </Spin>
                 </Card>
-                <DiseaseList />
+                <InvServiceList />
             </Space>
         </PageContainer>
     );
 };
 
-export default AddDisease;
+export default AddInvService;

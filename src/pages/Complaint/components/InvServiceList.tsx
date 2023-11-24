@@ -30,7 +30,7 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 
-const DiseaseList: React.FC = ({ }) => {
+const InvServiceList: React.FC = ({ }) => {
     const formRef = useRef<any>();
     const [form] = Form.useForm();
     const [data, setData] = useState(originData);
@@ -122,7 +122,7 @@ const DiseaseList: React.FC = ({ }) => {
             const dataMaskTypeId = res?.result?.map((item: any, index: string) => {
                 return { value:item.diseaseID,label:item.diseaseCodeICD}
             })
-            setDiseaseList(dataMaskForDropdown)
+            // setDiseaseList(dataMaskForDropdown)
             setDiseaseTypeList(dataMaskTypeId)
         }
     }
@@ -218,14 +218,14 @@ const DiseaseList: React.FC = ({ }) => {
     const columns = [
         {
             title: 'Name',
-            dataIndex: 'diseaseName',
+            dataIndex: 'serviceName',
             key: 'diseaseName',
             // render: (text) => <a>{text}</a>,
             editable: true,
             width: '25%'
         },
         {
-            title: 'Active',
+            title: 'isActive',
             dataIndex: 'isActive',
             key: 'isActive',
             editable: true,
@@ -238,16 +238,21 @@ const DiseaseList: React.FC = ({ }) => {
 
         },
         {
-            title: 'Disease Code ICD',
-            dataIndex: 'diseaseCodeICD',
-            key: 'diseaseCodeICD',
+            title: 'CGST',
+            dataIndex: 'CGSTPercent',
+            key: 'CGSTPercent',
             editable: true,
-            width: '20%'
         },
         {
-            title: 'Special Type Name',
-            key: 'specialTypeId',
-            dataIndex: 'specialTypeName',
+            title: 'SGST',
+            dataIndex: 'SGSTPercent',
+            key: 'SGSTPercent',
+            editable: true,
+        },
+        {
+            title: 'Cost',
+            key: 'serviceCost',
+            dataIndex: 'serviceCost',
             editable: true,
             width: '20%'
         },
@@ -298,7 +303,7 @@ const DiseaseList: React.FC = ({ }) => {
             form={form}
             component={false}>
             <Card
-                title="Disease List"
+                title="Investigation Service List"
                 style={{ boxShadow: '2px 2px 2px #4874dc' }}
             >
                 <Table
@@ -320,4 +325,4 @@ const DiseaseList: React.FC = ({ }) => {
     );
 };
 
-export default DiseaseList;
+export default InvServiceList;

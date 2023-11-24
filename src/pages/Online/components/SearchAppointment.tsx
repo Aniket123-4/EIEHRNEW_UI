@@ -8,20 +8,20 @@ import { PageContainer, ProFormInstance, StepsForm } from '@ant-design/pro-compo
 import { ProDescriptions } from '@ant-design/pro-components';
 import { requestAddInstitute } from '@/pages/Institute/services/api';
 import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
-import { getUserType } from '@/utils/common';
+import { getUserInLocalStorage, getUserType } from '@/utils/common';
 import { requestAddInstituteUser, requestUpdateInstituteUser } from '@/pages/InstituteUser/services/api';
 import { requestAddCandidate, requestGetCandidateList } from '@/pages/Candidate/services/api';
 import ViewCandidate from '@/pages/Candidate/components/ViewCandidate';
 import EditCandidate from '@/pages/Candidate/components/EditCandidate';
 import EditOnlineLogin from '@/pages/Online/components/EditOnlineLogin';
-import { requestGetAppointmentSearchList, requestGetDoctorList } from '../services/api';
+import { requestGetAppointmentSearchList, requestGetDoctorList, requestSyncOnlinePatient } from '../services/api';
 import UpdateProfileImage from '@/pages/User/UserProfile/UpdateProfileImage';
 import UpdateDocsUpload from '@/pages/User/UserProfile/UpdateDocsUpload';
 import { SearchOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
-const dateFormat = 'DD-MMM-YYYY';
+const dateFormat = 'DD MMM YYYY';
 
 
 
@@ -33,13 +33,13 @@ const UserProfile = () => {
     const [loading, setLoading] = useState(false)
     const intl = useIntl();
     const [openViewCandidate, setOpenViewCandidate] = useState(false);
-    const [selectedRows, setSelectedRows] = useState<Object>({});
-    const [isEditable, setIsEditable] = useState<boolean>(true);
     const [activeTab, setActiveTab] = useState<any>("1");
     const [doctorList, setDoctorList] = useState<any>([]);
-    const [slotDate, setSlotDate] = useState<any>(moment().format('YYYY-MM-DD'));
+    const [defDoctor, setDefDoctor] = useState<any>("");
+    const [slotDate, setSlotDate] = useState<any>(moment().format('DD-MMM-YYYY'));
 
     const [appointList, setAppointList] = useState([]);
+    const { verifiedUser } = getUserInLocalStorage();
 
 
     const user = JSON.parse(localStorage.getItem("user") as string);
@@ -55,22 +55,24 @@ const UserProfile = () => {
     };
 
     const initialTabItems = [
-        { label: 'Mobile No wise', children: '', key: '1' },
-        { label: 'Name wise', children: '', key: '2' },
-        { label: 'Patient No wise', children: '', key: '3' },
+        { label: 'Mobile No', children: '', key: '1' },
+        { label: 'Today Slot', children: '', key: '2' },
+        { label: 'Doctor and SlotDate', children: '', key: '3' },
     ];
 
     useEffect(() => {
-        getAppointmentList(activeTab, { slotDate: moment().format('YYYY/MM/DD'), phoneNo: "" });
         getDoctorList()
         setVisibility()
-    }, [])
+        getAppointmentList(activeTab, {  phoneNo: "",docUserID:defDoctor});
+    }, [defDoctor])
 
     const convertDate = (inputDateString: string) => {
         // Parse the input date string using Moment.js
-        const parsedDate = moment(inputDateString, 'YYYY-MM-DD HH:mm:ss');
+        console.log(inputDateString)
+        const parsedDate = moment(inputDateString, 'DD-MMM-YYYY');
         // Format the parsed date in the desired format
         const formattedDate = parsedDate.format('YYYY-MM-DD');
+        console.log(parsedDate);
         console.log(formattedDate);
         return formattedDate
     }
@@ -102,14 +104,14 @@ const UserProfile = () => {
     }
 
     const getAppointmentList = async (type: any = activeTab, param: any = "",) => {
-        console.log(param['slotDate'])
-        param['slotDate'] = convertDate(param['slotDate'])=="Invalid Date" ? "1900-01-01" : convertDate(param['slotDate']);
+        console.log(slotDate)
+        const slotDt = convertDate(slotDate)=="Invalid Date" ? "1900-01-01" : convertDate(slotDate);
         try {
             setLoading(true);
             const staticParams = {
                 // "phoneNo": search,
-                // "slotDate": "1900-01-01",
                 // "docUserID": "3693567666946061111",
+                "slotDate": slotDt,
                 "mainType": 1,
                 "userID": -1,
                 "formID": -1,
@@ -118,7 +120,7 @@ const UserProfile = () => {
             }
             const msg = await requestGetAppointmentSearchList(staticParams);
             if (msg.isSuccess === true) {
-                console.log(msg);
+                // console.log(msg);
                 setLoading(false)
                 setAppointList(msg.result)
                 // list = msg?.data.institutelist2s || [];
@@ -144,6 +146,7 @@ const UserProfile = () => {
                 const dataMaskForDropdown = res?.data?.map((item: any) => {
                     return { value: item.userID, label: item.userName }
                 })
+                setDefDoctor(dataMaskForDropdown[0].value)
                 console.log({ dataMaskForDropdown })
                 setDoctorList(dataMaskForDropdown)
                 setLoading(false)
@@ -159,46 +162,75 @@ const UserProfile = () => {
         console.log({ value: value.target.value })
         getAppointmentList(activeTab, { phoneNo: value.target.value })
     };
+    const syncPatient = async (v:any) => {
+        console.log(v)
+        const staticParams = {
+            "onlinePatientID": verifiedUser?.userID,
+            "patientNo": v?.patientNo,
+            "patientCaseNo": "",
+            "admNo": 1,
+            "userID": -1,
+            "formID": -1,
+            "type": 1
+        }
+        const res = await requestSyncOnlinePatient(staticParams);
+        if (res.isSuccess === true) {
+            message.success(res.msg);
+            return;
+        } else {
+            message.error(res.msg);
+        }
+    };
     const onDateChange = (date: any) => {
-        setSlotDate(moment(date).format('YYYY-MM-DD'))
-        getDoctorList(moment(date).format('YYYY-MM-DD'))
+        setSlotDate(moment(date).format('DD-MMM-YYYY'))
+        getDoctorList(moment(date).format('DD-MMM-YYYY'))
     };
     const reloadTable = () => {
         // actionRef.current.reload();
     }
     const columns = [
         {
-            title: 'patientName',
-            dataIndex: 'patientName',
-            // render: (text) => <a>{text}</a>,
-            editable: true
-        },
-        {
-            title: 'SectionName',
-            dataIndex: 'sectionName',
-            key: 'sectionName',
-            editable: true,
-            // render: (text:any ) => <Typography>{text.toString}</Typography>,
-
-        },
-        {
-            title: 'slotTime',
-            dataIndex: 'slotTime',
-            key: 'slotTime',
-            editable: true
-        },
-        {
-            title: 'UserName',
+            title: 'Doctor Name',
             key: 'userName',
             dataIndex: 'userName',
-            editable: true
         },
         {
-            title: 'MobileNo',
+            title: 'Department Name',
+            dataIndex: 'sectionName',
+            key: 'sectionName',
+            // render: (text:any ) => <Typography>{text.toString}</Typography>,
+        },
+        {
+            title: 'Slot Date',
+            key: 'slotDate',
+            dataIndex: 'slotDate'
+        },
+        {
+            title: 'Slot Time',
+            dataIndex: 'slotTime',
+            key: 'slotTime',
+        },
+        {
+            title: 'Patient Name',
+            dataIndex: 'patientName',
+            // render: (text) => <a>{text}</a>,
+        },
+        {
+            title: 'Mobile No',
             key: 'phoneNo',
             dataIndex: 'phoneNo',
-            editable: true
         },
+        {
+            title: 'Patient Case No',
+            dataIndex: 'patientNo',
+            // render: (text) => <a>{text}</a>,
+        },
+        {
+            title: 'Sync Patient',
+            dataIndex: 'sync',
+            render: (text:any,record:any) => (<Button onClick={()=>syncPatient(record)}>{'Sync'}</Button>),
+        },
+        
 
     ];
     const appointmentSearch = (type: any) => {
@@ -213,31 +245,35 @@ const UserProfile = () => {
                         }}
                     >
                         <Space.Compact block>
-                            <Form.Item style={{width:'15%'}}
-                                initialValue={dayjs(moment().format('YYYY/MM/DD'))}
-                                name="slotDate"
+                            {type!=2&&<Form.Item style={{width:type!=2 ?'15%' :'0%'}}
+                                // initialValue={dayjs(moment().format('YYYY/MM/DD'))}
+                                // name="slotDate"
                             >
-                                <DatePicker onChange={onDateChange} size='large' format={dateFormat} />
-                            </Form.Item>
+                                <DatePicker
+                                    onChange={onDateChange} size='large'
+                                    defaultValue={dayjs(moment(slotDate).format('DD MMM YYYY',dateFormat))}
+                                    format={dateFormat}
+                                    />
+                            </Form.Item>}
                             <Form.Item
-                                style={{width:'60%'}}
+                                style={{width:type!=2 ?'57%':'72%'}}
                                 initialValue=""
                                 name="phoneNo"
                             >
                                 <Input
                                     size='large'
-                                    placeholder="Search text..."
+                                    placeholder="Search by Mobile/Email/Patient Name"
                                 // onChange={onTextChange}
                                 />
                             </Form.Item>
                             <Form.Item
-                                style={{width:'15%'}}
+                                style={{width:'18%'}}
                                     name="docUserID"
-                                    rules={[{ required: false, message: 'Please select Doctor' }]}
+                                    initialValue={defDoctor}
+                                    rules={[{ required: true, message: 'Please select Doctor' }]}
                                 >
                                     <Select
-                                    
-                                    size='large'
+                                        size='large'
                                         placeholder="Select Doctor"
                                         optionFilterProp="children"
                                         options={doctorList}
@@ -255,8 +291,17 @@ const UserProfile = () => {
                                 dataSource={appointList}
                                 columns={columns}
                                 rowClassName="editable-row"
+                                expandable={{
+                                    expandedRowRender: (record:any) => <p style={{ margin: 0 }}>{record.remark}</p>,
+                                    // rowExpandable: (record) => record.name !== 'Not Expandable',
+                                }}
                                 pagination={{
                                     // onChange: cancel,
+                                }}
+                                onRow={(record, rowIndex) => {
+                                    return {
+                                    //   onClick: (event) => {syncPatient(record)}, // click row
+                                    };
                                 }}
                             />
                         </Spin>
@@ -278,14 +323,15 @@ const UserProfile = () => {
     return (
         <PageContainer
             header={{
-                title: `Search Patient Appointment`,
+                title: `Search Patient Slots`,
             }}
         >
             <Card>
                 <Tabs
                     tabPosition={'top'}
                     items={initialTabItems}
-                    onChange={(activeKey) => { setActiveTab(activeKey); getAppointmentList(activeKey, { slotDate: moment(), phoneNo: "" }) }}
+                    onChange={(activeKey) => { setActiveTab(activeKey); 
+                        getAppointmentList(activeKey, { phoneNo: "",docUserID:defDoctor }) }}
                 />
                 <div style={{ marginTop: 30 }}>
                     {activeTab === "1" && appointmentSearch(1)}

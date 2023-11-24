@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './styles/AddComplaint.css';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card, Checkbox } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card, Checkbox, InputNumber } from 'antd';
 import { requestGetComplaintType, requestGetRateType } from '@/services/apiRequest/dropdowns';
 import { requestAddComplaint } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
@@ -72,23 +72,6 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
             setRateType(dataMaskForDropdown)
         }
     }
-
-    const onRowEnter = (e: any) => {
-        setRow(e.target.value)
-        setCapacity((e.target.value) * col)
-        let roomCapacity1 = (e.target.value) * col
-        form.setFieldsValue({
-            roomCapacity: roomCapacity1
-        })
-    }
-    const onColumnEnter = (e: any) => {
-        setCol(e.target.value)
-        setCapacity((e.target.value) * row)
-        let roomCapacity1 = (e.target.value) * row
-        form.setFieldsValue({
-            roomCapacity: roomCapacity1
-        })
-    }
     const goBack = () => {
         history.push("/")
     }
@@ -96,25 +79,24 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
 
     const addComplaint = async (values: any) => {
         console.log(values);
+        values['isActive'] = values.isActive.toString();
         try {
             const staticParams = {
                 // "complaintTypeID": "1",
                 // "complaintTypeName": "",
                 // "complaintTypeCode": "1", 
+                // "isActive": "1",
                 "sortOrder": "",
-                "isActive": "1",
                 "formID": -1,
                 "type": 1,
             };
 
             setLoading(true)
             const msg = await requestAddComplaint({ ...values, ...staticParams });
+            console.log(msg.msg, msg.isSuccess);
             setLoading(false)
             if (msg.isSuccess === true) {
-                form.resetFields();
-                onClose();
                 message.success(msg.msg);
-                onSaveSuccess(msg);
                 return;
             } else {
                 message.error(msg.msg);
@@ -162,10 +144,11 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
                                 <Form.Item
                                     // initialValue={institute}
                                     name="complaintTypeID"
-                                    label="Complaint TypeID"
-                                    rules={[{ required: true, message: 'Please select complaint type' }]}
-                                >
-                                    <Input size={'large'} placeholder="Please enter complaint typeId" />
+                                    label="Complaint Type ID"
+                                    rules={[{ required: true, message: 'Please enter complaint typeId' },
+                                        {pattern:/\d*/,message: 'Complaint Id should be in numbers'}]}
+                                    >
+                                    <Input  maxLength={4} size={'large'}  placeholder="Please enter complaint typeId" />
                                     {/* <Select
                                         size={'large'}
                                         placeholder="Complaint type"
@@ -185,11 +168,13 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
                             </Col>
                             <Col className="gutter-row" >
                                 <Form.Item
-                                    name="isService"
+                                    name="isActive"
                                     // label="Is this a service"
                                     rules={[{ required: true, message: 'Please check' }]}
+                                    valuePropName="checked"
+                                    initialValue={true}
                                 >
-                                    <Checkbox checked={isActive}  onChange={onChangeServiceStatus}>isService</Checkbox>
+                                    <Checkbox >IsActive</Checkbox>
                                 </Form.Item>
                             </Col>
 
@@ -230,7 +215,7 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
                         </div>
                     </Spin>
                 </Card>
-            <ComplaintList />
+            <ComplaintList refresh={loading}/>
             </Space>
         </PageContainer>
     );
