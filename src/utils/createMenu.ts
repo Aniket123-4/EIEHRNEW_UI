@@ -22,7 +22,7 @@ const getModulePath = (name: string) => {
 
         case "Search Patient":
             return "/master/Patient";
-       
+
         case "Manage Appointment":
             return "/master/ManageAppointment";
 
@@ -41,7 +41,8 @@ const getModulePath = (name: string) => {
         case "Candidate Display":
             return "/candidate/list";
 
-
+        case "Patient Registration":
+            return "/booking/appointment-booking";
 
         default:
             if (verifiedUser.userTypeID === "11") {

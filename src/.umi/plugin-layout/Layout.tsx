@@ -84,7 +84,7 @@ export default (props: any) => {
   "fixedHeader": true,
   "fixSiderbar": true,
   "colorWeak": false,
-  "title": "ECSC Portal",
+  "title": "EIEHR Portal",
   "pwa": true,
   "iconfontUrl": ""
 };

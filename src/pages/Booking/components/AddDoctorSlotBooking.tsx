@@ -373,7 +373,6 @@ const AddDoctorSlotBooking = () => {
                                         size={'large'}
                                         onChange={(value, item) => {
                                             getDoctorList(value, item)
-
                                         }}
                                     />
                                 </Form.Item>

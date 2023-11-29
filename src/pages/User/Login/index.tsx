@@ -129,7 +129,7 @@ const Login: React.FC = () => {
                 currentUser: msg,
               }));
             });
-        
+
             if (msg?.verifiedUser.userTypeID === "11") {
               history.push('/candidate-dashboard');
             } else {
@@ -231,6 +231,7 @@ const Login: React.FC = () => {
         onFinish={async (values) => {
           await handleSubmit(values as API.LoginParams);
         }}
+        submitter={{ searchConfig: { submitText: 'Log in', restText: 'Log in' } }}
       >
         <Tabs
           centered

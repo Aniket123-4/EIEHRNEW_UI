@@ -24,3 +24,15 @@ export async function requestGetPatDocAppointment(body: any, options?: { [key: s
     ...(options || {}),
   });
 }
+
+
+export async function requestAddPatRequest(body: any, options?: { [key: string]: any }) {
+  return request<any>('/Online/AddPatRequest', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
