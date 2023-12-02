@@ -41,7 +41,7 @@ const getModulePath = (name: string) => {
         case "Candidate Display":
             return "/candidate/list";
 
-        case "Patient Registration":
+        case "Appointment":
             return "/booking/appointment-booking";
 
         default:

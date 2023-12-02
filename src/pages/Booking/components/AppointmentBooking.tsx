@@ -8,6 +8,8 @@ import { requestAddPatRequest, requestGetPatDocAppointment } from '../services/a
 import { UserOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { dateFormat } from '@/utils/constant';
+import { getUserInLocalStorage, getUserType } from '@/utils/common';
+import { isEmpty } from 'lodash';
 
 const { Option } = Select;
 
@@ -48,12 +50,11 @@ const AppointmentBooking = () => {
         console.log({ dayStr })
         setSelectedDate(dayStr);
         setShowDetails(true);
-
         const data = {
             fromDate: dayStr,
         };
-
         getDoctorList(data);
+        reset();
     };
 
     const getSectionList = async () => {
@@ -163,6 +164,11 @@ const AppointmentBooking = () => {
     }
 
 
+    const reset = () => {
+        slotForm.resetFields();
+        setAvailableSlots([])
+        setSelectedSlot({})
+    }
 
     const bookingForm = () => {
 
@@ -187,10 +193,11 @@ const AppointmentBooking = () => {
 
         const onFinishPatForm = async (values: any) => {
             console.log(values);
+            const { verifiedUser } = getUserInLocalStorage();
             const params = {
                 ...values,
                 userWeekSlotID: selectedSlot?.userWeekSlotID,
-                patientId: -1,
+                patientId: getUserType() === "Candidate" ? verifiedUser?.userID : -1,
                 remarkId: -1,
                 userID: -1,
                 formID: -1,
@@ -204,10 +211,11 @@ const AppointmentBooking = () => {
             if (!response?.isSuccess) {
                 message.error(response?.msg);
             } else {
-                slotForm.resetFields();
-                setAvailableSlots([])
+                reset();
             }
         };
+
+
         return (
             <Form
                 {...layout}
@@ -233,11 +241,11 @@ const AppointmentBooking = () => {
                 <Form.Item name="otpNo" label="OTP" rules={[{ required: true }]}>
                     <Input />
                 </Form.Item>
-                <Form.Item name="remark" label="Remark">
+                <Form.Item name="remark" label="Remark" preserve={true}>
                     <Input.TextArea />
                 </Form.Item>
                 <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" disabled={isEmpty(selectedSlot) ? true : false}>
                         Submit
                     </Button>
                 </Form.Item>
@@ -250,49 +258,90 @@ const AppointmentBooking = () => {
         slotForm.setFieldsValue({
             slot: item?.pTime,
             otpNo: item?.otpNo
-        })
+        });
+
+        if (getUserType() === "Candidate") {
+            const { verifiedUser } = getUserInLocalStorage();
+            slotForm.setFieldsValue({
+                slot: item?.pTime,
+                otpNo: item?.otpNo,
+                patientName: verifiedUser?.userName,
+                phoneNo: verifiedUser?.curMobile,
+                email: verifiedUser?.loginName,
+                remark: ""
+            });
+        }
     }
 
     const bookingSlotView = () => {
         return (
             <>
-                <Card
+                <>
+                    <Row gutter={[8, 8]}>
+                        <Col span={12}>
+                            <Card
+                                title="Booking Timing"
+                                style={{
+                                    height: "100%"
+                                }}
+                            >
+                                <List
+                                    grid={{ gutter: 16, column: 2 }}
+                                    itemLayout="vertical"
+                                    dataSource={availableSlots}
+                                    renderItem={(item, index) => (
+                                        // <Card hoverable={true} bodyStyle={{ padding: 5, width: 40, marginTop: 5, marginBottom: 5 }}>
+                                        <List.Item
+                                        >
+                                            <Card
+                                                hoverable={item?.isFree ? true : false}
+                                                style={{
+                                                    backgroundColor: item?.isFree ? "white" : "#f5f5f5",
+                                                }}
+                                            >
+                                                <Space>
+                                                    <div style={{ width: "30%" }}>
+                                                        <h2 style={{ marginTop: 5 }}>{item?.pTime}</h2>
+                                                    </div>
+                                                    {!item?.isFree ?
+                                                        <Tag color={item?.isFree ? "green" : "magenta"}>{item?.isFree ? "Free" : "Booked"}</Tag>
+                                                        :
+                                                        <Button
+                                                            type="primary" size='small'
+                                                            onClick={() => onSelectSlot(item)}
+                                                        >
+                                                            Book
+                                                        </Button>}
+                                                </Space>
+                                            </Card>
+                                        </List.Item>
+                                        // </Card>
+                                    )}
+                                />
+                            </Card>
+                        </Col>
+                        <Col span={12}>
+                            <Card
+                                title="Patient Information"
+                            >
+                                {bookingForm()}
+                            </Card>
+                        </Col>
+                    </Row>
+                </>
+                {/* <Card
                     style={{ boxShadow: '2px 2px 2px #4874dc' }}
                 >
                     <Row>
-                        <Col span={8}>
-                            <List
-                                itemLayout="vertical"
-                                dataSource={availableSlots}
-                                renderItem={(item, index) => (
-                                    // <Card hoverable={true} bodyStyle={{ padding: 5, width: 40, marginTop: 5, marginBottom: 5 }}>
-                                    <List.Item
-                                    >
-                                        <List.Item.Meta
-                                            title={<h2>{item?.pTime}</h2>}
-                                            description={<>
-                                                {!item?.isFree ?
-                                                    <Tag color={item?.isFree ? "green" : "magenta"}>{item?.isFree ? "Free" : "Booked"}</Tag>
-                                                    :
-                                                    <Button
-                                                        type="primary" size='small'
-                                                        onClick={() => onSelectSlot(item)}
-                                                    >
-                                                        Book
-                                                    </Button>}
-                                            </>}
-                                        />
-                                    </List.Item>
-                                    // </Card>
-                                )}
-                            />
+                        <Col span={12}>
+
                         </Col>
-                        <Col span={16}>
-                            {bookingForm()}
+                        <Col span={12}>
+
                         </Col>
                     </Row>
 
-                </Card>
+                </Card> */}
             </>
         )
     }
@@ -329,8 +378,7 @@ const AppointmentBooking = () => {
                         </Col>
                     </Row>
                     <WeekCalendar showDetailsHandle={showDetailsHandle} />
-                    {/* <br /> */}
-                    {/* {showDetails && <>{selectedDate}</>} */}
+
                     <br />
 
                     <List
@@ -341,23 +389,28 @@ const AppointmentBooking = () => {
                                 <List.Item.Meta
                                     avatar={<Avatar size={46} style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />}
                                     title={<h2>{item?.doctorName}</h2>}
-                                    description={<>
-
-                                        <Space>
+                                    description={<div style={{
+                                        marginTop: -15
+                                    }}>
+                                        <Space >
                                             {item?.time.map(slot => {
                                                 return (
-                                                    <div onClick={() => { getDoctorSlotForBooking(item, slot) }}>
+                                                    <div
+                                                        onClick={() => {
+                                                            getDoctorSlotForBooking(item, slot)
+                                                        }}
+                                                    >
                                                         <Card bodyStyle={{ padding: 5 }}
                                                             hoverable={true}
                                                         >
-                                                            <label>{`From :${slot?.fromHrValue}`}</label><br />
-                                                            <label>{`To :${slot?.toHrValue}`}</label>
+                                                            <label>{`${slot?.fromHrValue}`}</label><br />
+                                                            {/* <label>{`To :${slot?.toHrValue}`}</label> */}
                                                         </Card>
                                                     </div>
                                                 )
                                             })}
                                         </Space>
-                                    </>}
+                                    </div>}
                                 />
                             </List.Item>
                         )}

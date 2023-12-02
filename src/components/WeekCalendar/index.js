@@ -5,6 +5,7 @@ import {
   addWeeks,
   format,
   getWeek,
+  isPast,
   isSameDay,
   lastDayOfWeek,
   startOfWeek,
@@ -117,10 +118,24 @@ const WeekCalendar = ({ showDetailsHandle }) => {
                 ? "selected"
                 : ""
             }`}
+            style={{
+              backgroundColor: !isPast(cloneDay)
+                ? "white"
+                : isSameDay(cloneDay, new Date())
+                ? "white"
+                : "#8080804d",
+            }}
             key={day}
             onClick={() => {
-              const dayStr = format(cloneDay, "dd MMM YYY");
-              onDateClickHandle(cloneDay, dayStr);
+              console.log("isPast(cloneDay): =>" + isPast(cloneDay));
+              console.log(
+                "isSameDay(day, selectedDate): =>" +
+                  isSameDay(cloneDay, new Date())
+              );
+              if (isSameDay(cloneDay, new Date()) || !isPast(cloneDay)) {
+                const dayStr = format(cloneDay, "dd MMM YYY");
+                onDateClickHandle(cloneDay, dayStr);
+              }
             }}
           >
             <span className="number">{formattedDate}</span>
