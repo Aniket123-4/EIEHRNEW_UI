@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message } from 'antd';
 import { PageContainer, EditableProTable } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
-import InvestigationGroupList from './InvestigationGroupList';
 import InvestigationList from './InvestigationList';
 import { MinusCircleOutlined, PlusCircleFilled, PlusOutlined } from '@ant-design/icons';
 import { requestAddInvGroup, requestAddInvParameter, requestGetInvGroup, requestGetInvParameter, requestGetInvUnit, requestGetPatientType } from '../services/api';

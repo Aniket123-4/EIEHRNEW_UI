@@ -49,12 +49,14 @@ const AppointmentBooking = () => {
     const showDetailsHandle = (dayStr: any) => {
         console.log({ dayStr })
         setSelectedDate(dayStr);
-        setShowDetails(true);
+
         const data = {
             fromDate: dayStr,
         };
         getDoctorList(data);
+        setShowDetails(true);
         reset();
+
     };
 
     const getSectionList = async () => {
@@ -101,7 +103,6 @@ const AppointmentBooking = () => {
                 let time = [];
                 let i = 1;
                 for (var key in item) {
-                    console.log(`fHrs${i}` + " :" + item[`fHrs${i}`]);
                     if (item[`fHrs${i}`] !== 'X') {
                         time.push({
                             fromHr: `fHrs${i}`,
@@ -156,6 +157,18 @@ const AppointmentBooking = () => {
             if (!response?.isSuccess) {
                 message.error(response?.msg);
             }
+
+            if (getUserType() === "Candidate") {
+                const { verifiedUser } = getUserInLocalStorage();
+                slotForm.setFieldsValue({
+                    slot: "",
+                    otpNo: "",
+                    patientName: verifiedUser?.userName,
+                    phoneNo: verifiedUser?.curMobile,
+                    email: verifiedUser?.loginName,
+                    remark: ""
+                });
+            }
         } catch (error) {
             setLoading(false)
             console.log({ error });
@@ -165,7 +178,6 @@ const AppointmentBooking = () => {
 
 
     const reset = () => {
-        slotForm.resetFields();
         setAvailableSlots([])
         setSelectedSlot({})
     }
@@ -184,10 +196,7 @@ const AppointmentBooking = () => {
             types: {
                 email: '${label} is not a valid email!',
                 number: '${label} is not a valid number!',
-            },
-            number: {
-                range: '${label} must be between ${min} and ${max}',
-            },
+            }
         };
         /* eslint-enable no-template-curly-in-string */
 
@@ -218,25 +227,25 @@ const AppointmentBooking = () => {
 
         return (
             <Form
-                {...layout}
                 name="nest-messages"
                 onFinish={onFinishPatForm}
                 form={slotForm}
-                style={{ maxWidth: 600 }}
                 validateMessages={validateMessages}
+                layout="vertical"
 
             >
                 <Form.Item name="slot" label="Slot Timing" rules={[{ required: true }]}>
                     <Input disabled />
                 </Form.Item>
                 <Form.Item name="patientName" label="Patient Name" rules={[{ required: true }]}>
-                    <Input />
+                    <Input disabled={getUserType() === "Candidate" ? true : false} />
+                </Form.Item>
+
+                <Form.Item name="email" label="Email" rules={[{ type: 'email', required: true }]}>
+                    <Input disabled={getUserType() === "Candidate" ? true : false} />
                 </Form.Item>
                 <Form.Item name="phoneNo" label="Mobile No" rules={[{ required: true }]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item name="email" label="Email" rules={[{ type: 'email', required: true }]}>
-                    <Input />
+                    <Input maxLength={10} />
                 </Form.Item>
                 <Form.Item name="otpNo" label="OTP" rules={[{ required: true }]}>
                     <Input />
@@ -244,7 +253,7 @@ const AppointmentBooking = () => {
                 <Form.Item name="remark" label="Remark" preserve={true}>
                     <Input.TextArea />
                 </Form.Item>
-                <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+                <Form.Item>
                     <Button type="primary" htmlType="submit" disabled={isEmpty(selectedSlot) ? true : false}>
                         Submit
                     </Button>
@@ -259,18 +268,6 @@ const AppointmentBooking = () => {
             slot: item?.pTime,
             otpNo: item?.otpNo
         });
-
-        if (getUserType() === "Candidate") {
-            const { verifiedUser } = getUserInLocalStorage();
-            slotForm.setFieldsValue({
-                slot: item?.pTime,
-                otpNo: item?.otpNo,
-                patientName: verifiedUser?.userName,
-                phoneNo: verifiedUser?.curMobile,
-                email: verifiedUser?.loginName,
-                remark: ""
-            });
-        }
     }
 
     const bookingSlotView = () => {

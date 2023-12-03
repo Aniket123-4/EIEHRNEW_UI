@@ -20,9 +20,6 @@ const getModulePath = (name: string) => {
         case "Investigation Parameter":
             return "/investigation/AddInvParameter";
 
-        case "Search Patient":
-            return "/master/Patient";
-
         case "Manage Appointment":
             return "/master/ManageAppointment";
 
@@ -43,6 +40,9 @@ const getModulePath = (name: string) => {
 
         case "Appointment":
             return "/booking/appointment-booking";
+
+        case "Search Patient":
+            return "/patient/search";
 
         default:
             if (verifiedUser.userTypeID === "11") {

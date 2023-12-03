@@ -184,6 +184,18 @@ export default [
     ],
   },
   {
+    name: 'patient',
+    path: '/patient',
+    routes: [
+      {
+        name: 'Patient',
+        path: '/patient/search',
+        component: './Patient/components/PatientList',
+      },
+
+    ],
+  },
+  {
     name: 'User Management2',
     path: '/user-management',
     routes: [
