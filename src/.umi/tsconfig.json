@@ -27,7 +27,7 @@
         "src/.umi/*"
       ],
       "@umijs/max": [
-        "/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/umi"
+        "D:\\Rohit ssd\\Msspl\\NodejsProject\\eiehrapp\\node_modules\\umi"
       ],
       "@umijs/max/typings": [
         "src/.umi/typings"

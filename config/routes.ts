@@ -109,11 +109,11 @@ export default [
         path: '/master/DiseaseList',
         component: './Complaint/components/DiseaseList',
       },
-      // {
-      //   name: 'Patient Registration',
-      //   path: '/master/AddOnlineLogin',
-      //   component: './Online/components/AddOnlineLogin',
-      // },
+      {
+        name: 'Patient Registration',
+        path: '/master/PatientRegistration',
+        component: './Patient/PatientRegistration',
+      },
       {
         name: 'Search Patient',
         path: '/master/Patient',
@@ -133,6 +133,17 @@ export default [
         name: 'Investigation Services',
         path: '/master/AddInvServices',
         component: './Complaint/components/AddInvService',
+      },
+    ],
+  },
+  {
+    name: 'patient',
+    path: '/patient',
+    routes: [
+      {
+        name: 'Patient Registration',
+        path: '/patient/PatientRegistration',
+        component: './Patient/PatientRegistration',
       },
     ],
   },

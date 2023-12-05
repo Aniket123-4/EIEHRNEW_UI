@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Card, Checkbox, Form, Input, InputNumber, Popconfirm, Select, Table, Typography, message } from 'antd';
+import { Card, Checkbox, Form, Input, InputNumber, Popconfirm, Select, Table, Tag, Typography, message } from 'antd';
 import { requestAddDisease, requestDiseaseList, requestDiseaseTypeList, requestSpecialList } from '../services/api';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 
@@ -230,11 +230,13 @@ const DiseaseList: React.FC = ({ }) => {
             key: 'isActive',
             editable: true,
             width: '15%',
-            render: (text: any) => <Typography align="center" style={{
-                width: '80%',
-                backgroundColor: text == true ? '#00FF00' : '#EBEBE4', borderRadius: 10,
-            }}>
-                {text == true ? 'Active' : 'InActive'}</Typography>,
+            render: (text: any) => 
+            // <Typography align="center" style={{
+            //     width: '80%',
+            //     backgroundColor: text == true ? '#00FF00' : '#EBEBE4', borderRadius: 10,
+            // }}>
+            //     {text == true ? 'Active' : 'InActive'}</Typography>,
+            <Tag color={text == true ? 'success' : 'error'}>{text == true ? 'Active' : 'InActive'}</Tag>,
 
         },
         {

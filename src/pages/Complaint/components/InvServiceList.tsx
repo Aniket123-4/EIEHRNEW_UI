@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Card, Checkbox, Form, Input, InputNumber, Popconfirm, Select, Table, Typography, message } from 'antd';
-import { requestAddDisease, requestDiseaseList, requestDiseaseTypeList, requestSpecialList } from '../services/api';
+import { Card, Checkbox, Form, Input, InputNumber, Popconfirm, Select, Table, Tag, Typography, message } from 'antd';
+import { requestAddDisease, requestDiseaseList, requestDiseaseTypeList, requestServiceList, requestSpecialList } from '../services/api';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 interface Item {
@@ -30,12 +30,12 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 
-const InvServiceList: React.FC = ({ }) => {
+const InvServiceList = (props: any) => {
     const formRef = useRef<any>();
     const [form] = Form.useForm();
     const [data, setData] = useState(originData);
     const [editingKey, setEditingKey] = useState('');
-    const [diseaseList, setDiseaseList] = useState([]);
+    const [serviceList, setServiceList] = useState([]);
     const [loading, setLoading] = useState(false)
     const [isActive, setIsActive] = useState(true);
     const [specialList, setSpecialist] = useState([]);
@@ -71,11 +71,11 @@ const InvServiceList: React.FC = ({ }) => {
     }) => {
         const inputNode = inputType === 'text' ?
             <Checkbox checked={isActive} onChange={onChangeServiceStatus}>IsActive</Checkbox>
-            : inputType === 'select' ? 
-            <Select
-                placeholder="Select"
-                options={specialList}
-            /> : <Input />;
+            : inputType === 'select' ?
+                <Select
+                    placeholder="Select"
+                    options={specialList}
+                /> : <Input />;
 
         return (
             <td {...restProps}>
@@ -102,44 +102,21 @@ const InvServiceList: React.FC = ({ }) => {
         setEditingKey('');
     };
     useEffect(() => {
-        getDiseaseList();
+        getServiceList();
         getSpecialType();
-    }, [])
+    }, [props.refresh])
 
-    const getDiseaseList = async () => {
+    const getServiceList = async () => {
         const params = {
-            "diseaseID": "-1",
-            "diseaseTypeID": "-1",
-            "specialTypeID": "-1",
-            "isActive": "-1",
-            "type": 1
+            ServiceID:-1,
+            type:1
         }
-        const res = await requestDiseaseList(params);
+        const res = await requestServiceList(params);
         if (res.result.length > 0) {
             const dataMaskForDropdown = res?.result?.map((item: any, index: string) => {
                 return { key: index, ...item }
             })
-            const dataMaskTypeId = res?.result?.map((item: any, index: string) => {
-                return { value:item.diseaseID,label:item.diseaseCodeICD}
-            })
-            // setDiseaseList(dataMaskForDropdown)
-            setDiseaseTypeList(dataMaskTypeId)
-        }
-    }
-    const getDiseaseTypeList = async () => {
-        const params = {
-            "diseaseTypeID": -1,
-            "specialTypeID": -1,
-            "isActive": -1,
-            "type": 1
-        }
-        const res = await requestDiseaseTypeList(params);
-        if (res.result.length > 0) {
-            const dataMaskForDropdown = res?.result?.map((item: any, index: string) => {
-                return { key: index, ...item }
-            })
-            setDiseaseList(dataMaskForDropdown)
-            console.log(dataMaskForDropdown);
+            setServiceList(dataMaskForDropdown)
         }
     }
     const getSpecialType = async () => {
@@ -152,40 +129,17 @@ const InvServiceList: React.FC = ({ }) => {
         }
     }
 
-    const save = async (key: React.Key) => {
-        try {
-            const row = (await form.validateFields()) as Item;
-
-            const newData = [...data];
-            const index = newData.findIndex((item) => key === item.key);
-            if (index > -1) {
-                const item = newData[index];
-                newData.splice(index, 1, {
-                    ...item,
-                    ...row,
-                });
-                setData(newData);
-                setEditingKey('');
-            } else {
-                newData.push(row);
-                setData(newData);
-                setEditingKey('');
-            }
-        } catch (errInfo) {
-            console.log('Validate Failed:', errInfo);
-        }
-    };
     const saveDisease = async (key: any) => {
         const editValues = (await form.validateFields()) as Item;
         const index: any = diseaseList.find((item) => key === item.key);
-        editValues['isActive'] =editValues.isActive.toString();
+        editValues['isActive'] = editValues.isActive.toString();
         // console.log(index.diseaseID);
         try {
             const staticParams = {
-                "DiseaseTypeCode":editValues?.diseaseCodeICD,
+                "DiseaseTypeCode": editValues?.diseaseCodeICD,
                 // "SpecialTypeID":editValues?.specialTypeName,
-                "diseaseTypeName":editValues?.diseaseName,
-                "diseaseTypeID":editValues?.specialTypeId,
+                "diseaseTypeName": editValues?.diseaseName,
+                "diseaseTypeID": editValues?.specialTypeId,
                 // "isActive": "1",
                 "sortOrder": 1,
                 "diseasesID": index?.diseaseID,
@@ -230,23 +184,20 @@ const InvServiceList: React.FC = ({ }) => {
             key: 'isActive',
             editable: true,
             width: '15%',
-            render: (text: any) => <Typography align="center" style={{
-                width: '80%',
-                backgroundColor: text == true ? '#00FF00' : '#EBEBE4', borderRadius: 10,
-            }}>
-                {text == true ? 'Active' : 'InActive'}</Typography>,
+            render: (text: any) => 
+                <Tag color={text == true ? 'success' : 'error'}>{text == true ? 'Active' : 'InActive'}</Tag>
 
         },
         {
             title: 'CGST',
-            dataIndex: 'CGSTPercent',
-            key: 'CGSTPercent',
+            dataIndex: 'cgstPercent',
+            key: 'cgstPercent',
             editable: true,
         },
         {
             title: 'SGST',
-            dataIndex: 'SGSTPercent',
-            key: 'SGSTPercent',
+            dataIndex: 'sgstPercent',
+            key: 'sgstPercent',
             editable: true,
         },
         {
@@ -272,7 +223,9 @@ const InvServiceList: React.FC = ({ }) => {
                         </Popconfirm>
                     </span>
                 ) : (
-                    <Typography.Link style={{ width: 100 }} disabled={editingKey !== ''} onClick={() => edit(record)}>
+                    <Typography.Link style={{ width: 100 }} 
+                    disabled={editingKey !== ''} 
+                    onClick={() =>{props?.onEditRecord(record.serviceID)} }>
                         Edit
                     </Typography.Link>
                 );
@@ -289,7 +242,7 @@ const InvServiceList: React.FC = ({ }) => {
             onCell: (record: Item) => ({
                 record,
                 inputType: col.dataIndex === 'isActive' ? 'text' :
-                    col.key === 'specialTypeId' ? 'select': 'string',
+                    col.key === 'specialTypeId' ? 'select' : 'string',
                 dataIndex: col.key,
                 title: col.title,
                 editing: isEditing(record),
@@ -298,30 +251,34 @@ const InvServiceList: React.FC = ({ }) => {
     });
 
     return (
-        <Form
-            // initialValues={{diseaseTypeID:diseaseList?.diseaseTypeID}}
-            form={form}
-            component={false}>
-            <Card
-                title="Investigation Service List"
-                style={{ boxShadow: '2px 2px 2px #4874dc' }}
-            >
+
+        <Card
+            title="Investigation Service List"
+            style={{ boxShadow: '2px 2px 2px #4874dc' }}
+        >
+            <Form
+                // initialValues={{diseaseTypeID:diseaseList?.diseaseTypeID}}
+                form={form}
+                component={false}>
+
                 <Table
+                    size="small"
+                    // scroll={{ x: "100%", y: "100%" }}
                     components={{
                         body: {
                             cell: EditableCell,
                         },
                     }}
 
-                    dataSource={diseaseList}
+                    dataSource={serviceList}
                     columns={mergedColumns}
                     rowClassName="editable-row"
                     pagination={{
                         onChange: cancel,
                     }}
                 />
-            </Card>
-        </Form>
+            </Form>
+        </Card>
     );
 };
 

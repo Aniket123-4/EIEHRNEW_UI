@@ -99,6 +99,16 @@ export async function requestGetPatientType(options?: { [key: string]: any }) {
   });
 }
 
+export async function requestPatientRegistration(options?: { [key: string]: any }) {
+  return request<any>('AddUpdatePatient', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
 
 
 

@@ -13,6 +13,7 @@ export async function getRoutes() {
 '3': React.lazy(() => import(/* webpackChunkName: "p__User__CandidateActivation__index" */'@/pages/User/CandidateActivation/index.tsx')),
 '4': React.lazy(() => import(/* webpackChunkName: "p__User__Package__index" */'@/pages/User/Package/index.tsx')),
 '5': React.lazy(() => import(/* webpackChunkName: "p__Online__components__AddOnlineLogin" */'@/pages/Online/components/AddOnlineLogin.tsx')),
+'5': React.lazy(() => import(/* webpackChunkName: "p__Online__components__AddOnlineLogin" */'@/pages/Online/components/AddOnlineLogin.tsx')),
 '6': React.lazy(() => import(/* webpackChunkName: "p__User__InstitututeUserActivation__index" */'@/pages/User/InstitututeUserActivation/index.tsx')),
 '7': React.lazy(() => import( './EmptyRoute')),
 '8': React.lazy(() => import(/* webpackChunkName: "p__User__UserProfile__UserProfile" */'@/pages/User/UserProfile/UserProfile.tsx')),

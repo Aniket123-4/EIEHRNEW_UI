@@ -42,34 +42,25 @@ const footerStyle: React.CSSProperties = {
 };
 
 const formDefaultValue = {
-  "firstName": "",
-  "lastName": "",
-  "candPassword": "",
-  "mobileNo": "",
-  "emailID": "",
-  "dob": "2023-08-22T20:53:58.000+05:30",
-  "panNo": "",
-  "aadhaarNo": "",
-  "maritalStatusID": -1,
-  "genderID": -1,
-  "instUiqueID": "",
-  "branchID": -1,
-  "otherBranchName": "",
-  "instName": "",
-  "candidateAddress": "",
-  "instAddress": "",
-  "stateID": -1,
-  "districtID": -1,
-  "cityID": -1,
-  "areaID": -1,
-  "landmark": "",
-  "sessionName": "",
-  "candidateID": "-1",
-  "profileImage": "",
+  "onlinePatientID": "0",
+  "eMail": "",
+  "password": "",
+  "curMobileNoCC": "",
+  "curMobileNo": "",
+  "fName": "",
+  "mName": "",
+  "lName": "",
+  "genderID": 0,
+  "fNameML": "",
+  "dob": "2023-11-28T12:49:16.420Z",
+  "nationalityID": 0,
+  "uniqueID": 0,
+  "uniqueName": "",
+  "curAddress": "",
+  "otp": "",
   "userID": "-1",
-  "formID": 2,
-  "type": 4,
-  "otp": ""
+  "formID": -1,
+  "type": "4"
 }
 
 const CandidateActivation = ({ visible, onClose, selectedRows, isEditable, onSaveSuccess }: any) => {
@@ -104,12 +95,12 @@ const CandidateActivation = ({ visible, onClose, selectedRows, isEditable, onSav
       setLoading(true)
       const msg = await requestAddCandidate({ ...candidateData, ...values });
       setLoading(false)
-      if (msg.isSuccess === "True") {
+      if (msg.isSuccess === true) {
         formRef.current?.resetFields();
         message.success(msg.msg);
         setOTPVisible(true);
         setCandidateData({ ...candidateData, ...values })
-        requestForOTP({ ...candidateData, ...values })
+        // requestForOTP({ ...candidateData, ...values })
         return;
       } else {
         message.error(msg.msg);
@@ -174,8 +165,8 @@ const CandidateActivation = ({ visible, onClose, selectedRows, isEditable, onSav
     requestForValidateOTP(values);
   };
   const goBack = () => {
-		history.push("/")
-	}
+    history.push("/")
+  }
 
   const activateCandidateActivation = () => {
     return (
@@ -189,7 +180,7 @@ const CandidateActivation = ({ visible, onClose, selectedRows, isEditable, onSav
         layout="vertical"
       >
         <Form.Item
-          name="mobileNo"
+          name="curMobileNo"
           label="Mobile No"
           rules={[
             { required: true, type: 'string', message: 'Please enter mobile number' },
@@ -205,26 +196,26 @@ const CandidateActivation = ({ visible, onClose, selectedRows, isEditable, onSav
         </Form.Item>
 
         <Form.Item
-          name="emailID"
+          name="eMail"
           label="Email"
           rules={[{ required: true, type: 'email', message: 'Please enter Email' }]}
         >
           <Input maxLength={80} placeholder="Please enter Email" />
         </Form.Item>
 
-        <div style={{alignContent:'center',display: 'flex',alignItems: 'center',justifyContent:"space-between"}}>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-        <Form.Item>
-          <Button onClick={goBack} type="primary" htmlType="submit" className="login-form-button">
-            Cancel
-          </Button>
-        </Form.Item>
+        <div style={{ alignContent: 'center', display: 'flex', alignItems: 'center', justifyContent: "space-between" }}>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+          <Form.Item>
+            <Button onClick={goBack} type="primary" htmlType="submit" className="login-form-button">
+              Cancel
+            </Button>
+          </Form.Item>
         </div>
-        
+
       </Form>
     )
   }
@@ -268,7 +259,7 @@ const CandidateActivation = ({ visible, onClose, selectedRows, isEditable, onSav
         <Space direction="vertical" style={{ width: '100%' }} size={[0, 48]}>
           <Layout>
             <Header style={headerStyle}>
-              <h2>Activate Candidate</h2>
+              <h2>Activate Patient</h2>
             </Header>
             <Content style={contentStyle}>
               <Spin tip="Please wait..." spinning={loading}>

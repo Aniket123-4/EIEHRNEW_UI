@@ -191,7 +191,7 @@ const Login: React.FC = () => {
                   const urlParams = new URL(window.location.href).searchParams;
                   history.push(urlParams.get('redirect') || '/user/candidate/add');
                 }}>
-                Register Candidate
+                Register Patient
               </Button>
               <Button
                 size='middle'
@@ -201,10 +201,11 @@ const Login: React.FC = () => {
                   const urlParams = new URL(window.location.href).searchParams;
                   history.push(urlParams.get('redirect') || '/user/candidateActivation');
                 }}>
-                Candidate Activation
+                Patient Activation
               </Button>
 
               <Button
+              disabled
                 size='middle'
                 style={{ width: 300 }}
                 type="default"
@@ -212,10 +213,11 @@ const Login: React.FC = () => {
                   const urlParams = new URL(window.location.href).searchParams;
                   history.push(urlParams.get('redirect') || '/InstituteUser/candidate/add');
                 }}>
-                Add Institute-User
+                Add Hospital/Doctor
               </Button>
 
               <Button
+              disabled
                 size='middle'
                 style={{ width: 300 }}
                 type="default"
@@ -223,7 +225,7 @@ const Login: React.FC = () => {
                   const urlParams = new URL(window.location.href).searchParams;
                   history.push(urlParams.get('redirect') || '/user/InstitututeUserActivation');
                 }}>
-                Institute-User Activation
+                Hospital/Doctor Activation
               </Button>
             </Space>
           </div>
