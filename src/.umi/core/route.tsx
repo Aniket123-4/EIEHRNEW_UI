@@ -56,7 +56,7 @@ export async function getRoutes() {
 '46': React.lazy(() => import( './EmptyRoute')),
 '47': React.lazy(() => import(/* webpackChunkName: "p__CandidateDashboard" */'@/pages/CandidateDashboard.tsx')),
 '48': React.lazy(() => import(/* webpackChunkName: "p__404" */'@/pages/404.tsx')),
-'ant-design-pro-layout': React.lazy(() => import(/* webpackChunkName: "umi__plugin-layout__Layout" */'D:/Rohit ssd/Msspl/NodejsProject/eiehrapp/src/.umi/plugin-layout/Layout.tsx')),
+'ant-design-pro-layout': React.lazy(() => import(/* webpackChunkName: "umi__plugin-layout__Layout" */'/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/src/.umi/plugin-layout/Layout.tsx')),
 },
   };
 }

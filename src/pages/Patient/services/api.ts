@@ -2,10 +2,8 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
-
-/**  POST /api/login/account */
-export async function requestAddComplaint(body: any, options?: { [key: string]: any }) {
-  return request<any>('/MasterForm/api/AddUpdateComplaintType', {
+export async function requestGetPatientSearch(body: any, options?: { [key: string]: any }) {
+  return request<any>('/GetPatientSearch', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FilterOutlined, PlusOutlined } from '@ant-design/icons';
+import { EditOutlined, FilterOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
-import { requestAddComplaint, requestAddDisease, requestAddInvParameter, requestGetInvGroup, requestGetInvestigation } from '../services/api';
+import { requestAddComplaint, requestAddDisease, requestAddInvParameter, requestGetInvGroup, requestGetInvestigation, requestGetPatientSearch } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { Table, Tag } from 'antd';
@@ -38,55 +38,72 @@ const PatientList = React.forwardRef((props) => {
 
     const columns: ColumnsType<DataType> = [
         {
-            title: 'Name',
-            dataIndex: 'invName',
-            key: 'invName',
+            title: 'Patient No',
+            dataIndex: 'patientNo',
+            key: 'patientNo',
             render: (text) => <a>{text}</a>,
         },
         {
-            title: 'Code',
-            dataIndex: 'invCode',
-            key: 'invCode',
+            title: 'Name',
+            dataIndex: 'candName',
+            key: 'candName',
+        },
+        // {
+        //     title: 'candNameML',
+        //     dataIndex: 'candNameML',
+        //     key: 'candNameML',
+        // },
+        {
+            title: 'DOB',
+            dataIndex: 'dob',
+            key: 'dob',
         },
         {
-            title: 'Active',
-            dataIndex: 'isActive',
-            key: 'isActive',
-            render: (isActive) => <label>{isActive ? "Yes" : "No"}</label>,
+            title: 'Age',
+            dataIndex: 'age',
+            key: 'age',
         },
         {
-            title: 'Range Required',
-            key: 'isRangeRequired',
-            dataIndex: 'isRangeRequired',
-            render: (isRangeRequired) => <label>{isRangeRequired ? "Yes" : "No"}</label>,
+            title: 'Gender',
+            dataIndex: 'genderName',
+            key: 'genderName',
+        },
+        // {
+        //     title: 'civilStatusName',
+        //     dataIndex: 'civilStatusName',
+        //     key: 'civilStatusName',
+        // },
+        {
+            title: 'Blood Group',
+            dataIndex: 'bloodGroup',
+            key: 'bloodGroup',
         },
         {
-            title: 'Group Name',
-            dataIndex: 'invGroupName',
-            key: 'invGroupName',
+            title: 'Mobile No',
+            dataIndex: 'curMobileNo',
+            key: 'curMobileNo',
         },
+        // {
+        //     title: 'curPhoneNo',
+        //     dataIndex: 'curPhoneNo',
+        //     key: 'curPhoneNo',
+        // },
         {
-            title: 'Is Service',
-            dataIndex: 'isService',
-            key: 'isService',
-            render: (isService) => <label>{isService ? "Yes" : "No"}</label>,
-        },
-        {
-            title: 'Name ML',
-            dataIndex: 'invNameML',
-            key: 'invNameML',
-        },
-        {
-            title: 'Rate',
-            dataIndex: 'invRate',
-            key: 'invRate',
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
         },
         {
             title: 'Action',
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <Button size={'small'} onClick={() => { props?.onEditRecord(record) }}>Edit</Button>
+                    <Button size={'small'} type='link' onClick={() => { console.log(record) }}>
+                        <InfoCircleOutlined />
+                    </Button>
+                    <Button size={'small'} type='link' onClick={() => { console.log(record) }}>
+                        <EditOutlined />
+                    </Button>
                 </Space>
             ),
         },
@@ -97,22 +114,41 @@ const PatientList = React.forwardRef((props) => {
     }, [])
 
     const getList = async () => {
-        try {
-            const staticParams = {
-                invParameterID: -1,
-                invGroupID: -1,
-                isActive: -1,
-                formID: -1,
-                type: 1
-            };
 
+        const params = {
+            patientNo: '',
+            patientUIDNo: '',
+            ageGreater: 0,
+            genderID: -1,
+            civilStatusID: -1,
+            bloodGroupID: -1,
+            nationalityID: -1,
+            serviceTypeID: -1,
+            patientName: '',
+            patientMobileNo: '',
+            patientPhoneNo: '',
+            patientDOB: '1900-01-01',
+            fromDate: '1900-01-21',
+            toDate: '2023-12-21',
+        }
+        searchPatient(params)
+    }
+
+    const searchPatient = async (params: any) => {
+        try {
             setLoading(true)
-            const response = await requestGetInvestigation({ ...staticParams });
+            const staticParams = {
+                isDeleted: false,
+                userID: -1,
+                formID: -1,
+                type: 1,
+                patientID: -1,
+            }
+            const response = await requestGetPatientSearch({ ...params, ...staticParams });
             setLoading(false)
             setList(response?.result)
 
             if (response?.isSuccess) {
-                message.success(response?.msg);
                 form.resetFields();
             } else {
                 message.error(response?.msg);
@@ -124,8 +160,10 @@ const PatientList = React.forwardRef((props) => {
         }
     }
 
-    const showDrawer = () => {
-
+    const onFilter = async (value: any) => {
+        console.log('onFilter', value);
+        await searchPatient(value)
+        setOpenPatientFilter(false);
     }
 
     const onClosePatientFilter = () => {
@@ -152,6 +190,8 @@ const PatientList = React.forwardRef((props) => {
                 <PatientFilter
                     visible={openPatientFilter}
                     onClose={onClosePatientFilter}
+                    onFilter={onFilter}
+                    loading={loading}
                 />
             </div>
         </Card>
