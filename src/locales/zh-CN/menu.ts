@@ -1,52 +1,53 @@
 export default {
   'menu.welcome': 'Welcome',
-  'menu.more-blocks': 'More',//更多区块
-  'menu.home': 'Home',//首页
-  'menu.admin': 'Admin',//管理页
-  'menu.admin.sub-page': '二级管理页',
-  'menu.login': 'Login',//登录
-  'menu.register': 'Register',//注册
-  'menu.register-result': 'Registration results',//注册结果
+  'menu.more-blocks': 'More',//More blocks
+  'menu.home': 'Home',//Home page
+  'menu.admin': 'Admin',//Management page
+  'menu.admin.sub-page': 'Secondary management page',
+  'menu.login': 'Login',//Login
+  'menu.register': 'Register',//Register
+  'menu.register-result': 'Registration results',//Registration results
   'menu.dashboard': 'Dashboard',
-  'menu.dashboard.analysis': '分析页',
-  'menu.dashboard.monitor': '监控页',
-  'menu.dashboard.workplace': '工作台',
+  'menu.dashboard.analysis': 'Analysis page',
+  'menu.dashboard.monitor': 'Monitoring page',
+  'menu.dashboard.workplace': 'Workbench',
   'menu.exception.403': '403',
   'menu.exception.404': '404',
   'menu.exception.500': '500',
-  'menu.form': 'form page',//表单页
-  'menu.form.basic-form': 'basic form',//基础表单
-  'menu.form.step-form': 'step by step form',//分步表单
-  'menu.form.step-form.info': 'Step-by-step form (fill in transfer information)',//分步表单（填写转账信息）
-  'menu.form.step-form.confirm': '分步表单（确认转账信息）',
-  'menu.form.step-form.result': '分步表单（完成）',
-  'menu.form.advanced-form': '高级表单',
-  'menu.list': 'List',//列表页
-  'menu.list.table-list': '查询表格',
-  'menu.list.basic-list': '标准列表',
-  'menu.list.card-list': '卡片列表',
-  'menu.list.search-list': '搜索列表',
-  'menu.list.search-list.articles': '搜索列表（文章）',
-  'menu.list.search-list.projects': '搜索列表（项目）',
-  'menu.list.search-list.applications': '搜索列表（应用）',
-  'menu.profile': '详情页',
-  'menu.profile.basic': '基础详情页',
-  'menu.profile.advanced': '高级详情页',
-  'menu.result': '结果页',
-  'menu.result.success': '成功页',
-  'menu.result.fail': '失败页',
-  'menu.exception': '异常页',
+  'menu.form': 'form page',//form page
+  'menu.form.basic-form': 'basic form',//Basic form
+  'menu.form.step-form': 'step by step form',//step by step form
+  'menu.form.step-form.info': 'Step-by-step form (fill in transfer information)',//Step-by-step form (fill in transfer information)
+  'menu.form.step-form.confirm': 'Step-by-step form (confirm transfer information)',
+  'menu.form.step-form.result': 'Step-by-step form (complete)',
+  'menu.form.advanced-form': 'Advanced form',
+  'menu.list': 'List',//list page
+  'menu.list.table-list': 'Query table',
+  'menu.list.basic-list': 'Standard list',
+  'menu.list.card-list': 'Card list',
+  'menu.list.search-list': 'Search list',
+  'menu.list.search-list.articles': 'Search list (articles)',
+  'menu.list.search-list.projects': 'Search list (projects)',
+  'menu.list.search-list.applications': 'Search list (applications)',
+  'menu.profile': 'Details page',
+  'menu.profile.basic': 'Basic details page',
+  'menu.profile.advanced': 'Advanced details page',
+  'menu.result': 'Result page',
+  'menu.result.success': 'Success page',
+  'menu.result.fail': 'Failure page',
+  'menu.exception': 'Exception page',
   'menu.exception.not-permission': '403',
   'menu.exception.not-find': '404',
   'menu.exception.server-error': '500',
-  'menu.exception.trigger': '触发错误',
-  'menu.account': '个人页',
-  'menu.account.center': '个人中心',
-  'menu.account.settings': '个人设置',
-  'menu.account.trigger': '触发报错',
-  'menu.account.logout': '退出登录',
-  'menu.editor': '图形编辑器',
-  'menu.editor.flow': '流程编辑器',
-  'menu.editor.mind': '脑图编辑器',
-  'menu.editor.koni': '拓扑编辑器',
+
+  'menu.exception.trigger': 'Trigger error',
+  'menu.account': 'Personal page',
+  'menu.account.center': 'Personal Center',
+  'menu.account.settings': 'Personal Settings',
+  'menu.account.trigger': 'Trigger error',
+  'menu.account.logout': 'Log out',
+  'menu.editor': 'Graphic Editor',
+  'menu.editor.flow': 'Process Editor',
+  'menu.editor.mind': 'Mind Map Editor',
+  'menu.editor.koni': 'Topology Editor',
 };

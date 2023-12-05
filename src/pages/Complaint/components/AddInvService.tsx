@@ -1,32 +1,65 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card, Checkbox, Divider, Modal } from 'antd';
-import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
-import { requestAddComplaint, requestAddDisease, requestDiseaseList, requestDiseaseTypeList, requestSpecialList } from '../services/api';
-import { requestGetInstituteList } from '@/pages/Institute/services/api';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card, Checkbox, Divider, Modal, InputNumber, Tree, TreeProps } from 'antd';
+import { requestAddService, requestDiseaseTypeList, requestGetInvGroup, requestGetInvParameterMasterList, requestServiceList, requestSpecialList } from '../services/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
-import DiseaseList from './DiseaseList';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import InvServiceList from './InvServiceList';
+import { dateFormat } from '@/utils/constant';
+import { convertDate } from '@/utils/helper';
+import dayjs from 'dayjs';
 
-
+const { RangePicker } = DatePicker;
 const { Option } = Select;
+
+
+interface DataNode {
+    title: string;
+    key: string;
+    isLeaf?: boolean;
+    children?: DataNode[];
+}
+
+const initTreeData: DataNode[] = [
+    { title: 'Node1', key: '0' },
+    { title: 'Expand to load', key: '1' },
+];
+
 
 
 const AddInvService = () => {
     const formRef = useRef<any>();
     const { token } = theme.useToken();
-    const [capacity, setCapacity] = useState(1);
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false)
     const [diseaseType, setDiseaseType] = useState<any>([])
     const [isActive, setIsActive] = useState(true);
+    const [isExpand, setIsExpand] = useState(1);
     const [specialList, setSpecialist] = useState([]);
-    const [open, setOpen] = useState(false);
+    const [groupList, setGroupList] = useState<DataNode[]>();
+    const [ServiceID, setServiceID] = useState<any>(-1);
+    const [invArr, setInvArr] = useState("0");
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const investigationListRef = useRef();
+    const [defExpandedKeys, setDefExpandedKeys] = useState<any>([]);
+    const [defCheckedKeys, setDefCheckedKeys] = useState<any>(['1 ']);
 
-
+    const updateTreeData = (list: DataNode[], key: React.Key, children: DataNode[]): DataNode[] =>
+        list.map((node) => {
+            if (node.key === key) {
+                return {
+                    ...node,
+                    children,
+                };
+            }
+            if (node.children) {
+                return {
+                    ...node,
+                    children: updateTreeData(node.children, key, []),
+                };
+            }
+            return node;
+        });
 
     const contentStyle: React.CSSProperties = {
         // lineHeight: '260px',
@@ -39,63 +72,114 @@ const AddInvService = () => {
 
 
     useEffect(() => {
-        getSpecialType();
-        getDiseaseType();
+        getInvGroup();
     }, [])
 
-    const getSpecialType = async () => {
-        const res = await requestSpecialList({});
-        // console.log(res);
-        if (res?.result?.length > 0) {
-            const dataMaskForDropdown = res?.result?.map((item: any) => {
-                return { value: item.diseaseTypeID, label: item.diseaseTypeName }
-            })
-            setSpecialist(dataMaskForDropdown)
-        }
-    }
-    const getDiseaseType = async () => {
+    const getInvGroup = async () => {
         const params = {
-            "diseaseTypeID": -1,
-            "specialTypeID": -1,
+            "invGroupID": -1,
+            "discountParameterID": -1,
             "isActive": -1,
+            "formID": -1,
             "type": 1
         }
-        const res = await requestDiseaseTypeList(params);
-        console.log(res);
+        const res = await requestGetInvGroup(params);
+        // console.log(res);
         if (res?.result?.length > 0) {
-            const dataMaskForDropdown = res?.result?.map((item: any, index: number) => {
-                return { value: item.diseaseTypeID, label: item.diseaseTypeName }
+            const dataMaskForDropdown = res?.result?.map((item: any, index: any) => {
+                return {
+                    key: `${item.invGroupID}`, title: item.invGroupName, disableCheckbox: true,
+                }
             })
-            setDiseaseType(dataMaskForDropdown)
-            // console.log(dataMaskForDropdown)
+            setGroupList(dataMaskForDropdown)
+            console.log(defExpandedKeys)
+
+            // setDefExpandedKeys(groups)
         }
     }
+    const getInvParameter = async (id: any) => {
+        const params1 = {
+            "invParameterID": -1,
+            invGroupID: id,
+            "isActive": -1,
+            "formID": -1,
+            "type": 1
+        }
+        const res = await requestGetInvParameterMasterList(params1);
+        // console.log(res);
+        // if (res?.result?.length > 0) {
+        const dataMaskForDropdown = res?.result?.map((item: any) => {
+            return { key: item.invParameterID, title: item.invName }
+        })
+        return dataMaskForDropdown;
+        // }
+    }
+
     const goBack = () => {
         history.push("/")
     }
+    const getServiceList = async (ServiceID: any = -1, type: any = 1) => {
+        const params = {
+            ServiceID,
+            type
+        }
+        const res = await requestServiceList(params);
+        if(type==3)
+        {
+            const groups = res?.result?.map((item: any) => {
+                return item.groupID.trim()
+            })
+            setDefExpandedKeys(groups)
+            console.log(groups)
+        }
+        if (res.result.length > 0) {
+            const data = res?.result[0]
+            setIsActive(data?.isActive);
+            setServiceID(data?.serviceID)
 
-    const addDisease = async (values: any, type: number = 1) => {
-        values['isActive'] =values.isActive.toString();
+            form?.setFieldsValue({
+                serviceName: data?.serviceName,
+                serviceCost: data?.serviceCost,
+                invGroupID: data?.m39_InvGroupID,
+                sgstPercent: data?.sgstPercent,
+                cgstPercent: data?.cgstPercent,
+                serviceTo: dayjs(data?.serviceTo),
+                serviceFrom: dayjs(data?.serviceFrom),
+            });
+            // if(type==1)getServiceList(params.ServiceID,3)
+        }
+    }
+    const addService = async (values: any, serviceID: number = -1, type: any = 1) => {
+        console.log(values, serviceID)
+        values['isActive'] = values.isActive;
+        const { dateRange } = values;
         // values['diseaseTypeID'] = values.diseaseTypeID ? values.diseaseTypeID.toString() : "-1";
+        let serviceFrom = convertDate(values.serviceFrom);
+        let serviceTo = convertDate(values.serviceTo);
         try {
             const staticParams = {
-                // "diseaseTypeID": values['diseaseTypeID'] ? values['diseaseTypeID'] : "-1",
-                // "diseaseTypeName": "string",
-                // "diseaseTypeCode": " string",
-                // "specialTypeID": "string",
-                // "isActive": isActive.toString(),
-                "sortOrder": 1,
-                "diseasesID": "-1",
+                serviceID,
+                // "serviceName": "string",
+                // "serviceFrom": "2023-11-25T11:33:01.276Z",
+                // "serviceTo": "2023-11-25T11:33:01.276Z",
+                // "isActive": true,
+                // "serviceCost": 0,
+                // "cgstPercent": 0,
+                // "sgstPercent": 0,
+                serviceTo,
+                serviceFrom,
+                "invParameter": invArr,
+                "userID": 0,
                 "formID": -1,
                 "type": type
-
             };
             console.log(values, staticParams)
             setLoading(true)
-            const msg = await requestAddDisease({ ...values, ...staticParams });
+            const msg = await requestAddService({ ...values, ...staticParams });
             setLoading(false)
             if (msg.isSuccess === true) {
                 form.resetFields();
+                setServiceID(-1)
                 message.success(msg.msg);
                 setIsModalOpen(false);
                 return;
@@ -122,23 +206,99 @@ const AddInvService = () => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
+    const onExpand = async (expandedKeysValue: any) => {
+        const id = expandedKeysValue[expandedKeysValue.length - 1];
+        const params = {
+            "invParameterID": -1,
+            invGroupID: parseInt(id, 10) ? parseInt(id, 10) : 1,
+            "isActive": -1,
+            "formID": -1,
+            "type": 1
+        }
+        const res = await requestGetInvParameterMasterList(params);
+        if (res?.result?.length > 0) {
+            const dataMaskForDropdown = res?.result?.map((item: any) => {
+                return { key: item.invParameterID, title: item.invName }
+            })
+            const objIndex = groupList.findIndex((obj => obj.key == expandedKeysValue));
+
+            // //Log object to Console.
+            console.log("Before update: ", groupList[objIndex], objIndex, expandedKeysValue)
+            // groupList[objIndex].children = dataMaskForDropdown
+            // setGroupList(groupList)
+            return dataMaskForDropdown;
+        }
+    };
+    const onSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
+        console.log('selected', selectedKeys, info);
+    };
+
+    const onCheck: TreeProps['onCheck'] = (checkedKeys, info) => {
+        const d = removeDuplicates(checkedKeys)
+        setInvArr(d.toString().trim())
+        console.log('onCheck', checkedKeys.toString(), info);
+    };
+    function removeDuplicates(arr: any[]) {
+        return [...new Set(arr)];
+    }
+
+    const onLoadData = ({ key, children }: any) =>
+        new Promise<void>(async (resolve) => {
+            const params = {
+                "invParameterID": -1,
+                invGroupID: parseInt(key, 10) ? parseInt(key, 10) : 1,
+                "isActive": -1,
+                "formID": -1,
+                "type": 1
+            }
+            // console.log(loadedKeys)
+            setTimeout(async () => {
+                const res = await requestGetInvParameterMasterList(params);
+                if (res?.result?.length > 0) {
+                    const dataMaskForDropdown = res?.result?.map((item: any) => {
+                        // setDefCheckedKeys(defCheckedKeys.push(item.invParameterID))
+                        return { key: `${item.invParameterID} `, title: item.invName, isLeaf: true }
+                    })
+                    setTimeout(() => {
+                        if (dataMaskForDropdown.length > 0)
+                            setGroupList((origin) =>
+                                updateTreeData(origin, key, dataMaskForDropdown),
+                            );
+                        resolve();
+                    }, 1000);
+                }
+                else {
+                    setGroupList((origin) => updateTreeData(origin, key, []))
+                    resolve();
+                    message.error("NO INVESTIGATION PARAMETER FOUND FOR THIS GROUP");
+                }
+            }, 1000);
+
+        });
     const filterOption = (input: string, option?: { label: string; value: string }) =>
         (option?.label.toLowerCase() ?? '').includes(input.toLowerCase());//.toLowerCase()
+
+    const onEditRecord = (data: any) => {
+        console.log(data)
+        getServiceList(data, 1)
+    }
     const addForm = () => {
         return (
             <Form
+                style={{}}
                 layout="vertical"
                 // hideRequiredMark
                 form={form}
-                onFinish={(values) => addDisease(values, 2)}
+                onFinish={(values) => addService(values, ServiceID)}
                 initialValues={{
                 }}
             >
                 {/* Basic Information */}
                 <>
+                    {console.log(groupList, isExpand)}
                     <div className="gutter-example">
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     name="serviceName"
                                     label="Battery of Test Name"
@@ -148,69 +308,115 @@ const AddInvService = () => {
                                     <Input size={'large'} placeholder="Please enter service name" />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={6}>
+
+                            <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     name="serviceFrom"
-                                    label="Effective From Date"
-                                    rules={[{ required: true, message: 'Please Select From Date' }]}
+                                    label="Service From"
+                                    rules={[{ required: true, message: 'Please select' }]}
                                 >
                                     <DatePicker
-                                        size={'large'}
+                                        // defaultValue={dayjs(data?.dob, 'YYYY/MM/DD')}
+                                        size="large"
                                         style={{ width: '100%' }}
-                                        format={'DD-MMM-YYYY'}
+                                        getPopupContainer={(trigger) => trigger.parentElement!}
                                     />
+                                    {/* <RangePicker
+                                        format={dateFormat}
+                                        style={{ width: "100%" }}
+                                        size={'large'}
+                                    /> */}
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     name="serviceTo"
-                                    label="Effective To Date"
-                                    rules={[{ required: true, message: 'Please select to date' }]}
+                                    label="Service To"
+                                    rules={[{ required: true, message: 'Please select' }]}
                                 >
                                     <DatePicker
-                                        size={'large'}
+                                        size="large"
+                                        // defaultValue={dayjs()}
                                         style={{ width: '100%' }}
-                                        format={'DD-MMM-YYYY'}
+                                        getPopupContainer={(trigger) => trigger.parentElement!}
                                     />
                                 </Form.Item>
                             </Col>
-                            
-                            <Col className="gutter-row" span={6}>
+
+
+                            <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     name="serviceCost"
                                     label="Cost"
                                     rules={[{ required: true, message: 'Please enter cost' }]}
                                 >
-                                    <Input size={'large'} placeholder="Please enter cost" />
+                                    <Input type='number' size={'large'} placeholder="Please enter cost" />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={8}>
+                                <Form.Item
+                                    name="cgstPercent"
+                                    rules={[{ required: true, message: 'Please select SGST Percent' }]}
+                                    label="CGST %"
+                                >
+                                    <InputNumber size={'large'}
+                                        style={{ width: '100%' }}
+                                        placeholder="Please enter CGST Percent"
+                                        // formatter={(value) => `${value}%`}
+                                        // parser={(value) => value!.replace('%', '')}
+                                        min={0}
+                                        max={100} />
+                                </Form.Item>
+                            </Col>
+                            <Col className="gutter-row" span={8}>
+                                <Form.Item
+                                    name="sgstPercent"
+                                    label="SGST %"
+                                    rules={[{ required: true, message: 'Please enter SGST Percent' }]}
+                                >
+                                    <InputNumber size={'large'} placeholder="Please enter SGST Percent"
+                                        style={{ width: '100%' }}
+                                        // formatter={(value: any) => `${value}%`}
+                                        // parser={(value) => value!.replace('%', '')}
+                                        min={0}
+                                        max={100} />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Col className="gutter-row" span={8}>
                             <Form.Item
-                                name="CGSTPercent"
-                                rules={[{ required: false, message: 'Please select SGST Percent' }]}
-                                label="CGST"
+                                name="invParameter"
+                                valuePropName="checked"
+                                // initialValue={true}
+                                label="Investigation Parameter"
+                                rules={[{ required: true, message: 'Please select' }]}
                             >
-                                <Input size={'large'} placeholder="Please enter CGST Percent" />
-                            </Form.Item>
-                        </Col>
-                        <Col className="gutter-row" span={6}>
-                            <Form.Item
-                                name="SGSTPercent"
-                                label="SGST"
-                                rules={[{ required: false, message: 'Please enter SGST Percent' }]}
-                            >
-                                <Input size={'large'} placeholder="Please enter SGST Percent" />
+                                {defExpandedKeys &&<Tree
+                                    checkable
+                                    // disableCheckbox
+                                    // onExpand={onExpand}
+                                    loadData={onLoadData}
+                                    height={140}
+                                    rootStyle={{ width: 400 }}
+                                    defaultExpandedKeys={defExpandedKeys}
+                                    // defaultCheckedKeys={defCheckedKeys}
+                                    // expandedKeys={expandedKeys}
+                                    // autoExpandParent={autoExpandParent}
+                                    onCheck={onCheck}
+                                    onSelect={onSelect}
+                                    // checkedKeys={checkedKeys}
+                                    // onSelect={onSelect}
+                                    // selectedKeys={selectedKeys}
+                                    treeData={groupList}
+                                />}
                             </Form.Item>
                         </Col>
 
-                        </Row>
-                        
                         <Col className="gutter-row" span={6}>
                             <Form.Item
                                 name="isActive"
                                 valuePropName="checked"
                                 initialValue={true}
-                                // rules={[{ required: false, message: 'Please select isActive' }]}
                                 label=""
                                 rules={[{ required: false, message: 'Please select' }]}
                             >
@@ -227,51 +433,6 @@ const AddInvService = () => {
                             </Button>
                         </Col>
                     </div>
-                    <Modal
-                        title="Add new Disease Type"
-                        open={isModalOpen}
-                        onCancel={handleCancel}
-                        footer={[
-                        ]}>
-                        <Form
-                            onFinish={(v) => addDisease(v = { diseaseTypeID: '-1', ...v }, 1)}>
-
-                            <Form.Item
-                                name="diseaseTypeName"
-                                label="Disease Type Name"
-                                rules={[{ required: true, message: 'Please enter disease code' }]}
-                            >
-                                <Input size={'large'} placeholder="Please enter disease code" />
-                            </Form.Item>
-                            <Form.Item
-                                name="DiseaseTypeCode"
-                                label="Disease Type Code"
-                                rules={[{ required: true, message: 'Please enter disease code' }]}
-                            >
-                                <Input size={'large'} placeholder="Please enter disease code" />
-                            </Form.Item>
-                            <Form.Item
-                                name="specialTypeID"
-                                label="Special type"
-                                rules={[{ required: true, message: 'Please enter special type' }]}
-                            >
-                                <Select
-                                    showSearch
-                                    size={'large'}
-                                    placeholder="Select Special Type"
-                                    options={specialList}
-                                    filterOption={filterOption}
-                                />
-                            </Form.Item>
-                            <Button type="primary" htmlType="submit">
-                                Submit
-                            </Button>
-                            <Button style={{marginLeft:10}} onClick={handleCancel}
-                                type="default" >
-                                Cancel
-                            </Button>
-                        </Form>
-                    </Modal>
                 </>
             </Form>
         )
@@ -281,24 +442,34 @@ const AddInvService = () => {
         <PageContainer
             title=" "
             style={{}}>
-            <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-                <Card
-                    style={{ height: '100%', boxShadow: '2px 2px 2px #4874dc' }}
-                    title="Add new Investigation Service"
-                // extra={[
-                //     <Button key="rest" onClick={() => {
-                //         history.push("/complaints/DiseaseList")
-                //     }}
-                //     >List</Button>,
-                // ]}
-                >
-                    <Spin tip="Please wait..." spinning={loading}>
-                        <div style={contentStyle}>
-                            {addForm()}
-                        </div>
-                    </Spin>
-                </Card>
-                <InvServiceList />
+            <Space direction="horizontal">
+                <Row>
+                    <Col span={12}>
+
+
+                        <Card
+                            style={{ width: '100%', height: '100%', boxShadow: '2px 2px 2px #4874dc' }}
+                            title="Create Investigation Service"
+                        // extra={[
+                        //     <Button key="rest" onClick={() => {
+                        //         history.push("/complaints/DiseaseList")
+                        //     }}
+                        //     >List</Button>,
+                        // ]}
+                        >
+                            <Spin tip="Please wait..." spinning={loading}>
+                                <div style={contentStyle}>
+                                    {addForm()}
+                                </div>
+                            </Spin>
+                        </Card>
+                    </Col>
+                    <Col span={12}>
+                        <InvServiceList refresh={loading}
+                            onEditRecord={onEditRecord}
+                            ref={investigationListRef} />
+                    </Col>
+                </Row>
             </Space>
         </PageContainer>
     );

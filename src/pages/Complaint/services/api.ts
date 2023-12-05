@@ -55,6 +55,16 @@ export async function requestDiseaseList(body: any, options?: { [key: string]: a
     ...(options || {}),
   });
 }
+export async function requestServiceList(body: any, options?: { [key: string]: any }) {
+  return request<any>(`MasterForm/GetService?ServiceID=${body.ServiceID}&IsActive=-1&Type=${body.type}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
 export async function requestSpecialList(body: any, options?: { [key: string]: any }) {
   return request<any>('MasterForm/vSpecialDiseaseType', {
     method: 'GET',
@@ -77,6 +87,36 @@ export async function requestDiseaseTypeList(body: any, options?: { [key: string
 }
 export async function requestAddInvGroup(body: any, options?: { [key: string]: any }) {
   return request<any>('MasterForm/api/AddUpdateInvGroup', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetInvGroup(body: any, options?: { [key: string]: any }) {
+  return request<any>('MasterForm/api/GetInvGroup', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetInvParameterMasterList(body: any, options?: { [key: string]: any }) {
+  return request<any>('MasterForm/api/GetInvParameterMasterList', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestAddService(body: any, options?: { [key: string]: any }) {
+  return request<any>('MasterForm/AddService', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

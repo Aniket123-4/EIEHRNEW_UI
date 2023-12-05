@@ -146,8 +146,6 @@ const UserProfile = () => {
                 const dataMaskForDropdown = res?.data?.map((item: any) => {
                     return { value: item.userID, label: item.userName }
                 })
-                setDefDoctor(dataMaskForDropdown[0].value)
-                console.log({ dataMaskForDropdown })
                 setDoctorList(dataMaskForDropdown)
                 setLoading(false)
             }
@@ -165,7 +163,7 @@ const UserProfile = () => {
     const syncPatient = async (v:any) => {
         console.log(v)
         const staticParams = {
-            "onlinePatientID": verifiedUser?.userID,
+            "onlinePatientID": v?.onlinePatientID,
             "patientNo": v?.patientNo,
             "patientCaseNo": "",
             "admNo": 1,
@@ -248,10 +246,10 @@ const UserProfile = () => {
                             {type!=2&&<Form.Item style={{width:type!=2 ?'15%' :'0%'}}
                                 // initialValue={dayjs(moment().format('YYYY/MM/DD'))}
                                 // name="slotDate"
-                            >
+                                >
                                 <DatePicker
                                     onChange={onDateChange} size='large'
-                                    defaultValue={dayjs(moment(slotDate).format('DD MMM YYYY',dateFormat))}
+                                    defaultValue={dayjs(slotDate)}
                                     format={dateFormat}
                                     />
                             </Form.Item>}
@@ -275,8 +273,9 @@ const UserProfile = () => {
                                     <Select
                                         size='large'
                                         placeholder="Select Doctor"
-                                        optionFilterProp="children"
+                                        // optionFilterProp="children"
                                         options={doctorList}
+                                        onSelect={(d)=>setDefDoctor(d)}
                                     />
                                 </Form.Item>
                             <Button style={{ width: 100 }} size='large' type="primary" htmlType="submit" shape="default" icon={<SearchOutlined />} />

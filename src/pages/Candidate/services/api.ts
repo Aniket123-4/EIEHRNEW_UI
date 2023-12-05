@@ -5,7 +5,7 @@ import { request } from '@umijs/max';
 
 /**  POST /api/login/account */
 export async function requestAddCandidate(body: any, options?: { [key: string]: any }) {
-  return request<any>('/Candidate/AddCandidate', {
+  return request<any>('Online/AddOnlineLogin', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

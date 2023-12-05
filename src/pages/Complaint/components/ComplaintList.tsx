@@ -111,17 +111,7 @@ const ComplaintList = ({ refresh }: any) => {
             key: 'isActive',
             width: '15%',
             render: (text: any) =>
-                // <Select
-                //     // defaultValue={selectedRows?.genderID}
-                //     placeholder="Select gender"
-                //     optionFilterProp="children"
-                //     options={isActive}
-                // />,
-                <Typography align="center" style={{
-                    width: '80%',
-                    backgroundColor: text=="true" ?'#00FF00' : '#EBEBE4', justifyContent: 'center', borderRadius: 10,
-                }}>
-                    {text=="true" ? 'Active' : 'InActive'}</Typography>,
+            <Tag color={text == "true" ? 'success' : 'error'}>{text == "true" ? 'Active' : 'InActive'}</Tag>,
             editable: true
         },
         {

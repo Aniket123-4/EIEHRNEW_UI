@@ -111,10 +111,11 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
 
     const onChangeServiceStatus = (e: CheckboxChangeEvent) => {
         formRef.current?.setFieldsValue({
-            isService: e.target.checked ? "true" :"false"})
-            setIsActive(e.target.checked)
-            // setVatApplicable(e.target.checked)
-            
+            isService: e.target.checked ? "true" : "false"
+        })
+        setIsActive(e.target.checked)
+        // setVatApplicable(e.target.checked)
+
     };
 
     const addForm = () => {
@@ -140,23 +141,14 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
                                     <Input size={'large'} placeholder="Please enter complaint name" />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={8}>
+                            {/* <Col className="gutter-row" span={8}>
                                 <Form.Item
-                                    // initialValue={institute}
                                     name="complaintTypeID"
                                     label="Complaint Type ID"
-                                    rules={[{ required: true, message: 'Please enter complaint typeId' },
-                                        {pattern:/\d*/,message: 'Complaint Id should be in numbers'}]}
-                                    >
+                                    rules={[{ required: true, message: 'Please enter complaint typeId' }]}>
                                     <Input  maxLength={4} size={'large'}  placeholder="Please enter complaint typeId" />
-                                    {/* <Select
-                                        size={'large'}
-                                        placeholder="Complaint type"
-                                        optionFilterProp="children"
-                                        options={complaintType}
-                                    /> */}
                                 </Form.Item>
-                            </Col>
+                            </Col> */}
                             <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     name="complaintTypeCode"
@@ -166,19 +158,18 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
                                     <Input size={'large'} placeholder="Please enter complaint code" />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" >
-                                <Form.Item
-                                    name="isActive"
-                                    // label="Is this a service"
-                                    rules={[{ required: true, message: 'Please check' }]}
-                                    valuePropName="checked"
-                                    initialValue={true}
-                                >
-                                    <Checkbox >IsActive</Checkbox>
-                                </Form.Item>
-                            </Col>
-
                         </Row>
+                        <Col className="gutter-row" span={2}>
+                            <Form.Item
+                                name="isActive"
+                                // label="Is this a service"
+                                rules={[{ required: true, message: 'Please check' }]}
+                                valuePropName="checked"
+                                initialValue={true}
+                            >
+                                <Checkbox >IsActive</Checkbox>
+                            </Form.Item>
+                        </Col>
                         <Col style={{ justifyContent: 'flex-end' }}>
                             <Button style={{ padding: 5, width: 100, height: 40 }} type="primary" htmlType="submit">
                                 Submit
@@ -195,19 +186,19 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
     }
 
     return (
-        <PageContainer 
-        title=" "
+        <PageContainer
+            title=" "
             style={{}}>
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
                 <Card
-                    style={{height: '100%', boxShadow: '2px 2px 2px #4874dc' }}
-                    title="Create a new complaint master"
-                    // extra={[
-                    //     <Button key="rest" onClick={() => {
-                    //         history.push("/complaints/list")
-                    //     }}
-                    //     >List</Button>,
-                    // ]}
+                    style={{ height: '100%', boxShadow: '2px 2px 2px #4874dc' }}
+                    title="Create a New Complaint"
+                // extra={[
+                //     <Button key="rest" onClick={() => {
+                //         history.push("/complaints/list")
+                //     }}
+                //     >List</Button>,
+                // ]}
                 >
                     <Spin tip="Please wait..." spinning={loading}>
                         <div style={contentStyle}>
@@ -215,7 +206,7 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
                         </div>
                     </Spin>
                 </Card>
-            <ComplaintList refresh={loading}/>
+                <ComplaintList refresh={loading} />
             </Space>
         </PageContainer>
     );
