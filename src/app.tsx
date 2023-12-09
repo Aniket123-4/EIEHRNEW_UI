@@ -16,7 +16,8 @@ import { flushSync } from 'react-dom';
 import { getPackageId, getUserInLocalStorage, setMenu } from './utils/common';
 import { createMenu } from './utils/createMenu';
 import type { MenuProps } from 'antd';
-import { Dropdown, Space, message } from 'antd';
+import { Button, Dropdown, Space, message } from 'antd';
+import PatientDetailsCommon from './pages/Patient/components/PatientDetailsCommon';
 
 
 /**
@@ -74,13 +75,13 @@ const UserMenu = ({ initialState }: any) => {
 
   const items: MenuProps['items'] = [
     {
-      label: 'Logout',
-      key: '1',
-    },
-    {
       label: 'Update Profile',
       key: '2',
     },
+    {
+      label: 'Logout',
+      key: '1',
+    }
   ];
 
   return <Dropdown
@@ -97,10 +98,19 @@ const UserMenu = ({ initialState }: any) => {
   </Dropdown>
 }
 
+
+const patientComp = () => {
+  return (
+    <>
+      {/* <PatientDetailsCommon/> */}
+    </>
+  )
+}
+
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }: any) => {
   return {
-    actionsRender: () => [<UserMenu initialState={initialState} />],
+    actionsRender: () => [patientComp(), <UserMenu initialState={initialState} />],
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;

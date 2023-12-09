@@ -207,6 +207,18 @@ export default [
     ],
   },
   {
+    name: 'reception',
+    path: '/reception',
+    routes: [
+      {
+        name: 'Reception',
+        path: '/reception/search',
+        component: './Reception/components/ReceptionSearch',
+      },
+
+    ],
+  },
+  {
     name: 'User Management2',
     path: '/user-management',
     routes: [
