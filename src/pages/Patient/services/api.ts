@@ -108,6 +108,19 @@ export async function requestPatientRegistration(body: any, options?: { [key: st
   });
 }
 
+export async function requestGetPatientHeader(body: any,options?: { [key: string]: any }) {
+  return request<any>('GetPatientHeader', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+
+
 
 
 

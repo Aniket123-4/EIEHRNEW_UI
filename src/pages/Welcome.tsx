@@ -2,9 +2,10 @@ import React, { useRef, useState, useEffect } from 'react';
 import { PageContainer, ProDescriptions } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Card, theme, Image, Divider, Space, Avatar, Typography, Row, Col } from 'antd';
-import { getUserInLocalStorage } from '@/utils/common';
+import { getUserInLocalStorage, getUserType } from '@/utils/common';
 import { requestGetCandidateList } from './Candidate/services/api';
 import { AlipayOutlined, UserOutlined } from '@ant-design/icons';
+import PatientDetailsCommon from './Patient/components/PatientDetailsCommon';
 const { Title, Text, Link } = Typography;
 
 const Welcome: React.FC = () => {
@@ -49,7 +50,7 @@ const Welcome: React.FC = () => {
         },
       }}
     >
-    
+      {getUserType() === "Admin" ? <PatientDetailsCommon /> : null}
     </PageContainer>
   );
 };

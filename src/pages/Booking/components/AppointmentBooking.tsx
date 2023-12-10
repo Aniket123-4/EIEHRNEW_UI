@@ -206,7 +206,7 @@ const AppointmentBooking = () => {
             const params = {
                 ...values,
                 userWeekSlotID: selectedSlot?.userWeekSlotID,
-                patientId: getUserType() === "Candidate" ? verifiedUser?.userID : -1,
+                patientId: -1,//getUserType() === "Candidate" ? verifiedUser?.userID : -1,
                 remarkId: -1,
                 userID: -1,
                 formID: -1,
