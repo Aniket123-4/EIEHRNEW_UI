@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { EditOutlined, FilterOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
-import { requestAddComplaint, requestAddDisease, requestAddInvParameter, requestGetInvGroup, requestGetInvestigation, requestGetPatientSearch } from '../services/api';
-import { requestGetInstituteList } from '@/pages/Institute/services/api';
-import { PageContainer } from '@ant-design/pro-components';
+import {   requestGetPatientSearch } from '../services/api';
+
 import { Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import PatientFilter from '@/components/Filters/PatientFilter';
+import { history, type IRoute } from 'umi';
 
 const { Option } = Select;
 
@@ -98,10 +98,10 @@ const PatientList = React.forwardRef((props) => {
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <Button size={'small'} type='link' onClick={() => { console.log(record) }}>
+                    <Button size={'small'} type='link' onClick={() => { history.push(`/patient/ViewPatient/${record.patientID}`)  }}>
                         <InfoCircleOutlined />
                     </Button>
-                    <Button size={'small'} type='link' onClick={() => { console.log(record) }}>
+                    <Button size={'small'} type='link' onClick={() => { history.push(`/patient/EditPatient/${record.patientID}`) }}>
                         <EditOutlined />
                     </Button>
                 </Space>

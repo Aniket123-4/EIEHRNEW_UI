@@ -35,7 +35,7 @@ const UpdateDocsUpload: React.FC = () => {
     const [fileList, setFileList] = useState<UploadFile[]>([])
 
     useEffect(() => {
-        getUserDetails();
+        // getUserDetails();
     }, [])
 
     const getUserDetails = async () => {
@@ -111,7 +111,10 @@ const UpdateDocsUpload: React.FC = () => {
 
     return (
         <>
-            <List
+            <Upload >
+                <Button icon={<UploadOutlined />}>Upload</Button>
+            </Upload>
+            {/* <List
                 itemLayout="vertical"
                 size="small"
                 dataSource={docsList}
@@ -151,7 +154,7 @@ const UpdateDocsUpload: React.FC = () => {
                         />
                     </List.Item>
                 )}
-            />
+            /> */}
 
 
         </>

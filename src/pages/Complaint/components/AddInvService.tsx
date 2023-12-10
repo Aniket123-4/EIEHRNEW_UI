@@ -41,7 +41,7 @@ const AddInvService = () => {
     const [invArr, setInvArr] = useState("0");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const investigationListRef = useRef();
-    const [defExpandedKeys, setDefExpandedKeys] = useState<any>([]);
+    const [defExpandedKeys, setDefExpandedKeys] = useState<any>(["1"]);
     const [defCheckedKeys, setDefCheckedKeys] = useState<any>(['1 ']);
 
     const updateTreeData = (list: DataNode[], key: React.Key, children: DataNode[]): DataNode[] =>
@@ -127,10 +127,14 @@ const AddInvService = () => {
         if(type==3)
         {
             const groups = res?.result?.map((item: any) => {
-                return item.groupID.trim()
+                return item?.groupID.trim()
             })
+            const invParams = res?.result?.map((item: any) => {
+                return item?.invParameterID+" "
+            })
+            setDefCheckedKeys(invParams)
             setDefExpandedKeys(groups)
-            console.log(groups)
+            setInvArr(invParams.toString().trim())
         }
         if (res.result.length > 0) {
             const data = res?.result[0]
@@ -146,7 +150,7 @@ const AddInvService = () => {
                 serviceTo: dayjs(data?.serviceTo),
                 serviceFrom: dayjs(data?.serviceFrom),
             });
-            // if(type==1)getServiceList(params.ServiceID,3)
+            if(type==1)getServiceList(params.ServiceID,3)
         }
     }
     const addService = async (values: any, serviceID: number = -1, type: any = 1) => {
@@ -181,7 +185,8 @@ const AddInvService = () => {
                 form.resetFields();
                 setServiceID(-1)
                 message.success(msg.msg);
-                setIsModalOpen(false);
+                getInvGroup()
+                getServiceList()
                 return;
             } else {
                 message.error(msg.msg);
@@ -206,28 +211,12 @@ const AddInvService = () => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-    const onExpand = async (expandedKeysValue: any) => {
-        const id = expandedKeysValue[expandedKeysValue.length - 1];
-        const params = {
-            "invParameterID": -1,
-            invGroupID: parseInt(id, 10) ? parseInt(id, 10) : 1,
-            "isActive": -1,
-            "formID": -1,
-            "type": 1
-        }
-        const res = await requestGetInvParameterMasterList(params);
-        if (res?.result?.length > 0) {
-            const dataMaskForDropdown = res?.result?.map((item: any) => {
-                return { key: item.invParameterID, title: item.invName }
-            })
-            const objIndex = groupList.findIndex((obj => obj.key == expandedKeysValue));
-
-            // //Log object to Console.
-            console.log("Before update: ", groupList[objIndex], objIndex, expandedKeysValue)
-            // groupList[objIndex].children = dataMaskForDropdown
-            // setGroupList(groupList)
-            return dataMaskForDropdown;
-        }
+    const onExpand = (expandedKeysValue: React.Key[]) => {
+        console.log('onExpand', expandedKeysValue);
+        // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+        // or, you can remove all expanded children keys.
+        setDefExpandedKeys(expandedKeysValue);
+        // setAutoExpandParent(false);
     };
     const onSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
         console.log('selected', selectedKeys, info);
@@ -237,6 +226,8 @@ const AddInvService = () => {
         const d = removeDuplicates(checkedKeys)
         setInvArr(d.toString().trim())
         console.log('onCheck', checkedKeys.toString(), info);
+        setDefCheckedKeys(checkedKeys);
+        console.log({defCheckedKeys:defCheckedKeys})
     };
     function removeDuplicates(arr: any[]) {
         return [...new Set(arr)];
@@ -295,7 +286,6 @@ const AddInvService = () => {
             >
                 {/* Basic Information */}
                 <>
-                    {console.log(groupList, isExpand)}
                     <div className="gutter-example">
                         <Row gutter={16}>
                             <Col className="gutter-row" span={8}>
@@ -389,23 +379,21 @@ const AddInvService = () => {
                                 valuePropName="checked"
                                 // initialValue={true}
                                 label="Investigation Parameter"
-                                rules={[{ required: true, message: 'Please select' }]}
+                                rules={[{ required: false, message: 'Please select' }]}
                             >
                                 {defExpandedKeys &&<Tree
                                     checkable
-                                    // disableCheckbox
-                                    // onExpand={onExpand}
+                                    onExpand={onExpand}
                                     loadData={onLoadData}
                                     height={140}
                                     rootStyle={{ width: 400 }}
-                                    defaultExpandedKeys={defExpandedKeys}
+                                    // defaultExpandedKeys={defExpandedKeys}
                                     // defaultCheckedKeys={defCheckedKeys}
-                                    // expandedKeys={expandedKeys}
+                                    expandedKeys={defExpandedKeys}
                                     // autoExpandParent={autoExpandParent}
                                     onCheck={onCheck}
-                                    onSelect={onSelect}
-                                    // checkedKeys={checkedKeys}
                                     // onSelect={onSelect}
+                                    checkedKeys={defCheckedKeys}
                                     // selectedKeys={selectedKeys}
                                     treeData={groupList}
                                 />}

@@ -110,11 +110,6 @@ export default [
         component: './Complaint/components/DiseaseList',
       },
       {
-        name: 'Patient Registration',
-        path: '/master/PatientRegistration',
-        component: './Patient/PatientRegistration',
-      },
-      {
         name: 'Search Patient',
         path: '/master/Patient',
         component: './Online',
@@ -143,7 +138,17 @@ export default [
       {
         name: 'Patient Registration',
         path: '/patient/PatientRegistration',
-        component: './Patient/PatientRegistration',
+        component: './Patient/components/PatientRegistration',
+      },
+      {
+        name: 'Edit Patient',
+        path: '/patient/EditPatient/:id',
+        component: './Patient/components/EditPatient',
+      },
+      {
+        name: 'View Patient',
+        path: '/patient/ViewPatient/:id',
+        component: './Patient/components/ViewPatient',
       },
     ],
   },
@@ -261,7 +266,7 @@ export default [
   },
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/candidate-dashboard',
   }, {
     path: '/candidate-dashboard',
     component: './CandidateDashboard',
