@@ -141,7 +141,7 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
 
 
 export async function requestGetState(body: any = {}, options?: { [key: string]: any }) {
-  return request<any>(`/Common/GetState?StateID=-1&UserID=-1&FormID=-1&Type=1`, {
+  return request<any>(`/Common/GetState?CountryID=1&StateID=-1&Type=1`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ export async function requestGetState(body: any = {}, options?: { [key: string]:
 
 export async function requestGetDistrict(body: any = {}, options?: { [key: string]: any }) {
   console.log(body);
-  return request<any>(`/Common/GetDistrict?DistrictID=-1&StateID=${body.value}&UserID=-1&FormID=-1&Type=1`, {
+  return request<any>(`/Common/GetDistrict?&StateID=${body.value}&DistrictID=-1&Type=1`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -180,6 +180,56 @@ export async function requestGetCity(body: any = {}, options?: { [key: string]: 
     headers: {
       'Content-Type': 'application/json',
     },
+    ...(options || {}),
+  });
+}
+export async function requestGetCivilStatus(body: any={}, options?: { [key: string]: any }) {
+  return request<any>('MasterForm/api/GetCivilStatus', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetBloodGroup(body: any={}, options?: { [key: string]: any }) {
+  return request<any>('MasterForm/api/GetBloodGroup', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetReligion(body: any={}, options?: { [key: string]: any }) {
+  return request<any>('MasterForm/api/GetReligion', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetRelation(body: any={}, options?: { [key: string]: any }) {
+  return request<any>('MasterForm/api/GetRelation', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetDocType(body: any={}, options?: { [key: string]: any }) {
+  return request<any>('MasterForm/vUniqueID', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
     ...(options || {}),
   });
 }

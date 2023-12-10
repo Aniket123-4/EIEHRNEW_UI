@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import './styles/AddComplaint.css';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card } from 'antd';
-import { requestGetComplaintType, requestGetGender, requestGetRateType } from '@/services/apiRequest/dropdowns';
+import { requestGetComplaintType, requestGetDocType, requestGetGender, requestGetRateType } from '@/services/apiRequest/dropdowns';
 import { requestAddOnlineLogin } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
 import { PageContainer } from '@ant-design/pro-components';
@@ -11,6 +11,7 @@ import moment from 'moment';
 import dayjs from 'dayjs';
 import { getUserInLocalStorage } from '@/utils/common';
 import TextArea from 'antd/es/input/TextArea';
+import { convertDate } from '@/utils/helper';
 
 
 
@@ -27,6 +28,8 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
     const [complaintType, setComplaintType] = useState<any>([{ value: "1", label: "Type 1" }])
     const [gender, setGender] = useState<any>([])
     const [isOtpVisible, setOTPVisible] = useState(false);
+    const [docType, setDocType] = useState<any>([{ value: '1', label: "Aadhaar" }])
+
 
 
     const contentStyle: React.CSSProperties = {
@@ -43,6 +46,7 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
         // getComplaintType();
         PostForm()
         getGender();
+        getDocType();
     }, [])
 
     const getGender = async () => {
@@ -55,6 +59,15 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
             setGender(dataMaskForDropdown)
         }
     }
+    const getDocType = async () => {
+        const res = await requestGetDocType();
+        if (res.result.length > 0) {
+            const dataMaskForDropdown = res?.result?.map((item: any) => {
+                return { value: item.uniqueID, label: item.uniqueName }
+            })
+            setDocType(dataMaskForDropdown)
+        }
+    }
 
     const goBack = () => {
         history.push("/")
@@ -65,7 +78,7 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
     }
 
     const addOnlineLogin = async (values: any) => {
-        console.log(values['genderID']);
+        values['dob'] = convertDate(values['dob']);
         try {
             const staticParams = {
                 // "fName": "string",
@@ -204,7 +217,7 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                 <Form.Item
                                     initialValue={dayjs(selectedRows?.dob, dateFormat)}
                                     name="dob"
-                                    label="DOB (Min age 12 years old)"
+                                    label="DOB"
                                     rules={[{ required: true, message: 'Please choose the DOB' }]}
                                 >
                                     {/* 12 age min DD-MMM-YYYY */}
@@ -212,10 +225,10 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                         size={'large'}
                                         style={{ width: '100%' }}
                                         format={'DD-MMM-YYYY'}
-                                        disabledDate={(current) => {
-                                            let customDate = moment().format("YYYY-MM-DD");
-                                            return current && current > dayjs().subtract(12, 'year');
-                                        }}
+                                        // disabledDate={(current) => {
+                                        //     let customDate = moment().format("YYYY-MM-DD");
+                                        //     return current && current > dayjs().subtract(12, 'year');
+                                        // }}
                                         defaultValue={dayjs(selectedRows?.dob, dateFormat)}
                                         getPopupContainer={(trigger) => trigger.parentElement!}
                                     />
@@ -238,33 +251,36 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                             </Col>
                             <Col className="gutter-row" span={6}>
                                 <Form.Item
-                                    initialValue={selectedRows?.vUniqueID}
-
-                                    name="uniqueID"
-                                    label="Unique Id"
-                                    rules={[{ required: true, message: 'Please enter unique Id ' }]}
+                                    initialValue={selectedRows?.fNameML}
+                                    name="fNameML"
+                                    label="First name ml"
+                                    rules={[{ message: 'Please Enter Name in Other Language ' }]}
                                 >
-                                    <Input type="number" size={'large'} placeholder="Please enter unique Id" />
+                                    <Input size={'large'} placeholder="Please Enter Name in Other Language" />
                                 </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={6}>
                                 <Form.Item
-                                    initialValue={selectedRows?.fNameML}
-                                    name="fNameML"
-                                    label="First name ml"
-                                    rules={[{ message: 'Please enter first name ML ' }]}
+                                    initialValue={selectedRows?.vUniqueID}
+                                    name="uniqueID"
+                                    label="Doc Type"
+                                    rules={[{ required: true, message: 'Please Select Doc Type ' }]}
                                 >
-                                    <Input size={'large'} placeholder="Please enter first name ML" />
+                                    <Select size="large"
+                                            placeholder="Please Select Doc Type"
+                                            options={docType}
+                                        />
+                                    {/* <Input type="number" size={'large'} placeholder="Please Select Doc Type" /> */}
                                 </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={6}>
                                 <Form.Item
                                     initialValue={selectedRows?.vUniqueName}
                                     name="uniqueName"
-                                    label="Unique name"
-                                    rules={[{ required: false, message: 'Please enter unique Name ' }]}
+                                    label="Document Number"
+                                    rules={[{ required: false, message: 'Please Enter Document Number' }]}
                                 >
-                                    <Input size={'large'} placeholder="Please enter unique name" />
+                                    <Input size={'large'} placeholder="Please Enter Document Number" />
                                 </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={6}>

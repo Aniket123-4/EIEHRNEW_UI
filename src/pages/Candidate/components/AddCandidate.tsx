@@ -340,7 +340,7 @@ const AddCandidate = ({ visible, onClose, selectedRows, isEditable, onSaveSucces
                             <Col span={8}>
                                 <Form.Item
                                     name="dob"
-                                    label="DOB (Min age 12 years old)"
+                                    label="DOB"
                                     rules={[{ required: false, message: 'Please choose the DOB' }]}
                                 >
                                     {/* 12 age min DD-MMM-YYYY */}
