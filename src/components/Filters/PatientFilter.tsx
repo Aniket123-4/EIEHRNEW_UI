@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, TimePicker, List, Avatar, Tag, Drawer, DatePicker } from 'antd';
-import { requestGetGender, requestGetSection } from '@/services/apiRequest/dropdowns';
+import { requestGetBloodGroup, requestGetCivilStatus, requestGetCountry, requestGetGender, requestGetSection } from '@/services/apiRequest/dropdowns';
 import moment from 'moment';
 import { dateFormat } from '@/utils/constant';
 
@@ -72,18 +72,16 @@ const PatientFilter: React.FC = ({ visible, onClose, selectedRows, loading, onFi
 
     const getBloodGroupData = async () => {
         const params = {
-            "sectionID": -1,
-            "userID": -1,
-            "formID": -1,
+            "bGroupID": -1,
             "type": 1
         }
-        // const res = await requestGetGender(params);
+        const res = await requestGetBloodGroup(params);
         let dataMaskForDropdown = [];
-        // if (res.data.length > 0) {
-        //     dataMaskForDropdown = res?.data?.map((item: any) => {
-        //         return { value: item.genderID, label: item.genderName }
-        //     });
-        // }
+        if (res.result.length > 0) {
+            dataMaskForDropdown = res?.result?.map((item: any) => {
+                return { value: item.bGroupID, label: item.bGroupName }
+            });
+        }
         dataMaskForDropdown.unshift({ value: -1, label: "All" });
         setBloodGroupChoices(dataMaskForDropdown)
     }
@@ -91,18 +89,16 @@ const PatientFilter: React.FC = ({ visible, onClose, selectedRows, loading, onFi
 
     const getNationalityData = async () => {
         const params = {
-            "sectionID": -1,
-            "userID": -1,
-            "formID": -1,
-            "type": 1
+            "CountryID": -1,
+            "Type": 1
         }
-        // const res = await requestGetGender(params);
+        const res = await requestGetCountry(params);
         let dataMaskForDropdown = [];
-        // if (res.data.length > 0) {
-        //     dataMaskForDropdown = res?.data?.map((item: any) => {
-        //         return { value: item.genderID, label: item.genderName }
-        //     });
-        // }
+        if (res.length > 0) {
+            dataMaskForDropdown = res?.map((item: any) => {
+                return { value: item.countryID, label: item.nationality }
+            });
+        }
         dataMaskForDropdown.unshift({ value: -1, label: "All" });
         setNationalityChoices(dataMaskForDropdown)
     }
@@ -129,18 +125,16 @@ const PatientFilter: React.FC = ({ visible, onClose, selectedRows, loading, onFi
 
     const getCivilStatusData = async () => {
         const params = {
-            "sectionID": -1,
-            "userID": -1,
-            "formID": -1,
+            "civilStatusID": -1,
             "type": 1
         }
-        // const res = await requestGetGender(params);
+        const res = await requestGetCivilStatus(params);
         let dataMaskForDropdown = [];
-        // if (res.data.length > 0) {
-        //     dataMaskForDropdown = res?.data?.map((item: any) => {
-        //         return { value: item.genderID, label: item.genderName }
-        //     });
-        // }
+        if (res.result.length > 0) {
+            dataMaskForDropdown = res?.result?.map((item: any) => {
+                return { value: item.civilStatusID, label: item.civilStatusName }
+            });
+        }
         dataMaskForDropdown.unshift({ value: -1, label: "All" });
         setCivilStatusChoices(dataMaskForDropdown)
     }

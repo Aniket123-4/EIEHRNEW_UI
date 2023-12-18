@@ -19,6 +19,14 @@ export async function requestGetGender(options?: { [key: string]: any }) {
   });
 }
 
+export async function requestGetCountry(options?: { [key: string]: any }) {
+  return request<any>('/Common/GetCountry?CountryID=-1&Type=1', {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+
+
 export async function requestGetUserType(options?: { [key: string]: any }) {
   return request<any>('/Login/GetUserType', {
     method: 'GET',

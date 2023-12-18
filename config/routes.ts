@@ -266,8 +266,9 @@ export default [
   },
   {
     path: '/',
-    redirect: '/candidate-dashboard',
-  }, {
+    redirect: '/welcome',
+  },
+   {
     path: '/candidate-dashboard',
     component: './CandidateDashboard',
   },

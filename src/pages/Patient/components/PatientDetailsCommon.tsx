@@ -28,62 +28,7 @@ const PatientDetailsCommon = React.forwardRef((props) => {
     const [loading, setLoading] = useState(false)
     const { token } = theme.useToken();
     const [patientData, setPatientData] = useState({});
-
-
-    const borderedItems: DescriptionsProps['items'] = [
-        {
-            key: '1',
-            label: 'Product',
-            children: 'Cloud Database',
-        },
-        {
-            key: '2',
-            label: 'Billing',
-            children: 'Prepaid',
-        },
-        {
-            key: '3',
-            label: 'Time',
-            children: '18:00:00',
-        },
-        {
-            key: '4',
-            label: 'Amount',
-            children: '$80.00',
-        },
-        {
-            key: '5',
-            label: 'Discount',
-            children: '$20.00',
-        },
-        {
-            key: '6',
-            label: 'Official',
-            children: '$60.00',
-        },
-        {
-            key: '7',
-            label: 'Config Info',
-            children: (
-                <>
-                    Data disk type: MongoDB
-                    <br />
-                    Database version: 3.4
-                    <br />
-                    Package: dds.mongo.mid
-                    <br />
-                    Storage space: 10 GB
-                    <br />
-                    Replication factor: 3
-                    <br />
-                    Region: East China 1
-                    <br />
-                </>
-            ),
-        },
-    ];
-
-
+    const [caseChoice, setCaseChoice] = useState([]);
 
 
     const onFinishPatForm = async (values: any) => {
@@ -101,6 +46,11 @@ const PatientDetailsCommon = React.forwardRef((props) => {
         console.log(response?.result);
 
         const result1 = response?.result1[0];
+
+        const caseChoiceMaskForDropdown = response?.result3?.map((item: any) => {
+            return { value: item.patientCaseID, label: item.patientCaseNo }
+        });
+        setCaseChoice(caseChoiceMaskForDropdown)
         const patentBasicDetails = [
             {
                 key: '1',
@@ -180,12 +130,15 @@ const PatientDetailsCommon = React.forwardRef((props) => {
         }
     };
 
+    const handleChangeCase = () => {
+
+    }
+
     return (
         <Card>
             <Form
                 onFinish={onFinishPatForm}
                 form={form}
-
                 layout="vertical"
             >
                 <Space>
@@ -196,6 +149,14 @@ const PatientDetailsCommon = React.forwardRef((props) => {
                         <Button style={{ marginTop: 28 }} type="primary" htmlType="submit">
                             Submit
                         </Button>
+                    </Form.Item>
+                    <Form.Item name="case" label="Case No" rules={[{ required: false }]}>
+                        <Select
+                            style={{ width: 200 }}
+                            onChange={handleChangeCase}
+                            options={caseChoice}
+                            placeholder="Select"
+                        />
                     </Form.Item>
                 </Space>
             </Form >
