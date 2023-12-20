@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Typography, Popconfirm, Checkbox } from 'antd';
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Typography, Popconfirm, Checkbox, InputRef } from 'antd';
 import { requestGetComplaintType, requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
 import { requestAddComplaint, requestAddDisease, requestAddInvParameter, requestDiseaseList } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { Table, Tag } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import type { ColumnType, ColumnsType } from 'antd/es/table';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { FilterConfirmProps } from 'antd/es/table/interface';
+import Highlighter from 'react-highlight-words';
 
 const { Option } = Select;
 
@@ -29,7 +31,11 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 
-const ComplaintList = ({ refresh }: any) => {
+const ComplaintList = ({ refresh, editRecord }: any) => {
+    const [searchText, setSearchText] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const searchInput = useRef<InputRef>(null);
+
     const formRef = useRef<any>();
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false)
@@ -38,12 +44,13 @@ const ComplaintList = ({ refresh }: any) => {
     const [editingKey, setEditingKey] = useState('');
     const isEditing = (record: Item) => record.key === editingKey;
     // const [isActive, setisActive] = useState<any>([{ value: "true", label: "True" }, { value: "false", label: "False" }])
-    const [isActive, setIsActive] = useState(true);
+    const [isActive, setIsActive] = useState(false);
 
     useEffect(() => {
         getComplaintList();
     }, [refresh])
 
+    type DataIndex = keyof DataType;
     const EditableCell: React.FC<EditableCellProps> = ({
         editing,
         dataIndex,
@@ -56,26 +63,25 @@ const ComplaintList = ({ refresh }: any) => {
 
     }) => {
         const inputNode = inputType === 'text' ?
-            <Checkbox >IsActive</Checkbox>
+            <Checkbox checked={isActive}>IsActive</Checkbox>
             : <Input style={{ width: '100%' }} size='large' />;
         return (
             <td {...restProps}>
                 {editing ? (
                     <>
-                    {console.log(record.isActive)}
-                    <Form.Item
-                        valuePropName={dataIndex=='isActive' ? 'checked' :'value'}
-                        name={dataIndex}
-                        style={{ width: '100%' }}
-                        rules={[
-                            {
-                                required: true,
-                                message: `Please Input ${title}`,
-                            },
-                        ]}
-                    >
-                        {inputNode}
-                    </Form.Item>
+                        <Form.Item
+                            valuePropName={dataIndex == 'isActive' ? 'checked' : 'value'}
+                            name={dataIndex}
+                            style={{ width: '100%' }}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: `Please Input ${title}`,
+                                },
+                            ]}
+                        >
+                            {inputNode}
+                        </Form.Item>
                     </>
                 ) : (
                     children
@@ -95,6 +101,97 @@ const ComplaintList = ({ refresh }: any) => {
         borderRadius: token.borderRadiusLG,
     };
 
+    const handleSearch = (
+        selectedKeys: string[],
+        confirm: (param?: FilterConfirmProps) => void,
+        dataIndex: DataIndex,
+    ) => {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    };
+
+    const handleReset = (clearFilters: () => void) => {
+        clearFilters();
+        setSearchText('');
+    };
+    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+            <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+                <Input
+                    ref={searchInput}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                    style={{ marginBottom: 8, display: 'block' }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        onClick={() => clearFilters && handleReset(clearFilters)}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Reset
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            confirm({ closeDropdown: false });
+                            setSearchText((selectedKeys as string[])[0]);
+                            setSearchedColumn(dataIndex);
+                        }}
+                    >
+                        Filter
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            close();
+                        }}
+                    >
+                        close
+                    </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: (filtered: boolean) => (
+            <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+        ),
+        onFilter: (value, record) =>
+            record[dataIndex]
+                .toString()
+                .toLowerCase()
+                .includes((value as string).toLowerCase()),
+        onFilterDropdownOpenChange: (visible) => {
+            if (visible) {
+                setTimeout(() => searchInput.current?.select(), 100);
+            }
+        },
+        render: (text) =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ''}
+                />
+            ) : (
+                text
+            ),
+    });
+
     const columns = [
         {
             title: 'Name',
@@ -103,7 +200,7 @@ const ComplaintList = ({ refresh }: any) => {
             // render: (text) => <a>{text}</a>,
             editable: true,
             width: '35%',
-
+            ...getColumnSearchProps('complaintTypeName'),
         },
         {
             title: 'Active',
@@ -111,7 +208,7 @@ const ComplaintList = ({ refresh }: any) => {
             key: 'isActive',
             width: '15%',
             render: (text: any) =>
-            <Tag color={text == "true" ? 'success' : 'error'}>{text == "true" ? 'Active' : 'InActive'}</Tag>,
+                <Tag color={text == "true" ? 'success' : 'error'}>{text == "true" ? 'Active' : 'InActive'}</Tag>,
             editable: true
         },
         {
@@ -120,6 +217,7 @@ const ComplaintList = ({ refresh }: any) => {
             key: 'TypeCode',
             editable: true,
             width: '25%',
+            ...getColumnSearchProps('complaintTypeCode'),
         },
         {
             title: 'Action',
@@ -148,8 +246,9 @@ const ComplaintList = ({ refresh }: any) => {
 
     const edit = (record: Partial<Item> & { key: React.Key }) => {
         console.log(record)
-        form.setFieldsValue({ complaintTypeName: '', complaintTypeCode: '', isActive: '', rowID: '', ...record });
-        setEditingKey(record.key);
+        editRecord(record)
+        // form.setFieldsValue({ complaintTypeName: '', complaintTypeCode: '', isActive: '', rowID: '', ...record });
+        // setEditingKey(record.key);
     };
     const mergedColumns = columns.map((col) => {
         if (!col.editable) {
@@ -236,7 +335,7 @@ const ComplaintList = ({ refresh }: any) => {
             setLoading(false)
             // console.log(dataMaskForDropdown)
         }
-        else {        
+        else {
             setLoading(true)
         }
     }
@@ -248,27 +347,27 @@ const ComplaintList = ({ refresh }: any) => {
             form={form}
             // initialValues={{isActive:"true"}}
             component={false}
-            >
+        >
             <Card
                 title="ComplaintType List"
                 style={{ boxShadow: '2px 2px 2px #4874dc' }}
             >
                 <div style={contentStyle}>
                     {complaintList &&
-                    <Spin tip="Please wait..." spinning={loading}>
-                        <Table
-                            components={{
-                                body: {
-                                    cell: EditableCell,
-                                },
-                            }}
-                            columns={mergedColumns}
-                            dataSource={complaintList}
-                            rowClassName="editable-row"
-                            pagination={{
-                                onChange: cancel,
-                            }}
-                        />
+                        <Spin tip="Please wait..." spinning={loading}>
+                            <Table
+                                components={{
+                                    body: {
+                                        cell: EditableCell,
+                                    },
+                                }}
+                                columns={mergedColumns}
+                                dataSource={complaintList}
+                                rowClassName="editable-row"
+                                pagination={{
+                                    onChange: cancel,
+                                }}
+                            />
                         </Spin>}
                 </div>
             </Card>

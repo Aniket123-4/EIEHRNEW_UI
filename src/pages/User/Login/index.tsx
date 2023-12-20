@@ -164,8 +164,8 @@ const Login: React.FC = () => {
     >
       <LoginFormPage
         backgroundImageUrl="https://www.shutterstock.com/shutterstock/photos/1401561251/display_1500/stock-photo-modern-microscope-for-operations-in-surgery-room-at-the-hospital-background-1401561251.jpg"
-        title="EIEHR Portal"
-        subTitle="Medical portal"
+        title="EIEHR "
+        subTitle={<><h2>Medical portal</h2><h6>Powered by <br/>MULTIFACET SOFTWARE SYSTEMS PRIVATE LIMITED</h6></>}
         actions={
           <div
             style={{

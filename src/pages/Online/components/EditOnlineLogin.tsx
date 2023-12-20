@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import './styles/AddComplaint.css';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card } from 'antd';
-import { requestGetComplaintType, requestGetDocType, requestGetGender, requestGetRateType } from '@/services/apiRequest/dropdowns';
+import { requestGetComplaintType, requestGetCountry, requestGetDocType, requestGetGender, requestGetRateType } from '@/services/apiRequest/dropdowns';
 import { requestAddOnlineLogin } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
 import { PageContainer } from '@ant-design/pro-components';
@@ -28,7 +28,10 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
     const [complaintType, setComplaintType] = useState<any>([{ value: "1", label: "Type 1" }])
     const [gender, setGender] = useState<any>([])
     const [isOtpVisible, setOTPVisible] = useState(false);
-    const [docType, setDocType] = useState<any>([{ value: '1', label: "Aadhaar" }])
+    const [docType, setDocType] = useState<any>([])
+    const [selectedDocType, setSelectedDocType] = useState<number>(-1);
+    const [nationality, setNationality] = useState<any>([{ value: '1', label: "Indian" }])
+
 
 
 
@@ -47,6 +50,7 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
         PostForm()
         getGender();
         getDocType();
+        getCountry();
     }, [])
 
     const getGender = async () => {
@@ -56,6 +60,7 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
             const dataMaskForDropdown = res?.data?.map((item: any) => {
                 return { value: item.genderID, label: item.genderName }
             })
+            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
             setGender(dataMaskForDropdown)
         }
     }
@@ -65,7 +70,18 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
             const dataMaskForDropdown = res?.result?.map((item: any) => {
                 return { value: item.uniqueID, label: item.uniqueName }
             })
+            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
             setDocType(dataMaskForDropdown)
+        }
+    }
+    const getCountry = async () => {
+        const res = await requestGetCountry();
+        if (res.length > 0) {
+            const dataMaskForDropdown = res?.map((item: any) => {
+                return { value: item.countryID, label: item.nationality }
+            })
+            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
+            setNationality(dataMaskForDropdown)
         }
     }
 
@@ -74,7 +90,21 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
     }
 
     const PostForm = () => {
-        console.log(props)
+        form.setFieldsValue(
+            {
+                "fName": selectedRows?.fName,
+                "mName": selectedRows?.mName,
+                "lName": selectedRows?.lName,
+                "curMobileNoCC": selectedRows?.curMobileNoCC,
+                "curMobileNo": selectedRows?.curMobileNo,
+                "genderID": selectedRows?.genderID,
+                "dob": dayjs(selectedRows?.dob, dateFormat),
+                "nationalityID": selectedRows?.nationalityID,
+                "fNameML": selectedRows?.fNameML,
+                "uniqueID": selectedRows?.vUniqueID,
+                "uniqueName": selectedRows?.uniqueName,
+                "curAddress": selectedRows?.curAddress,
+            });
     }
 
     const addOnlineLogin = async (values: any) => {
@@ -136,7 +166,7 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                         <Row gutter={16}>
                             <Col className="gutter-row" span={6}  >
                                 <Form.Item
-                                    initialValue={selectedRows?.fName}
+                                    // initialValue={selectedRows?.fName}
                                     name="fName"
                                     label="First name"
                                     rules={[{ required: true, message: 'Please enter first name' }]}
@@ -147,7 +177,7 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                             </Col>
                             <Col className="gutter-row" span={6}  >
                                 <Form.Item
-                                    initialValue={selectedRows?.mName}
+                                    // initialValue={selectedRows?.mName}
                                     name="mName"
                                     label="Middle name"
                                     rules={[{ message: 'Please enter middle name' }]}
@@ -157,7 +187,7 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                             </Col>
                             <Col className="gutter-row" span={6}  >
                                 <Form.Item
-                                    initialValue={selectedRows?.lName}
+                                    // initialValue={selectedRows?.lName}
                                     name="lName"
                                     label="Last name"
                                     rules={[{ required: true, message: 'Please enter last name' }]}
@@ -165,47 +195,47 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                     <Input size={'large'} placeholder="Please enter last name" />
                                 </Form.Item>
                             </Col>
-                            
+
                             <Col className="gutter-row" span={6}>
                                 <Space.Compact>
-                                <Form.Item
-                                    initialValue={selectedRows?.curMobileNoCC}
-                                    style={{ width: '20%' }}
-                                    name="curMobileNoCC"
-                                    label="  CC"
-                                    rules={[{ required: false, message: 'Please enter Mobile number cc' }]}
-                                >
-                                    <Input  size={'large'} placeholder="Please enter MobileNoCC" />
+                                    <Form.Item
+                                        // initialValue={selectedRows?.curMobileNoCC}
+                                        style={{ width: '20%' }}
+                                        name="curMobileNoCC"
+                                        label="  CC"
+                                        rules={[{ required: false, message: 'Please enter Mobile number cc' }]}
+                                    >
+                                        <Input size={'large'} placeholder="Please enter MobileNoCC" />
 
-                                </Form.Item>
-                                <Form.Item
-                                    style={{ width: '80%' }}
-                                    initialValue={selectedRows?.curMobileNo}
-                                    name="curMobileNo"
-                                    label="Mobile number"
-                                    rules={[
-                                        { required: true, type: 'string', message: 'Please enter mobile number' },
-                                        {
-                                            pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
-                                            message: 'Please enter a valid mobile number',
-                                        }
-                                    ]}
-                                >
-                                    <Input  maxLength={10} size={'large'} placeholder="Please enter mobile number" />
-                                </Form.Item>
-                                
+                                    </Form.Item>
+                                    <Form.Item
+                                        style={{ width: '80%' }}
+                                        // initialValue={selectedRows?.curMobileNo}
+                                        name="curMobileNo"
+                                        label="Mobile number"
+                                        rules={[
+                                            { required: true, type: 'string', message: 'Please enter mobile number' },
+                                            {
+                                                pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
+                                                message: 'Please enter a valid mobile number',
+                                            }
+                                        ]}
+                                    >
+                                        <Input maxLength={10} size={'large'} placeholder="Please enter mobile number" />
+                                    </Form.Item>
+
                                 </Space.Compact>
-                                
+
                             </Col>
                             <Col className="gutter-row" span={6}>
                                 <Form.Item
-                                    initialValue={selectedRows?.genderID}
+                                    // initialValue={selectedRows?.genderID}
                                     name="genderID"
                                     label="Gender"
                                     rules={[{ required: true, message: 'Please select gender' }]}
                                 >
                                     <Select
-                                        defaultValue={selectedRows?.genderID}
+                                        // defaultValue={selectedRows?.genderID}
                                         size={'large'}
                                         placeholder="Select gender"
                                         optionFilterProp="children"
@@ -215,7 +245,7 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                             </Col>
                             <Col span={6}>
                                 <Form.Item
-                                    initialValue={dayjs(selectedRows?.dob, dateFormat)}
+                                    // initialValue={dayjs(selectedRows?.dob, dateFormat)}
                                     name="dob"
                                     label="DOB"
                                     rules={[{ required: true, message: 'Please choose the DOB' }]}
@@ -236,7 +266,7 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                             </Col>
                             <Col className="gutter-row" span={6}>
                                 <Form.Item
-                                    initialValue={selectedRows?.nationalityID}
+                                    // initialValue={selectedRows?.nationalityID}
                                     name="nationalityID"
                                     label="Nationality"
                                     rules={[{ required: true, message: 'Please select Nationality' }]}
@@ -244,8 +274,7 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                     <Select
                                         size={'large'}
                                         placeholder="Select nationality"
-                                        optionFilterProp="children"
-                                        options={[{ label: 'Indian', value: '1' }, { label: 'Other', value: '2' }]}
+                                        options={nationality}
                                     />
                                 </Form.Item>
                             </Col>
@@ -261,37 +290,38 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                             </Col>
                             <Col className="gutter-row" span={6}>
                                 <Form.Item
-                                    initialValue={selectedRows?.vUniqueID}
+                                    // initialValue={selectedRows?.vUniqueID}
                                     name="uniqueID"
                                     label="Doc Type"
                                     rules={[{ required: true, message: 'Please Select Doc Type ' }]}
                                 >
-                                    <Select size="large"
-                                            placeholder="Please Select Doc Type"
-                                            options={docType}
-                                        />
+                                    <Select
+                                        size="large"
+                                        placeholder="Please Select Doc Type"
+                                        options={docType}
+                                    />
                                     {/* <Input type="number" size={'large'} placeholder="Please Select Doc Type" /> */}
                                 </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={6}>
                                 <Form.Item
-                                    initialValue={selectedRows?.vUniqueName}
+                                    // initialValue={selectedRows?.vUniqueName}
                                     name="uniqueName"
                                     label="Document Number"
-                                    rules={[{ required: false, message: 'Please Enter Document Number' }]}
+                                    rules={[{ required: true, message: 'Please Enter Document Number' }]}
                                 >
                                     <Input size={'large'} placeholder="Please Enter Document Number" />
                                 </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={6}>
                                 <Form.Item
-                                    initialValue={selectedRows?.curAddress}
+                                    // initialValue={selectedRows?.curAddress}
                                     name="curAddress"
                                     label="Address"
                                     rules={[{ required: true, message: 'Please enter address ' }]}
                                 >
                                     {/* <Input size={'large'} placeholder="Please enter address" /> */}
-                                    <TextArea  placeholder="Address" />
+                                    <TextArea placeholder="Address" />
                                 </Form.Item>
                             </Col>
 

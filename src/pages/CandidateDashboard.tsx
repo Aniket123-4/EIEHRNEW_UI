@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { PageContainer, ProDescriptions } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { Card, theme, Image, Divider, Space, Avatar, Typography, Row, Col, Progress, Spin, Table, Button, message } from 'antd';
+import { Card, theme, Image, Divider, Space, Avatar, Typography, Row, Col, Progress, Spin, Table, Button, message, Tag } from 'antd';
 import { getUserInLocalStorage } from '@/utils/common';
 import { requestGetCandidateList } from './Candidate/services/api';
 import { UserOutlined } from '@ant-design/icons';
@@ -76,10 +76,8 @@ const CandidateDashboard: React.FC = () => {
       title: 'Slot Expired',
       key: 'isExpired',
       dataIndex: 'isExpired',
-      render: (text: any) => <Typography style={{
-        textAlign: 'center', borderRadius: 10,
-        backgroundColor: text == false ? '#00FF00' : '#EBEBE4',
-      }}>{text == true ? "Yes" : "No"}</Typography>,
+      render: (text: any) => 
+      <Tag color={text == true ?"error": "success"}>{text == true ? "Yes" : "No"}</Tag>
     },
   ];
   const columns1 = [
@@ -113,10 +111,12 @@ const CandidateDashboard: React.FC = () => {
       title: 'ConsultancyPaid',
       key: 'isConsultencyPaid',
       dataIndex: 'isConsultencyPaid',
-      render: (text: any) => <Typography style={{
-        textAlign: 'center', borderRadius: 10,
-        backgroundColor: text == false ? '#00FF00' : '#EBEBE4',
-      }}>{text == true ? "Yes" : "No"}</Typography>,
+      render: (text: any) => 
+      <Tag color={text == false ?"error": "success"}>{text == true ? "Yes" : "No"}</Tag>
+      // <Typography style={{
+      //   textAlign: 'center', borderRadius: 10,
+      //   backgroundColor: text == false ? '#00FF00' : '#EBEBE4',
+      // }}>{text == true ? "Yes" : "No"}</Typography>,
     },
   ];
   const data = [

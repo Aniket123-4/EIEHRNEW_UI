@@ -19,12 +19,11 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
     const formRef = useRef<any>();
     const { token } = theme.useToken();
     const [current, setCurrent] = useState(0);
-    const [row, setRow] = useState(1);
-    const [col, setCol] = useState(1);
     const [capacity, setCapacity] = useState(1);
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false)
     const [complaintType, setComplaintType] = useState<any>([{ value: "1", label: "Type 1" }])
+    const [complaintTypeID, setComplaintTypeID] = useState<any>("-1")
     const [rateType, setRateType] = useState<any>([])
     const [institute, setInstitute] = useState<any>([])
     const [isActive, setIsActive] = useState(true);
@@ -82,7 +81,7 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
         values['isActive'] = values.isActive.toString();
         try {
             const staticParams = {
-                // "complaintTypeID": "1",
+                "complaintTypeID": complaintTypeID,
                 // "complaintTypeName": "",
                 // "complaintTypeCode": "1", 
                 // "isActive": "1",
@@ -97,6 +96,8 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
             setLoading(false)
             if (msg.isSuccess === true) {
                 message.success(msg.msg);
+                form.resetFields();
+                setComplaintTypeID("-1")
                 return;
             } else {
                 message.error(msg.msg);
@@ -116,6 +117,16 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
         setIsActive(e.target.checked)
         // setVatApplicable(e.target.checked)
 
+    };
+    const setEditField = (data:any) => {
+        form.setFieldsValue({
+            complaintTypeName:data?.complaintTypeName,
+            complaintTypeID:data?.complaintTypeID,
+            complaintTypeCode:data?.complaintTypeCode,
+            isActive:data?.isActive=="true" ? true : false,
+        })
+        window.scrollTo(0, 0)
+        setComplaintTypeID(data?.complaintTypeID)
     };
 
     const addForm = () => {
@@ -206,7 +217,8 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
                         </div>
                     </Spin>
                 </Card>
-                <ComplaintList refresh={loading} />
+                <ComplaintList refresh={loading}
+                    editRecord={(data:any)=>setEditField(data)} />
             </Space>
         </PageContainer>
     );
