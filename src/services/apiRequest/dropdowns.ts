@@ -19,14 +19,6 @@ export async function requestGetGender(options?: { [key: string]: any }) {
   });
 }
 
-export async function requestGetCountry(options?: { [key: string]: any }) {
-  return request<any>('/Common/GetCountry?CountryID=-1&Type=1', {
-    method: 'POST',
-    ...(options || {}),
-  });
-}
-
-
 export async function requestGetUserType(options?: { [key: string]: any }) {
   return request<any>('/Login/GetUserType', {
     method: 'GET',
@@ -234,6 +226,16 @@ export async function requestGetRelation(body: any={}, options?: { [key: string]
 export async function requestGetDocType(body: any={}, options?: { [key: string]: any }) {
   return request<any>('MasterForm/vUniqueID', {
     method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetCountry(body: any={}, options?: { [key: string]: any }) {
+  return request<any>('Common/GetCountry?CountryID=-1&Type=1', {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },

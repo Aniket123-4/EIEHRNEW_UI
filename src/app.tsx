@@ -1,7 +1,7 @@
 import React from 'react';
 import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
-import { DownOutlined, LinkOutlined, LogoutOutlined, UnorderedListOutlined, UserOutlined } from '@ant-design/icons';
+import { DownOutlined, HomeOutlined, LinkOutlined, LogoutOutlined, UnorderedListOutlined, UserOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
@@ -150,29 +150,46 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }: a
       },
     ],
 
-    menuHeaderRender: undefined,
-    // 自定义 403 页面
-    // unAccessible: <div>unAccessible</div>,
-    // 增加一个 loading 的状态
-    childrenRender: (children) => {
-      // if (initialState?.loading) return <PageLoading />;
-      return (
-        <>
-          {children}
-          <SettingDrawer
-            disableUrlParams
-            enableDarkTheme
-            settings={initialState?.settings}
-            onSettingChange={(settings) => {
-              setInitialState((preInitialState) => ({
-                ...preInitialState,
-                settings,
-              }));
-            }}
-          />
-        </>
-      );
-    },
+    menuHeaderRender: (logo,title)=><div
+    id="customize_menu_header"
+    style={{
+      height: '25px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+    }}
+    onClick={() => {
+      if(getUserInLocalStorage()?.verifiedUser?.userTypeID === "11")
+      history.push("/candidate-dashboard")
+      else  
+      history.push("/welcome")
+    }}
+  >
+    {<HomeOutlined />}
+    {'HomePage'}
+  </div>,
+// 自定义 403 页面
+// unAccessible: <div>unAccessible</div>,
+// 增加一个 loading 的状态
+childrenRender: (children) => {
+  // if (initialState?.loading) return <PageLoading />;
+  return (
+    <>
+      {children}
+      <SettingDrawer
+        disableUrlParams
+        enableDarkTheme
+        settings={initialState?.settings}
+        onSettingChange={(settings) => {
+          setInitialState((preInitialState) => ({
+            ...preInitialState,
+            settings,
+          }));
+        }}
+      />
+    </>
+  );
+},
     ...initialState?.settings,
     ...defaultSettings,
   };

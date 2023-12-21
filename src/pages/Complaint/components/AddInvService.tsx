@@ -43,6 +43,7 @@ const AddInvService = () => {
     const investigationListRef = useRef();
     const [defExpandedKeys, setDefExpandedKeys] = useState<any>(["1"]);
     const [defCheckedKeys, setDefCheckedKeys] = useState<any>(['1 ']);
+    const [totalRate, setTotalRate] = useState<any>(0);
 
     const updateTreeData = (list: DataNode[], key: React.Key, children: DataNode[]): DataNode[] =>
         list.map((node) => {
@@ -222,7 +223,14 @@ const AddInvService = () => {
         console.log('selected', selectedKeys, info);
     };
 
-    const onCheck: TreeProps['onCheck'] = (checkedKeys, info) => {
+    const onCheck: TreeProps['onCheck'] = (checkedKeys, info:any) => {
+        const rate = info && info?.checkedNodes?.map((item: any) => {
+            return (item?.invRate)
+        })
+
+        const totalrate=rate.reduce((a:number, b:number) => parseInt(a) + parseInt(b))
+        setTotalRate(totalrate)
+        
         const d = removeDuplicates(checkedKeys)
         setInvArr(d.toString().trim())
         console.log('onCheck', checkedKeys.toString(), info);
@@ -248,7 +256,8 @@ const AddInvService = () => {
                 if (res?.result?.length > 0) {
                     const dataMaskForDropdown = res?.result?.map((item: any) => {
                         // setDefCheckedKeys(defCheckedKeys.push(item.invParameterID))
-                        return { key: `${item.invParameterID} `, title: item.invName, isLeaf: true }
+                        return { key: `${item.invParameterID} `, title: item.invName, isLeaf: true,
+                        invRate:item.invRate }
                     })
                     setTimeout(() => {
                         if (dataMaskForDropdown.length > 0)
@@ -378,7 +387,7 @@ const AddInvService = () => {
                                 name="invParameter"
                                 valuePropName="checked"
                                 // initialValue={true}
-                                label="Investigation Parameter"
+                                label={"Investigation Parameter" + totalRate}
                                 rules={[{ required: false, message: 'Please select' }]}
                             >
                                 {defExpandedKeys &&<Tree

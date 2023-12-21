@@ -1,7 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Card, Checkbox, Form, Input, InputNumber, Popconfirm, Select, Table, Tag, Typography, message } from 'antd';
+import { Button, Card, Checkbox, Form, Input, InputNumber, InputRef, Popconfirm, Select, Space, Table, Tag, Typography, message } from 'antd';
 import { requestAddDisease, requestDiseaseList, requestDiseaseTypeList, requestSpecialList } from '../services/api';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { SearchOutlined } from '@ant-design/icons';
+import { ColumnType } from 'antd/es/table';
+import { FilterConfirmProps } from 'antd/es/table/interface';
+import Highlighter from 'react-highlight-words';
+
 
 interface Item {
     key: string;
@@ -30,7 +35,11 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 
-const DiseaseList: React.FC = ({ }) => {
+const DiseaseList: React.FC = ({editRecord,refresh }:any) => {
+    const [searchText, setSearchText] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const searchInput = useRef<InputRef>(null);
+
     const formRef = useRef<any>();
     const [form] = Form.useForm();
     const [data, setData] = useState(originData);
@@ -41,13 +50,14 @@ const DiseaseList: React.FC = ({ }) => {
     const [specialList, setSpecialist] = useState([]);
     const [diseaseTypeList, setDiseaseTypeList] = useState([]);
 
-
+    type DataIndex = keyof DataType;
     const isEditing = (record: Item) => record.key === editingKey;
 
     const edit = (record: Partial<Item> & { key: React.Key }) => {
-        console.log(record.key)
-        form.setFieldsValue({ diseaseName: '', isActive: '', diseaseTypeName: '', ...record });
-        setEditingKey(record.key);
+        console.log(record)
+        editRecord(record)
+        // form.setFieldsValue({ diseaseName: '', isActive: '', diseaseTypeName: '', ...record });
+        // setEditingKey(record.key);
     };
     const onChangeServiceStatus = (e: CheckboxChangeEvent) => {
         formRef.current?.setFieldsValue({
@@ -103,6 +113,9 @@ const DiseaseList: React.FC = ({ }) => {
     };
     useEffect(() => {
         getDiseaseList();
+    }, [refresh])
+    
+    useEffect(() => {
         getSpecialType();
     }, [])
 
@@ -175,6 +188,98 @@ const DiseaseList: React.FC = ({ }) => {
             console.log('Validate Failed:', errInfo);
         }
     };
+
+    const handleSearch = (
+        selectedKeys: string[],
+        confirm: (param?: FilterConfirmProps) => void,
+        dataIndex: DataIndex,
+    ) => {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    };
+
+    const handleReset = (clearFilters: () => void) => {
+        clearFilters();
+        setSearchText('');
+    };
+    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+            <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+                <Input
+                    ref={searchInput}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                    style={{ marginBottom: 8, display: 'block' }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        onClick={() => clearFilters && handleReset(clearFilters)}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Reset
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            confirm({ closeDropdown: false });
+                            setSearchText((selectedKeys as string[])[0]);
+                            setSearchedColumn(dataIndex);
+                        }}
+                    >
+                        Filter
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            close();
+                        }}
+                    >
+                        close
+                    </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: (filtered: boolean) => (
+            <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+        ),
+        onFilter: (value, record) =>
+            record[dataIndex]
+                .toString()
+                .toLowerCase()
+                .includes((value as string).toLowerCase()),
+        onFilterDropdownOpenChange: (visible) => {
+            if (visible) {
+                setTimeout(() => searchInput.current?.select(), 100);
+            }
+        },
+        render: (text) =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ''}
+                />
+            ) : (
+                text
+            ),
+    });
+
     const saveDisease = async (key: any) => {
         const editValues = (await form.validateFields()) as Item;
         const index: any = diseaseList.find((item) => key === item.key);
@@ -222,7 +327,8 @@ const DiseaseList: React.FC = ({ }) => {
             key: 'diseaseName',
             // render: (text) => <a>{text}</a>,
             editable: true,
-            width: '25%'
+            width: '25%',
+            ...getColumnSearchProps('diseaseName'),
         },
         {
             title: 'Active',

@@ -6,6 +6,7 @@ import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { updateCandidateProfileImage } from '@/services/apiRequest/api';
 import { getUserInLocalStorage } from '@/utils/common';
 import { addCandidateDoc, getCandidateDoc, requestGetCandidateList } from '@/pages/Candidate/services/api';
+import { requestFileUpload } from '@/pages/Patient/services/api';
 
 const { Title } = Typography;
 
@@ -108,10 +109,34 @@ const UpdateDocsUpload: React.FC = () => {
             <div style={{ marginTop: 8 }}>Upload</div>
         </div>
     );
+    const onUpload = (info: any) => {
+        // if (info.file.status !== 'uploading') {
+        //     console.log(info.file, info.fileList);
+        // }
+        if (info.file.status === 'done') {
+            const getValue = getBase64(info.file.originFileObj as RcFile, async (url) => {
+                // console.log(url, info.file.name)
+                const param = {
+                    "fileName": info.file.name,
+                    "data": url
+                }
+                const res = await requestFileUpload(param);
+                if(res.isSuccess==true)
+                message.success(`${res.msg}`);
+                else
+                message.error(`Some Error Occurred`);
+            })
+        } else if (info.file.status === 'error') {
+            message.error(`${info.file.name} file upload failed.`);
+        }
+
+    }
 
     return (
         <>
-            <Upload >
+            <Upload
+                onChange={onUpload}
+            >
                 <Button icon={<UploadOutlined />}>Upload</Button>
             </Upload>
             {/* <List

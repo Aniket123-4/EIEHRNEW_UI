@@ -3,18 +3,36 @@ import {
     PageContainer,
     StepsForm,
 } from '@ant-design/pro-components';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Image, theme, Spin, InputNumber, Card, Divider, Checkbox, Typography, Tabs, Upload, Avatar } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Image, theme, Spin, InputNumber, Card, Divider, Checkbox, Typography, Tabs, Upload, Avatar, Table, Popconfirm } from 'antd';
 
 import { useEffect, useRef, useState } from 'react';
 import { FormattedMessage, history, SelectLang, useIntl, useParams } from '@umijs/max';
 const moment = require('moment');
 import dayjs from 'dayjs';
 import { requestGetPatientSearch, requestPatientRegistration } from '../services/api';
-import { requestGetBloodGroup, requestGetCivilStatus, requestGetDistrict, requestGetGender, requestGetRelation, requestGetReligion, requestGetState } from '@/services/apiRequest/dropdowns';
+import { requestGetBloodGroup, requestGetCivilStatus, requestGetCountry, requestGetDistrict, requestGetGender, requestGetRelation, requestGetReligion, requestGetState } from '@/services/apiRequest/dropdowns';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { LoadingOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
+import { ColumnsType } from 'antd/es/table';
 
+interface DataType {
+    col1: string
+    col2: string,
+    col3: string
+    col4: string
+    col5: string
+    col6: string
+    col7: string
+    col8: string
+    col9: string
+    col10: string,
+    col11: string,
+    col12: string,
+    col13: string,
+    col14: string,
+    col15: string
+}
 
 const { Option } = Select;
 
@@ -25,6 +43,8 @@ const EditPatient = ({ visible, isEditable, }: any) => {
     const { token } = theme.useToken();
     const intl = useIntl();
     const [form] = Form.useForm();
+    const [form1] = Form.useForm();
+    const [form2] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [patientId, setPatientId] = useState<any>();
     const [state, setState] = useState<any>([{ value: '1', label: "Uttar Pradesh" }])
@@ -36,14 +56,10 @@ const EditPatient = ({ visible, isEditable, }: any) => {
     const [bloodGroup, setBloodGroup] = useState<any>([{ value: '1', label: "O+" }])
     const [religion, setReligion] = useState<any>([{ value: '1', label: "Hindu" }])
     const [relation, setRelation] = useState<any>([{ value: '1', label: "Father" }])
-    const [isOtpVisible, setOTPVisible] = useState(false);
-    const [candidateData, setCandidateData] = useState({});
-    const [dobValidation, setDobValidation] = useState<any>();
-    const [activeTab, setActiveTab] = useState<any>("1");
-    const [disabled, setDisabled] = useState<any>(false);
     const [lstType_Patient, setLstType_Patient] = useState([]);
     const [patient, setPatientDetails] = useState([]);
     const [patientDoc, setPatientDoc] = useState<any>('');
+    const [istType_Pat, setIstType_Pat] = useState([]);
     const [fileList, setFileList] = useState<UploadFile[]>([
     ]);
 
@@ -79,8 +95,10 @@ const EditPatient = ({ visible, isEditable, }: any) => {
         getCivilStatus()
         getBloodGroup()
         getState()
+        getDistrict()
         getReligion()
         getRelation()
+        getCountry()
         let customDate = moment().format("YYYY-MM-DD");
         console.log(moment() && moment() > moment(customDate, "YYYY-MM-DD"))
 
@@ -129,15 +147,52 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                 const patientData = response?.result[0]
                 const patientData1 = response?.result1[0]
                 const patientDoc = response?.result2[0]
-                const familyData = response?.result3[0]
-                const familyData1 = response?.result4[0]
-                // setFileList({
-                //     uid: '-1',
-                //     name: 'image.png',
-                //     status: 'done',
-                //     url: patientDoc?.photo,
-                // })
-                console.log(patientDoc?.photo)
+                // const familyData = response?.result3[0]
+                // const familyData1 = response?.result4[0]
+
+                const dataMaskForFamily = response?.result3?.map((item: any) => {
+                    return {
+                        "col1": item.relationID,
+                        "col2": item.contactSerialNo,
+                        "col3": item.contactName,
+                        "col4": item.contactMobileNoCC,
+                        "col5": item.contactMobileNo,
+                        "col6": item.contactPhoneCC,
+                        "col7": "",
+                        "col8": item.contactPhoneAC,
+                        "col9": item.bGroupID,
+                        "col10": "",
+                        "col11": "",
+                        "col12": "",
+                        "col13": "",
+                        "col14": "",
+                        "col15": ""
+                    };
+                })
+                const family = dataMaskForFamily.filter((item) => item.col3 !== "");
+                setLstType_Patient(family);
+                const dataMaskForDropdown = response?.result4?.map((item: any) => {
+                    return {
+                        "col1": item.relationID,
+                        "col2": item.contactSerialNo,
+                        "col3": item.contactName,
+                        "col4": item.contactMobileNoCC,
+                        "col5": item.contactMobileNo,
+                        "col6": item.contactPhoneCC,
+                        "col7": "",
+                        "col8": item.contactPhoneAC,
+                        "col9": item.bGroupID,
+                        "col10": "",
+                        "col11": "",
+                        "col12": "",
+                        "col13": "",
+                        "col14": "",
+                        "col15": ""
+                    };
+                })
+                const newData = dataMaskForDropdown.filter((item) => item.col3 !== "");
+                setIstType_Pat(newData);
+
                 form.setFieldsValue(
                     {
                         "fName": patientData?.fName,
@@ -169,7 +224,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                         "curMobileNo": patientData1?.curMobileNo,
                         "curPhoneCC": patientData1?.curPhoneCC,
                         "curPhoneNo": patientData1?.curPhoneNo,
-                        "curPhoneAC": patientData1?.curPhoneAC,
+
                         "perHouseNo": patientData1?.perHouseNo,
                         "perAddress": patientData1?.perAddress,
                         "perPinCode": patientData1?.perPinCode,
@@ -180,32 +235,12 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                         "perMobileNo": patientData1?.perMobileNo,
                         "perPhoneCC": patientData1?.perPhoneCC,
                         "perPhoneNo": patientData1?.perPhoneNo,
-                        "perPhoneAC": patientData1?.perPhoneAC,
 
-                        "Fcol1": familyData?.relationID,
-                        "Fcol2": familyData?.contactSerialNo,
-                        "Fcol3": familyData?.contactName,
-                        "Fcol4": familyData?.contactMobileNoCC,
-                        "Fcol5": familyData?.contactMobileNo,
-                        "Fcol6": familyData?.contactPhoneCC,
-                        "Fcol8": familyData?.contactPhoneNo,
-                        "Fcol7": familyData?.contactPhoneAC,
-                        "Fcol9": familyData?.bGroupID,
-
-                        "col1": familyData1?.relationID,
-                        "col2": familyData1?.contactSerialNo,
-                        "col3": familyData1?.contactName,
-                        "col4": familyData1?.contactMobileNoCC,
-                        "col5": familyData1?.contactMobileNo,
-                        "col6": familyData1?.contactPhoneCC,
-                        "col8": familyData1?.contactPhoneNo,
-                        "col7": familyData1?.contactPhoneAC,
-                        "col9": familyData1?.bGroupID,
                         "uidDocName": patientData1?.uidDocName,
                         "passIssueDate": dayjs(patientData1.passportIssueDate),
                         "passIssuePlace": patientData1?.passportIssuePlace,
-                        "photo": `data:image/png;base64,${patientDoc?.photo}`,
-                        "signature": `data:image/png;base64,${patientDoc?.signature}`,
+                        "photo": patientDoc?.photo ? `data:image/png;base64,${patientDoc?.photo}`:"",
+                        "signature": patientDoc?.signature ? `data:image/png;base64,${patientDoc?.signature}`:"",
                         "isVIP": true,
                         // "patientID": -1,
                         // "patientNo": patientData?.patientNo,
@@ -250,6 +285,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             const dataMaskForDropdown = res?.data?.map((item: any) => {
                 return { value: item.genderID, label: item.genderName }
             })
+            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
             setGender(dataMaskForDropdown)
         }
     }
@@ -260,6 +296,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             const dataMaskForDropdown = res?.result?.map((item: any) => {
                 return { value: item.civilStatusID, label: item.civilStatusName }
             })
+            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
             setCivilStatus(dataMaskForDropdown)
         }
     }
@@ -270,7 +307,9 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             const dataMaskForDropdown = res?.result?.map((item: any) => {
                 return { value: item.bGroupID, label: item.bGroupName }
             })
+            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
             setBloodGroup(dataMaskForDropdown)
+            console.log(dataMaskForDropdown)
         }
     }
     const getReligion = async () => {
@@ -280,6 +319,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             const dataMaskForDropdown = res?.result?.map((item: any) => {
                 return { value: item.religionID, label: item.religionName }
             })
+            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
             setReligion(dataMaskForDropdown)
         }
     }
@@ -290,6 +330,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             const dataMaskForDropdown = res?.result?.map((item: any) => {
                 return { value: item.relationID, label: item.relationName }
             })
+            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
             setRelation(dataMaskForDropdown)
         }
     }
@@ -300,7 +341,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             const dataMaskForDropdown = res?.map((item: any) => {
                 return { value: item.stateID, label: item.stateName }
             })
-            console.log({ dataMaskForDropdown })
+            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
             setState(dataMaskForDropdown)
         }
     }
@@ -311,7 +352,23 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             const dataMaskForDropdown = res?.map((item: any) => {
                 return { value: item.districtID, label: item.districtName }
             })
+            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
             setDistrict(dataMaskForDropdown)
+        }
+    }
+    const getCountry = async () => {
+        const res = await requestGetCountry();
+        if (res.length > 0) {
+            const dataMaskForDropdown = res?.map((item: any) => {
+                return { value: item.countryID, label: item.nationality }
+            })
+            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
+            setNationality(dataMaskForDropdown)
+            const dataMaskForCountry = res?.map((item: any) => {
+                return { value: item.countryID, label: item.countryName }
+            })
+            dataMaskForCountry.unshift({ value: "-1", label: "Select" });
+            setCountry(dataMaskForCountry)
         }
     }
     const addPatientReg = async (values: any) => {
@@ -320,45 +377,28 @@ const EditPatient = ({ visible, isEditable, }: any) => {
         let serviceFrom = convertDate(values.serviceFrom);
         try {
             const staticParams = {
-                "lstType_Patient": [
-                    {//RelationID,ContactSerialNo,ContactName,ContactMobileNoCC,ContactMobileNo,
-                        //ContactPhoneCC,ContactPhoneAC,ContactPhoneNo,BloodGroup,'','','','','','' 
-                        "col1": values.Fcol1 ? values.Fcol1 : "",
-                        "col2": values.Fcol2 ? values.Fcol2 : "",
-                        "col3": values.Fcol3 ? values.Fcol3 : "",
-                        "col4": values.Fcol4 ? values.Fcol4 : "",
-                        "col5": values.Fcol5 ? values.Fcol5 : "",
-                        "col6": values.Fcol6 ? values.Fcol6 : "",
-                        "col7": values.Fcol7 ? values.Fcol7 : "",
-                        "col8": values.Fcol8 ? values.Fcol8 : "",
-                        "col9": values.Fcol9 ? values.Fcol9 : "",
-                        "col10": "",
-                        "col11": "",
-                        "col12": "",
-                        "col13": "",
-                        "col14": "",
-                        "col15": ""
-                    }
-                ],
-                "istType_Pat": [
-                    {
-                        "col1": values.col1 ? values.col1 : "",
-                        "col2": values.col2 ? values.col2 : "",
-                        "col3": values.col3 ? values.col3 : "",
-                        "col4": values.col4 ? values.col4 : "",
-                        "col5": values.col5 ? values.col5 : "",
-                        "col6": values.col6 ? values.col6 : "",
-                        "col7": values.col7 ? values.col7 : "",
-                        "col8": values.col8 ? values.col8 : "",
-                        "col9": values.col9 ? values.col9 : "",
-                        "col10": "",
-                        "col11": "",
-                        "col12": "",
-                        "col13": "",
-                        "col14": "",
-                        "col15": ""
-                    }
-                ],
+                "lstType_Patient": lstType_Patient,
+                // [
+                //     {//RelationID,ContactSerialNo,ContactName,ContactMobileNoCC,ContactMobileNo,
+                //         //ContactPhoneCC,ContactPhoneAC,ContactPhoneNo,BloodGroup,'','','','','','' 
+                //         "col1": values.Fcol1 ? values.Fcol1 : "",
+                //         "col2": values.Fcol2 ? values.Fcol2 : "",
+                //         "col3": values.Fcol3 ? values.Fcol3 : "",
+                //         "col4": values.Fcol4 ? values.Fcol4 : "",
+                //         "col5": values.Fcol5 ? values.Fcol5 : "",
+                //         "col6": values.Fcol6 ? values.Fcol6 : "",
+                //         "col7": values.Fcol7 ? values.Fcol7 : "",
+                //         "col8": values.Fcol8 ? values.Fcol8 : "",
+                //         "col9": values.Fcol9 ? values.Fcol9 : "",
+                //         "col10": "",
+                //         "col11": "",
+                //         "col12": "",
+                //         "col13": "",
+                //         "col14": "",
+                //         "col15": ""
+                //     }
+                // ],
+                "istType_Pat": istType_Pat,
                 // "photo": "",
                 // "signature": "",
                 // "isVIP": false,
@@ -372,6 +412,9 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                 "uidDocID": 0,
                 "vUniqueID": 0,
                 "vUniqueName": 0,
+
+                "curPhoneAC": "",
+                "perPhoneAC": "",
                 "userID": -1,
                 "formID": -1,
                 "type": 1
@@ -395,7 +438,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
         }
     };
     const goBack = () => {
-        history.push("/")
+        history.push("/patient/search")
     }
     const onChangePic: UploadProps['onChange'] = ({ fileList: newFileList }) => {
         console.log(newFileList)
@@ -416,7 +459,6 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                     "perMobileNoCC": addressFields.curMobileNoCC,
                     "perMobileNo": addressFields.curMobileNo,
                     "perPhoneCC": addressFields.curPhoneCC,
-                    "perPhoneAC": addressFields.curPhoneAC,
                     "perPhoneNo": addressFields.curPhoneNo,
                 });
         else
@@ -430,10 +472,425 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                 "perMobileNoCC": "",
                 "perMobileNo": "",
                 "perPhoneCC": "",
-                "perPhoneAC": "",
                 "perPhoneNo": "",
             })
     };
+
+    const columns: ColumnsType<DataType> = [
+        {
+            title: 'SrNo.',
+            dataIndex: 'col2',
+            key: 'col2',
+            render: (text) => <a>{text}</a>,
+        },
+        {
+            title: 'Contact Name',
+            dataIndex: 'col3',
+            key: 'col3',
+        },
+        {
+            title: 'Relation',
+            dataIndex: 'col1',
+            key: 'col1',
+            render: (v) =>
+                <Select
+                    size='small'
+                    disabled={true}
+                    defaultValue={v}
+                    options={relation}
+                />,
+        },
+        {
+            title: 'Mobile Number',
+            key: 'col5',
+            dataIndex: 'col5',
+        },
+        {
+            title: 'Blood Group',
+            key: 'col9',
+            dataIndex: 'col9',
+            render: (v) =>
+                <Select
+                    size='small'
+                    disabled={true}
+                    defaultValue={v}
+                    options={bloodGroup}
+                />,
+        },
+        {
+            title: 'Phone Number',
+            key: 'col8',
+            dataIndex: 'col8',
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (_, record: { key: React.Key }) =>
+                lstType_Patient.length >= 1 ? (
+                    <Button onClick={() => handleEdit(record, 1)}>
+                        <a>Edit</a>
+                    </Button>
+                ) : null,
+        },
+    ];
+    const column1: ColumnsType<DataType> = [
+        {
+            title: 'SrNo.',
+            dataIndex: 'col2',
+            key: 'col2',
+            render: (text) => <a>{text}</a>,
+        },
+        {
+            title: 'Contact Name',
+            dataIndex: 'col3',
+            key: 'col3',
+        },
+        {
+            title: 'Relation',
+            dataIndex: 'col1',
+            key: 'col1',
+            render: (v) =>
+                <Select
+                    size='small'
+                    disabled={true}
+                    defaultValue={v}
+                    options={relation}
+                />,
+        },
+        {
+            title: 'Mobile Number',
+            key: 'col5',
+            dataIndex: 'col5',
+        },
+        {
+            title: 'Blood Group',
+            key: 'col9',
+            dataIndex: 'col9',
+            render: (v) =>
+                <Select
+                    size='small'
+                    disabled={true}
+                    defaultValue={v}
+                    options={bloodGroup}
+                />,
+        },
+        {
+            title: 'Phone Number',
+            key: 'col8',
+            dataIndex: 'col8',
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (_, record: { key: React.Key }) =>
+                istType_Pat.length >= 1 ? (
+                    <Button onClick={() => handleEdit(record, 2)}>
+                        <a>Edit</a>
+                    </Button>
+                ) : null,
+        },
+    ];
+    const handleEdit = (record: any, type: number) => {
+        if (type == 1) {
+            form1.setFieldsValue(record);
+            const newData = lstType_Patient.filter((item) => item.col2 !== record.col2);
+            setLstType_Patient(newData);
+        }
+        if (type == 2) {
+            form2.setFieldsValue(record);
+            const newData = istType_Pat.filter((item) => item.col2 !== record.col2);
+            setIstType_Pat(newData);
+        }
+    };
+    const formList = () => {
+        const addFamilyItem = () => {
+            let flag = 0;
+            const values = form1.getFieldsValue()
+            const family = {
+                "col1": values.col1 ? values.col1 : "",
+                "col2": (lstType_Patient.length + 1).toString(),
+                "col3": values.col3 ? values.col3 : "",
+                "col4": values.col4 ? values.col4 : "",
+                "col5": values.col5 ? values.col5 : "",
+                "col6": values.col6 ? values.col6 : "",
+                "col7": values.col7 ? values.col7 : "",
+                "col8": values.col8 ? values.col8 : "",
+                "col9": values.col9 ? values.col9 : "",
+                "col10": "",
+                "col11": "",
+                "col12": "",
+                "col13": "",
+                "col14": "",
+                "col15": ""
+            }
+            const error = form1.getFieldsError()
+            error.map((item, index) => {
+                if (item.errors.length > 0 || (values.col3 == "" && index == 0)) {
+                    flag = 1
+                    message.error(`Please check the error`);
+                }
+                else
+                    if (flag == 0 && index == error.length - 1 && values.col3) {
+                        console.log(lstType_Patient)
+                        setLstType_Patient([...lstType_Patient, family])
+                        form1.resetFields()
+                    }
+            })
+        }
+        return (
+            <>
+                <Form
+                    form={form1}
+                >
+                    <Row style={{ height: 120 }} gutter={16}>
+                        <Col span={5}>
+                            <Form.Item
+                                name={'col3'}
+                                label="Contact Name"
+                                rules={[{ required: false, message: 'Please Enter Contact Name' }]}
+                            >
+                                <Input maxLength={30} placeholder="Please Enter Contact Name" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={5}>
+                            <Form.Item
+                                name={'col1'}
+                                label="Relation"
+                                rules={[{ required: false, message: 'Please Select The Relation with Patient' }]}
+                            >
+                                <Select
+                                    placeholder="Please choose the Relation"
+                                    options={relation}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={5}>
+                            <Space.Compact>
+                                <Form.Item
+                                    style={{ width: '25%' }}
+                                    initialValue={'+91'}
+                                    name={'col4'}
+                                    label="  CC"
+                                    rules={[{ required: false, message: 'Please enter Mobile number cc' }]}
+                                >
+                                    <Input maxLength={3} size={'middle'} placeholder="CC" />
+
+                                </Form.Item>
+                                <Form.Item
+                                    style={{ width: '75%' }}
+                                    name={'col5'}
+                                    label="Mobile Number"
+                                    rules={[
+                                        { required: false, type: 'string', message: 'Please enter mobile number' },
+                                        {
+                                            pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
+                                            message: 'Please enter a valid mobile number',
+                                        }
+                                    ]}
+                                >
+                                    <Input maxLength={10} size={'middle'} placeholder="Please enter mobile number" />
+                                </Form.Item>
+
+                            </Space.Compact>
+
+                        </Col>
+                        <Col span={5}>
+                            <Space.Compact>
+                                <Form.Item
+                                    style={{ width: '25%' }}
+                                    name={'col6'}
+                                    initialValue={'0512'}
+                                    label="  CC"
+                                    rules={[{ required: false, message: 'Please Enter Phone Number CC' }]}
+                                >
+                                    <Input size={'middle'} placeholder="CC" />
+
+                                </Form.Item>
+                                <Form.Item
+                                    style={{ width: '75%' }}
+                                    name={'col8'}
+                                    label="Phone number"
+                                    rules={[
+                                        { required: false, type: 'string', message: 'Please Enter Phone No' },
+                                        {
+                                            pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
+                                            message: 'Please enter a valid phone number',
+                                        }
+                                    ]}
+                                >
+                                    <Input maxLength={10} size={'middle'} placeholder="Please Enter Phone No" />
+                                </Form.Item>
+
+                            </Space.Compact>
+
+                        </Col>
+                        <Col span={4}>
+                            <Form.Item
+                                name={'col9'}
+                                label="BloodGroup"
+                                rules={[{ required: false, message: 'Please Select BloodGroup' }]}
+                            >
+                                <Select
+                                    placeholder="Please choose the BloodGroup"
+                                    options={bloodGroup}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col style={{ marginTop: 30 }} span={5}>
+                            <Button onClick={addFamilyItem} type="primary">
+                                Add
+                            </Button>
+                        </Col>
+                    </Row>
+                </Form>
+                <Table pagination={false} columns={columns} dataSource={lstType_Patient} />
+            </>
+        )
+    }
+    const formList1 = () => {
+        const addFamilyItem = () => {
+            let flag = 0;
+            const values = form2.getFieldsValue()
+            const family = {
+                "col1": values.col1 ? values.col1 : "",
+                "col2": (istType_Pat.length + 1).toString(),
+                "col3": values.col3 ? values.col3 : "",
+                "col4": values.col4 ? values.col4 : "",
+                "col5": values.col5 ? values.col5 : "",
+                "col6": values.col6 ? values.col6 : "",
+                "col7": values.col7 ? values.col7 : "",
+                "col8": values.col8 ? values.col8 : "",
+                "col9": values.col9 ? values.col9 : "",
+                "col10": "",
+                "col11": "",
+                "col12": "",
+                "col13": "",
+                "col14": "",
+                "col15": ""
+            }
+            const error = form2.getFieldsError()
+            error.map((item, index) => {
+                if (item.errors.length > 0 || (values.col3 == "" && index == 0)) {
+                    flag = 1
+                    message.error(`Please check the error`);
+                }
+                else
+                    if (flag == 0 && index == error.length - 1 && values.col3) {
+                        setIstType_Pat([...istType_Pat, family])
+                        form2.resetFields()
+                    }
+            })
+        }
+        return (
+            <>
+                <Form
+                    form={form2}
+                >
+                    <Row style={{ height: 120 }} gutter={16}>
+                        <Col span={5}>
+                            <Form.Item
+                                name={'col3'}
+                                label="Contact Name"
+                                rules={[{ required: false, message: 'Please Enter Contact Name' }]}
+                            >
+                                <Input maxLength={30} placeholder="Please Enter Contact Name" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={5}>
+                            <Form.Item
+                                name={'col1'}
+                                label="Relation"
+                                rules={[{ required: false, message: 'Please Select The Relation with Patient' }]}
+                            >
+                                <Select
+                                    placeholder="Please choose the Relation"
+                                    options={relation}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={5}>
+                            <Space.Compact>
+                                <Form.Item
+                                    style={{ width: '25%' }}
+                                    initialValue={'+91'}
+                                    name={'col4'}
+                                    label="  CC"
+                                    rules={[{ required: false, message: 'Please enter Mobile number cc' }]}
+                                >
+                                    <Input maxLength={3} size={'middle'} placeholder="CC" />
+
+                                </Form.Item>
+                                <Form.Item
+                                    style={{ width: '75%' }}
+                                    name={'col5'}
+                                    label="Mobile Number"
+                                    rules={[
+                                        { required: false, type: 'string', message: 'Please enter mobile number' },
+                                        {
+                                            pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
+                                            message: 'Please enter a valid mobile number',
+                                        }
+                                    ]}
+                                >
+                                    <Input maxLength={10} size={'middle'} placeholder="Please enter mobile number" />
+                                </Form.Item>
+
+                            </Space.Compact>
+
+                        </Col>
+                        <Col span={5}>
+                            <Space.Compact>
+                                <Form.Item
+                                    style={{ width: '25%' }}
+                                    name={'col6'}
+                                    initialValue={'0512'}
+                                    label="  CC"
+                                    rules={[{ required: false, message: 'Please Enter Phone Number CC' }]}
+                                >
+                                    <Input size={'middle'} placeholder="CC" />
+
+                                </Form.Item>
+                                <Form.Item
+                                    style={{ width: '75%' }}
+                                    name={'col8'}
+                                    label="Phone number"
+                                    rules={[
+                                        { required: false, type: 'string', message: 'Please Enter Phone No' },
+                                        {
+                                            pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
+                                            message: 'Please enter a valid phone number',
+                                        }
+                                    ]}
+                                >
+                                    <Input maxLength={10} size={'middle'} placeholder="Please Enter Phone No" />
+                                </Form.Item>
+
+                            </Space.Compact>
+
+                        </Col>
+                        <Col span={4}>
+                            <Form.Item
+                                name={'col9'}
+                                label="BloodGroup"
+                                rules={[{ required: false, message: 'Please Select BloodGroup' }]}
+                            >
+                                <Select
+                                    placeholder="Please choose the BloodGroup"
+                                    options={bloodGroup}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col style={{ marginTop: 30 }} span={5}>
+                            <Button onClick={addFamilyItem} type="primary">
+                                Add
+                            </Button>
+                        </Col>
+                    </Row>
+                </Form>
+                <Table pagination={false} columns={column1} dataSource={istType_Pat} />
+            </>
+        )
+    }
 
     const addPatientRegForm = () => {
         return (
@@ -442,7 +899,11 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             // title={'Patient Registration'}
             >
                 <Card
-                    title={''}
+                    title={<div style={{ textAlign: "end" }}>
+                        <Button onClick={goBack} type="primary">
+                            Back
+                        </Button>
+                    </div>}
                     style={{ height: '100%', boxShadow: '2px 2px 2px #4874dc' }}
                 >
                     {patient && <Form
@@ -749,12 +1210,12 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                     </Form.Item>
                                 </Col>
                                 <Col className="gutter-row" span={6}>
-                                    <Space.Compact>
+                                    <Space.Compact style={{ alignItems: 'center' }}>
                                         <Form.Item
                                             // initialValue={patientAddress?.curMobileNoCC}
                                             style={{ width: '20%' }}
                                             name="curMobileNoCC"
-                                            label="  CC"
+                                            label={<Typography style={{ marginLeft: 5 }}>{'CC'}</Typography>}
                                             rules={[{ required: false, message: 'Please enter Mobile number cc' }]}
                                         >
                                             <Input maxLength={3} size={'middle'} placeholder="CC" />
@@ -780,12 +1241,12 @@ const EditPatient = ({ visible, isEditable, }: any) => {
 
                                 </Col>
                                 <Col className="gutter-row" span={6}>
-                                    <Space.Compact>
+                                    <Space.Compact style={{ alignItems: 'center' }}>
                                         <Form.Item
                                             // initialValue={patientAddress?.curPhoneCC}
                                             style={{ width: '25%' }}
                                             name="curPhoneCC"
-                                            label="  CC"
+                                            label={<Typography style={{ marginLeft: 5 }}>{'CC'}</Typography>}
                                             rules={[{ required: false, message: 'Please Enter Phone Number CC' }]}
                                         >
                                             <Input maxLength={4} size={'middle'} placeholder="CC" />
@@ -797,7 +1258,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                             name="curPhoneNo"
                                             label="Phone number"
                                             rules={[
-                                                { required: true, type: 'string', message: 'Please Enter Phone No' },
+                                                { required: false, type: 'string', message: 'Please Enter Phone No' },
                                                 {
                                                     pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
                                                     message: 'Please enter a valid phone number',
@@ -809,16 +1270,6 @@ const EditPatient = ({ visible, isEditable, }: any) => {
 
                                     </Space.Compact>
 
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        // initialValue={patientAddress?.curPhoneAC}
-                                        name="curPhoneAC"
-                                        label="PhoneAC"
-                                        rules={[{ required: false, message: 'Please Enter PhoneAC' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please enter PhoneAC" />
-                                    </Form.Item>
                                 </Col>
                             </Row>
                         </Card>
@@ -916,7 +1367,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                             name="perMobileNo"
                                             label="Mobile number"
                                             rules={[
-                                                { required: true, type: 'string', message: 'Please enter mobile number' },
+                                                { required: false, type: 'string', message: 'Please enter mobile number' },
                                                 {
                                                     pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
                                                     message: 'Please enter a valid mobile number',
@@ -946,7 +1397,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                             name="perPhoneNo"
                                             label="Phone number"
                                             rules={[
-                                                { required: true, type: 'string', message: 'Please Enter Phone No' },
+                                                { required: false, type: 'string', message: 'Please Enter Phone No' },
                                                 {
                                                     pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
                                                     message: 'Please enter a valid phone number',
@@ -959,15 +1410,6 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                     </Space.Compact>
 
                                 </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="perPhoneAC"
-                                        label="PhoneAC"
-                                        rules={[{ required: false, message: 'Please Enter PhoneAC' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please enter PhoneAC" />
-                                    </Form.Item>
-                                </Col>
                             </Row>
                         </Card>
                         <Divider orientation="left"><h4></h4></Divider>
@@ -979,7 +1421,8 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                         }
                             style={{ boxShadow: '2px 2px 2px #4874dc' }}
                             headStyle={{ backgroundColor: '#004080', border: 0 }}>
-                            <Row gutter={16}>
+                                {formList()}
+                            {/* <Row gutter={16}>
                                 <Col span={6}>
                                     <Form.Item
                                         name="Fcol3"
@@ -1091,7 +1534,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         />
                                     </Form.Item>
                                 </Col>
-                            </Row>
+                            </Row> */}
                         </Card>
                         <Divider orientation="left"><h4></h4></Divider>
 
@@ -1102,7 +1545,8 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                         }
                             style={{ boxShadow: '2px 2px 2px #4874dc' }}
                             headStyle={{ backgroundColor: '#004080', border: 0 }}>
-                            <Row gutter={16}>
+                            {formList1()}
+                            {/* <Row gutter={16}>
                                 <Col span={6}>
                                     <Form.Item
                                         name="col3"
@@ -1214,7 +1658,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         />
                                     </Form.Item>
                                 </Col>
-                            </Row>
+                            </Row> */}
                         </Card>
                         <Divider orientation="left"><h4></h4></Divider>
                         <Card title={<Space direction='horizontal'>
@@ -1351,11 +1795,14 @@ const EditPatient = ({ visible, isEditable, }: any) => {
 
                         </Form.Item>
                         <Row style={{ marginTop: 30 }} justify="center" align="middle">
-                            <Form.Item >
-                                <Button type="primary" htmlType="submit" >
-                                    Register
+                            <Col style={{ justifyContent: 'flex-end' }}>
+                                <Button size={'middle'} type="primary" htmlType="submit">
+                                    Submit
                                 </Button>
-                            </Form.Item>
+                                <Button onClick={goBack} size={'middle'} style={{ marginLeft: 10 }} type="default" >
+                                    Cancel
+                                </Button>
+                            </Col>
                         </Row>
                     </Form>}
                 </Card>

@@ -114,11 +114,12 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
                 setMobileNo(values['curMobileNo'])
                 setEmailID(values['eMail'])
                 setOTPVisible(true);
-                if (type == 5)
-                    {const urlParams = new URL(window.location.href).searchParams;
+                if (type == 5) {
+                    const urlParams = new URL(window.location.href).searchParams;
                     setTimeout(() => {
-                    history.push(urlParams.get('redirect') || '/user/login');
-                }, 1000)}
+                        history.push(urlParams.get('redirect') || '/user/login');
+                    }, 1000)
+                }
                 return;
                 return;
             } else {
@@ -198,11 +199,25 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
                             </Col>
                             <Col className="gutter-row" span={6}>
                                 <Form.Item
-                                    name="password1"
+                                    name="cnfPassword"
                                     label="Confirm Password"
-                                    rules={[{ required: true, message: 'Please enter password' }]}
+                                    dependencies={['password']}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Please confirm your password!',
+                                        },
+                                        ({ getFieldValue }) => ({
+                                            validator(_, value) {
+                                                if (!value || getFieldValue('password') === value) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject(new Error('The new password that you entered do not match!'));
+                                            },
+                                        }),
+                                    ]}
                                 >
-                                    <Input type="password" size={'large'} placeholder="Please Enter Password" />
+                                    <Input  type="password" size={'large'} placeholder="Please Enter Password" />
                                 </Form.Item>
                             </Col>
                             {/* <Col className="gutter-row" span={2}>

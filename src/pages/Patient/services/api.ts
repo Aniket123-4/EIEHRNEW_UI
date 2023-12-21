@@ -107,8 +107,18 @@ export async function requestPatientRegistration(body: any, options?: { [key: st
     ...(options || {}),
   });
 }
+export async function requestFileUpload(body: any) {
+  return request<any>('MasterForm/UploadFileAsync', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Accept': '*/*'
+    },
+    data: body,
+  });
+}
 
-export async function requestGetPatientHeader(body: any,options?: { [key: string]: any }) {
+export async function requestGetPatientHeader(body: any, options?: { [key: string]: any }) {
   return request<any>('GetPatientHeader', {
     method: 'POST',
     headers: {

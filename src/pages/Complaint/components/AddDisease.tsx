@@ -16,16 +16,14 @@ const { Option } = Select;
 const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId }: any) => {
     const formRef = useRef<any>();
     const { token } = theme.useToken();
-    const [current, setCurrent] = useState(0);
-    const [row, setRow] = useState(1);
-    const [col, setCol] = useState(1);
     const [capacity, setCapacity] = useState(1);
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false)
     const [diseaseType, setDiseaseType] = useState<any>([])
     const [isActive, setIsActive] = useState(true);
     const [specialList, setSpecialist] = useState([]);
-    const [open, setOpen] = useState(false);
+    const [data, setData] = useState([]);
+    const [diseaseID, setDiseaseID] = useState("-1");
     const [isModalOpen, setIsModalOpen] = useState(false);
 
 
@@ -53,6 +51,9 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                 return { value: item.diseaseTypeID, label: item.diseaseTypeName }
             })
             setSpecialist(dataMaskForDropdown)
+            form.setFieldsValue({
+                specialTypeID:"1"
+            })
         }
     }
     const getDiseaseType = async () => {
@@ -87,7 +88,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                 // "specialTypeID": "string",
                 // "isActive": isActive.toString(),
                 "sortOrder": 1,
-                "diseasesID": "-1",
+                "diseasesID": diseaseID,
                 "formID": -1,
                 "type": type
 
@@ -99,6 +100,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
             if (msg.isSuccess === true) {
                 form.resetFields();
                 message.success(msg.msg);
+                setDiseaseID("-1")
                 setIsModalOpen(false);
                 return;
             } else {
@@ -123,6 +125,18 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
     };
     const handleCancel = () => {
         setIsModalOpen(false);
+    };
+    
+    const setEditField = (data:any) => {
+        form.setFieldsValue({
+            diseaseTypeName:data?.diseaseName,
+            diseaseTypeCode:data?.diseaseCodeICD,
+            diseaseTypeID:data?.diseaseTypeID,
+            specialTypeID:data?.specialTypeID,
+            isActive:data?.isActive,
+        })
+        window.scrollTo(0, 0)
+        setDiseaseID(data?.diseaseID)
     };
     const filterOption = (input: string, option?: { label: string; value: string }) =>
         (option?.label.toLowerCase() ?? '').includes(input.toLowerCase());//.toLowerCase()
@@ -298,7 +312,9 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                         </div>
                     </Spin>
                 </Card>
-                <DiseaseList />
+                <DiseaseList
+                    refresh={loading}
+                    editRecord={(data:any)=>setEditField(data)}/>
             </Space>
         </PageContainer>
     );
