@@ -252,7 +252,7 @@ const AddDoctorSlotBooking = () => {
 
     const getDoctorList = async (value: any, item: any) => {
         const params = {
-            "CommonID": -1,//item.value,
+            "CommonID": item.value,
             "Type": 3,
         }
         const res = await requestGetUserList(params);
