@@ -12,6 +12,8 @@ import { requestGetPatientSearch } from '@/pages/Patient/services/api';
 import { dateFormat } from '@/utils/constant';
 import { requestGetPatientDailyCount, requestGetPatientSearchOPIP } from '../services/api';
 import AddUpdatePatientCase from './AddUpdatePatientCase';
+import { requestGetSection, requestVPreEmpType } from '@/services/apiRequest/dropdowns';
+import dayjs from 'dayjs';
 
 const { Option } = Select;
 
@@ -27,21 +29,34 @@ const options = [
     { label: 'Visit Status Update', value: 3 },
 ];
 
+const optionsPreempType = [
+    { label: 'Pre-emp Type 1', value: 1 },
+    { label: 'Pre-emp Type 2', value: 2 },
+    { label: 'Pre-emp Type 3', value: 3 },
+    { label: 'Pre-emp Type 4', value: 4 },
+    { label: 'Pre-emp Type 5', value: 5 },
+    { label: 'Pre-emp Type 6', value: 6 },
+];
+
 const ReceptionSearch = React.forwardRef((props) => {
     const [filterForm] = Form.useForm();
     const [loading, setLoading] = useState(false)
     const [loadingCheckin, setLoadingCheckin] = useState(false)
     const { token } = theme.useToken();
     const [list, setList] = useState([]);
+    const [preEmpType, setGetVPreEmpType] = useState([]);
     const [value1, setValue1] = useState('New Visit');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [patientDailyCount, setPatientDailyCount] = useState({});
     const [selectedType, setSelectedType] = useState(1);
     const [patientCheckInData, setPatientCheckInData] = useState({});
+    const [selectedPreEmpType, setSelectedPreEmpType] = useState(-1);
+    const [selectedPatientData, setSelectedPatientData] = useState({});
+    const [selectedTab, setSelectedTab] = useState('1');
 
 
     const onChange = (key: string) => {
-        console.log(key);
+        setSelectedTab(key)
     };
 
     const items: TabsProps['items'] = [
@@ -52,7 +67,7 @@ const ReceptionSearch = React.forwardRef((props) => {
         },
         {
             key: '2',
-            label: 'All ',
+            label: 'Allergic',
             children: '',
         },
         {
@@ -117,22 +132,23 @@ const ReceptionSearch = React.forwardRef((props) => {
                     <Select
                         size={'small'}
                         placeholder="Preemp Type"
-                        style={{ width: 120 }}
-                        options={[
-                        ]}
+                        style={{ width: 140 }}
+                        options={preEmpType}
+                        onChange={data => onSelectPreEmp(data)}
                     />
-                    <Button size={'small'} type='primary' size={'small'} onClick={() => patientCheckIn(record)}>
+                    <Button size={'small'} type='primary' onClick={() => patientCheckIn(record)}>
                         Check In
                     </Button>
-
                 </Space>
             ),
         },
     ];
 
     useEffect(() => {
+        getVPreEmpType();
         getPatientDailyCount();
         filterForm.setFieldsValue({
+            fromToDate:[dayjs(moment(), dateFormat), dayjs(moment(), dateFormat)],
             patientPhoneNo: '',
             fromDate: '1900-11-21T12:47:26.406Z',
             toDate: '2023-12-21T12:47:26.406Z',
@@ -156,11 +172,14 @@ const ReceptionSearch = React.forwardRef((props) => {
     }, [])
 
 
-    const patientCheckIn = async (patientData: any) => {
-        console.log({ patientData });
+    const onSelectPreEmp = (value: any) => {
+        setSelectedPreEmpType(value)
+    }
 
+    const patientCheckIn = async (patientData: any) => {
+        setSelectedPatientData(patientData)
         const params = {
-            patientCaseID: -1,
+            patientCaseID: patientData?.patientID,
             patientCaseNo: '1',
             patientID: -1,
             patientNo: '',
@@ -177,13 +196,13 @@ const ReceptionSearch = React.forwardRef((props) => {
             userID: -1,
             formID: -1,
             type: 6,
-            preEmpTypeID: -1
+            preEmpTypeID: selectedPreEmpType
         }
         console.log(params);
         setLoadingCheckin(true)
         const response = await requestGetPatientSearchOPIP(params);
         setLoadingCheckin(false)
-        setPatientCheckInData(response?.result)
+        setPatientCheckInData(response)
 
         if (response?.isSuccess) {
         } else {
@@ -223,6 +242,22 @@ const ReceptionSearch = React.forwardRef((props) => {
             <Table columns={columns} dataSource={list} />
         )
     }
+
+    const getVPreEmpType = async () => {
+        const params = {
+        }
+        const res = await requestVPreEmpType(params);
+
+        if (res.result.length > 0) {
+
+            const dataMaskForDropdown = res?.result?.map((item: any) => {
+                return { value: item.preEmpTypeID, label: item.preEmpTypeName }
+            });
+            // dataMaskForDropdown.unshift({ value: -1, label: "All" });
+            setGetVPreEmpType(dataMaskForDropdown)
+        }
+    }
+
 
 
     const filterVisitForm = () => {
@@ -286,7 +321,6 @@ const ReceptionSearch = React.forwardRef((props) => {
                                 style={{ width: "100%" }}
                             />
                         </Form.Item>
-
                     </Col>
                     <Col span={12}>
                         <Form.Item name="patientCaseID" label="Patient Case" rules={[{ required: false }]}>
@@ -304,7 +338,6 @@ const ReceptionSearch = React.forwardRef((props) => {
                         <Form.Item name="patientCaseNo" label="Patient Case No" rules={[{ required: false }]}>
                             <Input />
                         </Form.Item>
-
                     </Col>
                     <Col span={12}>
                         <Form.Item name="patientNo" label="PatientNo" rules={[{ required: false }]}>
@@ -336,7 +369,6 @@ const ReceptionSearch = React.forwardRef((props) => {
                                 defaultValue={-1}
                             />
                         </Form.Item>
-
                     </Col>
                     <Col span={12}>
                         <Form.Item name="sectionID" label="Section" rules={[{ required: false }]}>
@@ -351,7 +383,6 @@ const ReceptionSearch = React.forwardRef((props) => {
 
                 <Row gutter={16}>
                     <Col span={12}>
-
                         <Form.Item name="consultantDocID" label="Consultant Doc" rules={[{ required: false }]}>
                             <Select
                                 onChange={handleChangeFilter}
@@ -359,13 +390,11 @@ const ReceptionSearch = React.forwardRef((props) => {
                                 defaultValue={-1}
                             />
                         </Form.Item>
-
                     </Col>
                     <Col span={12}>
                         <Form.Item name="patientFileNo" label="Patient File No" rules={[{ required: false }]}>
                             <InputNumber style={{ width: "100%" }} min={0} />
                         </Form.Item>
-
                     </Col>
                 </Row>
 
@@ -374,7 +403,6 @@ const ReceptionSearch = React.forwardRef((props) => {
                         <Form.Item name="patientMobile" label="Patient Mobile No" rules={[{ required: false }]}>
                             <Input />
                         </Form.Item>
-
                     </Col>
                     <Col span={12}>
                         <Form.Item name="patientPhone" label="Patient Phone No" rules={[{ required: false }]}>
@@ -387,7 +415,6 @@ const ReceptionSearch = React.forwardRef((props) => {
                     <Button type="primary" loading={loading} htmlType="submit">
                         Filter
                     </Button>
-
                 </Form.Item>
             </Form >
         )
@@ -407,7 +434,7 @@ const ReceptionSearch = React.forwardRef((props) => {
 
     const model = () => {
         return (
-            <Modal title="Patient Name"
+            <Modal title={selectedPatientData?.candName}
                 open={isModalOpen}
                 width={1000}
                 style={{ top: 20 }}
@@ -415,8 +442,13 @@ const ReceptionSearch = React.forwardRef((props) => {
                 onCancel={() => handleCancel()}
                 footer={[]}
             >
-                <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
-                <AddUpdatePatientCase handleCancel={() => handleCancel()} />
+                {/* <Tabs defaultActiveKey={1} items={items} onChange={onChange} /> */}
+                <AddUpdatePatientCase
+                    patientData={selectedPatientData}
+                    checkinData={patientCheckInData}
+                    selectedTab={selectedTab}
+                    preEmpType={selectedPreEmpType}
+                    handleCancel={() => handleCancel()} />
             </Modal>
         )
     }
@@ -433,7 +465,6 @@ const ReceptionSearch = React.forwardRef((props) => {
                 <Row gutter={16}>
                     <Col span={6}>
                         <Card bodyStyle={{ padding: 10 }} bordered={false}>
-
                             <Row>
                                 <Col span={12}>
                                     <h3>Registration</h3>
@@ -442,7 +473,6 @@ const ReceptionSearch = React.forwardRef((props) => {
                                     <h3 style={{ textAlign: 'end' }}>{patientDailyCount?.patReg}</h3>
                                 </Col>
                             </Row>
-
                         </Card>
                     </Col>
                     <Col span={6}>
@@ -467,12 +497,10 @@ const ReceptionSearch = React.forwardRef((props) => {
                                     <h3 style={{ textAlign: 'end' }}>{patientDailyCount?.patRevisit}</h3>
                                 </Col>
                             </Row>
-
                         </Card>
                     </Col>
                     <Col span={6}>
                         <Card bodyStyle={{ padding: 10 }} bordered={false}>
-
                             <Row>
                                 <Col span={12}>
                                     <h3>Checkout</h3>
@@ -486,17 +514,15 @@ const ReceptionSearch = React.forwardRef((props) => {
                 </Row>
             </div>
             <Row gutter={8}>
-                <Col span={12}>
+                <Col span={14}>
 
                     <Card>
-                        {/* loading={loadingCheckin} */}
                         <Spin spinning={loadingCheckin} >
                             {patientSearch()}
                         </Spin>
-
                     </Card>
                 </Col>
-                <Col span={12}>
+                <Col span={10}>
                     <Card>
                         <Radio.Group options={options} onChange={onChange3} value={selectedType} />
                         <div style={{ marginTop: 20 }}>

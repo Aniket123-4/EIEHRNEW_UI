@@ -307,6 +307,16 @@ export async function requestGetSection(body: any, options?: { [key: string]: an
     ...(options || {}),
   });
 }
+export async function requestVPreEmpType(body: any, options?: { [key: string]: any }) {
+  return request<any>('/MasterForm/vPreEmpType', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
 
 export async function requestGetUserList(
   params: {
