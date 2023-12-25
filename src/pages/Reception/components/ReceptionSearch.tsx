@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { EditOutlined, FilterOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, theme, Card, Radio, Modal, Tabs, TabsProps, InputNumber, Spin } from 'antd';
+import { Button, Col, DatePicker, Typography, Form, Input, Row, Select, Space, message, theme, Card, Radio, Modal, Tabs, TabsProps, InputNumber, Spin } from 'antd';
 import { Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import PatientFilter from '@/components/Filters/PatientFilter';
@@ -16,12 +16,9 @@ import { requestGetSection, requestVPreEmpType } from '@/services/apiRequest/dro
 import dayjs from 'dayjs';
 
 const { Option } = Select;
+const { Title, Text } = Typography;
 
-const radioOptions = {
-    NEW_VISIT: 'New Visit',
-    FOLLOW_UP_VISIT: 'Follow Up Visit',
-    VISIT_STATUS: 'Visit Status Update'
-}
+
 
 const options = [
     { label: 'New Visit', value: 1 },
@@ -29,14 +26,7 @@ const options = [
     { label: 'Visit Status Update', value: 3 },
 ];
 
-const optionsPreempType = [
-    { label: 'Pre-emp Type 1', value: 1 },
-    { label: 'Pre-emp Type 2', value: 2 },
-    { label: 'Pre-emp Type 3', value: 3 },
-    { label: 'Pre-emp Type 4', value: 4 },
-    { label: 'Pre-emp Type 5', value: 5 },
-    { label: 'Pre-emp Type 6', value: 6 },
-];
+
 
 const ReceptionSearch = React.forwardRef((props) => {
     const [filterForm] = Form.useForm();
@@ -51,6 +41,7 @@ const ReceptionSearch = React.forwardRef((props) => {
     const [selectedType, setSelectedType] = useState(1);
     const [patientCheckInData, setPatientCheckInData] = useState({});
     const [selectedPreEmpType, setSelectedPreEmpType] = useState(-1);
+    const [selectedPreEmpTypeError, setSelectedPreEmpTypeError] = useState(false);
     const [selectedPatientData, setSelectedPatientData] = useState({});
     const [selectedTab, setSelectedTab] = useState('1');
 
@@ -104,16 +95,16 @@ const ReceptionSearch = React.forwardRef((props) => {
             dataIndex: 'age',
             key: 'age',
         },
-        // {
-        //     title: 'Gender',
-        //     dataIndex: 'genderName',
-        //     key: 'genderName',
-        // },
-        // {
-        //     title: 'Blood Group',
-        //     dataIndex: 'bloodGroup',
-        //     key: 'bloodGroup',
-        // },
+        {
+            title: 'Gender',
+            dataIndex: 'genderName',
+            key: 'genderName',
+        },
+        {
+            title: 'Blood Group',
+            dataIndex: 'bloodGroup',
+            key: 'bloodGroup',
+        },
         // {
         //     title: 'Mobile No',
         //     dataIndex: 'curMobileNo',
@@ -129,14 +120,15 @@ const ReceptionSearch = React.forwardRef((props) => {
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <Select
-                        size={'small'}
-                        placeholder="Preemp Type"
-                        style={{ width: 140 }}
-                        options={preEmpType}
-                        onChange={data => onSelectPreEmp(data)}
-                    />
-                    <Button size={'small'} type='primary' onClick={() => patientCheckIn(record)}>
+
+                    <Button size={'small'} type='primary' onClick={() => {
+                        if (selectedPreEmpType !== -1) {
+                            setSelectedPreEmpTypeError(false)
+                            patientCheckIn(record)
+                        } else {
+                            setSelectedPreEmpTypeError(true)
+                        }
+                    }}>
                         Check In
                     </Button>
                 </Space>
@@ -148,7 +140,7 @@ const ReceptionSearch = React.forwardRef((props) => {
         getVPreEmpType();
         getPatientDailyCount();
         filterForm.setFieldsValue({
-            fromToDate:[dayjs(moment(), dateFormat), dayjs(moment(), dateFormat)],
+            fromToDate: [dayjs(moment(), dateFormat), dayjs(moment(), dateFormat)],
             patientPhoneNo: '',
             fromDate: '1900-11-21T12:47:26.406Z',
             toDate: '2023-12-21T12:47:26.406Z',
@@ -174,6 +166,7 @@ const ReceptionSearch = React.forwardRef((props) => {
 
     const onSelectPreEmp = (value: any) => {
         setSelectedPreEmpType(value)
+        setSelectedPreEmpTypeError(false)
     }
 
     const patientCheckIn = async (patientData: any) => {
@@ -239,7 +232,20 @@ const ReceptionSearch = React.forwardRef((props) => {
 
     const patientSearch = () => {
         return (
-            <Table columns={columns} dataSource={list} />
+            <>
+                <Title level={5}>{options.length} Preemp Type</Title>
+                <Select
+                    label="Preemp Type"
+                    size={'middle'}
+                    placeholder="Preemp Type"
+                    style={{ width: 300, marginTop: -10 }}
+                    options={preEmpType}
+                    onChange={data => onSelectPreEmp(data)}
+                />
+                <br />
+                {selectedPreEmpTypeError ? <Text style={{ marginTop: 20 }} type="danger">Selection required</Text> : null}
+                <div style={{ marginTop: 10 }}> <Table columns={columns} dataSource={list} /></div>
+            </>
         )
     }
 
@@ -314,7 +320,7 @@ const ReceptionSearch = React.forwardRef((props) => {
                 size={'medium'}
             >
                 <Row gutter={16}>
-                    <Col span={12}>
+                    <Col span={24}>
                         <Form.Item name="fromToDate" label="From/To Date" rules={[{ required: false }]}>
                             <DatePicker.RangePicker
                                 format={dateFormat}
@@ -322,7 +328,11 @@ const ReceptionSearch = React.forwardRef((props) => {
                             />
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                </Row>
+
+                <Row gutter={16}>
+
+                    <Col span={24}>
                         <Form.Item name="patientCaseID" label="Patient Case" rules={[{ required: false }]}>
                             <Select
                                 onChange={handleChangeFilter}

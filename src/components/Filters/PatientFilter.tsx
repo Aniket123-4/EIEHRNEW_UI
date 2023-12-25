@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, TimePicker, List, Avatar, Tag, Drawer, DatePicker } from 'antd';
-import { requestGetBloodGroup, requestGetCivilStatus, requestGetCountry, requestGetGender, requestGetSection } from '@/services/apiRequest/dropdowns';
+import { requestGetBloodGroup, requestGetCivilStatus, requestGetCountry, requestGetDistrict, requestGetGender, requestGetSection, requestGetState } from '@/services/apiRequest/dropdowns';
 import moment from 'moment';
 import { dateFormat } from '@/utils/constant';
 
@@ -20,6 +20,9 @@ const PatientFilter: React.FC = ({ visible, onClose, selectedRows, loading, onFi
     const [bloodGroupChoices, setBloodGroupChoices] = useState<any>([]);
     const [nationalityChoices, setNationalityChoices] = useState<any>([]);
     const [serviceTypeChoices, setServiceTypeChoices] = useState<any>([]);
+    const [state, setState] = useState<any>([])
+    const [district, setDistrict] = useState<any>([{ value: -1, label: "All" }])
+    const [city, setCity] = useState<any>([])
 
     useEffect(() => {
         getChoices();
@@ -31,6 +34,8 @@ const PatientFilter: React.FC = ({ visible, onClose, selectedRows, loading, onFi
         await getBloodGroupData();
         await getNationalityData();
         await getServiceTypeData();
+        await getState();
+
         console.log("form")
         filterForm.setFieldsValue({
             patientID: -1,
@@ -51,6 +56,27 @@ const PatientFilter: React.FC = ({ visible, onClose, selectedRows, loading, onFi
         })
     }
 
+    const getState = async () => {
+        const res = await requestGetState();
+        if (res.length > 0) {
+            const dataMaskForDropdown = res?.map((item: any) => {
+                return { value: item.stateID, label: item.stateName }
+            })
+            dataMaskForDropdown.unshift({ value: -1, label: "All" });
+            setState(dataMaskForDropdown)
+        }
+    }
+
+    const getDistrict = async (value: any, item: any) => {
+        const res = await requestGetDistrict(item);
+        if (res.length > 0) {
+            const dataMaskForDropdown = res?.map((item: any) => {
+                return { value: item.districtID, label: item.districtName }
+            })
+            dataMaskForDropdown.unshift({ value: -1, label: "All" });
+            setDistrict(dataMaskForDropdown)
+        }
+    }
 
     const getGenderData = async () => {
         const params = {
@@ -189,7 +215,7 @@ const PatientFilter: React.FC = ({ visible, onClose, selectedRows, loading, onFi
             patientMobileNo: '',
             patientPhoneNo: '',
             patientDOB: undefined,
-            fromToDate:undefined
+            fromToDate: undefined
             // fromDate: '1900-01-21',
             // toDate: moment(new Date()).format('YYYY-MM-DD')
         });
@@ -269,6 +295,24 @@ const PatientFilter: React.FC = ({ visible, onClose, selectedRows, loading, onFi
                         <Select
                             onChange={handleChangeFilter}
                             options={serviceTypeChoices}
+                            defaultValue={-1}
+                        />
+                    </Form.Item>
+
+                    <Form.Item name="StateID" label="State" rules={[{ required: false }]}>
+                        <Select
+                            onChange={(value, item) => {
+                                console.log(value)
+                                getDistrict(value, item)
+                            }}
+                            options={state}
+                            defaultValue={-1}
+                        />
+                    </Form.Item>
+                    <Form.Item name="DistrictID" label="District" rules={[{ required: false }]}>
+                        <Select
+                            onChange={handleChangeFilter}
+                            options={district}
                             defaultValue={-1}
                         />
                     </Form.Item>

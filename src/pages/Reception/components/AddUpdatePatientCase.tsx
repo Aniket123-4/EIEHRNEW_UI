@@ -420,8 +420,11 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
 
 
 
-                            <Card title={<Typography style={{ color: 'white', fontSize: 18 }}>
-                                {"Allergic"}</Typography>} style={{ boxShadow: '2px 2px 2px #4874dc' }}
+                            <Card title={
+                                <Typography style={{ color: 'white', fontSize: 18 }}>
+                                    {"Allergic"}
+                                </Typography>
+                            } style={{ boxShadow: '2px 2px 2px #4874dc' }}
                                 headStyle={{ backgroundColor: '#004080', border: 0 }}>
 
                                 <Row gutter={16}>
