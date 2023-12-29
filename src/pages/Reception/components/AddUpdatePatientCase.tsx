@@ -14,6 +14,7 @@ const { Option } = Select;
 const { Text, Link } = Typography;
 
 const AddUpdatePatientCase = React.forwardRef((props) => {
+    const { selectedType, checkinData, preEmpType, patientData }: any = props;
     const [filterForm] = Form.useForm();
     const [loading, setLoading] = useState(false)
     const [selectedConsultantDocID, setSelectedConsultantDocID] = useState();
@@ -55,38 +56,53 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
     useEffect(() => {
         setSelectedRows([])
 
-        if (props?.preEmpType === "5") {
+        if (preEmpType === "5") {
             setSelectionType('radio')
         } else {
             setSelectionType('checkbox')
         }
-        if (props?.checkinData?.result4.length === 0) {
+        if (checkinData?.result4.length === 0) {
             setFormVisible(true)
         } else {
             setFormVisible(false)
         }
+
+        let admissionDate: any = moment(new Date()).format(dateFormat);
+        let sectionID = "";
+        let consultantDocID = "";
+        let proDiagnosis = "";
+        if (selectedType === 2 || selectedType === 3) {
+            admissionDate = moment(checkinData?.result[0]?.admissionDate);
+            sectionID = checkinData?.result[0]?.sectionID
+            getDoctorList("", { value: sectionID })
+            consultantDocID = checkinData?.result[0]?.consultantDocID
+            proDiagnosis = checkinData?.result[0]?.proDiagnosis
+        }
+
+        console.log({ admissionDate })
+
         filterForm.setFieldsValue({
-            patientCaseID: -1,
-            patientID: -1,
+            patientCaseID: patientData?.patientCaseID,
+            patientID: patientData?.patientID,
             caseType: 1,
-            admissionDate: dayjs(moment(), dateFormat),
+            admissionDate: admissionDate,
             dischargeDate: '',
-            consultantDocID: '',
+            consultantDocID: consultantDocID,
             referToDocID: '',
-            sectionID: '',
+            sectionID: sectionID,
             admTypeID: -1,
             patientFoundID: 1,
-            proDiagnosis: '',
-            patientFileNo: props?.patientData?.patientNo,
+            proDiagnosis: proDiagnosis,
+            patientFileNo: patientData?.patientNo,
             deductablePercentage: 100,
-            allergy: '',
-            warnings: '',
-            addiction: '',
-            socialHistory: '',
-            familyHistory: '',
-            personalHistory: '',
-            pastMedicalHistory: '',
-            obstetrics: '',
+            allergy: checkinData?.result1[0]?.allergy,
+            warnings: checkinData?.result1[0]?.warnings,
+            addiction: checkinData?.result1[0]?.addiction,
+            socialHistory: checkinData?.result1[0]?.socialHistory,
+            familyHistory: checkinData?.result1[0]?.familyHistory,
+            personalHistory: checkinData?.result1[0]?.personalHistory,
+            pastMedicalHistory: checkinData?.result1[0]?.pastMedicalHistory,
+            obstetrics: checkinData?.result1[0]?.obstetrics,
             isNextVisit: true,
             priority: 0,
             invParameterID: '',
@@ -99,7 +115,7 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
             ],
             serviceID: ''
         })
-    }, [props?.preEmpType])
+    }, [preEmpType])
 
 
     useEffect(() => {
@@ -181,7 +197,6 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
         }
         console.log(values);
 
-        const { preEmpType }: any = props;
 
         const lstType = preEmpType === "1" || preEmpType === "2" || preEmpType === "3" || preEmpType === "4" || preEmpType === "5" ? [] : selectedRowsState.map((row, index) => {
             return {
@@ -190,18 +205,28 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
             }
         });
 
-        const serviceID = preEmpType === "6" || preEmpType === "7" ? 1 : selectedRowsState[0]?.invParameterID;
+        const serviceID = preEmpType === "1" || preEmpType === "2" || preEmpType === "3" || preEmpType === "4" || preEmpType === "6" || preEmpType === "7" ? -1 : selectedRowsState[0]?.invParameterID;
+
+        let type = 1;
+
+        if (selectedType === 2) {
+            type = 2
+        }
+
+        if (selectedType === 3) {
+            type = 3
+        }
 
         const params = {
             ...values,
             referToDocID: selectedConsultantDocID,
-            patientID: -1,
+            patientID: patientData?.patientID,
             userID: -1,
             formID: -1,
-            type: 2,
+            type: type,
             lstType_ro: lstType,
             serviceID: serviceID,
-            isNextVisit: true,
+            isNextVisit: false,
             patientCaseID: -1,
             patientFoundID: 1,
             preEmpTypeID: 1,
@@ -268,7 +293,7 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
                         }}
                         columns={columns}
                         pagination={false}
-                        dataSource={props?.checkinData?.result4.map((item, index) => { return { ...item, key: index } })}
+                        dataSource={checkinData?.result4.map((item, index) => { return { ...item, key: index } })}
                     />
                     <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
                         {rowSelectionVisible ? <Text style={{ marginTop: 20 }} type="danger">Selection required</Text> : null}
