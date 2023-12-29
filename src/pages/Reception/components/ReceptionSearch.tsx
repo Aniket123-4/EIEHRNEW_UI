@@ -74,22 +74,30 @@ const ReceptionSearch = React.forwardRef((props) => {
             dataIndex: 'patientNo',
             key: 'patientNo',
             render: (text) => <a>{text}</a>,
+            fixed: 'left',
         },
         {
             title: 'Name',
             dataIndex: 'candName',
             key: 'candName',
+            fixed: 'left',
         },
-        // {
-        //     title: 'candNameML',
-        //     dataIndex: 'candNameML',
-        //     key: 'candNameML',
-        // },
-        // {
-        //     title: 'DOB',
-        //     dataIndex: 'dob',
-        //     key: 'dob',
-        // },
+        {
+            title: 'Case No',
+            dataIndex: 'patientCaseNo',
+            key: 'patientCaseNo',
+        },
+        {
+            title: 'PreEmp Type',
+            dataIndex: 'vPreEmpType',
+            render: (text) => <a>{text}</a>,
+            key: 'vPreEmpType',
+        },
+        {
+            title: 'DOB',
+            dataIndex: 'dob',
+            key: 'dob',
+        },
         {
             title: 'Age',
             dataIndex: 'age',
@@ -105,11 +113,11 @@ const ReceptionSearch = React.forwardRef((props) => {
             dataIndex: 'bloodGroup',
             key: 'bloodGroup',
         },
-        // {
-        //     title: 'Mobile No',
-        //     dataIndex: 'curMobileNo',
-        //     key: 'curMobileNo',
-        // },
+        {
+            title: 'Mobile No',
+            dataIndex: 'curMobileNo',
+            key: 'curMobileNo',
+        },
         // {
         //     title: 'Email',
         //     dataIndex: 'email',
@@ -118,11 +126,12 @@ const ReceptionSearch = React.forwardRef((props) => {
         {
             title: 'Action',
             key: 'action',
+            fixed: 'right',
             render: (_, record) => (
                 <Space size="middle">
 
                     <Button size={'small'} type='primary' onClick={() => {
-                        if (selectedPreEmpType !== -1) {
+                        if (selectedPreEmpType !== -1 || selectedType !== 1) {
                             setSelectedPreEmpTypeError(false)
                             patientCheckIn(record)
                         } else {
@@ -145,7 +154,7 @@ const ReceptionSearch = React.forwardRef((props) => {
             fromDate: '1900-11-21T12:47:26.406Z',
             toDate: '2023-12-21T12:47:26.406Z',
             patientCaseID: -1,
-            patientCaseNo: '1',
+            patientCaseNo: '',
             patientID: -1,
             patientNo: '',
             patientUIDNo: '',
@@ -172,9 +181,9 @@ const ReceptionSearch = React.forwardRef((props) => {
     const patientCheckIn = async (patientData: any) => {
         setSelectedPatientData(patientData)
         const params = {
-            patientCaseID: patientData?.patientID,
-            patientCaseNo: '1',
-            patientID: -1,
+            patientCaseID: patientData?.patientCaseID,
+            patientCaseNo: '',
+            patientID: patientData?.patientID,
             patientNo: '',
             patientUIDNo: '',
             caseTypeID: -1,
@@ -191,14 +200,18 @@ const ReceptionSearch = React.forwardRef((props) => {
             type: 6,
             preEmpTypeID: selectedPreEmpType
         }
-        console.log(params);
+        console.log({params});
+        console.log({selectedType,patientData})
+        if(selectedType===2||selectedType===3){
+            setSelectedPreEmpType(patientData?.vPreEmpType)
+        }
         setLoadingCheckin(true)
         const response = await requestGetPatientSearchOPIP(params);
         setLoadingCheckin(false)
         setPatientCheckInData(response)
+      
 
-        if (response?.isSuccess) {
-        } else {
+        if (!response?.isSuccess) {
             message.error(response?.msg);
         }
 
@@ -233,18 +246,23 @@ const ReceptionSearch = React.forwardRef((props) => {
     const patientSearch = () => {
         return (
             <>
-                <Title level={5}>{options.length} Preemp Type</Title>
-                <Select
-                    label="Preemp Type"
-                    size={'middle'}
-                    placeholder="Preemp Type"
-                    style={{ width: 300, marginTop: -10 }}
-                    options={preEmpType}
-                    onChange={data => onSelectPreEmp(data)}
-                />
-                <br />
-                {selectedPreEmpTypeError ? <Text style={{ marginTop: 20 }} type="danger">Selection required</Text> : null}
-                <div style={{ marginTop: 10 }}> <Table columns={columns} dataSource={list} /></div>
+                {selectedType === 1 ? <>
+                    <Title level={5}>Preemp Type</Title>
+                    <Select
+                        label="Preemp Type"
+                        size={'middle'}
+                        placeholder="Preemp Type"
+                        style={{ width: 300, marginTop: -10 }}
+                        options={preEmpType}
+                        onChange={data => onSelectPreEmp(data)}
+                    />
+                    <br />
+                    {selectedPreEmpTypeError ? <Text style={{ marginTop: 20 }} type="danger">Selection required</Text> : null}
+
+                </> : null}
+
+
+                <div style={{ marginTop: 10 }}> <Table size='small' scroll={{ x: 1000 }} columns={columns} dataSource={list} /></div>
             </>
         )
     }
@@ -447,6 +465,7 @@ const ReceptionSearch = React.forwardRef((props) => {
             <Modal title={selectedPatientData?.candName}
                 open={isModalOpen}
                 width={1000}
+                height={300}
                 style={{ top: 20 }}
                 onOk={() => handleCancel()}
                 onCancel={() => handleCancel()}
@@ -458,6 +477,7 @@ const ReceptionSearch = React.forwardRef((props) => {
                     checkinData={patientCheckInData}
                     selectedTab={selectedTab}
                     preEmpType={selectedPreEmpType}
+                    selectedType={selectedType}
                     handleCancel={() => handleCancel()} />
             </Modal>
         )

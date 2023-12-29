@@ -50,6 +50,9 @@ const getModulePath = (name: string) => {
         case "Reception":
             return "/reception/search";
 
+        case "Doctor Patient":
+            return "/doctor/patient-list";
+
         default:
             if (verifiedUser.userTypeID === "11") {
                 return "/candidate-dashboard";
