@@ -233,6 +233,15 @@ export async function requestGetDocType(body: any={}, options?: { [key: string]:
     ...(options || {}),
   });
 }
+export async function requestGetUniqueID() {
+  return request<any>('DefaultForm/api/GetUniqueID', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    
+  });
+}
 export async function requestGetCountry(body: any={}, options?: { [key: string]: any }) {
   return request<any>('Common/GetCountry?CountryID=-1&Type=1', {
     method: 'POST',

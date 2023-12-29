@@ -6,7 +6,7 @@ import { getUserInLocalStorage } from '@/utils/common';
 import { requestGetCandidateList, requestGetDocuments } from '@/pages/Candidate/services/api';
 import { FileAddOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import Upload, { RcFile } from 'antd/es/upload';
-import { requestGetDocType } from '@/services/apiRequest/dropdowns';
+import { requestGetDocType, requestGetUniqueID } from '@/services/apiRequest/dropdowns';
 import { convertDate, convertDateInSSSZFormat } from '@/utils/helper';
 import dayjs from 'dayjs';
 import PatientDetailsCommon from './PatientDetailsCommon';
@@ -26,14 +26,14 @@ interface DataType {
     rate: string;
 }
 interface PatientType {
-    patientDocID: -1,
+    patientDocID: number,
     docName: string,
     docExt: string,
     docPath: string,
     remark: string,
 }
 
-const PatientFile = React.forwardRef( (props) => {
+const PatientFile = React.forwardRef((props) => {
     const [form] = Form.useForm();
     const [addDocform] = Form.useForm();
     const [loading, setLoading] = useState(false)
@@ -43,11 +43,11 @@ const PatientFile = React.forwardRef( (props) => {
     const [docList, setDocList] = useState<any>([])
     const [imageUrl, setImageUrl] = useState<string>();
     const [docName, setDocName] = useState<any>("")
-    const [docType, setDocType] = useState<any>([])
+    const [docType, setDocType] = useState<any>("-1")
     const [groupList, setGroupList] = useState([]);
     const [invParameter, setInvParameter] = useState([]);
 
-    const [lstType_PatientDoc, setlstType_PatientDoc] = useState<PatientType>()
+    const [lstType_PatientDoc, setlstType_PatientDoc] = useState<any>([])
     const { verifiedUser } = getUserInLocalStorage();
 
 
@@ -55,7 +55,7 @@ const PatientFile = React.forwardRef( (props) => {
 
     useEffect(() => {
         getPatientDoc();
-        getDocType();
+        //getDocType();
         getInvGroup();
     }, [patientData])
 
@@ -165,10 +165,11 @@ const PatientFile = React.forwardRef( (props) => {
         }
     };
     const handleChangeDocGroup = async (v: any) => {
+        //form.setFieldsValue({docTypeID:"-1"})
         getInvParameter(v)
     }
     const handleChangeDocType = (v: any) => {
-        
+        setDocType(v);
     }
 
     const getInvParameter = async (id: any) => {
@@ -182,22 +183,28 @@ const PatientFile = React.forwardRef( (props) => {
         const res = await requestGetInvParameterMasterList(params1);
         // console.log(res);
         // if (res?.result?.length > 0) {
-            const dataMaskForDropdown = res?.result?.map((item: any) => {
-                return { key: item.invParameterID, label: item.invName }
-            })
-            setInvParameter(dataMaskForDropdown);
+        const dataMaskForDropdown = res?.result?.map((item: any) => {
+            return { value: item.invParameterID, label: item.invName }
+        })
+        dataMaskForDropdown.unshift({ value: "-1", label: "Select" })
+        setInvParameter(dataMaskForDropdown);
         // }
     }
 
-    const getDocType = async () => {
-        const res = await requestGetDocType();
-        if (res?.result.length > 0) {
-            const dataMaskForDropdown = res?.result?.map((item: any) => {
-                return { value: item.uniqueID, label: item.uniqueName }
-            })
-            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
-            setDocType(dataMaskForDropdown)
+    const updateDocList = async (v: any, url: any) => {
+        var re = /(?:\.([^.]+))?$/;
+        var ext = re?.exec(v.file.name)[1];
+        const res = await requestGetUniqueID();
+        const p: any = {
+            patientDocID: res?.result,
+            docName: v.file.name,
+            docExt: ext,
+            docPath: "",
+            remark: "",
+            base64: url
         }
+        setlstType_PatientDoc([...lstType_PatientDoc, p])
+        console.log(lstType_PatientDoc, p);
     }
     const getInvGroup = async () => {
         try {
@@ -244,7 +251,7 @@ const PatientFile = React.forwardRef( (props) => {
     }
     const previewDoc = async (item: any) => {
         const params = {
-            fileName: item.a11_OnlinePatientID + "_" + item.docID,
+            fileName: item.patientDocID,
             filePath: ""
         }
         const res1 = await requestGetDocuments(params);
@@ -268,15 +275,7 @@ const PatientFile = React.forwardRef( (props) => {
             "patientCaseID": patientData?.patientCaseID,
             "docTypeID": values?.docTypeID,
             "lstType_PatientDoc": lstType_PatientDoc,
-            // [
-            //     {
-            //         "patientDocID": -1,
-            //         "docName": "newdoc.png",
-            //         "docExt": "png",
-            //         "docPath": "",
-            //         "remark": "remark"
-            //     }
-            // ],
+
             "docDateTime": convertDateInSSSZFormat(dayjs()),
             "isDelete": false,
             "userID": -1,
@@ -284,37 +283,33 @@ const PatientFile = React.forwardRef( (props) => {
             "type": 1
         }
 
-
-        const params = {
-            "onlinePatientID": verifiedUser?.userID,
-            "slNo": 1,
-            "docName": docName,
-            "docExt": ext,
-            "docPath": "",
-            "userID": -1,
-            "formID": -1,
-            "type": 1
-        }
+        // lstType_PatientDoc.map((item)=>{
+        //     console.log(item)
+        // })
         const res = await requestAddUpdatePatientDoc(paramsOfDoc);
         if (res?.isSuccess == true) {
-            const param1 = {
-                "fileName": res?.result['0']?.docID,
-                "data": values.docBase64
-            }
-            const res1 = await requestFileUpload(param1);
-            //const res2 = await requestAddUpdatePatientDoc(param1);
+            lstType_PatientDoc.map(async (item: any) => {
+                const param1 = {
+                    "fileName": item?.patientDocID,
+                    "data": item.base64
+                }
+                const res1 = await requestFileUpload(param1);
+                if (res1.isSuccess == true) {
+                    message.success(res.msg)
+                    getPatientDoc()
+                }
+                else
+                    message.error(res1.msg)
+            })
+            // 
 
-            if (res1.isSuccess == true) {
-                message.success(res.msg)
-                getPatientDoc()
-            }
-            else
-                message.error(res1.msg)
+
+            message.success(res.msg)
         }
     }
     const downloadDoc = async (item: any) => {
         const params = {
-            fileName: item.a11_OnlinePatientID + "_" + item.docID,
+            fileName: item.patientDocID,
             filePath: ""
         }
         const res1 = await requestGetDocuments(params);
@@ -428,11 +423,10 @@ const PatientFile = React.forwardRef( (props) => {
                                                 />
                                             </Form.Item>
                                             <Form.Item
-                                                name="docTypeIDs"
+                                                name="docTypeID"
                                                 label="Document Type" rules={[{ required: true, message: "Please Select Document Type" }]}>
                                                 <Select
-                                                    defaultValue={"-1"}
-                                                    //value={(v)=>console.log(v)}
+                                                    // value={docType}
                                                     style={{ width: 200 }}
                                                     onChange={handleChangeDocType}
                                                     options={invParameter}
@@ -445,9 +439,8 @@ const PatientFile = React.forwardRef( (props) => {
                                                     getValueFromEvent={(v) => getBase64(v.file.originFileObj as RcFile, (url) => {
                                                         form.setFieldsValue({ docBase64: url })
                                                         setDocName(v.file.name)
-                                                        console.log(lstType_PatientDoc)
                                                         if (v.file.status === "done")
-                                                            setlstType_PatientDoc([...lstType_PatientDoc, v.file.name])
+                                                            updateDocList(v, url)
                                                     })}
                                                     label=""
                                                     rules={[{ required: false, message: 'Please Select Document' }]}
