@@ -9,12 +9,13 @@ import { useEffect, useRef, useState } from 'react';
 import { FormattedMessage, history, SelectLang, useIntl, useParams } from '@umijs/max';
 const moment = require('moment');
 import dayjs from 'dayjs';
-import { requestGetPatientSearch, requestPatientRegistration } from '../services/api';
-import { requestGetBloodGroup, requestGetCivilStatus, requestGetCountry, requestGetDistrict, requestGetGender, requestGetRelation, requestGetReligion, requestGetState } from '@/services/apiRequest/dropdowns';
+import { requestAddOnlinePatDoc, requestFileUpload, requestGetPatientSearch, requestPatientRegistration } from '../services/api';
+import { requestGetBloodGroup, requestGetCivilStatus, requestGetCountry, requestGetDistrict, requestGetDocType, requestGetGender, requestGetRelation, requestGetReligion, requestGetState } from '@/services/apiRequest/dropdowns';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { LoadingOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { ColumnsType } from 'antd/es/table';
+import { requestGetDocuments } from '@/pages/Candidate/services/api';
 
 interface DataType {
     col1: string
@@ -45,6 +46,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
     const [form] = Form.useForm();
     const [form1] = Form.useForm();
     const [form2] = Form.useForm();
+    const [isFormDisable, setIsFormDisable] = useState(false);
     const [loading, setLoading] = useState(false);
     const [patientId, setPatientId] = useState<any>();
     const [state, setState] = useState<any>([{ value: '1', label: "Uttar Pradesh" }])
@@ -59,9 +61,15 @@ const EditPatient = ({ visible, isEditable, }: any) => {
     const [lstType_Patient, setLstType_Patient] = useState([]);
     const [patient, setPatientDetails] = useState([]);
     const [patientDoc, setPatientDoc] = useState<any>('');
+    const [patientDocs, setPatientDocs] = useState<any>('');
+    const [patientDocUpload, setPatientDocUpload] = useState<any>();
     const [istType_Pat, setIstType_Pat] = useState([]);
     const [fileList, setFileList] = useState<UploadFile[]>([
     ]);
+    const [docType, setDocType] = useState<any>([{ value: '1', label: "Aadhaar" }])
+    const user = JSON.parse(localStorage.getItem("user") as string);
+
+
 
     const uploadButton = (
         <div>
@@ -99,6 +107,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
         getReligion()
         getRelation()
         getCountry()
+        getDocType();
         let customDate = moment().format("YYYY-MM-DD");
         console.log(moment() && moment() > moment(customDate, "YYYY-MM-DD"))
 
@@ -107,7 +116,9 @@ const EditPatient = ({ visible, isEditable, }: any) => {
     useEffect(() => {
         const patientID = history.location.pathname.split('/')[3];
         setPatientId(patientID)
-        console.log(patientID);
+        if (history.location.search === "?true")
+            setIsFormDisable(true)
+        console.log(history.location.search);
         getPatientDetails(patientID)
     }, [])
 
@@ -142,6 +153,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             setLoading(false)
             setPatientDetails(response?.result)
             setPatientDoc(response?.result2[0])
+            setPatientDocs(response?.result1[0])
 
             if (response?.isSuccess) {
                 const patientData = response?.result[0]
@@ -150,7 +162,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                 // const familyData = response?.result3[0]
                 // const familyData1 = response?.result4[0]
 
-                const dataMaskForFamily = response?.result3?.map((item: any) => {
+                const dataMaskForFamily = response?.result3?.map((item: any, index: number) => {
                     return {
                         "col1": item.relationID,
                         "col2": item.contactSerialNo,
@@ -159,19 +171,20 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                         "col5": item.contactMobileNo,
                         "col6": item.contactPhoneCC,
                         "col7": "",
-                        "col8": item.contactPhoneAC,
+                        "col8": item.contactPhoneNo,
                         "col9": item.bGroupID,
                         "col10": "",
                         "col11": "",
                         "col12": "",
                         "col13": "",
                         "col14": "",
-                        "col15": ""
+                        "col15": "",
+                        ind: index + 1
                     };
                 })
                 const family = dataMaskForFamily.filter((item) => item.col3 !== "");
                 setLstType_Patient(family);
-                const dataMaskForDropdown = response?.result4?.map((item: any) => {
+                const dataMaskForDropdown = response?.result4?.map((item: any, index: number) => {
                     return {
                         "col1": item.relationID,
                         "col2": item.contactSerialNo,
@@ -180,14 +193,15 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                         "col5": item.contactMobileNo,
                         "col6": item.contactPhoneCC,
                         "col7": "",
-                        "col8": item.contactPhoneAC,
+                        "col8": item.contactPhoneNo,
                         "col9": item.bGroupID,
                         "col10": "",
                         "col11": "",
                         "col12": "",
                         "col13": "",
                         "col14": "",
-                        "col15": ""
+                        "col15": "",
+                        ind: index
                     };
                 })
                 const newData = dataMaskForDropdown.filter((item) => item.col3 !== "");
@@ -236,19 +250,19 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                         "perPhoneCC": patientData1?.perPhoneCC,
                         "perPhoneNo": patientData1?.perPhoneNo,
 
-                        "uidDocName": patientData1?.uidDocName,
+                        //"uidDocName": patientData1?.uidDocName,
                         "passIssueDate": dayjs(patientData1.passportIssueDate),
                         "passIssuePlace": patientData1?.passportIssuePlace,
-                        "photo": patientDoc?.photo ? `data:image/png;base64,${patientDoc?.photo}`:"",
-                        "signature": patientDoc?.signature ? `data:image/png;base64,${patientDoc?.signature}`:"",
+                        "photo": patientDoc?.photo ? `data:image/png;base64,${patientDoc?.photo}` : "",
+                        "signature": patientDoc?.signature ? `data:image/png;base64,${patientDoc?.signature}` : "",
                         "isVIP": true,
                         // "patientID": -1,
                         // "patientNo": patientData?.patientNo,
-                        "uidDocExt": "",
+                        //"uidDocExt": "",
                         "uidDocPath": "",
                         // "uidDocID": 1,
-                        "vUniqueID": -1,
-                        "vUniqueName": 4,
+                        "vUniqueID": patientData.vUniqueID,
+                        "vUniqueName": patientData.vUniqueName,
 
                     });
             } else {
@@ -261,6 +275,37 @@ const EditPatient = ({ visible, isEditable, }: any) => {
         }
     }
 
+    const downloadDoc = async (item: any) => {
+        const params = {
+            fileName: user?.verifiedUser?.userID + "_" + patientDocs.uidDocID,
+            filePath: ""
+        }
+        const res1 = await requestGetDocuments(params);
+        //window.location.href = `data:application/octet-stream;base64,${res1.result}`;
+        if (res1.isSuccess == true) {
+            fetch(window.location.href)
+                .then(resp => resp.blob())
+                .then(blob => {
+                    const url = `data:application/octet-stream;base64,${res1.result}`;
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = prompt("Enter filename and extension (e.g. myImage.jpg):", window.location.href.split('\/').pop() === "" ? window.location.hostname + ".html" : item.docName);
+                    document.body.appendChild(a);
+                    if (a.download !== "null") {
+                        a.click();
+                        alert('Your file ' + a.download + ' has downloaded!');
+                    }
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(() => alert('Could not download file.'));
+        }
+        else {
+            message.error("File Not Found")
+        }
+        // window.location.href = file;
+        //console.log(res1)
+    }
     const convertDate = (inputDateString: string) => {
         // Parse the input date string using Moment.js
         const parsedDate = moment(inputDateString, 'YYYY-MM-DD HH:mm:ss');
@@ -309,7 +354,16 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             })
             dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
             setBloodGroup(dataMaskForDropdown)
-            console.log(dataMaskForDropdown)
+        }
+    }
+    const getDocType = async () => {
+        const res = await requestGetDocType();
+        if (res.result.length > 0) {
+            const dataMaskForDropdown = res?.result?.map((item: any) => {
+                return { value: item.uniqueID, label: item.uniqueName }
+            })
+            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
+            setDocType(dataMaskForDropdown)
         }
     }
     const getReligion = async () => {
@@ -336,7 +390,6 @@ const EditPatient = ({ visible, isEditable, }: any) => {
     }
     const getState = async () => {
         const res = await requestGetState();
-        console.log(res);
         if (res.length > 0) {
             const dataMaskForDropdown = res?.map((item: any) => {
                 return { value: item.stateID, label: item.stateName }
@@ -347,7 +400,6 @@ const EditPatient = ({ visible, isEditable, }: any) => {
     }
     const getDistrict = async (stateId: any = 1) => {
         const res = await requestGetDistrict({ value: stateId });
-        console.log(res);
         if (res.length > 0) {
             const dataMaskForDropdown = res?.map((item: any) => {
                 return { value: item.districtID, label: item.districtName }
@@ -371,8 +423,68 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             setCountry(dataMaskForCountry)
         }
     }
+    const onUpload = (info: any) => {
+        if (info.file.status === 'done') {
+            getBase64(info.file.originFileObj as RcFile, async (url) => {
+                // console.log(url, info.file.name)
+                addPatientDoc({ docBase64: url, docName: info.file.name })
+                // const param = {
+                //     "fileName": info.file.name,
+                //     "data": url
+                // }
+                // const res = await requestFileUpload(param);
+                // if (res.isSuccess == true)
+                //     message.success(`${res.msg}`);
+                // else
+                //     message.error(`Some Error Occurred`);
+            })
+        } else if (info.file.status === 'error') {
+            message.error(`${info.file.name} file upload failed.`);
+        }
+
+    }
+
+    const addPatientDoc = async (values: any) => {
+        var re = /(?:\.([^.]+))?$/;
+        var ext = re?.exec(values.docName)[1];
+        console.log(values)
+
+        const params = {
+            "onlinePatientID": user?.verifiedUser?.userID,
+            "slNo": 1,
+            "docName": values.docName,
+            "docExt": ext,
+            "docPath": "",
+            "userID": -1,
+            "formID": -1,
+            "type": 1
+        }
+        const res = await requestAddOnlinePatDoc(params);
+
+        // console.log(res.result['0'].docID);
+
+        if (res?.isSuccess == true) {
+            const param1 = {
+                "fileName": res?.result['0']?.docID,
+                "data": values.docBase64
+            }
+            const res1 = await requestFileUpload(param1);
+
+            if (res1.isSuccess == true)
+            setPatientDocUpload({
+                "uidDocID": res?.result['0']?.docID.split('_')[1],
+                "uidDocExt": ext,
+                "uidDocName": values.docName,
+            })
+            else
+                message.error(res1.msg)
+        }
+    }
     const addPatientReg = async (values: any) => {
         values['isVIP'] = values.isVIP ? values.isVIP : false;
+        values['uidDocName'] = patientDocUpload?.uidDocName ? patientDocUpload.uidDocName : "";
+        values['uidDocExt'] = patientDocUpload?.uidDocExt ? patientDocUpload.uidDocExt : "";
+        values['uidDocID'] = patientDocUpload?.uidDocID ? patientDocUpload.uidDocID : 0;
         console.log(values)
         let serviceFrom = convertDate(values.serviceFrom);
         try {
@@ -407,11 +519,12 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                 // "passIssuePlace": "",
                 "patientID": patient[0]?.patientID,
                 "patientNo": patient[0]?.patientNo,
-                "uidDocExt": "",
+                //"uidDocExt": "",
                 "uidDocPath": "",
-                "uidDocID": 0,
-                "vUniqueID": 0,
-                "vUniqueName": 0,
+                //"uidDocID": 0,
+                // "vUniqueID": 0,
+                // "vUniqueName": 0,
+                //"uidDocName": "",
 
                 "curPhoneAC": "",
                 "perPhoneAC": "",
@@ -424,7 +537,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             const msg = await requestPatientRegistration({ ...values, ...staticParams });
             setLoading(false)
             if (msg.isSuccess === true) {
-                form.resetFields();
+                // form.resetFields();
                 message.success(msg.msg);
                 return;
             } else {
@@ -492,13 +605,15 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             title: 'Relation',
             dataIndex: 'col1',
             key: 'col1',
-            render: (v) =>
-                <Select
-                    size='small'
-                    disabled={true}
-                    defaultValue={v}
-                    options={relation}
-                />,
+            render: (v) => <Typography>{v != 0 ? relation[v].label : 'NA'}</Typography>
+
+            // <Select
+            //     size='small'
+            //     disabled={true}
+            //     defaultValue={v}
+            //     options={relation}
+            // />,
+            ,
         },
         {
             title: 'Mobile Number',
@@ -509,13 +624,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             title: 'Blood Group',
             key: 'col9',
             dataIndex: 'col9',
-            render: (v) =>
-                <Select
-                    size='small'
-                    disabled={true}
-                    defaultValue={v}
-                    options={bloodGroup}
-                />,
+            render: (v) => <Typography>{v != 0 ? bloodGroup[v].label : 'NA'}</Typography>,
         },
         {
             title: 'Phone Number',
@@ -538,7 +647,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             title: 'SrNo.',
             dataIndex: 'col2',
             key: 'col2',
-            render: (text) => <a>{text}</a>,
+            render: (text, record, index) => <a>{index + 1}</a>,
         },
         {
             title: 'Contact Name',
@@ -549,13 +658,14 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             title: 'Relation',
             dataIndex: 'col1',
             key: 'col1',
-            render: (v) =>
-                <Select
-                    size='small'
-                    disabled={true}
-                    defaultValue={v}
-                    options={relation}
-                />,
+            render: (v) => <Typography>{v != 0 ? relation[v].label : 'NA'}</Typography>
+            // render: (v) =>
+            //     <Select
+            //         size='small'
+            //         disabled={true}
+            //         defaultValue={v}
+            //         options={relation}
+            //     />,
         },
         {
             title: 'Mobile Number',
@@ -566,13 +676,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             title: 'Blood Group',
             key: 'col9',
             dataIndex: 'col9',
-            render: (v) =>
-                <Select
-                    size='small'
-                    disabled={true}
-                    defaultValue={v}
-                    options={bloodGroup}
-                />,
+            render: (v) => <Typography>{v != 0 ? bloodGroup[v].label : 'NA'}</Typography>,
         },
         {
             title: 'Phone Number',
@@ -582,7 +686,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
         {
             title: 'Action',
             key: 'action',
-            render: (_, record: { key: React.Key }) =>
+            render: (_, record: { key: React.Key }, index) =>
                 istType_Pat.length >= 1 ? (
                     <Button onClick={() => handleEdit(record, 2)}>
                         <a>Edit</a>
@@ -592,14 +696,24 @@ const EditPatient = ({ visible, isEditable, }: any) => {
     ];
     const handleEdit = (record: any, type: number) => {
         if (type == 1) {
-            form1.setFieldsValue(record);
-            const newData = lstType_Patient.filter((item) => item.col2 !== record.col2);
-            setLstType_Patient(newData);
+            const values = form1.getFieldsValue()
+            if (values.col3 != undefined)
+                message.error("Please Submit Previous Record First")
+            if (values.col3 == "" || values.col3 == undefined) {
+                form1.setFieldsValue(record);
+                const newData = lstType_Patient.filter((item, index) => item.col3 !== record.col3);
+                setLstType_Patient(newData);
+            }
         }
         if (type == 2) {
-            form2.setFieldsValue(record);
-            const newData = istType_Pat.filter((item) => item.col2 !== record.col2);
-            setIstType_Pat(newData);
+            const values = form2.getFieldsValue()
+            if (values.col3 != undefined)
+                message.error("Please Submit Previous Record First")
+            if (values.col3 == "" || values.col3 == undefined) {
+                form2.setFieldsValue(record);
+                const newData = istType_Pat.filter((item) => item.col3 !== record.col3);
+                setIstType_Pat(newData);
+            }
         }
     };
     const formList = () => {
@@ -608,7 +722,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             const values = form1.getFieldsValue()
             const family = {
                 "col1": values.col1 ? values.col1 : "",
-                "col2": (lstType_Patient.length + 1).toString(),
+                "col2": values.col2 ? values.col2 : (lstType_Patient.length + 1).toString(),
                 "col3": values.col3 ? values.col3 : "",
                 "col4": values.col4 ? values.col4 : "",
                 "col5": values.col5 ? values.col5 : "",
@@ -907,6 +1021,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                     style={{ height: '100%', boxShadow: '2px 2px 2px #4874dc' }}
                 >
                     {patient && <Form
+                        disabled={isFormDisable}
                         layout={'vertical'}
                         form={form}
                         onFinish={async (values) => {
@@ -1421,7 +1536,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                         }
                             style={{ boxShadow: '2px 2px 2px #4874dc' }}
                             headStyle={{ backgroundColor: '#004080', border: 0 }}>
-                                {formList()}
+                            {formList()}
                             {/* <Row gutter={16}>
                                 <Col span={6}>
                                     <Form.Item
@@ -1671,21 +1786,39 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                             <Row gutter={16}>
                                 <Col span={6}>
                                     <Form.Item
-                                        name="uidDocName"
-                                        label="Document Name"
+                                        name="vUniqueID"
+                                        label="Document Type"
                                         rules={[{ required: false, message: 'Please Enter The DocName' }]}
                                     >
-                                        <Input maxLength={80} placeholder="Please Enter The DocName" />
+                                        <Select
+                                            placeholder="Please Choose The DocName"
+                                            options={docType}
+                                        />
+                                        {/* <Input maxLength={80} placeholder="Please Enter The DocName" /> */}
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
                                     <Form.Item
+                                        name="vUniqueName"
+                                        label="Document Number"
+
+                                        rules={[
+                                            { required: true, message: 'Please Enter Doc Number' },
+                                            {
+                                                pattern: /^[0-9\b]+$/,
+                                                message: 'Please Enter a Valid Doc Number',
+                                            }
+                                        ]}
+                                    >
+                                        <Input maxLength={16} placeholder="Please Enter The Doc Number" />
+                                    </Form.Item>
+                                    {/* <Form.Item
                                         name="uidDocID"
                                         label="Document ID"
                                         rules={[{ required: false, message: 'Please Enter The Doc ID' }]}
                                     >
                                         <Input maxLength={80} placeholder="Please Enter The Doc ID" />
-                                    </Form.Item>
+                                    </Form.Item> */}
                                 </Col>
                                 <Col span={6}>
                                     <Form.Item
@@ -1712,6 +1845,26 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                 </Col>
                             </Row>
                             <Col span={6}>
+                                <Row>
+                                    <Form.Item
+                                        name="docs"
+                                        getValueFromEvent={(v) => getBase64(v.file.originFileObj as RcFile, (url) => {
+                                            addPatientDoc({ docBase64: url, docName: v.file.name })
+                                            //form.({ photo: url });
+                                            //setPasetFieldsValuetientDoc({ signature: patientDoc?.signature, photo: pic[1] });
+                                        })}
+                                        label="">
+                                        <Upload
+                                            //onChange={onUpload}
+                                        >
+                                            <Button icon={<UploadOutlined />}>Upload</Button>
+                                        </Upload>
+                                    </Form.Item>
+
+                                    <Button onClick={downloadDoc}>Download</Button>
+                                </Row>
+                            </Col>
+                            <Col span={6}>
                                 <Space align="center" size={24}>
                                     Photo:
                                     <Avatar size={120}
@@ -1727,7 +1880,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                             setPatientDoc({ signature: patientDoc?.signature, photo: pic[1] });
                                         })}
                                         label=""
-                                        rules={[{ required: false, message: 'Please Enter PhoneAC' }]}
+                                        rules={[{ required: false, message: 'Please Select Photo' }]}
                                     >
                                         <Upload
                                             name="avatar"

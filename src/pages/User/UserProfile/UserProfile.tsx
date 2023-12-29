@@ -39,7 +39,6 @@ const UserProfile = () => {
     const data = user?.verifiedUser;
     const datatype = getUserType()
     console.log(user?.verifiedUser?.userID)
-    console.log(user?.verifiedUser?.firstName)
 
     const contentStyle: React.CSSProperties = {
         lineHeight: '230px',
