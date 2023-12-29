@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { EditOutlined, FilterOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Descriptions, DescriptionsProps } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
-import { requestAddComplaint, requestAddDisease, requestAddInvParameter, requestGetInvGroup, requestGetInvestigation, requestGetPatientHeader, requestGetPatientSearch } from '../services/api';
+import { requestAddComplaint, requestAddDisease, requestAddInvParameter, requestFnGetPatientSearch, requestGetInvGroup, requestGetInvestigation, requestGetPatientHeader, requestGetPatientSearch, requestGetPatientVisitNo } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { Table, Tag } from 'antd';
@@ -23,16 +23,23 @@ interface DataType {
     rate: string;
 }
 
-const PatientDetailsCommon = React.forwardRef((props) => {
+let timeout: ReturnType<typeof setTimeout> | null;
+let currentValue: string;
+
+
+
+const PatientDetailsCommon = React.forwardRef((props: any) => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false)
     const { token } = theme.useToken();
     const [patientData, setPatientData] = useState({});
     const [caseChoice, setCaseChoice] = useState([]);
+    const [patientList, setPatientList] = useState([]);
+    const [admissionNo, setAdmissionNo] = useState([]);
 
 
     const onFinishPatForm = async (values: any) => {
-
+        values['case'] = values.case ? values.case : -1;
         const params = {
             patientNo: values?.patientNo,
             patientID: -1,
@@ -44,9 +51,10 @@ const PatientDetailsCommon = React.forwardRef((props) => {
         const response = await requestGetPatientHeader(params);
         setLoading(false)
         console.log(response?.result);
-
         const result1 = response?.result1[0];
+        console.log(Object.keys(props).length)
 
+        
         const caseChoiceMaskForDropdown = response?.result3?.map((item: any) => {
             return { value: item.patientCaseID, label: item.patientCaseNo }
         });
@@ -123,16 +131,68 @@ const PatientDetailsCommon = React.forwardRef((props) => {
                 children: result1?.insuranceComp
             }
         ];
-
         setPatientData({ patentBasicDetails })
+        Object.keys(props).length ? props?.onChange({ ...result1, "patientCaseID": values.case }): null ;
+        getGetPatientSearchList("")
         if (!response?.isSuccess) {
             message.error(response?.msg);
         }
     };
 
-    const handleChangeCase = () => {
-
+    const getGetPatientSearchList = async (value: string = "") => {
+        const params = {
+            "patientNo": "",
+            "patientName": value,
+            "userID": -1,
+            "formID": -1,
+            "type": 1
+        }
+        const res = await requestFnGetPatientSearch(params);
+        if (res.result.length > 0) {
+            const dataMaskForDropdown = res?.result?.map((item: any) => {
+                return { value: item.patientNo, label: item.patientName }
+            })
+            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
+            setPatientList(dataMaskForDropdown)
+        }
     }
+    const getPatientVisitNo = async (value: any) => {
+        const params = {
+            "patientCaseID": value.toString(),
+            "patientCaseNo": 1,
+            "userID": -1,
+            "formID": -1,
+            "type": 1
+        }
+        const res = await requestGetPatientVisitNo(params);
+        console.log(res)
+        if (res.result.length > 0) {
+            const dataMaskForDropdown = res?.result?.map((item: any) => {
+                return { value: item.patientCaseID, label: item.admNo }
+            })
+            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
+            setAdmissionNo(dataMaskForDropdown)
+        }
+    }
+    const handleChangeCase = (v:any) => {
+        Object.keys(props).length ? props?.onChange({...props?.patData, "patientCaseID": v }): null ;
+        getPatientVisitNo(v)
+    }
+    const onChange = (value: string) => {
+        onFinishPatForm({ patientNo: value })
+        form.setFieldsValue({
+            "patientNo": value
+        })
+    };
+
+    const onSearch = (value: string) => {
+        console.log('search:', value);
+        getGetPatientSearchList(value);
+    };
+
+    // Filter `option.label` match the user type `input`
+    const filterOption = (input: string, patientList?: { label: string; value: string }) =>
+        (patientList?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
     return (
         <Card>
@@ -142,6 +202,24 @@ const PatientDetailsCommon = React.forwardRef((props) => {
                 layout="vertical"
             >
                 <Space>
+
+                    <Form.Item name="Search" label="Search">
+                        <Select
+                            style={{ width: 200 }}
+                            showSearch
+                            placeholder="Please Input For Search"
+                            optionFilterProp="children"
+                            onChange={onChange}
+                            onSearch={onSearch}
+                            filterOption={filterOption}
+                            notFoundContent={null}
+                            options={(patientList).map((d) => ({
+                                value: d.value,
+                                label: d.label,
+                            }))}
+                        />
+                    </Form.Item>
+
                     <Form.Item name="patientNo" label="Patient No" rules={[{ required: true }]}>
                         <Input maxLength={20} />
                     </Form.Item>
@@ -155,6 +233,14 @@ const PatientDetailsCommon = React.forwardRef((props) => {
                             style={{ width: 200 }}
                             onChange={handleChangeCase}
                             options={caseChoice}
+                            placeholder="Select"
+                        />
+                    </Form.Item>
+                    <Form.Item name="AdmissionNo" label="Admission No" rules={[{ required: false }]}>
+                        <Select
+                            style={{ width: 200 }}
+                            onChange={handleChangeCase}
+                            options={admissionNo}
                             placeholder="Select"
                         />
                     </Form.Item>

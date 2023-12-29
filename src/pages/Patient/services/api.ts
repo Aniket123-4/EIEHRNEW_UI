@@ -117,9 +117,59 @@ export async function requestFileUpload(body: any) {
     data: body,
   });
 }
+export async function requestAddOnlinePatDoc(body: any) {
+  return request<any>('Online/AddOnlinePatDoc', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Accept': '*/*'
+    },
+    data: body,
+  });
+}
 
 export async function requestGetPatientHeader(body: any, options?: { [key: string]: any }) {
   return request<any>('GetPatientHeader', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetPatientDoc(body: any, options?: { [key: string]: any }) {
+  return request<any>('GetPatientDoc', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestAddUpdatePatientDoc(body: any, options?: { [key: string]: any }) {
+  return request<any>('AddUpdatePatientDoc', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestFnGetPatientSearch(body: any, options?: { [key: string]: any }) {
+  return request<any>('FnGetPatientSearch', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetPatientVisitNo(body: any, options?: { [key: string]: any }) {
+  return request<any>('GetPatientVisitNo', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

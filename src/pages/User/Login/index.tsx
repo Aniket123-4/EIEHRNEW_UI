@@ -298,7 +298,7 @@ const Login: React.FC = () => {
               marginBottom: 20
             }}
           >
-            forget the password
+            Forgot password?
           </a>
         </div>
       </LoginFormPage>
