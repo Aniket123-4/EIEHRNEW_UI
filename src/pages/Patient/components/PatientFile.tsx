@@ -192,6 +192,7 @@ const PatientFile = React.forwardRef((props) => {
     }
 
     const updateDocList = async (v: any, url: any) => {
+        const fr=addDocform.getFieldsValue()
         var re = /(?:\.([^.]+))?$/;
         var ext = re?.exec(v.file.name)[1];
         const res = await requestGetUniqueID();
@@ -201,7 +202,7 @@ const PatientFile = React.forwardRef((props) => {
             docExt: ext,
             docPath: "",
             remark: "",
-            base64: url
+            base64: fr.docBase64
         }
         setlstType_PatientDoc([...lstType_PatientDoc, p])
         console.log(lstType_PatientDoc, p);
@@ -295,16 +296,14 @@ const PatientFile = React.forwardRef((props) => {
                 }
                 const res1 = await requestFileUpload(param1);
                 if (res1.isSuccess == true) {
-                    message.success(res.msg)
+                    //message.success(res.msg)
                     getPatientDoc()
                 }
                 else
                     message.error(res1.msg)
             })
-            // 
-
-
             message.success(res.msg)
+            setlstType_PatientDoc([])
         }
     }
     const downloadDoc = async (item: any) => {
@@ -433,20 +432,20 @@ const PatientFile = React.forwardRef((props) => {
                                                     placeholder="Select"
                                                 />
                                             </Form.Item>
-                                            <Row>
+                                            <Row> 
                                                 <Form.Item
                                                     name="docBase64"
                                                     getValueFromEvent={(v) => getBase64(v.file.originFileObj as RcFile, (url) => {
-                                                        form.setFieldsValue({ docBase64: url })
+                                                        addDocform.setFieldsValue({ docBase64: url })
                                                         setDocName(v.file.name)
                                                         if (v.file.status === "done")
                                                             updateDocList(v, url)
                                                     })}
                                                     label=""
-                                                    rules={[{ required: false, message: 'Please Select Document' }]}
+                                                    rules={[{ required: true, message: 'Please Attach Document' }]}
                                                 >
                                                     <Upload
-                                                        maxCount={4}
+                                                        maxCount={10}
                                                     >
                                                         <Button icon={<FileAddOutlined />}>Attach</Button>
                                                     </Upload>

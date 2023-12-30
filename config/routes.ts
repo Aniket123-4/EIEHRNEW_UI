@@ -155,6 +155,11 @@ export default [
         path: '/patient/PatientFile',
         component: './Patient/components/PatientFile',
       },
+      {
+        name: 'New Token No',
+        path: '/patient/NewTokenNo',
+        component: './Patient/components/NewTokenNo',
+      },
     ],
   },
   {

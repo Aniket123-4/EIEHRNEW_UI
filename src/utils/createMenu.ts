@@ -50,6 +50,9 @@ const getModulePath = (name: string) => {
         case "Patient File":
             return "/patient/PatientFile";
 
+        case "New Token No":
+            return "/patient/NewTokenNo";
+
         case "Reception":
             return "/reception/search";
 
