@@ -6,12 +6,38 @@ import { requestAddUpdatePatientCase, requestGetPatientDailyCount, requestGetPat
 import { requestGetSection, requestGetUserList } from '@/services/apiRequest/dropdowns';
 import { requestGetInvParameterMasterList } from '@/pages/Complaint/services/api';
 import { ProColumns } from '@ant-design/pro-components';
-import dayjs from 'dayjs';
+import { ProDescriptions } from '@ant-design/pro-components';
 import { convertDate, convertDateInSSSZFormat } from '@/utils/helper';
 
 const { Option } = Select;
 
 const { Text, Link } = Typography;
+
+const columns: ProColumns<any>[] = [
+    // {
+    //     title: 'inv Parameter ID',
+    //     dataIndex: 'invParameterID',
+    //     key: 'invParameterID',
+    //     render: (text) => <a>{text}</a>,
+    // },
+    {
+        title: 'Inv Parameter Name',
+        dataIndex: 'invParameterName',
+        key: 'invParameterName',
+    },
+    // {
+    //     title: 'Checked',
+    //     key: 'isChecked',
+    //     dataIndex: 'isChecked',
+    //     render: (text) => <a>{text ? <Tag color="green">Yes</Tag> : <Tag color="magenta">No</Tag>}</a>,
+    // },
+    {
+        title: 'isSaved',
+        key: 'isSaved',
+        dataIndex: 'isSaved',
+        render: (text) => <a>{text ? <Tag color="green">Yes</Tag> : <Tag color="magenta">No</Tag>}</a>,
+    }
+];
 
 const AddUpdatePatientCase = React.forwardRef((props) => {
     const { selectedType, checkinData, preEmpType, patientData }: any = props;
@@ -25,37 +51,20 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
     const [formVisible, setFormVisible] = useState<any>(false);
     const [rowSelectionVisible, setRowSelectionVisible] = useState<any>(false);
     const [doctorList, setDoctorList] = useState<any>([])
+    const [receiptModel, setReceiptModel] = useState<any>(false)
+    const [batteryOfServiceVisible, setBatteryOfServiceVisible] = useState<any>(false)
+    const [receiptData, setReceiptData] = useState<any>({})
 
 
-    const columns: ProColumns<any>[] = [
-        {
-            title: 'inv Parameter ID',
-            dataIndex: 'invParameterID',
-            key: 'invParameterID',
-            render: (text) => <a>{text}</a>,
-        },
-        {
-            title: 'Inv Parameter Name',
-            dataIndex: 'invParameterName',
-            key: 'invParameterName',
-        },
-        // {
-        //     title: 'Checked',
-        //     key: 'isChecked',
-        //     dataIndex: 'isChecked',
-        //     render: (text) => <a>{text ? <Tag color="green">Yes</Tag> : <Tag color="magenta">No</Tag>}</a>,
-        // },
-        {
-            title: 'isSaved',
-            key: 'isSaved',
-            dataIndex: 'isSaved',
-            render: (text) => <a>{text ? <Tag color="green">Yes</Tag> : <Tag color="magenta">No</Tag>}</a>,
-        }
-    ];
+
+    useEffect(() => {
+        getSectionList();
+        getInvParameter();
+    }, []);
 
     useEffect(() => {
         setSelectedRows([])
-
+        filterForm.resetFields()
         if (preEmpType === "5") {
             setSelectionType('radio')
         } else {
@@ -67,7 +76,7 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
             setFormVisible(false)
         }
 
-        let admissionDate: any = moment(new Date()).format(dateFormat);
+        let admissionDate: any = moment(new Date());
         let sectionID = "";
         let consultantDocID = "";
         let proDiagnosis = "";
@@ -79,7 +88,6 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
             proDiagnosis = checkinData?.result[0]?.proDiagnosis
         }
 
-        console.log({ admissionDate })
 
         filterForm.setFieldsValue({
             patientCaseID: patientData?.patientCaseID,
@@ -94,15 +102,15 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
             patientFoundID: 1,
             proDiagnosis: proDiagnosis,
             patientFileNo: patientData?.patientNo,
-            deductablePercentage: 100,
-            allergy: checkinData?.result1[0]?.allergy,
-            warnings: checkinData?.result1[0]?.warnings,
-            addiction: checkinData?.result1[0]?.addiction,
-            socialHistory: checkinData?.result1[0]?.socialHistory,
-            familyHistory: checkinData?.result1[0]?.familyHistory,
-            personalHistory: checkinData?.result1[0]?.personalHistory,
-            pastMedicalHistory: checkinData?.result1[0]?.pastMedicalHistory,
-            obstetrics: checkinData?.result1[0]?.obstetrics,
+            deductablePercentage: checkinData?.result2[0]?.compRebatePercentage ? checkinData?.result2[0]?.compRebatePercentage : 100,
+            allergy: checkinData?.result1[0]?.allergy?checkinData?.result1[0]?.allergy:"",
+            warnings: checkinData?.result1[0]?.warnings?checkinData?.result1[0]?.warnings:"",
+            addiction: checkinData?.result1[0]?.addiction?checkinData?.result1[0]?.addiction:"",
+            socialHistory: checkinData?.result1[0]?.socialHistory?checkinData?.result1[0]?.socialHistory:"",
+            familyHistory: checkinData?.result1[0]?.familyHistory?checkinData?.result1[0]?.familyHistory:"",
+            personalHistory: checkinData?.result1[0]?.personalHistory?checkinData?.result1[0]?.personalHistory:"",
+            pastMedicalHistory: checkinData?.result1[0]?.pastMedicalHistory?checkinData?.result1[0]?.pastMedicalHistory:"",
+            obstetrics: checkinData?.result1[0]?.obstetrics?checkinData?.result1[0]?.obstetrics:"",
             isNextVisit: true,
             priority: 0,
             invParameterID: '',
@@ -115,15 +123,9 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
             ],
             serviceID: ''
         })
-    }, [preEmpType])
+    }, [preEmpType, patientData?.patientID])
 
 
-    useEffect(() => {
-
-        getSectionList();
-        getInvParameter();
-
-    }, []);
 
 
     const getInvParameter = async () => {
@@ -210,7 +212,7 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
         let type = 1;
 
         if (selectedType === 2) {
-            type = 2
+            type = 1
         }
 
         if (selectedType === 3) {
@@ -221,13 +223,13 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
             ...values,
             referToDocID: selectedConsultantDocID,
             patientID: patientData?.patientID,
+            patientCaseID: patientData?.patientCaseID,
             userID: -1,
             formID: -1,
             type: type,
             lstType_ro: lstType,
             serviceID: serviceID,
             isNextVisit: false,
-            patientCaseID: -1,
             patientFoundID: 1,
             preEmpTypeID: 1,
             admTypeID: 1,
@@ -239,7 +241,11 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
 
         if (response?.isSuccess) {
             filterForm.resetFields()
-            message.success(response?.msg);
+            message.success(response?.result?.[0]?.msg);
+            if (selectedType == 1) {
+                setReceiptModel(true)
+                setReceiptData(response?.result?.[0])
+            }
         } else {
             message.error(response?.msg);
         }
@@ -272,7 +278,52 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
             // };
         }
     };
+    const handleCancel = () => {
+        filterForm.resetFields()
+        setReceiptModel(false);
+    };
 
+    const receiptModelPopup = () => {
+        return (
+            <Modal title={'Patient Information'}
+                open={receiptModel}
+                width={1000}
+                style={{ top: 20 }}
+                onOk={() => handleCancel()}
+                onCancel={() => handleCancel()}
+                footer={[]}
+            >
+                {/* <Tabs defaultActiveKey={1} items={items} onChange={onChange} /> */}
+                <ProDescriptions
+                    dataSource={receiptData}
+                    bordered={true}
+                    size={'small'}
+                    columns={[
+                        {
+                            title: 'Adm No',
+                            dataIndex: 'admNo',
+                            span: 4
+                        },
+                        {
+                            title: 'Token No',
+                            dataIndex: 'tokenNo',
+                            span: 4
+                        },
+                        {
+                            title: 'Patient No',
+                            dataIndex: 'patientNo',
+                            span: 4
+                        },
+                        {
+                            title: 'Patient Case No',
+                            dataIndex: 'patientCaseNo',
+                            span: 4
+                        },
+                    ]}
+                />
+            </Modal>
+        )
+    }
 
 
     return (
@@ -281,37 +332,44 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
                 form={filterForm}
                 onFinish={onFinishPatForm}
                 layout="vertical"
+                preserve={true}
             >
 
-                {!formVisible ? <Card title={<Typography style={{ color: 'white', fontSize: 18 }}>
-                    {"Battery of Service"}</Typography>} style={{ boxShadow: '2px 2px 2px #4874dc' }}
-                    headStyle={{ backgroundColor: '#004080', border: 0 }}>
-                    <Table
-                        rowSelection={{
-                            type: selectionType,
-                            ...rowSelection,
-                        }}
-                        columns={columns}
-                        pagination={false}
-                        dataSource={checkinData?.result4.map((item, index) => { return { ...item, key: index } })}
-                    />
-                    <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-                        {rowSelectionVisible ? <Text style={{ marginTop: 20 }} type="danger">Selection required</Text> : null}
-                        <Button
-                            type="primary"
-                            style={{ marginTop: 10 }}
-                            loading={loading} onClick={() => {
-                                if (selectedRowsState.length == 0) {
-                                    setRowSelectionVisible(true)
-                                } else {
-                                    setFormVisible(true)
-                                }
+                {!formVisible ?
+                    <Card title={
+                        <Typography style={{ color: 'white', fontSize: 18 }}>
+                            {"Battery of Service"}
+                        </Typography>
+                    }
+                        style={{ boxShadow: '2px 2px 2px #4874dc' }}
+                        headStyle={{ backgroundColor: '#004080', border: 0 }}
+                    >
+                        <Table
+                            rowSelection={{
+                                type: selectionType,
+                                ...rowSelection,
                             }}
-                        >
-                            Next
-                        </Button>
-                    </Space>
-                </Card> : null}
+                            columns={columns}
+                            pagination={false}
+                            dataSource={checkinData?.result4.map((item, index) => { return { ...item, key: index } })}
+                        />
+                        <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                            {rowSelectionVisible ? <Text style={{ marginTop: 20 }} type="danger">Selection required</Text> : null}
+                            <Button
+                                type="primary"
+                                style={{ marginTop: 10 }}
+                                loading={loading} onClick={() => {
+                                    if (selectedRowsState.length == 0) {
+                                        setRowSelectionVisible(true)
+                                    } else {
+                                        setFormVisible(true)
+                                    }
+                                }}
+                            >
+                                Next
+                            </Button>
+                        </Space>
+                    </Card> : null}
 
                 {formVisible ?
                     <>
@@ -526,6 +584,7 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
 
                     </> : null}
             </Form >
+            {receiptModelPopup()}
         </>
     );
 });

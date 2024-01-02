@@ -118,11 +118,11 @@ const ReceptionSearch = React.forwardRef((props) => {
             dataIndex: 'curMobileNo',
             key: 'curMobileNo',
         },
-        {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
-        },
+        // {
+        //     title: 'Email',
+        //     dataIndex: 'email',
+        //     key: 'email',
+        // },
         {
             title: 'Action',
             key: 'action',
@@ -200,14 +200,18 @@ const ReceptionSearch = React.forwardRef((props) => {
             type: 6,
             preEmpTypeID: selectedPreEmpType
         }
-        console.log(params);
+        console.log({params});
+        console.log({selectedType,patientData})
+        if(selectedType===2||selectedType===3){
+            setSelectedPreEmpType(patientData?.vPreEmpType)
+        }
         setLoadingCheckin(true)
         const response = await requestGetPatientSearchOPIP(params);
         setLoadingCheckin(false)
         setPatientCheckInData(response)
+      
 
-        if (response?.isSuccess) {
-        } else {
+        if (!response?.isSuccess) {
             message.error(response?.msg);
         }
 
@@ -258,7 +262,7 @@ const ReceptionSearch = React.forwardRef((props) => {
                 </> : null}
 
 
-                <div style={{ marginTop: 10 }}> <Table scroll={{ x: 1000 }} columns={columns} dataSource={list} /></div>
+                <div style={{ marginTop: 10 }}> <Table size='small' scroll={{ x: 1000 }} columns={columns} dataSource={list} /></div>
             </>
         )
     }

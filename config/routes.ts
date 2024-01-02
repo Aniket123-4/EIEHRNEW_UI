@@ -221,6 +221,24 @@ export default [
 
     ],
   },
+
+  {
+    name: 'doctor',
+    path: '/doctor',
+    routes: [
+      {
+        name: 'Doctor',
+        path: '/doctor/patient-list',
+        component: './DoctorForm/components/DoctorPatientList',
+      },
+      {
+        name: 'Patient Details',
+        path: '/doctor/patient-details/:id',
+        component: './DoctorForm/components/DoctorPatientDetails',
+      },
+
+    ],
+  },
   {
     name: 'reception',
     path: '/reception',
@@ -278,7 +296,7 @@ export default [
     path: '/',
     redirect: '/welcome',
   },
-   {
+  {
     path: '/candidate-dashboard',
     component: './CandidateDashboard',
   },
