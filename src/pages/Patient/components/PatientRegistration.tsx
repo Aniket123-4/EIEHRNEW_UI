@@ -16,7 +16,7 @@ import { PlusOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons'
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { ColumnsType } from 'antd/es/table';
 
-
+const { Search } = Input;
 interface DataType {
     col1: string
     col2: string,
@@ -55,20 +55,19 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
     const [bloodGroup, setBloodGroup] = useState<any>([{ value: '1', label: "O+" }])
     const [religion, setReligion] = useState<any>([{ value: '1', label: "Hindu" }])
     const [relation, setRelation] = useState<any>([{ value: '1', label: "Father" }])
-    const [serial, setSerial] = useState<any>([{ value: '1', label: "1" }, { value: '2', label: "2" }, { value: '3', label: "3" }])
     const [docType, setDocType] = useState<any>([{ value: '1', label: "Aadhaar" }])
+    const [selectedDoc, setSelectedDoc] = useState<any>()
     const [family, setFamily] = useState<any>([])
     const [emergency, setEmergency] = useState<any>([])
     const [isOtpVisible, setOTPVisible] = useState(false);
-    const [candidateData, setCandidateData] = useState({});
-    const [dobValidation, setDobValidation] = useState<any>();
-    const [activeTab, setActiveTab] = useState<any>("1");
     const [lstType_Patient, setLstType_Patient] = useState([]);
     const [istType_Pat, setIstType_Pat] = useState([]);
     const [patientNo, setPatientNo] = useState("");
     const [docName, setDocName] = useState<any>("");
     const user = JSON.parse(localStorage.getItem("user") as string);
     const [patientDocUpload, setPatientDocUpload] = useState<any>();
+    const [patient, setPatientDetails] = useState([]);
+
 
 
 
@@ -113,6 +112,9 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
         console.log(formattedDate);
         return formattedDate
     }
+    const onDocTypeSelect =  (v:any) => {
+        setSelectedDoc(v)
+    };
     const getBase64 = async (img: RcFile, callback: (url: string) => void) => {
         const reader = new FileReader();
         reader.addEventListener('load', () => callback(reader.result as string));
@@ -138,9 +140,10 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
         console.log('Received values of form: ', values);
         // requestForValidateOTP(values);
     };
-    const getPatientSearch = async () => {
+    const getPatientSearch = async (v: any) => {
+        setLoading(true);
         const params = {
-            patientNo: patientNo,
+            patientNo: v.patientNo,
             patientUIDNo: '',
             ageGreater: 0,
             genderID: -1,
@@ -161,10 +164,123 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
             patientID: -1,
         }
         const response = await requestGetPatientSearch({ ...params });
-        if (response.result.length > 0) {
-            history.push(`/patient/EditPatient/${response.result[0].patientID}`)
+        setPatientDetails(response?.result)
+        setLoading(false)
+        // setPatientDoc(response?.result2[0])
+        // setPatientDocs(response?.result1[0])
+
+        if (response?.isSuccess&& response?.result.length>0) {
+            const patientData = response?.result[0]
+            const patientData1 = response?.result1[0]
+            const patientDoc = response?.result2[0]
+            // const familyData = response?.result3[0]
+            // const familyData1 = response?.result4[0]
+
+            const dataMaskForFamily = response?.result3?.map((item: any, index: number) => {
+                return {
+                    "col1": item.relationID,
+                    "col2": item.contactSerialNo,
+                    "col3": item.contactName,
+                    "col4": item.contactMobileNoCC,
+                    "col5": item.contactMobileNo,
+                    "col6": item.contactPhoneCC,
+                    "col7": "",
+                    "col8": item.contactPhoneNo,
+                    "col9": item.bGroupID,
+                    "col10": "",
+                    "col11": "",
+                    "col12": "",
+                    "col13": "",
+                    "col14": "",
+                    "col15": "",
+                    ind: index + 1
+                };
+            })
+            const family = dataMaskForFamily.filter((item) => item.col3 !== "");
+            setLstType_Patient(family);
+            const dataMaskForDropdown = response?.result4?.map((item: any, index: number) => {
+                return {
+                    "col1": item.relationID,
+                    "col2": item.contactSerialNo,
+                    "col3": item.contactName,
+                    "col4": item.contactMobileNoCC,
+                    "col5": item.contactMobileNo,
+                    "col6": item.contactPhoneCC,
+                    "col7": "",
+                    "col8": item.contactPhoneNo,
+                    "col9": item.bGroupID,
+                    "col10": "",
+                    "col11": "",
+                    "col12": "",
+                    "col13": "",
+                    "col14": "",
+                    "col15": "",
+                    ind: index
+                };
+            })
+            const newData = dataMaskForDropdown.filter((item) => item.col3 !== "");
+            setIstType_Pat(newData);
+
+            form.setFieldsValue(
+                {
+                    "fName": patientData?.fName,
+                    "mName": patientData?.mName,
+                    "lName": patientData?.lName,
+                    "fatherName": patientData?.fatherName,
+                    "fNameML": patientData?.fNameML,
+                    "mNameML": patientData?.mNameML,
+                    "lNameML": patientData?.lNameML,
+                    "fatherNameML": patientData?.fatherNameML,
+                    "motherNameML": patientData?.motherNameML,
+                    "motherName": patientData?.motherName,
+                    "eMail": patientData1?.eMail,
+                    "alternateEmail": patientData1?.alternateEmail,
+                    "dob": dayjs(patientData?.dob),
+                    "genderID": patientData?.genderID,
+                    "civilStatusID": patientData?.civilStatusID,
+                    "bGroupID": patientData?.bGroupID,
+                    "religionID": patientData?.religionID,
+                    "nationalityID": patientData?.nationalityID,
+                    "birthPlace": patientData?.birthPlace,
+                    "curHouseNo": patientData1?.curHouseNo,
+                    "curAddress": patientData1?.curAddress,
+                    "curPinCode": patientData1?.curPinCode,
+                    "curStateID": patientData1?.curStateID,
+                    "curDistrictID": patientData1?.curDistrictID,
+                    "curCountryID": patientData1?.curCountryID,
+                    "curMobileNoCC": patientData1?.curMobileNoCC,
+                    "curMobileNo": patientData1?.curMobileNo,
+                    "curPhoneCC": patientData1?.curPhoneCC,
+                    "curPhoneNo": patientData1?.curPhoneNo,
+
+                    "perHouseNo": patientData1?.perHouseNo,
+                    "perAddress": patientData1?.perAddress,
+                    "perPinCode": patientData1?.perPinCode,
+                    "perStateID": patientData1?.perStateID,
+                    "perDistrictID": patientData1?.perDistrictID,
+                    "perCountryID": patientData1?.perCountryID,
+                    "perMobileNoCC": patientData1?.perMobileNoCC,
+                    "perMobileNo": patientData1?.perMobileNo,
+                    "perPhoneCC": patientData1?.perPhoneCC,
+                    "perPhoneNo": patientData1?.perPhoneNo,
+
+                    //"uidDocName": patientData1?.uidDocName,
+                    "passIssueDate": dayjs(patientData1.passportIssueDate),
+                    "passIssuePlace": patientData1?.passportIssuePlace,
+                    "photo": patientDoc?.photo ? `data:image/png;base64,${patientDoc?.photo}` : "",
+                    "signature": patientDoc?.signature ? `data:image/png;base64,${patientDoc?.signature}` : "",
+                    "isVIP": true,
+                    // "patientID": -1,
+                    // "patientNo": patientData?.patientNo,
+                    //"uidDocExt": "",
+                    "uidDocPath": "",
+                    // "uidDocID": 1,
+                    "vUniqueID": patientData.vUniqueID,
+                    "vUniqueName": patientData.vUniqueName,
+
+                });
         }
-        else{
+        else {
             message.error("Patient Not Found For Given Patient No ")
         }
     }
@@ -208,7 +324,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                 // console.log(url, info.file.name)
                 setDocName(info.file.name)
 
-                addPatientDoc({docBase64:url,docName:info.file.name})
+                addPatientDoc({ docBase64: url, docName: info.file.name })
 
                 // const param = {
                 //     "fileName": info.file.name,
@@ -255,11 +371,11 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
             const res1 = await requestFileUpload(param1);
 
             if (res1.isSuccess == true)
-            setPatientDocUpload({
-                "uidDocID": res?.result['0']?.docID.split('_')[1],
-                "uidDocExt": ext,
-                "uidDocName": values.docName,
-            })
+                setPatientDocUpload({
+                    "uidDocID": res?.result['0']?.docID.split('_')[1],
+                    "uidDocExt": ext,
+                    "uidDocName": values.docName,
+                })
             else
                 message.error(res1.msg)
         }
@@ -420,12 +536,12 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                 //"uidDocName": "",
                 "passIssueDate": dayjs(),
                 "passIssuePlace": "",
-                "vUniqueID":"-1",
-                "bGroupID":"-1",
-                "civilStatusID":"-1",
-                "genderID":"-1",
-                "nationalityID":"-1",
-                "religionID":"-1",
+                "vUniqueID": "-1",
+                "bGroupID": "-1",
+                "civilStatusID": "-1",
+                "genderID": "-1",
+                "nationalityID": "-1",
+                "religionID": "-1",
             });
     }
     const addPatientReg = async (values: any) => {
@@ -439,7 +555,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
         values['uidDocExt'] = patientDocUpload?.uidDocExt ? patientDocUpload.uidDocExt : "";
         values['uidDocID'] = patientDocUpload?.uidDocID ? patientDocUpload.uidDocID : 0;
 
-        
+
         try {
             const staticParams = {
                 // "fName": "",
@@ -511,16 +627,18 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                 // "isVIP": false,
                 // "passIssueDate": "2023-12-04T05:39:01.048Z",
                 // "passIssuePlace": "",
-                
+
                 "uidDocName": "",
                 "uidDocExt": "",
                 "uidDocPath": "",
                 //"uidDocID": 0,
-                
+
                 // "vUniqueID": 0,
                 // "vUniqueName": 0,
-                "patientID": -1,
-                "patientNo": "",
+                "patientID": patient[0]?.patientID ? patient[0]?.patientID : -1,
+                "patientNo": patient[0]?.patientNo ? patient[0]?.patientNo : "",
+                // "patientID": -1,
+                // "patientNo": "",
                 "userID": -1,
                 "formID": -1,
                 "type": 1
@@ -1150,9 +1268,22 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                 <Card
                     title={
                         <Row align={'middle'}>
-                            <Typography>Search by Patient No :</Typography>
-                            <Input onChange={(v) => (setPatientNo(v.target.value))} style={{ width: 200, marginLeft: 10 }}></Input>
-                            <Button onClick={() => getPatientSearch()} type="link" shape="default" icon={<SearchOutlined />} />
+                            <Form
+                                // onFinish={getPatientSearch}
+                                >
+                                <Form.Item
+                                    style={{ paddingTop: 15 }}
+                                    name={"patientNo"}
+                                    label="Search by Patient No :"
+                                    rules={[{ required: true, message: 'Please Enter Patient Number' }]}>
+                                    {/* <Input style={{ width: 200, marginLeft: 10 }}></Input> */}
+                                    <Search placeholder="input search text" 
+                                    loading={loading}
+                                    onSearch={(v)=>getPatientSearch({patientNo:v})} enterButton />
+                                </Form.Item>
+                            </Form>
+                            {/* <Typography>Search by Patient No :</Typography>
+                            <Button onClick={() => getPatientSearch()} type="link" shape="default" icon={<SearchOutlined />} /> */}
                         </Row>
                     }
                     style={{ height: '100%', boxShadow: '2px 2px 2px #4874dc' }}
@@ -1808,9 +1939,10 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     <Form.Item
                                         name="vUniqueID"
                                         label="Document Type"
-                                        rules={[{ required: false, message: 'Please Select The DocType' }]}
+                                        rules={[{ required: true, message: 'Please Select The DocType' }]}
                                     >
                                         <Select
+                                        onSelect={onDocTypeSelect}
                                             placeholder="Please Choose The DocName"
                                             options={docType}
                                         />
@@ -1818,6 +1950,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                 </Col>
                                 <Col span={6}>
                                     <Form.Item
+                                    
                                         name="vUniqueName"
                                         label="Document Number"
                                         rules={[
@@ -1828,10 +1961,10 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                             }
                                         ]}
                                     >
-                                        <Input maxLength={16} placeholder="Please Enter The Doc Number" />
+                                        <Input disabled={selectedDoc==undefined || selectedDoc==-1} maxLength={16} placeholder="Please Enter The Doc Number" />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
+                                { <><Col span={6}>
                                     <Form.Item
                                         name="passIssueDate"
                                         label="Issue Date"
@@ -1854,6 +1987,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         <Input maxLength={80} placeholder="Please Enter The Doc Issue Place" />
                                     </Form.Item>
                                 </Col>
+                                </>}
                             </Row>
                             <Col span={6}>
                                 <Upload
