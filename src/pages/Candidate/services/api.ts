@@ -49,6 +49,16 @@ export async function requestGetCandidateList(body: any, options?: { [key: strin
     ...(options || {}),
   });
 }
+export async function requestGetDocuments(body: any, options?: { [key: string]: any }) {
+  return request<any>('MasterForm/DownloadFile', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
 
 export async function getCandidateDoc(body: any, options?: { [key: string]: any }) {
   return request<any>('/Candidate/GetCandidateDoc', {

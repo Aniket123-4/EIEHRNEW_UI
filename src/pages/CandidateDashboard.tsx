@@ -4,7 +4,7 @@ import { useModel } from '@umijs/max';
 import { Card, theme, Image, Divider, Space, Avatar, Typography, Row, Col, Progress, Spin, Table, Button, message, Tag } from 'antd';
 import { getUserInLocalStorage } from '@/utils/common';
 import { requestGetCandidateList } from './Candidate/services/api';
-import { UserOutlined } from '@ant-design/icons';
+import { InsertRowAboveOutlined, PrinterOutlined, UserOutlined } from '@ant-design/icons';
 import Chart from 'react-google-charts';
 import { requestSyncOnlinePatient } from './Online/services/api';
 const { Title, Text, Link } = Typography;
@@ -16,12 +16,16 @@ const CandidateDashboard: React.FC = () => {
   const [patientVisits, setPatientVisits] = useState<any>([]);
   const [analysis, setAnalysis] = useState<any>([]);
   const [loading, setLoading] = useState(false)
+  const [printDataRecord, setPrintDataRecord] = useState([])
 
 
   useEffect(() => {
     getOnlinePatient(1);
     getOnlinePatient(2);
   }, [])
+
+  useEffect(() => {
+  }, [loading])
 
   const getOnlinePatient = async (type: any = 1) => {
     const { verifiedUser } = getUserInLocalStorage();
@@ -76,8 +80,14 @@ const CandidateDashboard: React.FC = () => {
       title: 'Slot Expired',
       key: 'isExpired',
       dataIndex: 'isExpired',
-      render: (text: any) => 
-      <Tag color={text == true ?"error": "success"}>{text == true ? "Yes" : "No"}</Tag>
+      render: (text: any) =>
+        <Tag color={text == true ? "error" : "success"}>{text == true ? "Yes" : "No"}</Tag>
+    },
+    {
+      width: '12%',
+      title: 'Print',
+      key: 'print',
+      render: (_: any, record: any) => <PrinterOutlined onClick={() => printData(record)} style={{ fontSize: 25 }} />
     },
   ];
   const columns1 = [
@@ -108,16 +118,24 @@ const CandidateDashboard: React.FC = () => {
     },
     {
       width: '12%',
-      title: 'ConsultancyPaid',
+      title: 'Consultancy Paid',
       key: 'isConsultencyPaid',
       dataIndex: 'isConsultencyPaid',
-      render: (text: any) => 
-      <Tag color={text == false ?"error": "success"}>{text == true ? "Yes" : "No"}</Tag>
+      render: (text: any) =>
+        <Tag color={text == false ? "error" : "success"}>{text == true ? "Yes" : "No"}</Tag>
       // <Typography style={{
       //   textAlign: 'center', borderRadius: 10,
       //   backgroundColor: text == false ? '#00FF00' : '#EBEBE4',
       // }}>{text == true ? "Yes" : "No"}</Typography>,
     },
+    // {
+    //   width: '12%',
+    //   title: 'Print',
+    //   key: 'print',
+    //   render: (_: any, record: any) => <PrinterOutlined onClick={() => {
+    //     printData(record)
+    //   }} style={{ fontSize: 25 }} />
+    // },
   ];
   const data = [
     ["Pizza", "Popularity"],
@@ -127,6 +145,26 @@ const CandidateDashboard: React.FC = () => {
     ["Sausage", 10], // Below limit.
     ["Anchovies", 9], // Below limit.
   ];
+
+  const printData = async (record: any) => {
+    await setTimeout(setPrintDataRecord(record), 3000);
+    setLoading(true)
+      
+    var printContents = document.getElementById("printData").innerHTML;
+    // var WinPrint = window.open('', '', );
+    //   WinPrint?.document.write(printContent!);
+    //   WinPrint?.document.close();
+    //   WinPrint?.focus();
+    //   WinPrint?.print();
+    //   WinPrint?.close();
+    var originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.focus();
+    window.print();
+    window.close();
+    document.body.innerHTML = originalContents;
+    setLoading(true);
+  }
 
   const { verifiedUser } = getUserInLocalStorage();
   const syncPatient = async (v: any) => {
@@ -144,9 +182,9 @@ const CandidateDashboard: React.FC = () => {
     if (res.isSuccess === true) {
       message.success(res.msg);
       return;
-  } else {
+    } else {
       message.error(res.msg);
-  }
+    }
 
   };
   const options = {
@@ -155,6 +193,7 @@ const CandidateDashboard: React.FC = () => {
   };
   return (
     <PageContainer
+    loading={loading}
       header={{
         title: ``,
         breadcrumb: {
@@ -270,15 +309,113 @@ const CandidateDashboard: React.FC = () => {
             />
           </Spin>
         </Card>
-        {<Chart
-          chartType="PieChart"
-          data={data}
-          options={options}
-          width={"100%"}
-          height={"400px"}
-        />}
-      </Card>
-    </PageContainer>
+
+
+
+        {/* <div  hidden={true} id="printData">
+          <h2 style={{ color: "green" }}>EIEHR</h2>
+          <table>
+            <tbody>
+              <tr>
+                <th>Patient Name: {selectedRows?.fName}</th>
+              </tr>
+              <tr>
+                <td>Doctor Name: {printDataRecord.doctorName}</td>
+              </tr>
+              <tr>
+                <td>Visit Date: {printDataRecord.slotDateVar}</td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> */}
+
+
+
+        <div hidden={true} id="printData">
+
+
+
+          <div id="mid">
+            <div style={{
+              display: 'block',
+              border: '1px solid black', borderRadius: 10
+            }}>
+              <div style={{
+                marginLeft: 20,
+                marginRight: 20,
+              }}>
+
+                <Row style={{ justifyContent: 'center', textAlign: 'center', marginTop: 10 }}>
+                  <h2>MultiFacet Systems Software Pvt Ltd</h2>
+                </Row>
+
+                <Col style={{ marginTop: 10 }}>
+                  <h2>BR Super Specialty Hospital</h2>
+                  <h3>{printDataRecord.doctorName}</h3>
+                  <h3>{'abc@gmail.com'}</h3>
+                  <h3>{'www.multifacet.com'}</h3>
+                </Col>
+                <Row style={{ justifyContent: 'space-between' }}>
+                  {/* <h4>Doctor Name :</h4>
+                <h4>{printDataRecord.doctorName}</h4> */}
+                  <Divider><h4></h4></Divider>
+                </Row>
+                <Row style={{ justifyContent: 'space-between' }}>
+                  <h4>Doctor Name :</h4>
+                  <h4>{printDataRecord.doctorName}</h4>
+                </Row>
+                <Row style={{ justifyContent: 'space-between' }}>
+                  <h4>Patient Name :</h4>
+                  <h4>{selectedRows?.fName}</h4>
+                </Row>
+                <Row style={{ justifyContent: 'space-between' }}>
+                  <h4>Patient No :</h4>
+                  <h4>{printDataRecord?.patientNo}</h4>
+                </Row>
+                <Row style={{ justifyContent: 'space-between' }}>
+                  <h4>Slot Date:</h4>
+                  <h4>{printDataRecord?.slotDateVar}</h4>
+                </Row>
+                <Row style={{ justifyContent: 'space-between' }}>
+                  <h4>Slot Time :</h4>
+                  <h4>{printDataRecord?.slotTimeVar}</h4>
+                </Row>
+                <Row style={{ justifyContent: 'space-between' }}>
+                  <h4>Week :</h4>
+                  <h4>{printDataRecord?.weekName}</h4>
+                </Row>
+                <Row style={{ justifyContent: 'space-between' }}>
+                  <h4>Slot Expired :</h4>
+                  <h4>{printDataRecord?.isExpired ? "Yes" : "No"}</h4>
+                </Row>
+
+                <div id="legalcopy">
+                  <p class="legal"><strong>Thank you for being a customer with us!</strong>
+                  </p>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div >
+
+
+
+
+
+        <Divider orientation="left"><h4></h4></Divider>
+        <div>
+          <Chart
+            chartType="PieChart"
+            data={data}
+            options={options}
+            width={"100%"}
+            height={"400px"}
+          />
+        </div>
+      </Card >
+    </PageContainer >
   );
 };
 

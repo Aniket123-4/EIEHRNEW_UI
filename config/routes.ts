@@ -150,6 +150,16 @@ export default [
         path: '/patient/ViewPatient/:id',
         component: './Patient/components/ViewPatient',
       },
+      {
+        name: 'Patient File',
+        path: '/patient/PatientFile',
+        component: './Patient/components/PatientFile',
+      },
+      {
+        name: 'New Token No',
+        path: '/patient/NewTokenNo',
+        component: './Patient/components/NewTokenNo',
+      },
     ],
   },
   {

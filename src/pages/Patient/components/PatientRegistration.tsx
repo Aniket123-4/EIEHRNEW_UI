@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
 const moment = require('moment');
 import dayjs from 'dayjs';
-import { requestFileUpload, requestGetPatientSearch, requestPatientRegistration } from '../services/api';
+import { requestAddOnlinePatDoc, requestFileUpload, requestGetPatientSearch, requestPatientRegistration } from '../services/api';
 import { requestGetBloodGroup, requestGetCivilStatus, requestGetCountry, requestGetDistrict, requestGetDocType, requestGetGender, requestGetRelation, requestGetReligion, requestGetState } from '@/services/apiRequest/dropdowns';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { PlusOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons';
@@ -66,6 +66,10 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
     const [lstType_Patient, setLstType_Patient] = useState([]);
     const [istType_Pat, setIstType_Pat] = useState([]);
     const [patientNo, setPatientNo] = useState("");
+    const [docName, setDocName] = useState<any>("");
+    const user = JSON.parse(localStorage.getItem("user") as string);
+    const [patientDocUpload, setPatientDocUpload] = useState<any>();
+
 
 
     const contentStyle: React.CSSProperties = {
@@ -158,8 +162,10 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
         }
         const response = await requestGetPatientSearch({ ...params });
         if (response.result.length > 0) {
-            console.log(response.result[0].patientID);
             history.push(`/patient/EditPatient/${response.result[0].patientID}`)
+        }
+        else{
+            message.error("Patient Not Found For Given Patient No ")
         }
     }
     const getGender = async () => {
@@ -198,22 +204,65 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
         //     console.log(info.file, info.fileList);
         // }
         if (info.file.status === 'done') {
-            const getValue = getBase64(info.file.originFileObj as RcFile, async (url) => {
+            getBase64(info.file.originFileObj as RcFile, async (url) => {
                 // console.log(url, info.file.name)
-                const param = {
-                    "fileName": info.file.name,
-                    "data": url
-                }
-                const res = await requestFileUpload(param);
-                if (res.isSuccess == true)
-                    message.success(`${res.msg}`);
-                else
-                    message.error(`Some Error Occurred`);
+                setDocName(info.file.name)
+
+                addPatientDoc({docBase64:url,docName:info.file.name})
+
+                // const param = {
+                //     "fileName": info.file.name,
+                //     "data": url
+                // }
+                // const res = await requestFileUpload(param);
+                // if (res.isSuccess == true)
+                //     {
+                //         message.success(`${res.msg}`);
+                //     }
+                // else
+                //     message.error(`Some Error Occurred`);
             })
         } else if (info.file.status === 'error') {
             message.error(`${info.file.name} file upload failed.`);
         }
 
+    }
+
+    const addPatientDoc = async (values: any) => {
+        var re = /(?:\.([^.]+))?$/;
+        var ext = re?.exec(values.docName)[1];
+        console.log(values)
+
+        const params = {
+            "onlinePatientID": user?.verifiedUser?.userID,
+            "slNo": 1,
+            "docName": values.docName,
+            "docExt": ext,
+            "docPath": "",
+            "userID": -1,
+            "formID": -1,
+            "type": 1
+        }
+        const res = await requestAddOnlinePatDoc(params);
+
+        // console.log(res.result['0'].docID);
+
+        if (res?.isSuccess == true) {
+            const param1 = {
+                "fileName": res?.result['0']?.docID,
+                "data": values.docBase64
+            }
+            const res1 = await requestFileUpload(param1);
+
+            if (res1.isSuccess == true)
+            setPatientDocUpload({
+                "uidDocID": res?.result['0']?.docID.split('_')[1],
+                "uidDocExt": ext,
+                "uidDocName": values.docName,
+            })
+            else
+                message.error(res1.msg)
+        }
     }
 
     const getFamilyGrid = async () => {
@@ -356,8 +405,6 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                 "curStateID": "-1",
                 "curDistrictID": "-1",
                 "curCountryID": "-1",
-                "curMobileNoCC": "",
-                "curMobileNo": "",
                 "curPhoneCC": "",
                 "curPhoneNo": "",
                 "perHouseNo": "0",
@@ -370,9 +417,15 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                 "perMobileNo": "",
                 "perPhoneCC": "",
                 "perPhoneNo": "",
-                "uidDocName": "",
+                //"uidDocName": "",
                 "passIssueDate": dayjs(),
                 "passIssuePlace": "",
+                "vUniqueID":"-1",
+                "bGroupID":"-1",
+                "civilStatusID":"-1",
+                "genderID":"-1",
+                "nationalityID":"-1",
+                "religionID":"-1",
             });
     }
     const addPatientReg = async (values: any) => {
@@ -382,14 +435,11 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
         values['photo'] = values?.photo ? values.photo : '';
         values['mName'] = values?.mName ? values.mName : ' ';
         values['vUniqueID'] = values?.vUniqueID ? values.vUniqueID : -1;
+        values['uidDocName'] = patientDocUpload?.uidDocName ? patientDocUpload.uidDocName : "";
+        values['uidDocExt'] = patientDocUpload?.uidDocExt ? patientDocUpload.uidDocExt : "";
+        values['uidDocID'] = patientDocUpload?.uidDocID ? patientDocUpload.uidDocID : 0;
 
-        // values['lstType_Patient']=values['lstType_Patient'].map((item)=>{
-        //     return  console.log(item) 
-        // })
-
-        console.log(lstType_Patient)
-        let serviceFrom = convertDate(values.serviceFrom);
-        let serviceTo = convertDate(values.serviceTo);
+        
         try {
             const staticParams = {
                 // "fName": "",
@@ -459,16 +509,18 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                 // "photo": "",
                 // "signature": "",
                 // "isVIP": false,
-                "uidDocName": "",
                 // "passIssueDate": "2023-12-04T05:39:01.048Z",
                 // "passIssuePlace": "",
-                "patientID": -1,
-                "patientNo": "",
+                
+                "uidDocName": "",
                 "uidDocExt": "",
                 "uidDocPath": "",
-                "uidDocID": 0,
+                //"uidDocID": 0,
+                
                 // "vUniqueID": 0,
                 // "vUniqueName": 0,
+                "patientID": -1,
+                "patientNo": "",
                 "userID": -1,
                 "formID": -1,
                 "type": 1
@@ -1343,9 +1395,13 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     <Form.Item
                                         name="curPinCode"
                                         label="PinCode"
-                                        rules={[{ required: false, message: 'Please Enter The PinCode' }]}
+                                        rules={[{ required: false, message: 'Please Enter The PinCode' },
+                                        {
+                                            pattern: /^[0-9\b]+$/,
+                                            message: 'Please Enter a Valid Pincode',
+                                        }]}
                                     >
-                                        <Input maxLength={80} placeholder="Please Enter The PinCode" />
+                                        <Input maxLength={6} placeholder="Please Enter The PinCode" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1401,7 +1457,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                             name="curMobileNo"
                                             label="Mobile number"
                                             rules={[
-                                                { required: false, type: 'string', message: 'Please enter mobile number' },
+                                                { required: true, type: 'string', message: 'Please enter mobile number' },
                                                 {
                                                     pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
                                                     message: 'Please enter a valid mobile number',
@@ -1487,9 +1543,13 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     <Form.Item
                                         name="perPinCode"
                                         label="PinCode"
-                                        rules={[{ required: false, message: 'Please Enter The PinCode' }]}
+                                        rules={[{ required: false, message: 'Please Enter The PinCode' },
+                                        {
+                                            pattern: /^[0-9\b]+$/,
+                                            message: 'Please Enter a Valid Pincode',
+                                        }]}
                                     >
-                                        <Input maxLength={80} placeholder="Please Enter The PinCode" />
+                                        <Input maxLength={6} placeholder="Please Enter The PinCode" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1748,7 +1808,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     <Form.Item
                                         name="vUniqueID"
                                         label="Document Type"
-                                        rules={[{ required: false, message: 'Please Enter The DocName' }]}
+                                        rules={[{ required: false, message: 'Please Select The DocType' }]}
                                     >
                                         <Select
                                             placeholder="Please Choose The DocName"
@@ -1760,7 +1820,6 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     <Form.Item
                                         name="vUniqueName"
                                         label="Document Number"
-
                                         rules={[
                                             { required: true, message: 'Please Enter Doc Number' },
                                             {

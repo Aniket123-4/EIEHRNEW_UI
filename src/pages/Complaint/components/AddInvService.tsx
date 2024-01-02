@@ -42,7 +42,7 @@ const AddInvService = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const investigationListRef = useRef();
     const [defExpandedKeys, setDefExpandedKeys] = useState<any>(["1"]);
-    const [defCheckedKeys, setDefCheckedKeys] = useState<any>(['1 ']);
+    const [defCheckedKeys, setDefCheckedKeys] = useState<any>([]);
     const [totalRate, setTotalRate] = useState<any>(0);
 
     const updateTreeData = (list: DataNode[], key: React.Key, children: DataNode[]): DataNode[] =>
@@ -125,13 +125,12 @@ const AddInvService = () => {
             type
         }
         const res = await requestServiceList(params);
-        if(type==3)
-        {
+        if (type == 3) {
             const groups = res?.result?.map((item: any) => {
                 return item?.groupID.trim()
             })
             const invParams = res?.result?.map((item: any) => {
-                return item?.invParameterID+" "
+                return item?.invParameterID + " "
             })
             setDefCheckedKeys(invParams)
             setDefExpandedKeys(groups)
@@ -151,7 +150,7 @@ const AddInvService = () => {
                 serviceTo: dayjs(data?.serviceTo),
                 serviceFrom: dayjs(data?.serviceFrom),
             });
-            if(type==1)getServiceList(params.ServiceID,3)
+            if (type == 1) getServiceList(params.ServiceID, 3)
         }
     }
     const addService = async (values: any, serviceID: number = -1, type: any = 1) => {
@@ -223,19 +222,19 @@ const AddInvService = () => {
         console.log('selected', selectedKeys, info);
     };
 
-    const onCheck: TreeProps['onCheck'] = (checkedKeys, info:any) => {
+    const onCheck: TreeProps['onCheck'] = (checkedKeys, info: any) => {
         const rate = info && info?.checkedNodes?.map((item: any) => {
             return (item?.invRate)
         })
 
-        const totalrate=rate.reduce((a:number, b:number) => parseInt(a) + parseInt(b))
-        setTotalRate(totalrate)
-        
+        const totalRate = rate.reduce((a: number, b: number) => parseInt(a) + parseInt(b))
+        setTotalRate(totalRate)
+
+        form.setFieldsValue({ serviceCost: totalRate })
+
         const d = removeDuplicates(checkedKeys)
         setInvArr(d.toString().trim())
-        console.log('onCheck', checkedKeys.toString(), info);
         setDefCheckedKeys(checkedKeys);
-        console.log({defCheckedKeys:defCheckedKeys})
     };
     function removeDuplicates(arr: any[]) {
         return [...new Set(arr)];
@@ -256,8 +255,10 @@ const AddInvService = () => {
                 if (res?.result?.length > 0) {
                     const dataMaskForDropdown = res?.result?.map((item: any) => {
                         // setDefCheckedKeys(defCheckedKeys.push(item.invParameterID))
-                        return { key: `${item.invParameterID} `, title: item.invName, isLeaf: true,
-                        invRate:item.invRate }
+                        return {
+                            key: `${item.invParameterID} `, title: `${item.invName}    @${item.invRate} ₹/-`,
+                            isLeaf: true, invRate: item.invRate
+                        }
                     })
                     setTimeout(() => {
                         if (dataMaskForDropdown.length > 0)
@@ -315,7 +316,7 @@ const AddInvService = () => {
                                     rules={[{ required: true, message: 'Please select' }]}
                                 >
                                     <DatePicker
-                                        // defaultValue={dayjs(data?.dob, 'YYYY/MM/DD')}
+                                        format={'DD-MMM-YYYY'}
                                         size="large"
                                         style={{ width: '100%' }}
                                         getPopupContainer={(trigger) => trigger.parentElement!}
@@ -335,7 +336,7 @@ const AddInvService = () => {
                                 >
                                     <DatePicker
                                         size="large"
-                                        // defaultValue={dayjs()}
+                                        format={'DD-MMM-YYYY'}
                                         style={{ width: '100%' }}
                                         getPopupContainer={(trigger) => trigger.parentElement!}
                                     />
@@ -355,7 +356,12 @@ const AddInvService = () => {
                             <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     name="cgstPercent"
-                                    rules={[{ required: true, message: 'Please select SGST Percent' }]}
+                                    rules={[
+                                        { required: true, message: 'Please Enter SGST Percent' },
+                                        {
+                                            pattern: /^[0-9\b]+$/,
+                                            message: 'Please Enter a Valid SGST Percent',
+                                        }]}
                                     label="CGST %"
                                 >
                                     <InputNumber size={'large'}
@@ -364,14 +370,19 @@ const AddInvService = () => {
                                         // formatter={(value) => `${value}%`}
                                         // parser={(value) => value!.replace('%', '')}
                                         min={0}
-                                        max={100} />
+                                        max={100} 
+                                        maxLength={3}/>
                                 </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     name="sgstPercent"
                                     label="SGST %"
-                                    rules={[{ required: true, message: 'Please enter SGST Percent' }]}
+                                    rules={[{ required: true, message: 'Please enter SGST Percent' },
+                                    {
+                                        pattern: /^[0-9\b]+$/,
+                                        message: 'Please Enter a Valid SGST Percent',
+                                    }]}
                                 >
                                     <InputNumber size={'large'} placeholder="Please enter SGST Percent"
                                         style={{ width: '100%' }}
@@ -387,10 +398,10 @@ const AddInvService = () => {
                                 name="invParameter"
                                 valuePropName="checked"
                                 // initialValue={true}
-                                label={"Investigation Parameter" + totalRate}
+                                label={"Investigation Parameter"}
                                 rules={[{ required: false, message: 'Please select' }]}
                             >
-                                {defExpandedKeys &&<Tree
+                                {defExpandedKeys && <Tree
                                     checkable
                                     onExpand={onExpand}
                                     loadData={onLoadData}

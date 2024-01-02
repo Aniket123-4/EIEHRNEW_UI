@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { EditOutlined, FilterOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
-import {   requestGetPatientSearch } from '../services/api';
+import { requestGetPatientSearch } from '../services/api';
 
 import { Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
@@ -98,7 +98,12 @@ const PatientList = React.forwardRef((props) => {
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <Button size={'small'} type='link' onClick={() => { history.push(`/patient/ViewPatient/${record.patientID}`)  }}>
+                    <Button size={'small'} type='link' onClick={() => 
+                        history.push({
+                            pathname: `/patient/EditPatient/${record.patientID}`,
+                            search: "true"
+                        })
+                    }>
                         <InfoCircleOutlined />
                     </Button>
                     <Button size={'small'} type='link' onClick={() => { history.push(`/patient/EditPatient/${record.patientID}`) }}>
