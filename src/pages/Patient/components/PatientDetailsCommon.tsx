@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { EditOutlined, FilterOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Descriptions, DescriptionsProps } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
-import { requestFnGetPatientSearch,  requestGetPatientHeader } from '../services/api';
+import { requestAddComplaint, requestAddDisease, requestAddInvParameter, requestFnGetPatientSearch, requestGetInvGroup, requestGetInvestigation, requestGetPatientHeader, requestGetPatientSearch, requestGetPatientVisitNo } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { Table, Tag } from 'antd';
@@ -36,11 +36,6 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
     const [caseChoice, setCaseChoice] = useState([]);
     const [patientList, setPatientList] = useState([]);
     const [admissionNo, setAdmissionNo] = useState([]);
-
-
-    useEffect(() => {
-        getGetPatientSearchList("");
-    }, [])
 
 
     const onFinishPatForm = async (values: any) => {
@@ -80,11 +75,11 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
                 label: 'DOB',
                 children: result1?.dob
             },
-            // {
-            //     key: '4',
-            //     label: 'Age',
-            //     children: result1?.age
-            // },
+            {
+                key: '4',
+                label: 'Age',
+                children: result1?.age
+            },
             {
                 key: '5',
                 label: 'Address',
@@ -130,15 +125,15 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
                 label: 'Gender',
                 children: result1?.genderName
             },
-            // {
-            //     key: '14',
-            //     label: 'Insurance Company',
-            //     children: result1?.insuranceComp
-            // }
+            {
+                key: '14',
+                label: 'Insurance Company',
+                children: result1?.insuranceComp
+            }
         ];
         setPatientData({ patentBasicDetails })
         Object.keys(props).length ? props?.onChange({ ...result1, "patientCaseID": values.case }): null ;
-        //getGetPatientSearchList("")
+        getGetPatientSearchList("")
         if (!response?.isSuccess) {
             message.error(response?.msg);
         }

@@ -115,6 +115,11 @@ export default [
         component: './Online',
       },
       {
+        name: 'AddPatRequest',
+        path: '/master/AddPatRequest',
+        component: './Online/components/AddPatRequest',
+      },
+      {
         name: 'Manage Appointment',
         path: '/master/ManageAppointment',
         component: './Online/components/SearchAppointment',
@@ -154,11 +159,6 @@ export default [
         name: 'New Token No',
         path: '/patient/NewTokenNo',
         component: './Patient/components/NewTokenNo',
-      },
-      {
-        name: 'Patient CheckOut',
-        path: '/patient/PatientCheckOut',
-        component: './Patient/components/PatientCheckOut',
       },
     ],
   },

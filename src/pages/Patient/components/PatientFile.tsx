@@ -5,7 +5,7 @@ import { requestAddOnlinePatDoc, requestAddUpdatePatientDoc, requestFileUpload, 
 import { getUserInLocalStorage } from '@/utils/common';
 import { requestGetCandidateList, requestGetDocuments } from '@/pages/Candidate/services/api';
 import { FileAddOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import Upload, { RcFile, UploadChangeParam, UploadFile, UploadProps } from 'antd/es/upload';
+import Upload, { RcFile } from 'antd/es/upload';
 import { requestGetDocType, requestGetUniqueID } from '@/services/apiRequest/dropdowns';
 import { convertDate, convertDateInSSSZFormat } from '@/utils/helper';
 import dayjs from 'dayjs';
@@ -63,31 +63,6 @@ const PatientFile = React.forwardRef((props) => {
         const reader = new FileReader();
         reader.addEventListener('load', () => callback(reader.result as string));
         reader.readAsDataURL(img);
-    };
-
-    const handleChange: UploadProps['onChange'] = async (info: UploadChangeParam<UploadFile>) => {
-        if (info.file.status === 'uploading') {
-            setLoading(true);
-            return;
-        }
-        // if (info.file.status === 'done') {
-        // Get this url from response in real world.
-        getBase64(info.file.originFileObj as RcFile, async (url) => {
-
-            var re = /(?:\.([^.]+))?$/;
-            var ext = re?.exec(info.file.name)[1];
-            const res = await requestGetUniqueID();
-            const p: any = {
-                patientDocID: res?.result,
-                docName: info.file.name,
-                docExt: ext,
-                docPath: "",
-                remark: "",
-                base64: url
-            }
-            setlstType_PatientDoc([...lstType_PatientDoc, p])
-        });
-        // }
     };
 
     const onFinishPatForm = async (values: any) => {
@@ -190,6 +165,7 @@ const PatientFile = React.forwardRef((props) => {
         }
     };
     const handleChangeDocGroup = async (v: any) => {
+        //form.setFieldsValue({docTypeID:"-1"})
         getInvParameter(v)
     }
     const handleChangeDocType = (v: any) => {
@@ -216,7 +192,7 @@ const PatientFile = React.forwardRef((props) => {
     }
 
     const updateDocList = async (v: any, url: any) => {
-        const fr = addDocform.getFieldsValue()
+        const fr=addDocform.getFieldsValue()
         var re = /(?:\.([^.]+))?$/;
         var ext = re?.exec(v.file.name)[1];
         const res = await requestGetUniqueID();
@@ -456,22 +432,20 @@ const PatientFile = React.forwardRef((props) => {
                                                     placeholder="Select"
                                                 />
                                             </Form.Item>
-                                            <Row>
+                                            <Row> 
                                                 <Form.Item
                                                     name="docBase64"
                                                     getValueFromEvent={(v) => getBase64(v.file.originFileObj as RcFile, (url) => {
-
-                                                        // addDocform.setFieldsValue({ docBase64: url })
-                                                        // setDocName(v.file.name)
-                                                        // if (v.file.status === "done")
-                                                        //     updateDocList(v, url)
+                                                        addDocform.setFieldsValue({ docBase64: url })
+                                                        setDocName(v.file.name)
+                                                        if (v.file.status === "done")
+                                                            updateDocList(v, url)
                                                     })}
                                                     label=""
                                                     rules={[{ required: true, message: 'Please Attach Document' }]}
                                                 >
                                                     <Upload
                                                         maxCount={10}
-                                                        onChange={handleChange}
                                                     >
                                                         <Button icon={<FileAddOutlined />}>Attach</Button>
                                                     </Upload>
