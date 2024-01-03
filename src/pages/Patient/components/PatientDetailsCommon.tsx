@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { EditOutlined, FilterOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Descriptions, DescriptionsProps } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Descriptions, DescriptionsProps, Avatar } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
-import { requestAddComplaint, requestAddDisease, requestAddInvParameter, requestFnGetPatientSearch, requestGetInvGroup, requestGetInvestigation, requestGetPatientHeader, requestGetPatientSearch, requestGetPatientVisitNo } from '../services/api';
+import { requestFnGetPatientSearch, requestGetPatientHeader, requestGetPatientVisitNo } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { Table, Tag } from 'antd';
@@ -33,9 +33,15 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
     const [loading, setLoading] = useState(false)
     const { token } = theme.useToken();
     const [patientData, setPatientData] = useState({});
+    const [patientImage, setPatientImage] = useState<any>();
     const [caseChoice, setCaseChoice] = useState([]);
     const [patientList, setPatientList] = useState([]);
     const [admissionNo, setAdmissionNo] = useState([]);
+
+
+    useEffect(() => {
+        getGetPatientSearchList("");
+    }, [])
 
 
     const onFinishPatForm = async (values: any) => {
@@ -52,9 +58,13 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
         setLoading(false)
         console.log(response?.result);
         const result1 = response?.result1[0];
+        if (response?.result2) {
+            const result2 = response?.result2[0];
+            setPatientImage(result2);
+        }
         console.log(Object.keys(props).length)
 
-        
+
         const caseChoiceMaskForDropdown = response?.result3?.map((item: any) => {
             return { value: item.patientCaseID, label: item.patientCaseNo }
         });
@@ -75,11 +85,11 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
                 label: 'DOB',
                 children: result1?.dob
             },
-            {
-                key: '4',
-                label: 'Age',
-                children: result1?.age
-            },
+            // {
+            //     key: '4',
+            //     label: 'Age',
+            //     children: result1?.age
+            // },
             {
                 key: '5',
                 label: 'Address',
@@ -125,15 +135,15 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
                 label: 'Gender',
                 children: result1?.genderName
             },
-            {
-                key: '14',
-                label: 'Insurance Company',
-                children: result1?.insuranceComp
-            }
+            // {
+            //     key: '14',
+            //     label: 'Insurance Company',
+            //     children: result1?.insuranceComp
+            // }
         ];
         setPatientData({ patentBasicDetails })
-        Object.keys(props).length ? props?.onChange({ ...result1, "patientCaseID": values.case }): null ;
-        getGetPatientSearchList("")
+        Object.keys(props).length ? props?.onChange({ ...result1, "patientCaseID": values.case }) : null;
+        //getGetPatientSearchList("")
         if (!response?.isSuccess) {
             message.error(response?.msg);
         }
@@ -174,8 +184,8 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
             setAdmissionNo(dataMaskForDropdown)
         }
     }
-    const handleChangeCase = (v:any) => {
-        Object.keys(props).length ? props?.onChange({...props?.patData, "patientCaseID": v }): null ;
+    const handleChangeCase = (v: any) => {
+        Object.keys(props).length ? props?.onChange({ ...props?.patData, "patientCaseID": v }) : null;
         getPatientVisitNo(v)
     }
     const onChange = (value: string) => {
@@ -247,11 +257,21 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
                 </Space>
             </Form >
             <>
-                {patientData && <Descriptions
-                    bordered
-                    size={'small'}
-                    items={patientData?.patentBasicDetails}
-                />}
+                {patientData && <Row>
+                    <Col span={22}>
+                        <Descriptions
+                            bordered
+                            size={'small'}
+                            items={patientData?.patentBasicDetails}
+                        />
+                    </Col>
+                    <Col span={2}>
+                        {patientImage && 
+                        <Avatar size={100}
+                            style={{justifyContent:'center', color: 'black', borderColor: 'black' }}
+                            src={patientImage?.photo? `data:image/png;base64,${patientImage?.photo}`:null} >No Image</Avatar>}
+                    </Col>
+                </Row>}
             </>
         </Card>
     );

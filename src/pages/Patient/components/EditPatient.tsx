@@ -137,8 +137,8 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             patientMobileNo: '',
             patientPhoneNo: '',
             patientDOB: '1900-01-01',
-            fromDate: '1900-01-21',
-            toDate: '2023-12-21',
+            fromDate: '1900-01-01',
+            toDate: dayjs(),
         }
         try {
             setLoading(true)

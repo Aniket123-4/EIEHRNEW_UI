@@ -13,90 +13,6 @@ export async function requestGetPatientSearch(body: any, options?: { [key: strin
   });
 }
 
-export async function requestAddDisease(body: any, options?: { [key: string]: any }) {
-  return request<any>('MasterForm/api/AddUpdateDisease', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
-}
-export async function requestAddInvParameter(body: any, options?: { [key: string]: any }) {
-  return request<any>('MasterForm/api/AddUpdateInvParameter', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
-}
-export async function requestAddInvGroup(body: any, options?: { [key: string]: any }) {
-  return request<any>('MasterForm/api/AddUpdateInvGroup', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
-}
-export async function requestGetInvGroup(body: any, options?: { [key: string]: any }) {
-  return request<any>('MasterForm/api/GetInvGroup', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
-}
-
-export async function requestGetInvestigation(body: any, options?: { [key: string]: any }) {
-  return request<any>('MasterForm/api/GetInvParameterMasterList', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
-}
-
-export async function requestGetInvUnit(body: any, options?: { [key: string]: any }) {
-  return request<any>('MasterForm/api/GetInvestigationUnit', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
-}
-
-export async function requestGetInvParameter(body: any, options?: { [key: string]: any }) {
-  return request<any>('MasterForm/api/GetInvParameter', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
-}
-
-export async function requestGetPatientType(options?: { [key: string]: any }) {
-  return request<any>('MasterForm/vPatientType', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    ...(options || {}),
-  });
-}
-
 export async function requestPatientRegistration(body: any, options?: { [key: string]: any }) {
   return request<any>('AddUpdatePatient', {
     method: 'POST',
@@ -170,6 +86,86 @@ export async function requestFnGetPatientSearch(body: any, options?: { [key: str
 }
 export async function requestGetPatientVisitNo(body: any, options?: { [key: string]: any }) {
   return request<any>('GetPatientVisitNo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetPatientByTokenNo(body: any, options?: { [key: string]: any }) {
+  return request<any>('GetPatientByTokenNo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestUpdatePatientTokenNo(body: any, options?: { [key: string]: any }) {
+  return request<any>('UpdatePatientTokenNo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetCheckOutPatient(body: any, options?: { [key: string]: any }) {
+  return request<any>('GetCheckOutPatient', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetTokenNoQueueJump(body: any, options?: { [key: string]: any }) {
+  return request<any>('GetTokenNoQueueJump', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetPatientCheckOutInfo(body: any, options?: { [key: string]: any }) {
+  return request<any>('GetPatientCheckOutInfo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestUpdateCaseCheckOut(body: any, options?: { [key: string]: any }) {
+  return request<any>('UpdateCaseCheckOut', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestUpdateBulkCaseCheckOut(body: any, options?: { [key: string]: any }) {
+  return request<any>('UpdateBulkCaseCheckOut', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestUpdateCaseCheckIn(body: any, options?: { [key: string]: any }) {
+  return request<any>('UpdatePatientStatus', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
