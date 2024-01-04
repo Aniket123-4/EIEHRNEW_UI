@@ -233,10 +233,9 @@ export default [
       },
       {
         name: 'Patient Details',
-        path: '/doctor/patient-details/:id',
+        path: '/doctor/patient-details/:id/:id/:id/:id',
         component: './DoctorForm/components/DoctorPatientDetails',
       },
-
     ],
   },
   {
@@ -286,7 +285,7 @@ export default [
     name: 'Change Password',
     routes: [
       {
-        name: 'ChangePassw',
+        name: 'Change Password',
         path: '/UserManagement/change-password',
         component: './UserManagement/components/UserChangePass',
       },

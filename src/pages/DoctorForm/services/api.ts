@@ -2,3 +2,14 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
+export async function requestGetPatientForDoctorOPIP(body: any, options?: { [key: string]: any }) {
+    return request<any>('/GetPatientForDoctorOPIP', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: body,
+      ...(options || {}),
+    });
+  }
+  

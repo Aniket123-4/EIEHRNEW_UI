@@ -9,6 +9,8 @@ import { activeStatus, dateFormat } from '@/utils/constant';
 import { convertDate } from '@/utils/helper';
 import dayjs from 'dayjs';
 import moment from 'moment';
+import { requestGetPatientForDoctorOPIP } from '../services/api';
+import { getUserInLocalStorage } from '@/utils/common';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -24,94 +26,135 @@ const DoctorPatientList = React.forwardRef((props) => {
         color: token.colorTextTertiary,
         borderRadius: token.borderRadiusLG,
     };
+    const { verifiedUser } = getUserInLocalStorage();
 
 
     const columns: ColumnsType<any> = [
+        // {
+        //     title: 'Vital Sign Entered',
+        //     dataIndex: 'docUserName',
+        //     key: 'docUserName',
+        //     render: (text) => <a>{text}</a>,
+        // },
+        // {
+        //     title: 'Insurance Approved Status',
+        //     dataIndex: 'noOfSlotPerHrs',
+        //     key: 'noOfSlotPerHrs',
+        // },
         {
-            title: 'Vital Sign Entered',
-            dataIndex: 'docUserName',
-            key: 'docUserName',
-            render: (text) => <a>{text}</a>,
+            title: 'Admission Date',
+            dataIndex: 'admissionDate',
+            key: 'admissionDate',
+            fixed: 'left',
         },
         {
-            title: 'Insurance Approved Status',
-            dataIndex: 'noOfSlotPerHrs',
-            key: 'noOfSlotPerHrs',
+            title: 'Name',
+            key: 'patientName',
+            dataIndex: 'patientName',
+            fixed: 'left',
         },
         {
-            title: 'CheckIn Date',
-            dataIndex: 'displaySlotFromDate',
-            key: 'displaySlotFromDate',
+            title: 'Patient Number',
+            key: 'patientNo',
+            dataIndex: 'patientNo',
+
+        },
+        {
+            title: 'Case Number',
+            key: 'patientCaseNo',
+            dataIndex: 'patientCaseNo',
+
         },
         {
             title: 'Admission Type',
-            key: 'displaySlotToDate',
-            dataIndex: 'displaySlotToDate',
+            key: 'admNo',
+            dataIndex: 'admNo',
 
         }, {
             title: 'Token Number',
-            key: 'displaySlotToDate',
-            dataIndex: 'displaySlotToDate',
-
-        }, {
-            title: 'Serial Number',
-            key: 'displaySlotToDate',
-            dataIndex: 'displaySlotToDate',
-
-        }, {
-            title: 'Patient Number',
-            key: 'displaySlotToDate',
-            dataIndex: 'displaySlotToDate',
-
-        }, {
-            title: 'Case Number',
-            key: 'displaySlotToDate',
-            dataIndex: 'displaySlotToDate',
-
-        }, {
-            title: 'Name',
-            key: 'displaySlotToDate',
-            dataIndex: 'displaySlotToDate',
+            key: 'tokenNo',
+            dataIndex: 'tokenNo',
 
         }, {
             title: 'Age',
-            key: 'Age',
-            dataIndex: 'Age',
+            key: 'age',
+            dataIndex: 'age',
 
-        }, , {
+        }, {
             title: 'Gender',
-            key: 'Gender',
-            dataIndex: 'Gender',
+            key: 'genderName',
+            dataIndex: 'genderName',
 
-        }, , {
+        }, {
             title: 'Mobile Number',
-            key: 'Mobile',
-            dataIndex: 'Mobile',
+            key: 'curMobileNo',
+            dataIndex: 'curMobileNo',
+
+        }, {
+            title: 'Ins App Status',
+            key: 'insAppStatus',
+            dataIndex: 'insAppStatus',
 
         },
         {
             title: 'Action',
             key: 'action',
+            fixed: 'right',
             render: (_, record) => (
                 <Space size="middle">
                     <Button size={'small'} onClick={() => {
-                        // props?.onEditRecord(record)
-                        const { dateRange, isActive } = formFilter.getFieldsValue()
-                        let slotFromDate = convertDate(dateRange[0]);
-                        let slotToDate = convertDate(dateRange[1]);
-                        console.log({ isActive })
-                        history.push(`/doctor/patient-details`)
-                    }}>
-                        View
-                    </Button>
+                        history.push(`/doctor/patient-details/${record.patientID}/${record.patientNo}/${record.patientCaseID}/${record.patientCaseNo}`)
+                    }}>View</Button>
 
                 </Space>
             ),
         },
     ];
 
-    const filterSubmit = (val: any) => {
-        history.push(`/doctor/patient-details/2343423`)
+    useEffect(() => {
+        getList();
+    }, [])
+
+    const getList = async () => {
+        try {
+
+            const { dateRange, isActive } = formFilter.getFieldsValue()
+            let slotFromDate = convertDate(dateRange[0]);
+            let slotToDate = convertDate(dateRange[1]);
+
+          
+
+            const staticParams = {
+                patientCaseID: -1,
+                patientCaseNo: '',
+                patientID: -1,
+                patientNo: '',
+                caseTypeID: 1,
+                patientName: '',
+                fromDate: slotFromDate,
+                toDate: slotToDate,
+                userID: -2,//verifiedUser?.userID,
+                formID: 1,
+                type: 1
+            }
+
+            setLoading(true)
+            const response = await requestGetPatientForDoctorOPIP({ ...staticParams });
+            setLoading(false)
+            setList(response?.result)
+
+            if (!response?.isSuccess) {
+                message.error(response?.msg);
+            }
+        } catch (error) {
+            setLoading(false)
+            console.log({ error });
+            message.error(error);
+        }
+    }
+
+    const filterSubmit = () => {
+        getList();
     }
 
     const filterForm = () => {
