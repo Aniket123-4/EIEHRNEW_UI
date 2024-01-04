@@ -38,6 +38,7 @@ interface DataType {
 const { Option } = Select;
 
 const dateFormat = 'YYYY/MM/DD';
+const inputStyle = { borderColor: 'blue',color:'black'};
 
 const EditPatient = ({ visible, isEditable, }: any) => {
     const formRef = useRef<ProFormInstance>();
@@ -91,11 +92,14 @@ const EditPatient = ({ visible, isEditable, }: any) => {
 
 
     const contentStyle: React.CSSProperties = {
-        lineHeight: '260px',
-        textAlign: 'center',
-        color: token.colorTextTertiary,
+        // lineHeight: '260px',
+        // textAlign: 'center',
+        
+        color: 'black',
+        textShadow:'red',
+
         // marginTop: 60,
-        height: 350,
+        // height: 350,
     };
 
     useEffect(() => {
@@ -461,8 +465,6 @@ const EditPatient = ({ visible, isEditable, }: any) => {
         }
         const res = await requestAddOnlinePatDoc(params);
 
-        // console.log(res.result['0'].docID);
-
         if (res?.isSuccess == true) {
             const param1 = {
                 "fileName": res?.result['0']?.docID,
@@ -485,38 +487,14 @@ const EditPatient = ({ visible, isEditable, }: any) => {
         values['uidDocName'] = patientDocUpload?.uidDocName ? patientDocUpload.uidDocName : "";
         values['uidDocExt'] = patientDocUpload?.uidDocExt ? patientDocUpload.uidDocExt : "";
         values['uidDocID'] = patientDocUpload?.uidDocID ? patientDocUpload.uidDocID : 0;
+        values['passIssueDate'] = convertDate(values?.passIssueDate)
+        values['dob'] =convertDate( values?.dob);
         console.log(values)
         let serviceFrom = convertDate(values.serviceFrom);
         try {
             const staticParams = {
                 "lstType_Patient": lstType_Patient,
-                // [
-                //     {//RelationID,ContactSerialNo,ContactName,ContactMobileNoCC,ContactMobileNo,
-                //         //ContactPhoneCC,ContactPhoneAC,ContactPhoneNo,BloodGroup,'','','','','','' 
-                //         "col1": values.Fcol1 ? values.Fcol1 : "",
-                //         "col2": values.Fcol2 ? values.Fcol2 : "",
-                //         "col3": values.Fcol3 ? values.Fcol3 : "",
-                //         "col4": values.Fcol4 ? values.Fcol4 : "",
-                //         "col5": values.Fcol5 ? values.Fcol5 : "",
-                //         "col6": values.Fcol6 ? values.Fcol6 : "",
-                //         "col7": values.Fcol7 ? values.Fcol7 : "",
-                //         "col8": values.Fcol8 ? values.Fcol8 : "",
-                //         "col9": values.Fcol9 ? values.Fcol9 : "",
-                //         "col10": "",
-                //         "col11": "",
-                //         "col12": "",
-                //         "col13": "",
-                //         "col14": "",
-                //         "col15": ""
-                //     }
-                // ],
                 "istType_Pat": istType_Pat,
-                // "photo": "",
-                // "signature": "",
-                // "isVIP": false,
-                // "uidDocName": "string",
-                // "passIssueDate": "2023-12-04T05:39:01.048Z",
-                // "passIssuePlace": "",
                 "patientID": patient[0]?.patientID,
                 "patientNo": patient[0]?.patientNo,
                 //"uidDocExt": "",
@@ -1039,7 +1017,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="First Name"
                                         rules={[{ required: true, message: 'Please enter First Name' }]}
                                     >
-                                        <Input style={{ borderColor: 'blue' }} placeholder="Please enter First Name" />
+                                        <Input style={inputStyle} placeholder="Please enter First Name" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1049,7 +1027,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Middle Name"
                                         rules={[{ required: false, message: 'Please enter Middle Name' }]}
                                     >
-                                        <Input placeholder="Please enter Middle Name" />
+                                        <Input style={inputStyle} placeholder="Please enter Middle Name" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1059,7 +1037,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Last Name"
                                         rules={[{ required: true, message: 'Please enter Last Name' }]}
                                     >
-                                        <Input placeholder="Please enter Last Name" />
+                                        <Input style={inputStyle} placeholder="Please enter Last Name" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1069,7 +1047,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Father Name"
                                         rules={[{ required: true, message: 'Please enter Father Name' }]}
                                     >
-                                        <Input placeholder="Please enter Father Name" />
+                                        <Input style={inputStyle} placeholder="Please enter Father Name" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1079,7 +1057,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="First Name In Other Language"
                                         rules={[{ required: false, message: 'Please enter First Name' }]}
                                     >
-                                        <Input placeholder="Please enter First Name" />
+                                        <Input style={inputStyle} placeholder="Please enter First Name" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1089,7 +1067,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Middle Name In Other Language"
                                         rules={[{ required: false, message: 'Please enter Middle Name' }]}
                                     >
-                                        <Input placeholder="Please enter Middle Name" />
+                                        <Input style={inputStyle} placeholder="Please enter Middle Name" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1099,7 +1077,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Last Name In Other Language"
                                         rules={[{ required: false, message: 'Please Enter Last Name' }]}
                                     >
-                                        <Input placeholder="Please Enter Last Name" />
+                                        <Input style={inputStyle} placeholder="Please Enter Last Name" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1109,7 +1087,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Father Name In Other Language"
                                         rules={[{ required: false, message: 'Please enter Father Name In Other Language' }]}
                                     >
-                                        <Input placeholder="Father Name In Other Language" />
+                                        <Input style={inputStyle} placeholder="Father Name In Other Language" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1119,7 +1097,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Mother Name In Other Language"
                                         rules={[{ required: false, message: 'Please Enter Mother Name' }]}
                                     >
-                                        <Input placeholder="Please enter Mother Name" />
+                                        <Input style={inputStyle} placeholder="Please enter Mother Name" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1129,7 +1107,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Mother Name"
                                         rules={[{ required: false, message: 'Please Enter Mother Name' }]}
                                     >
-                                        <Input placeholder="Please Enter Mother Name" />
+                                        <Input style={inputStyle} placeholder="Please Enter Mother Name" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1139,7 +1117,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Email"
                                         rules={[{ required: true, type: 'email', message: 'Please Enter Email' }]}
                                     >
-                                        <Input maxLength={80} placeholder="Please Enter Email" />
+                                        <Input style={inputStyle} maxLength={30} placeholder="Please Enter Email" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1149,7 +1127,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Alternate Email"
                                         rules={[{ required: false, type: 'email', message: 'Please enter an alternate Email' }]}
                                     >
-                                        <Input maxLength={80} placeholder="Please Enter Alternate Email" />
+                                        <Input maxLength={30} placeholder="Please Enter Alternate Email" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1178,7 +1156,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Gender"
                                         rules={[{ required: false, message: 'Please choose the Gender' }]}
                                     >
-                                        <Select
+                                        <Select style={inputStyle}
                                             placeholder="Please choose the Gender"
                                             options={gender}
                                         />
@@ -1191,7 +1169,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Civil Status"
                                         rules={[{ required: false, message: 'Please choose the Civil Status' }]}
                                     >
-                                        <Select
+                                        <Select style={inputStyle}
                                             placeholder="Please choose the Civil Status"
                                             options={civilStatus}
                                         />
@@ -1204,7 +1182,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Blood Group"
                                         rules={[{ required: false, message: 'Please Choose Blood Group' }]}
                                     >
-                                        <Select
+                                        <Select style={inputStyle}
                                             placeholder="Please Choose Blood Group"
                                             options={bloodGroup}
                                         />
@@ -1217,7 +1195,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Religion"
                                         rules={[{ required: false, message: 'Please Choose Religion' }]}
                                     >
-                                        <Select
+                                        <Select style={inputStyle}
                                             placeholder="Please Choose Religion"
                                             options={religion}
                                         />
@@ -1230,7 +1208,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Nationality"
                                         rules={[{ required: false, message: 'Please Choose Nationality' }]}
                                     >
-                                        <Select
+                                        <Select style={inputStyle}
                                             placeholder="Please Choose Nationality"
                                             options={nationality}
                                         />
@@ -1243,7 +1221,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Birth Place"
                                         rules={[{ required: false, message: 'Please Enter The Birth Place' }]}
                                     >
-                                        <Input maxLength={80} placeholder="Please Enter The Birth Place" />
+                                        <Input style={inputStyle} maxLength={30} placeholder="Please Enter The Birth Place" />
                                     </Form.Item>
                                 </Col>
                             </Row>
@@ -1261,7 +1239,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="HouseNo"
                                         rules={[{ required: false, message: 'Please Enter The HouseNo' }]}
                                     >
-                                        <Input maxLength={80} placeholder="Please Enter The HouseNo" />
+                                        <Input style={inputStyle} maxLength={10} placeholder="Please Enter The HouseNo" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1271,7 +1249,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Address"
                                         rules={[{ required: false, message: 'Please Enter The Address' }]}
                                     >
-                                        <Input maxLength={80} placeholder="Please Enter The Address" />
+                                        <Input style={inputStyle} maxLength={80} placeholder="Please Enter The Address" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1281,7 +1259,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="PinCode"
                                         rules={[{ required: false, message: 'Please Enter The PinCode' }]}
                                     >
-                                        <Input maxLength={80} placeholder="Please Enter The PinCode" />
+                                        <Input style={inputStyle} maxLength={6} placeholder="Please Enter The PinCode" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1291,7 +1269,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="State"
                                         rules={[{ required: false, message: 'Please Choose The State' }]}
                                     >
-                                        <Select
+                                        <Select style={inputStyle}
                                             onSelect={(id) => getDistrict(id)}
                                             placeholder="Please choose the State"
                                             options={state}
@@ -1300,12 +1278,11 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                 </Col>
                                 <Col span={6}>
                                     <Form.Item
-                                        // initialValue={patientAddress?.curDistrictID}
                                         name="curDistrictID"
                                         label="District"
                                         rules={[{ required: false, message: 'Please Choose The District' }]}
                                     >
-                                        <Select
+                                        <Select style={inputStyle}
                                             placeholder="Please choose the District"
                                             options={district}
                                         />
@@ -1313,12 +1290,11 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                 </Col>
                                 <Col span={6}>
                                     <Form.Item
-                                        // initialValue={patientAddress?.curCountryID}
                                         name="curCountryID"
                                         label="Country"
                                         rules={[{ required: false, message: 'Please Choose The District' }]}
                                     >
-                                        <Select
+                                        <Select style={inputStyle}
                                             placeholder="Please choose the District"
                                             options={country}
                                         />
@@ -1333,7 +1309,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                             label={<Typography style={{ marginLeft: 5 }}>{'CC'}</Typography>}
                                             rules={[{ required: false, message: 'Please enter Mobile number cc' }]}
                                         >
-                                            <Input maxLength={3} size={'middle'} placeholder="CC" />
+                                            <Input style={inputStyle} maxLength={3} size={'middle'} placeholder="CC" />
 
                                         </Form.Item>
                                         <Form.Item
@@ -1349,7 +1325,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                                 }
                                             ]}
                                         >
-                                            <Input maxLength={10} size={'middle'} placeholder="Please enter mobile number" />
+                                            <Input style={inputStyle} maxLength={10} size={'middle'} placeholder="Please enter mobile number" />
                                         </Form.Item>
 
                                     </Space.Compact>
@@ -1364,7 +1340,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                             label={<Typography style={{ marginLeft: 5 }}>{'CC'}</Typography>}
                                             rules={[{ required: false, message: 'Please Enter Phone Number CC' }]}
                                         >
-                                            <Input maxLength={4} size={'middle'} placeholder="CC" />
+                                            <Input style={inputStyle} maxLength={4} size={'middle'} placeholder="CC" />
 
                                         </Form.Item>
                                         <Form.Item
@@ -1380,7 +1356,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                                 }
                                             ]}
                                         >
-                                            <Input maxLength={10} size={'middle'} placeholder="Please Enter Phone No" />
+                                            <Input style={inputStyle} maxLength={10} size={'middle'} placeholder="Please Enter Phone No" />
                                         </Form.Item>
 
                                     </Space.Compact>
@@ -1405,7 +1381,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="HouseNo"
                                         rules={[{ required: false, message: 'Please Enter The HouseNo' }]}
                                     >
-                                        <Input maxLength={80} placeholder="Please Enter The HouseNo" />
+                                        <Input style={inputStyle} maxLength={10} placeholder="Please Enter The HouseNo" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1415,7 +1391,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Address"
                                         rules={[{ required: false, message: 'Please Enter The Address' }]}
                                     >
-                                        <Input maxLength={80} placeholder="Please Enter The Address" />
+                                        <Input style={inputStyle} maxLength={80} placeholder="Please Enter The Address" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1425,7 +1401,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="PinCode"
                                         rules={[{ required: false, message: 'Please Enter The PinCode' }]}
                                     >
-                                        <Input maxLength={80} placeholder="Please Enter The PinCode" />
+                                        <Input style={inputStyle} maxLength={6} placeholder="Please Enter The PinCode" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1435,7 +1411,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="State"
                                         rules={[{ required: false, message: 'Please Choose The State' }]}
                                     >
-                                        <Select
+                                        <Select style={inputStyle}
                                             placeholder="Please choose the State"
                                             options={state}
                                         />
@@ -1447,7 +1423,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="District"
                                         rules={[{ required: false, message: 'Please Choose The District' }]}
                                     >
-                                        <Select
+                                        <Select style={inputStyle}
                                             placeholder="Please choose the District"
                                             options={district}
                                         />
@@ -1459,7 +1435,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Country"
                                         rules={[{ required: false, message: 'Please Choose The District' }]}
                                     >
-                                        <Select
+                                        <Select style={inputStyle}
                                             placeholder="Please choose the District"
                                             options={country}
                                         />
@@ -1474,7 +1450,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                             label="  CC"
                                             rules={[{ required: false, message: 'Please enter Mobile number cc' }]}
                                         >
-                                            <Input size={'middle'} placeholder="CC" />
+                                            <Input style={inputStyle} size={'middle'} placeholder="CC" />
 
                                         </Form.Item>
                                         <Form.Item
@@ -1489,7 +1465,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                                 }
                                             ]}
                                         >
-                                            <Input maxLength={10} size={'middle'} placeholder="Please enter mobile number" />
+                                            <Input style={inputStyle} maxLength={10} size={'middle'} placeholder="Please enter mobile number" />
                                         </Form.Item>
 
                                     </Space.Compact>
@@ -1504,7 +1480,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                             label="  CC"
                                             rules={[{ required: false, message: 'Please Enter Phone Number CC' }]}
                                         >
-                                            <Input size={'middle'} placeholder="CC" />
+                                            <Input style={inputStyle} size={'middle'} placeholder="CC" />
 
                                         </Form.Item>
                                         <Form.Item
@@ -1519,7 +1495,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                                 }
                                             ]}
                                         >
-                                            <Input maxLength={10} size={'middle'} placeholder="Please Enter Phone No" />
+                                            <Input style={inputStyle} maxLength={10} size={'middle'} placeholder="Please Enter Phone No" />
                                         </Form.Item>
 
                                     </Space.Compact>
@@ -1537,119 +1513,6 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                             style={{ boxShadow: '2px 2px 2px #4874dc' }}
                             headStyle={{ backgroundColor: '#004080', border: 0 }}>
                             {formList()}
-                            {/* <Row gutter={16}>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="Fcol3"
-                                        label="ContactName"
-                                        rules={[{ required: false, message: 'Please Enter The PinCode' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please Enter The PinCode" />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="Fcol1"
-                                        label="Relation"
-                                        rules={[{ required: false, message: 'Please Select The Relation with Patient' }]}
-                                    >
-                                        <Select
-                                            placeholder="Please choose the Relation"
-                                            options={relation}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="Fcol2"
-                                        label="ContactSerialNo"
-                                        rules={[{ required: false, message: 'Please Enter The ContactSerialNo' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please Enter The ContactSerialNo" />
-                                    </Form.Item>
-                                </Col>
-                                <Col className="gutter-row" span={6}>
-                                    <Space.Compact>
-                                        <Form.Item
-                                            style={{ width: '20%' }}
-                                            initialValue={'+91'}
-                                            name="Fcol4"
-                                            label="  CC"
-                                            rules={[{ required: false, message: 'Please enter Mobile number cc' }]}
-                                        >
-                                            <Input size={'middle'} placeholder="CC" />
-
-                                        </Form.Item>
-                                        <Form.Item
-                                            style={{ width: '80%' }}
-                                            name="Fcol5"
-                                            label="Mobile number"
-                                            rules={[
-                                                { required: true, type: 'string', message: 'Please enter mobile number' },
-                                                {
-                                                    pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
-                                                    message: 'Please enter a valid mobile number',
-                                                }
-                                            ]}
-                                        >
-                                            <Input maxLength={10} size={'middle'} placeholder="Please enter mobile number" />
-                                        </Form.Item>
-
-                                    </Space.Compact>
-
-                                </Col>
-                                <Col className="gutter-row" span={6}>
-                                    <Space.Compact>
-                                        <Form.Item
-                                            style={{ width: '25%' }}
-                                            name="Fcol6"
-                                            initialValue={'0512'}
-                                            label="  CC"
-                                            rules={[{ required: false, message: 'Please Enter Phone Number CC' }]}
-                                        >
-                                            <Input size={'middle'} placeholder="CC" />
-
-                                        </Form.Item>
-                                        <Form.Item
-                                            style={{ width: '75%' }}
-                                            name="Fcol8"
-                                            label="Phone number"
-                                            rules={[
-                                                { required: true, type: 'string', message: 'Please Enter Phone No' },
-                                                {
-                                                    pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
-                                                    message: 'Please enter a valid phone number',
-                                                }
-                                            ]}
-                                        >
-                                            <Input maxLength={10} size={'middle'} placeholder="Please Enter Phone No" />
-                                        </Form.Item>
-
-                                    </Space.Compact>
-
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="Fcol7"
-                                        label="PhoneAC"
-                                        rules={[{ required: false, message: 'Please Enter PhoneAC' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please enter PhoneAC" />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="Fcol9"
-                                        label="BloodGroup"
-                                        rules={[{ required: false, message: 'Please Enter BloodGroup' }]}
-                                    >
-                                        <Select
-                                            placeholder="Please choose the BloodGroup"
-                                            options={bloodGroup}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                            </Row> */}
                         </Card>
                         <Divider orientation="left"><h4></h4></Divider>
 
@@ -1661,119 +1524,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                             style={{ boxShadow: '2px 2px 2px #4874dc' }}
                             headStyle={{ backgroundColor: '#004080', border: 0 }}>
                             {formList1()}
-                            {/* <Row gutter={16}>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="col3"
-                                        label="ContactName"
-                                        rules={[{ required: false, message: 'Please Enter The PinCode' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please Enter The PinCode" />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="col1"
-                                        label="Relation"
-                                        rules={[{ required: false, message: 'Please Select The Relation with Patient' }]}
-                                    >
-                                        <Select
-                                            placeholder="Please choose the Relation"
-                                            options={relation}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="col2"
-                                        label="ContactSerialNo"
-                                        rules={[{ required: false, message: 'Please Enter The ContactSerialNo' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please Enter The ContactSerialNo" />
-                                    </Form.Item>
-                                </Col>
-                                <Col className="gutter-row" span={6}>
-                                    <Space.Compact>
-                                        <Form.Item
-                                            style={{ width: '20%' }}
-                                            initialValue={'+91'}
-                                            name="col4"
-                                            label="  CC"
-                                            rules={[{ required: false, message: 'Please enter Mobile number cc' }]}
-                                        >
-                                            <Input size={'middle'} placeholder="CC" />
-
-                                        </Form.Item>
-                                        <Form.Item
-                                            style={{ width: '80%' }}
-                                            name="col5"
-                                            label="Mobile number"
-                                            rules={[
-                                                { required: true, type: 'string', message: 'Please enter mobile number' },
-                                                {
-                                                    pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
-                                                    message: 'Please enter a valid mobile number',
-                                                }
-                                            ]}
-                                        >
-                                            <Input maxLength={10} size={'middle'} placeholder="Please enter mobile number" />
-                                        </Form.Item>
-
-                                    </Space.Compact>
-
-                                </Col>
-                                <Col className="gutter-row" span={6}>
-                                    <Space.Compact>
-                                        <Form.Item
-                                            style={{ width: '25%' }}
-                                            name="col6"
-                                            initialValue={'0512'}
-                                            label="  CC"
-                                            rules={[{ required: false, message: 'Please Enter Phone Number CC' }]}
-                                        >
-                                            <Input size={'middle'} placeholder="CC" />
-
-                                        </Form.Item>
-                                        <Form.Item
-                                            style={{ width: '75%' }}
-                                            name="col8"
-                                            label="Phone number"
-                                            rules={[
-                                                { required: true, type: 'string', message: 'Please Enter Phone No' },
-                                                {
-                                                    pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
-                                                    message: 'Please enter a valid phone number',
-                                                }
-                                            ]}
-                                        >
-                                            <Input maxLength={10} size={'middle'} placeholder="Please Enter Phone No" />
-                                        </Form.Item>
-
-                                    </Space.Compact>
-
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="col7"
-                                        label="PhoneAC"
-                                        rules={[{ required: false, message: 'Please Enter PhoneAC' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please enter PhoneAC" />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="col9"
-                                        label="BloodGroup"
-                                        rules={[{ required: false, message: 'Please Enter BloodGroup' }]}
-                                    >
-                                        <Select
-                                            placeholder="Please choose the BloodGroup"
-                                            options={bloodGroup}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                            </Row> */}
+                            
                         </Card>
                         <Divider orientation="left"><h4></h4></Divider>
                         <Card title={<Space direction='horizontal'>
@@ -1788,10 +1539,10 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                     <Form.Item
                                         name="vUniqueID"
                                         label="Document Type"
-                                        rules={[{ required: false, message: 'Please Enter The DocName' }]}
+                                        rules={[{ required: false, message: 'Please Choose The DocType' }]}
                                     >
-                                        <Select
-                                            placeholder="Please Choose The DocName"
+                                        <Select style={inputStyle}
+                                            placeholder="Please Choose The DocType"
                                             options={docType}
                                         />
                                         {/* <Input maxLength={80} placeholder="Please Enter The DocName" /> */}
@@ -1810,7 +1561,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                             }
                                         ]}
                                     >
-                                        <Input maxLength={16} placeholder="Please Enter The Doc Number" />
+                                        <Input style={inputStyle} maxLength={16} placeholder="Please Enter The Doc Number" />
                                     </Form.Item>
                                     {/* <Form.Item
                                         name="uidDocID"
@@ -1840,7 +1591,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         label="Passport Issue Place"
                                         rules={[{ required: false, message: 'Please Enter The Passport Issue Place' }]}
                                     >
-                                        <Input maxLength={80} placeholder="Please Enter The Passport Issue Place" />
+                                        <Input style={inputStyle} maxLength={80} placeholder="Please Enter The Passport Issue Place" />
                                     </Form.Item>
                                 </Col>
                             </Row>

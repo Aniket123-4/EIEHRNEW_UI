@@ -56,6 +56,9 @@ const getModulePath = (name: string) => {
         case "Patient CheckOut":
             return "/patient/PatientCheckOut";
 
+        case "Doctor Patient Status":
+            return "/patient/DoctorPatientStatus";
+
         case "Reception":
             return "/reception/search";
 

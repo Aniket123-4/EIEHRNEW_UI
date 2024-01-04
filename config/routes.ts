@@ -160,6 +160,11 @@ export default [
         path: '/patient/PatientCheckOut',
         component: './Patient/components/PatientCheckout',
       },
+      {
+        name: 'Doctor Patient Status',
+        path: '/patient/DoctorPatientStatus',
+        component: './Patient/components/DoctorPatientStatus',
+      },
     ],
   },
   {

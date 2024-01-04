@@ -174,6 +174,16 @@ export async function requestUpdateCaseCheckIn(body: any, options?: { [key: stri
     ...(options || {}),
   });
 }
+export async function requestGetDoctorPatientList(body: any, options?: { [key: string]: any }) {
+  return request<any>('Reports/GetDoctorWiseAna', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
 
 
 
