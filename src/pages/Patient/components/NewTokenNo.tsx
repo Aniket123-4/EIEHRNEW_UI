@@ -108,7 +108,6 @@ const NewTokenNo = React.forwardRef(() => {
             "Type": 3,
         }
         const res = await requestGetUserList(params);
-        console.log(res)
         if (res.data.length > 0) {
             const dataMaskForDropdown = res?.data?.map((item: any) => {
                 return { value: item.userID, label: item.userName }
@@ -125,7 +124,7 @@ const NewTokenNo = React.forwardRef(() => {
             const staticParams = {
                 userID: -1,
                 tokenNo: values?.patientNo,
-                "date": "19000101",
+                "date": dayjs(),
                 "formID": -1,
                 "type": 2
             };
@@ -188,7 +187,7 @@ const NewTokenNo = React.forwardRef(() => {
             const staticParams = {
                 userID: -1,
                 tokenNo: values?.tokenNo,
-                "date": "19000101",
+                "date": dayjs(),
                 "formID": -1,
                 "type": 1
             };
@@ -213,8 +212,6 @@ const NewTokenNo = React.forwardRef(() => {
     };
     const updatePatientTokenNo = async (values: any) => {
         values['date'] = convertDate(values['date']);
-
-        console.log(patientData)
         try {
             const staticParams = {
                 "patientID": patientData.patientID,
@@ -228,7 +225,11 @@ const NewTokenNo = React.forwardRef(() => {
                 "formID": -1,
                 "type": 1
             };
-            setLoading(true)
+            if(!staticParams.admNo)
+                {message.error("Please Select Admission Number")
+                return}
+            else{
+                setLoading(true)
             const res = await requestUpdatePatientTokenNo({ ...values, ...staticParams });
             console.log(res);
             setLoading(false)
@@ -236,6 +237,7 @@ const NewTokenNo = React.forwardRef(() => {
                 message.success(res.msg)
             } else {
                 message.error(res.msg);
+            }
             }
 
         } catch (error) {
@@ -250,6 +252,7 @@ const NewTokenNo = React.forwardRef(() => {
     return (
         <Card>
             <PatientDetailsCommon
+                required={false}
                 patData={patientData}
                 onChange={(value: any) => { setPatientData(value); getPatientByTokenNo(value); }} />
             <>

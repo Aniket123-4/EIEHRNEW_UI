@@ -81,10 +81,9 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
     }
 
     const addOnlineLogin = async (values: any, type: any = 1) => {
-        console.log(values);
-
         try {
             const staticParams = {
+                //"fName":"rohit","lName":"gre","password":"admin","curMobileNoCC":"+91",
                 // "fName": "string",
                 // "lName": "string",
                 // "password": "string",
@@ -114,6 +113,10 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
                 setMobileNo(values['curMobileNo'])
                 setEmailID(values['eMail'])
                 setOTPVisible(true);
+                if(type==1)
+                {
+                    addOnlineLogin({...values, ...staticParams }, 4)
+                }
                 if (type == 5) {
                     const urlParams = new URL(window.location.href).searchParams;
                     setTimeout(() => {
@@ -341,6 +344,7 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
                         "userID": "-1",
                     }, 5)}
                 >
+                    <Col style={{textAlign:'center'}}>
                     <h2>{'OTP Verification'}</h2>
                     <Form.Item
                         name="otp"
@@ -350,18 +354,25 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
                     </Form.Item>
 
                     <Form.Item>
-                        <Button type="primary" htmlType="submit" className="login-form-button">
+                        <Button type="primary" htmlType="submit">
                             Verify
                         </Button>
                     </Form.Item>
                     <Form.Item>
                         <Button onClick={(v) => addOnlineLogin({
                             eMail: emailID,
-                            curMobileNo: mobileNo
+                            curMobileNo: mobileNo,
+                            "password": "",
+                            "curMobileNoCC": "",
+                            "fName": "",
+                            "mName": "",
+                            "lName": "",
+                            otp:""
                         }, 4)} type="link" className="login-form-button">
                             Resend the OTP
                         </Button>
                     </Form.Item>
+                    </Col>
                 </Form>
             </>
         )

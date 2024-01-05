@@ -272,7 +272,7 @@ const section_array:{sectionID:any; sectionName:any; sectionCode:any; parentSect
             })
            
            // const content = event.target.elements.content.value;
-           // values['dob'] = convertDate(values['dob']);
+           values['dob'] = values?.dob ? convertDate(values['dob']) :dayjs();
 
             const staticParams = {
                 userID: "-1",
@@ -287,7 +287,7 @@ const section_array:{sectionID:any; sectionName:any; sectionCode:any; parentSect
                   ShortName :"",
                   UserTypeID:"-1",
                   stringName:"",
-                  "middleName":values.middleName,
+                  "middleName":values.middleName ? values.middleName :"",
                   
                 formID: "-1",
                 type: "1",
@@ -305,7 +305,7 @@ const section_array:{sectionID:any; sectionName:any; sectionCode:any; parentSect
             setLoading(false)
             if (msg.isSuccess === true) {
                 //formRef.current?.resetFields();
-                form.resetFields();
+                // form.resetFields();
                 message.success(msg.msg);
                 //setOTPVisible(true);
                 setCandidateData({ ...values, ...staticParams })
@@ -313,6 +313,7 @@ const section_array:{sectionID:any; sectionName:any; sectionCode:any; parentSect
                 // setTimeout(() => {
                 //     history.push(urlParams.get('redirect') || '/list');
                 // }, 1000)
+                onSaveSuccess()
                 onClose();
                 //requestForOTP({ ...values, ...staticParams })
                 return;

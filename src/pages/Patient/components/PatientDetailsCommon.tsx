@@ -175,7 +175,6 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
             "type": 1
         }
         const res = await requestGetPatientVisitNo(params);
-        console.log(res)
         if (res.result.length > 0) {
             const dataMaskForDropdown = res?.result?.map((item: any) => {
                 return { value: item.patientCaseID, label: item.admNo }
@@ -187,6 +186,9 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
     const handleChangeCase = (v: any) => {
         Object.keys(props).length ? props?.onChange({ ...props?.patData, "patientCaseID": v }) : null;
         getPatientVisitNo(v)
+    }
+    const handleChangeAdmission = (v: any) => {
+        Object.keys(props).length ? props?.onChange({ ...props?.patData, "admNo": v?.label }) : null;
     }
     const onChange = (value: string) => {
         onFinishPatForm({ patientNo: value })
@@ -238,7 +240,7 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
                             Submit
                         </Button>
                     </Form.Item>
-                    <Form.Item name="case" label="Case No" rules={[{ required: false }]}>
+                    <Form.Item name="case" label="Case No" rules={[{ required: props.required ? props.required :false }]}>
                         <Select
                             style={{ width: 200 }}
                             onChange={handleChangeCase}
@@ -246,10 +248,11 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
                             placeholder="Select"
                         />
                     </Form.Item>
-                    <Form.Item name="AdmissionNo" label="Admission No" rules={[{ required: false }]}>
+                    <Form.Item name="AdmissionNo" label="Admission No" rules={[{ required: props.required ? props.required :false }]}>
                         <Select
                             style={{ width: 200 }}
-                            onChange={handleChangeCase}
+                            onChange={handleChangeAdmission}
+                            labelInValue={true}
                             options={admissionNo}
                             placeholder="Select"
                         />
