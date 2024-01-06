@@ -4,7 +4,7 @@ import { Button, Form, Input, Image, Select, Space, message, theme, Card, Descri
 import { requestAddOnlinePatDoc, requestAddUpdatePatientDoc, requestFileUpload, requestGetPatientDoc, requestGetPatientHeader } from '../services/api';
 import { getUserInLocalStorage } from '@/utils/common';
 import { requestGetCandidateList, requestGetDocuments } from '@/pages/Candidate/services/api';
-import { FileAddOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { DownloadOutlined, FileAddOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import Upload, { RcFile } from 'antd/es/upload';
 import { requestGetDocType, requestGetUniqueID } from '@/services/apiRequest/dropdowns';
 import { convertDate, convertDateInSSSZFormat } from '@/utils/helper';
@@ -247,7 +247,12 @@ const PatientFile = React.forwardRef((props) => {
         }
         const res = await requestGetPatientDoc(params);
         if (res.isSuccess = true) {
-            setDocList(res.result)
+            if(type==1){
+                setDocList(res.result)
+            }
+            if(type==2){
+                downloadZipDoc({file:res?.result1,docName:res?.result})
+            }
         }
     }
     const previewDoc = async (item: any) => {
@@ -291,7 +296,7 @@ const PatientFile = React.forwardRef((props) => {
         if (res?.isSuccess == true) {
             lstType_PatientDoc.map(async (item: any) => {
                 const param1 = {
-                    "fileName": item?.patientDocID,
+                    "fileName": item?.patientDocID+"."+item?.docExt,
                     "data": item.base64
                 }
                 const res1 = await requestFileUpload(param1);
@@ -308,7 +313,7 @@ const PatientFile = React.forwardRef((props) => {
     }
     const downloadDoc = async (item: any) => {
         const params = {
-            fileName: item.patientDocID,
+            fileName: item.phyName,
             filePath: ""
         }
         const res1 = await requestGetDocuments(params);
@@ -322,6 +327,31 @@ const PatientFile = React.forwardRef((props) => {
                     a.style.display = 'none';
                     a.href = url;
                     a.download = prompt("Enter filename and extension (e.g. myImage.jpg):", window.location.href.split('\/').pop() === "" ? window.location.hostname + ".html" : item.docName);
+                    document.body.appendChild(a);
+                    if (a.download !== "null") {
+                        a.click();
+                        alert('Your file ' + a.download + ' has downloaded!');
+                    }
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(() => alert('Could not download file.'));
+        }
+        else {
+            message.error("File Not Found")
+        }
+    }
+    const downloadZipDoc = async (item: any) => {
+        
+        //window.location.href = `data:application/octet-stream;base64,${res1.result}`;
+        if (item?.file) {
+            fetch(window.location.href)
+                .then(resp => resp.blob())
+                .then(blob => {
+                    const url = `data: application/zip;base64,${item.file}`;
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = prompt("Enter filename and extension (e.g. myImage.jpg):", window.location.href.split('\/').pop() === "" ? window.location.hostname + ".html" : item.docName+".zip");
                     document.body.appendChild(a);
                     if (a.download !== "null") {
                         a.click();
@@ -464,7 +494,10 @@ const PatientFile = React.forwardRef((props) => {
                                             padding: '0 16px',
                                             border: '1px solid rgba(140, 140, 140, 0.35)',
                                         }}
-                                        title={'Uploaded Documents'}>
+                                        title={<><Space>
+                                            <Typography>Uploaded Documents</Typography>
+                                            <Button onClick={()=>getPatientDoc(2)}><DownloadOutlined /></Button>
+                                            </Space></>}>
                                         {docList && <List
                                             dataSource={docList}
                                             renderItem={(item) => (

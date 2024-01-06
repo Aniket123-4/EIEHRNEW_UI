@@ -544,7 +544,7 @@ const section_array:{sectionID:any; sectionName:any; sectionCode:any; parentSect
                                 labelCol={{ span: 24 }}
                                     name="dob"
                                     label="DOB"
-                                    rules={[{ required: false, message: 'Please choose the DOB' }]}
+                                    rules={[{ required: true, message: 'Please choose the DOB' }]}
                                 >
                                     {/* 12 age min DD-MMM-YYYY */}
                                     <DatePicker

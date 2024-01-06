@@ -124,7 +124,6 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
                     }, 1000)
                 }
                 return;
-                return;
             } else {
                 message.error(msg.msg);
             }

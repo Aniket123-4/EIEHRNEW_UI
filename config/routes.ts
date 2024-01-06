@@ -127,6 +127,32 @@ export default [
     ],
   },
   {
+    name: 'Medical Store',
+    path: '/medicalStore',
+    routes: [
+      {
+        name: 'Item Master',
+        path: '/medicalStore/itemMaster',
+        component: './MedicalStore/component/ItemMaster',
+      },
+      {
+        name: 'Direct Item Reciept',
+        path: '/medicalStore/directItemReciept',
+        component: './Welcome',
+      },
+      {
+        name: 'Item Status',
+        path: '/medicalStore/itemStatus',
+        component: './Welcome',
+      },
+      {
+        name: 'Supplier Master',
+        path: '/medicalStore/SupplierMaster',
+        component: './Welcome',
+      },
+    ],
+  },
+  {
     name: 'patient',
     path: '/patient',
     routes: [
