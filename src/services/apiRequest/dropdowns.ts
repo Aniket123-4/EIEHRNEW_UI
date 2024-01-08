@@ -233,6 +233,59 @@ export async function requestGetDocType(body: any={}, options?: { [key: string]:
     ...(options || {}),
   });
 }
+
+export async function requestGetSupplier(body: any={}, options?: { [key: string]: any }) {
+  return request<any>('InventoryForm/GetSupplier', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+export async function requestGetUnit(body: any={}, options?: { [key: string]: any }) {
+  return request<any>('InventoryForm/GetUnit', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetItemCat(body: any={}, options?: { [key: string]: any }) {
+  return request<any>('InventoryForm/GetItemCat', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestAddItem(body: any={}, options?: { [key: string]: any }) {
+  return request<any>('InventoryForm/AddItem', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestAddSupplier(body: any={}, options?: { [key: string]: any }) {
+  return request<any>('InventoryForm/AddSupplier', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 export async function requestGetUniqueID() {
   return request<any>('DefaultForm/api/GetUniqueID', {
     method: 'POST',
