@@ -53,6 +53,15 @@ const getModulePath = (name: string) => {
         case "New Token No":
             return "/patient/NewTokenNo";
 
+        case "Patient CheckOut":
+            return "/patient/PatientCheckOut";
+
+        case "Doctor Patient Status":
+            return "/patient/DoctorPatientStatus";
+
+        case "Item Master":
+            return "/medicalStore/itemMaster";
+
         case "Reception":
             return "/reception/search";
 

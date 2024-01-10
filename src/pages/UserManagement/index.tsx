@@ -580,6 +580,7 @@ const UserManagement: React.FC = () => {
         onClose={onCloseAddCandidate}
         onSaveSuccess={reloadTable}
         selectedRows={selectedRows}
+        //onSaveSuccess={(v)=>(console.log(v))}
       // isdrawer={true}
       />
       <EditUser

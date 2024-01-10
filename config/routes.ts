@@ -115,11 +115,6 @@ export default [
         component: './Online',
       },
       {
-        name: 'AddPatRequest',
-        path: '/master/AddPatRequest',
-        component: './Online/components/AddPatRequest',
-      },
-      {
         name: 'Manage Appointment',
         path: '/master/ManageAppointment',
         component: './Online/components/SearchAppointment',
@@ -128,6 +123,32 @@ export default [
         name: 'Investigation Services',
         path: '/master/AddInvServices',
         component: './Complaint/components/AddInvService',
+      },
+    ],
+  },
+  {
+    name: 'Medical Store',
+    path: '/medicalStore',
+    routes: [
+      {
+        name: 'Item Master',
+        path: '/medicalStore/itemMaster',
+        component: './MedicalStore/component/ItemMaster',
+      },
+      {
+        name: 'Direct Item Reciept',
+        path: '/medicalStore/directItemReciept',
+        component: './Welcome',
+      },
+      {
+        name: 'Item Status',
+        path: '/medicalStore/itemStatus',
+        component: './Welcome',
+      },
+      {
+        name: 'Supplier Master',
+        path: '/medicalStore/SupplierMaster',
+        component: './Welcome',
       },
     ],
   },
@@ -159,6 +180,16 @@ export default [
         name: 'New Token No',
         path: '/patient/NewTokenNo',
         component: './Patient/components/NewTokenNo',
+      },
+      {
+        name: 'Patient CheckOut',
+        path: '/patient/PatientCheckOut',
+        component: './Patient/components/PatientCheckout',
+      },
+      {
+        name: 'Doctor Patient Status',
+        path: '/patient/DoctorPatientStatus',
+        component: './Patient/components/DoctorPatientStatus',
       },
     ],
   },
