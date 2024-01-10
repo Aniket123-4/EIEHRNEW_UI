@@ -122,7 +122,7 @@ const DoctorPatientList = React.forwardRef((props) => {
             let slotFromDate = convertDate(dateRange[0]);
             let slotToDate = convertDate(dateRange[1]);
 
-          
+
 
             const staticParams = {
                 patientCaseID: -1,
@@ -133,7 +133,7 @@ const DoctorPatientList = React.forwardRef((props) => {
                 patientName: '',
                 fromDate: slotFromDate,
                 toDate: slotToDate,
-                userID: -2,//verifiedUser?.userID,
+                userID: verifiedUser?.userID,
                 formID: 1,
                 type: 1
             }
@@ -179,7 +179,6 @@ const DoctorPatientList = React.forwardRef((props) => {
                             <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     name="dateRange"
-                                    label="From - To Date"
                                     rules={[{ required: true, message: 'Please select' }]}
                                 >
                                     <RangePicker
@@ -206,7 +205,7 @@ const DoctorPatientList = React.forwardRef((props) => {
                                 </Form.Item>
                             </Col> */}
                             <Col className="gutter-row" span={8}>
-                                <Button style={{ padding: 5, width: 100, height: 38, marginTop: 30 }} type="primary" htmlType="submit">
+                                <Button style={{ padding: 5, width: 100, height: 38, marginTop: 0 }} type="primary" htmlType="submit">
                                     Filter
                                 </Button>
                             </Col>
@@ -226,7 +225,7 @@ const DoctorPatientList = React.forwardRef((props) => {
     return (
         <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
             <Card
-                title="Filter"
+                title="From - To Date"
                 style={{ boxShadow: '2px 2px 2px #4874dc' }}
             >
                 <Spin tip="Please wait..." spinning={loading}>
@@ -236,7 +235,7 @@ const DoctorPatientList = React.forwardRef((props) => {
                 </Spin>
             </Card>
             <Card
-                title="Patient List (Total 0)"
+                title={`Patient List (Total ${list.length})`}
                 style={{ boxShadow: '2px 2px 2px #4874dc' }}
             >
 
@@ -244,6 +243,7 @@ const DoctorPatientList = React.forwardRef((props) => {
                     <Table
                         columns={columns}
                         dataSource={list}
+                        pagination={false}
                     />
                 </div>
             </Card>

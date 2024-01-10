@@ -8,10 +8,17 @@ import { DatePicker, Radio } from 'antd';
 import { dateFormat } from '@/utils/constant';
 import { convertDate, convertTime } from '@/utils/helper';
 import dayjs from 'dayjs';
+import { getUserInLocalStorage } from '@/utils/common';
+import { ColumnsType } from 'antd/es/table';
 
 
-const Investigation = ({ patientDetails = {} }: any) => {
+const Investigation = ({ patientDetails = {}, patientCaseID }: any) => {
     const { result6 } = patientDetails;
+    const [tabForm] = Form.useForm();
+    const [loading, setLoading] = useState(false);
+    const { verifiedUser } = getUserInLocalStorage();
+    const [diseaseList, setDiseaseList] = useState([]);
+
 
     const columns: ColumnsType<any> = [
         {
@@ -135,16 +142,168 @@ const Investigation = ({ patientDetails = {} }: any) => {
 
     ];
 
+
+    const formView = () => {
+
+        const onFinishPatForm = async (values: any) => {
+            const params = {
+                "patientCaseID": patientCaseID,
+                "admNo": "1",
+                "col1": values?.InvParameterID,
+                "col2": values?.InvParameterResult,
+                "col3": values?.InvRemark,
+                "col4": "",
+                "col5": "",
+                "col6": values?.NoOfInjection,
+                "col7": "",
+                "col8": "",
+                "col9": "",
+                "col10": "",
+                "col11": "",
+                "col12": "",
+                "col13": "",
+                "col14": "",
+                "col15": "",
+                "col16": "",
+                "col17": "",
+                "col18": "",
+                "col19": "",
+                "col20": "",
+                "col21": values?.InvParameterDate,
+                "col22": "",
+                "isForDelete": false,
+                "lstType_DocPatient": [
+                    {
+                        "col1": "",
+                        "col2": "",
+                        "col3": "",
+                        "col4": "",
+                        "col5": "",
+                        "col6": "",
+                        "col7": "",
+                        "col8": "",
+                        "col9": "",
+                        "col10": "",
+                        "col11": "",
+                        "col12": "",
+                        "col13": "",
+                        "col14": "",
+                        "col15": ""
+                    }
+                ],
+                "lstType_Patient": [
+                    {
+                        "col1": "",
+                        "col2": "",
+                        "col3": "",
+                        "col4": "",
+                        "col5": "",
+                        "col6": "",
+                        "col7": "",
+                        "col8": "",
+                        "col9": "",
+                        "col10": "",
+                        "col11": "",
+                        "col12": "",
+                        "col13": "",
+                        "col14": "",
+                        "col15": ""
+                    }
+                ],
+                "userID": verifiedUser?.userID,
+                "formID": -1,
+                "type": 4
+            }
+            try {
+                setLoading(true)
+                const response = await requestAddDelPatientForDoctorOPIP({ ...params });
+                setLoading(false)
+
+                if (!response?.isSuccess) {
+                    message.error(response?.msg);
+                } else {
+                    message.success(response?.msg);
+                    tabForm.resetFields();
+                }
+            } catch (e) {
+                setLoading(false)
+            }
+        };
+
+
+
+        const handleChangeFilter = (value: any) => { }
+
+        return (
+            <Form
+                form={tabForm}
+                onFinish={onFinishPatForm}
+                layout="vertical"
+                size={'small'}
+            >
+
+                <Row gutter={16}>
+
+                    <Col span={8}>
+                        <Form.Item name="InvParameterID" label="Inv Parameter" rules={[{ required: true }]}>
+                            <Select
+                                options={[]}
+                                placeholder="Select"
+                            />
+                        </Form.Item>
+                    </Col>
+
+                    <Col span={8}>
+                        <Form.Item name="InvParameterResult" label="Inv Parameter Result" rules={[{ required: true }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+
+                    <Col span={8}>
+                        <Form.Item name="InvRemark" label="Inv Remark" rules={[{ required: true }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="InvParameterDate" label="Date" rules={[{ required: true }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="NoOfInjection" label="No Of Injection" rules={[{ required: true }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="VolumeML" label="Volume ML" rules={[{ required: true }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+
+                </Row>
+
+                <Form.Item>
+                    <Button type="primary" loading={loading} htmlType="submit">
+                        Submit
+                    </Button>
+                </Form.Item>
+            </Form >
+        )
+    }
+
+
+
     return (
         <Space direction="vertical" size="small" style={{ display: 'flex' }}>
             <Card>
-                <Table
-                    columns={columns}
-                    size="small"
-                    dataSource={result6}
-                    pagination={false}
-                />
+                {formView()}
             </Card>
+            <Table
+                columns={columns}
+                size="small"
+                dataSource={result6}
+                pagination={false}
+            />
         </Space>
     );
 };

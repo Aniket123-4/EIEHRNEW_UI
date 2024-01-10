@@ -13,3 +13,17 @@ export async function requestGetPatientForDoctorOPIP(body: any, options?: { [key
     });
   }
   
+
+export async function requestAddDelPatientForDoctorOPIP(body: any, options?: { [key: string]: any }) {
+  return request<any>('/AddDelPatientForDoctorOPIP', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+
+  

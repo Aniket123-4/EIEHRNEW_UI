@@ -55,18 +55,7 @@ const PatientDocument = ({ patientDetails={} }: any) => {
             dataIndex: 'insuranceComp',
 
         },
-        {
-            title: 'Action',
-            key: 'action',
-            fixed: 'right',
-            render: (_, record) => (
-                <Space size="middle">
-                    <Button size={'small'} onClick={() => {
-                    }}>action</Button>
-
-                </Space>
-            ),
-        },
+      
     ];
 
     return (

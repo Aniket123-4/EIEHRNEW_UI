@@ -21,3 +21,8 @@ export const activeStatusOnly = [
     { label: "Active", value: 1 },
     { label: "In Active", value: 0 }
 ]
+
+export const booleanValueForOption = [
+    { label: "Yes", value: 1 },
+    { label: "No", value: 0 }
+]

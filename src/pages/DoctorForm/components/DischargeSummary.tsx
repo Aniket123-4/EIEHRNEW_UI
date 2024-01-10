@@ -2,25 +2,24 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, TimePicker } from 'antd';
 import { PageContainer, EditableProTable } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
-import { requestGetSection, requestGetUserList } from '@/services/apiRequest/dropdowns';
-import type { DatePickerProps, RadioChangeEvent } from 'antd';
 import { DatePicker, Radio } from 'antd';
 import { dateFormat } from '@/utils/constant';
 import { convertDate, convertTime } from '@/utils/helper';
 import dayjs from 'dayjs';
+import { ColumnsType } from 'antd/es/table';
 import { getUserInLocalStorage } from '@/utils/common';
 import { requestAddDelPatientForDoctorOPIP } from '../services/api';
-import { ColumnsType } from 'antd/es/table';
 
 const { RangePicker } = DatePicker;
 
-const Medication = ({ patientDetails = {}, patientCaseID }: any) => {
-    const { result1 } = patientDetails;
 
+
+const DischargeSummary = ({ patientDetails = {}, patientCaseID }: any) => {
+    const { result8 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const { verifiedUser } = getUserInLocalStorage();
-    const [drugList, setDiseaseList] = useState([{ value: "1", label: "drug 1" }]);
+
 
     const columns: ColumnsType<any> = [
         {
@@ -28,7 +27,8 @@ const Medication = ({ patientDetails = {}, patientCaseID }: any) => {
             key: 'patNameTitle',
             dataIndex: 'patNameTitle',
 
-        }, {
+        },
+        {
             title: 'Patient Number',
             key: 'patientNo',
             dataIndex: 'patientNo',
@@ -59,8 +59,19 @@ const Medication = ({ patientDetails = {}, patientCaseID }: any) => {
             key: 'insuranceComp',
             dataIndex: 'insuranceComp',
 
-        }
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            fixed: 'right',
+            render: (_, record) => (
+                <Space size="middle">
+                    <Button size={'small'} onClick={() => {
+                    }}>action</Button>
 
+                </Space>
+            ),
+        },
     ];
 
 
@@ -70,28 +81,28 @@ const Medication = ({ patientDetails = {}, patientCaseID }: any) => {
             const params = {
                 "patientCaseID": patientCaseID,
                 "admNo": "1",
-                "col1": values?.DrugID,
-                "col2": +values?.NoOfDays,
-                "col3": +values?.QuantityPerDay,
-                "col4": values?.Instruction,
-                "col5": values?.Advice,
-                "col6": values?.Diet,
-                "col7": values?.ProductID,
-                "col8": "",
-                "col9": values?.Qty,
-                "col10": values?.QtyTimesPerDay,
-                "col11": values?.UnitIDForDoc,
+                "col1": values?.DisCondID,
+                "col2": values?.DischargeToID,
+                "col3": values?.CondUponDischarge,
+                "col4": values?.BreifCaseSummary,
+                "col5": values?.ReasonForAdmission,
+                "col6": values?.ClinicalFinding,
+                "col7": values?.FinalDaigNosis,
+                "col8": values?.InstructionToPateint,
+                "col9": values?.DischargeNotes,
+                "col10": values?.FinalAdvice,
+                "col11": values?.IssuesToAddressAtFollowUP,
                 "col12": "",
-                "col13": "",
-                "col14": "",
-                "col15": "",
-                "col16": "",
-                "col17": "",
-                "col18": "",
-                "col19": "",
-                "col20": "",
-                "col21": "",
-                "col22": "",
+                "col13": values?.IsDocSeen,
+                "col14": values?.IsEmergency,
+                "col15": values?.PatDiseaseTypeID,
+                "col16": values?.PatSickLeaveID,
+                "col17": values?.SickLeaveDays,
+                "col18": values?.FromDateToDate,
+                "col19": values?.Reasons,
+                "col20": values?.Others,
+                "col21": values?.DischargeDate,
+                "col22": values?.NextVisitDate,
                 "isForDelete": false,
                 "lstType_DocPatient": [
                     {
@@ -133,7 +144,7 @@ const Medication = ({ patientDetails = {}, patientCaseID }: any) => {
                 ],
                 "userID": verifiedUser?.userID,
                 "formID": -1,
-                "type": 4
+                "type": 7
             }
             try {
                 setLoading(true)
@@ -166,80 +177,114 @@ const Medication = ({ patientDetails = {}, patientCaseID }: any) => {
                 <Row gutter={16}>
 
                     <Col span={8}>
-                        <Form.Item name="DrugID" label="Drug" rules={[{ required: true }]}>
-                            <Select
-                                options={drugList}
-                                placeholder="Select"
-                            />
-                        </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                        <Form.Item name="NoOfDays" label="No Of Days" rules={[{ required: true }]}>
+                        <Form.Item name="DisCondID" label="DisCondID" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
 
                     <Col span={8}>
-                        <Form.Item name="QuantityPerDay" label="Quantity Per Day" rules={[{ required: true }]}>
+                        <Form.Item name="DischargeToID" label="DischargeToID" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="CondUponDischarge" label="CondUponDischarge" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="BreifCaseSummary" label="BreifCaseSummary" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="ReasonForAdmission" label="ReasonForAdmission" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="ClinicalFinding" label="ClinicalFinding" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="FinalDaigNosis" label="FinalDaigNosis" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="InstructionToPateint" label="InstructionToPateint" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+
+                    <Col span={8}>
+                        <Form.Item name="DischargeNotes" label="DischargeNotes" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="FinalAdvice" label="FinalAdvice" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="IssuesToAddressAtFollowUP" label="IssuesToAddressAtFollowUP" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="IsDocSeen" label="IsDocSeen" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="IsEmergency" label="IsEmergency" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+
+                    <Col span={8}>
+                        <Form.Item name="DischargeDate" label="DischargeDate" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+
+
+                    <Col span={8}>
+                        <Form.Item name="NextVisitDate" label="PatDiseaseTypeID multiple" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+
+                    <Col span={8}>
+                        <Form.Item name="PatSickLeaveID" label="PatSickLeaveID multiple" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+
+                    <Col span={8}>
+                        <Form.Item name="SickLeaveDays" label="SickLeave Days" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="FromDateToDate" label="From Date To Date" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="Reasons" label="Reasons" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="Others" label="Others" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
 
                 </Row>
-
-                <Row gutter={16}>
-
-                    <Col span={8}>
-                        <Form.Item name="Instruction" label="Instruction" rules={[{ required: true }]}>
-                            <Input placeholder="Please Enter" />
-                        </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                        <Form.Item name="Advice" label="Advice" rules={[{ required: true }]}>
-                            <Input placeholder="Please Enter" />
-                        </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                        <Form.Item name="Diet" label="Diet" rules={[{ required: true }]}>
-                            <Input placeholder="Please Enter" />
-                        </Form.Item>
-                    </Col>
-
-                </Row>
-
-                <Row gutter={16}>
-
-                    <Col span={8}>
-                        <Form.Item name="ProductID" label="Product" rules={[{ required: true }]}>
-                            <Select
-                                options={drugList}
-                                placeholder="Select"
-                            />
-                        </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                        <Form.Item name="Qty" label="Qty" rules={[{ required: true }]}>
-                            <InputNumber placeholder="Please Enter" style={{ width: "100%" }} />
-                        </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                        <Form.Item name="QtyTimesPerDay" label="Qty Times Per Day" rules={[{ required: true }]}>
-                            <InputNumber placeholder="Please Enter" style={{ width: "100%" }} />
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item name="UnitIDForDoc" label="Unit For Doc" rules={[{ required: true }]}>
-                            <InputNumber placeholder="Please Enter" style={{ width: "100%" }} />
-                        </Form.Item>
-                    </Col>
-
-                </Row>
-
 
                 <Form.Item>
                     <Button type="primary" loading={loading} htmlType="submit">
@@ -251,20 +296,20 @@ const Medication = ({ patientDetails = {}, patientCaseID }: any) => {
     }
 
 
+
     return (
         <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
             <Card>
                 {formView()}
             </Card>
-
             <Table
                 columns={columns}
                 size="small"
-                dataSource={result1}
+                dataSource={result8}
                 pagination={false}
             />
         </Space>
     );
 };
 
-export default Medication;
+export default DischargeSummary;

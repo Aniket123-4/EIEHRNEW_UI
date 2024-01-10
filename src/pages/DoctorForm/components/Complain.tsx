@@ -2,20 +2,26 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, TimePicker } from 'antd';
 import { PageContainer, EditableProTable } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
-import { requestGetSection, requestGetUserList } from '@/services/apiRequest/dropdowns';
+import { requestGetComplaintType, requestGetSection, requestGetUserList } from '@/services/apiRequest/dropdowns';
 import type { DatePickerProps, RadioChangeEvent } from 'antd';
 import { DatePicker, Radio } from 'antd';
-import { dateFormat } from '@/utils/constant';
-import { convertDate, convertTime } from '@/utils/helper';
+import { booleanValueForOption, dateFormat } from '@/utils/constant';
 import dayjs from 'dayjs';
-import DoctorSlotBookingList from './DoctorSlotBookingList';
+import moment from 'moment';
+import { requestAddDelPatientForDoctorOPIP } from '../services/api';
+import { getUserInLocalStorage } from '@/utils/common';
 
 const { RangePicker } = DatePicker;
 
 
 
-const Complain = ({ patientDetails = {} }: any) => {
+const Complain = ({ patientDetails = {}, patientCaseID }: any) => {
     const { result2 } = patientDetails;
+    const [filterForm] = Form.useForm();
+    const [loading, setLoading] = useState(false)
+
+
+    const { verifiedUser } = getUserInLocalStorage();
 
     const columns: ColumnsType<any> = [
         {
@@ -43,21 +49,193 @@ const Complain = ({ patientDetails = {} }: any) => {
             title: 'Complaint ML',
             key: 'complaintML',
             dataIndex: 'complaintML',
-
         }
-      
+
     ];
+
+    const [complaintType, setComplaintType] = useState<any>([])
+
+    useEffect(() => {
+        getComplaintType();
+    }, [])
+
+    const getComplaintType = async () => {
+        const staticParams = {
+            "complaintTypeID": "-1",
+            "isActive": "1",
+            "type": "1"
+        }
+        const res = await requestGetComplaintType(staticParams);
+        // console.log(res.result);
+        if (res.result.length > 0) {
+            const dataMaskForDropdown = res?.result?.map((item: any) => {
+                return { value: item.complaintTypeID, label: item.complaintTypeName }
+            })
+            setComplaintType(dataMaskForDropdown)
+            // console.log(dataMaskForDropdown)
+        }
+    }
+
+    const formView = () => {
+
+        /* eslint-disable no-template-curly-in-string */
+        const validateMessages = {
+            required: '${label} is required!',
+            types: {
+                email: '${label} is not a valid email!',
+                number: '${label} is not a valid number!',
+            }
+        };
+        /* eslint-enable no-template-curly-in-string */
+
+        const onFinishPatForm = async (values: any) => {
+            const date = moment(new Date()).format(dateFormat);
+            console.log(result2)
+            const params = {
+                "patientCaseID": patientCaseID,
+                "admNo": 1,
+                "col1": values?.ComplainTypeID,
+                "col2": values?.Complain,
+                "col3": "",
+                "col4": "" + values?.IsML,
+                "col5": values?.ComplaintML,
+                "col6": "",
+                "col7": "",
+                "col8": "",
+                "col9": "",
+                "col10": "",
+                "col11": "",
+                "col12": "",
+                "col13": "",
+                "col14": "",
+                "col15": "",
+                "col16": "",
+                "col17": "",
+                "col18": "",
+                "col19": "",
+                "col20": "",
+                "col21": date,
+                "col22": date,
+                "isForDelete": false,
+                "lstType_DocPatient": [
+                    {
+                        "col1": "",
+                        "col2": "",
+                        "col3": "",
+                        "col4": "",
+                        "col5": "",
+                        "col6": "",
+                        "col7": "",
+                        "col8": "",
+                        "col9": "",
+                        "col10": "",
+                        "col11": "",
+                        "col12": "",
+                        "col13": "",
+                        "col14": "",
+                        "col15": ""
+                    }
+                ],
+                "lstType_Patient": [
+                    {
+                        "col1": "",
+                        "col2": "",
+                        "col3": "",
+                        "col4": "",
+                        "col5": "",
+                        "col6": "",
+                        "col7": "",
+                        "col8": "",
+                        "col9": "",
+                        "col10": "",
+                        "col11": "",
+                        "col12": "",
+                        "col13": "",
+                        "col14": "",
+                        "col15": ""
+                    }
+                ],
+                "userID": verifiedUser?.userID,
+                "formID": -1,
+                "type": 1
+            }
+
+            setLoading(true)
+            const response = await requestAddDelPatientForDoctorOPIP({ ...params });
+            setLoading(false)
+
+            if (!response?.isSuccess) {
+                message.error(response?.msg);
+            } else {
+                message.success(response?.msg);
+            }
+        };
+
+
+
+        const handleChangeFilter = (value: any) => { }
+
+        return (
+            <Form
+                form={filterForm}
+                onFinish={onFinishPatForm}
+                layout="vertical"
+                size={'small'}
+            >
+
+                <Row gutter={16}>
+
+                    <Col span={6}>
+                        <Form.Item name="ComplainTypeID" label="Complain Type" rules={[{ required: true }]}>
+                            <Select
+                                onChange={handleChangeFilter}
+                                options={complaintType}
+                                placeholder="Select"
+                            />
+                        </Form.Item>
+                    </Col>
+
+                    <Col span={6}>
+                        <Form.Item name="IsML" label="is ML" rules={[{ required: true }]}>
+                            <Select
+                                onChange={handleChangeFilter}
+                                options={booleanValueForOption}
+                                placeholder="Select"
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item name="ComplaintML" label="Complaint ML" rules={[{ required: true }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item name="Complain" label="Complain" rules={[{ required: true }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+                <Form.Item>
+                    <Button type="primary" loading={loading} htmlType="submit">
+                        Submit
+                    </Button>
+                </Form.Item>
+            </Form >
+        )
+    }
 
     return (
         <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
             <Card>
-                <Table
-                    columns={columns}
-                    size="small"
-                    dataSource={result2}
-                    pagination={false}
-                />
+                {formView()}
             </Card>
+            <Table
+                columns={columns}
+                size="small"
+                dataSource={result2}
+                pagination={false}
+            />
         </Space>
     );
 };

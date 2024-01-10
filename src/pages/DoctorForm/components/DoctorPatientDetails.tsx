@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ExclamationCircleFilled, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Modal, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Tabs } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Modal, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Tabs, Descriptions } from 'antd';
 import { PageContainer, ProDescriptions } from '@ant-design/pro-components';
 import { Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
@@ -23,6 +23,7 @@ import ClinicalFinding from './ClinicalFinding';
 import PatientDocument from './PatientDocument';
 import { requestGetPatientHeader } from '@/pages/Patient/services/api';
 import BasicDetails from './BasicDetails';
+import DischargeSummary from './DischargeSummary';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -38,68 +39,71 @@ const DoctorPatientDetails = React.forwardRef((props) => {
     const [patientNo, setPatientNo] = useState<string>();
     const [patientCaseID, setPatientCaseID] = useState<string>();
     const [patientCaseNo, setPatientCaseNo] = useState<string>();
-    const [patientBasicDetails, setPatientBasicDetails] = useState<any>();
+    const [patientBasicDetails, setPatientBasicDetails] = useState<any>(null);
     const [patientDetails, setPatientDetails] = useState<any>();
-
+    const [isModalOpenForPatHistory, setIsModalOpenForPatHistory] = useState(false);
 
     const items: TabsProps['items'] = [
         {
             key: '0',
             label: 'BASIC INFORMATION',
-            children: <BasicDetails patientBasicDetails={patientBasicDetails} />,
+            children: patientBasicDetails && <BasicDetails patientBasicDetails={patientBasicDetails} patientCaseID={patientCaseID} />,
         }, {
             key: '1',
             label: 'GENERAL INFORMATION',
-            children: <GeneralInformation patientDetails={patientDetails} />,
+            children: <GeneralInformation patientDetails={patientDetails} patientCaseID={patientCaseID} />,
         },
         {
             key: '2',
             label: 'COMPLAIN',
-            children: <Complain patientDetails={patientDetails} />,
+            children: <Complain patientDetails={patientDetails} patientCaseID={patientCaseID} />,
         },
         {
             key: '3',
             label: 'VITAL SIGN',
-            children: <VitalSign patientDetails={patientDetails} />,
+            children: <VitalSign patientDetails={patientDetails} patientCaseID={patientCaseID} />,
         },
         {
             key: '4',
             label: 'DIAGNOSIS',
-            children: <Diagnosis patientDetails={patientDetails} />,
+            children: <Diagnosis patientDetails={patientDetails} patientCaseID={patientCaseID} />,
         },
         {
             key: '5',
             label: 'MEDICATION',
-            children: <Medication patientDetails={patientDetails} />,
+            children: <Medication patientDetails={patientDetails} patientCaseID={patientCaseID} />,
         },
         {
             key: '7',
             label: 'INVESTIGATION',
-            children: <Investigation patientDetails={patientDetails} />,
+            children: <Investigation patientDetails={patientDetails} patientCaseID={patientCaseID} />,
         },
         {
             key: '8',
             label: 'PATIENT HISTORY',
-            children: <PatientHistory patientDetails={patientDetails} />,
+            children: <PatientHistory patientDetails={patientDetails} patientCaseID={patientCaseID} />,
         },
         {
             key: '9',
             label: 'PATIENT DOCUMENT',
-            children: <PatientDocument patientDetails={patientDetails} />,
+            children: <PatientDocument patientDetails={patientDetails} patientCaseID={patientCaseID} />,
         },
         {
             key: '10',
             label: 'REFERAL DOCTOR',
-            children: <ReferalDoctor patientDetails={patientDetails} />,
+            children: <ReferalDoctor patientDetails={patientDetails} patientCaseID={patientCaseID} />,
         },
         {
             key: '11',
             label: 'CLINICAL FINDING',
-            children: <ClinicalFinding patientDetails={patientDetails} />,
+            children: <ClinicalFinding patientDetails={patientDetails} patientCaseID={patientCaseID} />,
+        },
+        {
+            key: '12',
+            label: 'DISCHARGE SUMMARY',
+            children: <DischargeSummary patientDetails={patientDetails} patientCaseID={patientCaseID} />,
         },
     ];
-
-
 
     useEffect(() => {
         const patientID: string = history.location.pathname.split('/')[3];
@@ -169,6 +173,10 @@ const DoctorPatientDetails = React.forwardRef((props) => {
             setLoading(false)
             setPatientDetails(response)
 
+            if (response.result7.length > 0) {
+                setIsModalOpenForPatHistory(true);
+            }
+
             if (!response?.isSuccess) {
                 message.error(response?.msg);
             }
@@ -188,6 +196,84 @@ const DoctorPatientDetails = React.forwardRef((props) => {
         console.log(key);
     };
 
+    const showModal = () => {
+        setIsModalOpenForPatHistory(true);
+    };
+
+    const handleOk = () => {
+        setIsModalOpenForPatHistory(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpenForPatHistory(false);
+    };
+
+
+    const patHistoryModal = () => {
+
+        const desData = [
+
+            {
+                label: 'Allergy',
+                key: '1',
+                children: patientDetails?.result7[0]?.allergy
+            }, {
+                label: 'Warnings',
+                key: '2',
+                children: patientDetails?.result7[0]?.warnings
+            },
+            {
+                label: 'Addiction',
+                key: '3',
+                children: patientDetails?.result7[0]?.addiction
+            },
+            {
+                label: 'Social History',
+                key: '4',
+                children: patientDetails?.result7[0]?.socialHistory
+
+            }, {
+                label: 'Family History',
+                key: '5',
+                children: patientDetails?.result7[0]?.familyHistory
+            },
+            {
+                label: 'Personal History',
+                key: '6',
+                children: patientDetails?.result7[0]?.personalHistory
+            },
+            {
+                label: 'Past Medical History',
+                key: '7',
+                children: patientDetails?.result7[0]?.pastMedicalHistory
+            },
+            {
+                label: 'Obstetrics',
+                key: '8',
+                children: patientDetails?.result7[0]?.obstetrics
+            },
+        ];
+        return (
+            <>
+                <Modal
+                    width={900}
+                    title="Patient History"
+                    footer={[]}
+                    open={isModalOpenForPatHistory}
+                    onOk={handleOk}
+                    onCancel={handleCancel}
+                >
+                    <Space>
+                        {patientDetails && <Descriptions
+                            bordered
+                            items={desData}
+                        />}
+                    </Space>
+                </Modal>
+            </>
+        )
+    }
+
     return (
         <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
             <Card
@@ -196,17 +282,20 @@ const DoctorPatientDetails = React.forwardRef((props) => {
             >
                 <Spin tip="Please wait..." spinning={loading}>
                     <div style={contentStyle}>
-                        <Tabs defaultActiveKey="1"
-                            tabPosition={'left'}
-                            style={{
-                            }}
-                            items={items} onChange={onChange} />
+                        {patientBasicDetails ?
+                            <Tabs
+                                defaultActiveKey="0"
+                                tabPosition={'left'}
+                                style={{
+                                }}
+                                items={items}
+                                onChange={onChange}
+                            /> : null}
                     </div>
                 </Spin>
             </Card>
-
+            {patHistoryModal()}
         </Space>
-
     );
 });
 
