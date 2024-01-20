@@ -545,8 +545,9 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
             });
     }
     const addPatientReg = async (values: any) => {
+        values['dob'] = convertDate(values.dob); 
         values['isVIP'] = values.isVIP ? values.isVIP : false;
-        values['passIssueDate'] = values.passIssueDate ? values.passIssueDate : '1900-01-01';
+        values['passIssueDate'] =values.passIssueDate? convertDate(values.passIssueDate) : '1900-01-01';
         values['signature'] = values?.signature ? values.signature : '';
         values['photo'] = values?.photo ? values.photo : '';
         values['mName'] = values?.mName ? values.mName : ' ';

@@ -73,45 +73,50 @@ const DoctorPatientStatus = React.forwardRef(() => {
             title: 'Patient Admitted',
             dataIndex: 'patientAdmitted',
             key: 'patientAdmitted',
-            width: 150,
-            render: (_,record) => <Button onClick={() => showModal(record)
+            width: '18%',
+            render: (_, record, key) => <Button onClick={() => showModal(record, 'patientAdmitted')
             } size='small' block >{record.patientAdmitted}</Button>,
         },
         {
             title: 'Seen By Doctor',
             dataIndex: 'seenByDoc',
             key: 'seenByDoc',
-            width: 150,
-            render: (v) => <Button size='small' block >{v}</Button>,
+            width: '18%',
+            render: (_, record) => <Button onClick={() => showModal(record, 'seenByDoc')
+            } size='small' block >{record.seenByDoc}</Button>,
         },
         {
             title: 'Patient CheckedOut',
             dataIndex: 'patientCheckedOut',
             key: 'patientCheckedOut',
-            width: 150,
-            render: (v) => <Button size='small' block >{v}</Button>,
+            width: '18%',
+            render: (_, record) => <Button onClick={() => showModal(record, 'patientCheckedOut')
+            } size='small' block >{record.patientCheckedOut}</Button>,
         },
         {
             title: 'Patient Not Seen',
             dataIndex: 'patientNotSeen',
             key: 'patientNotSeen',
-            width: 150,
-            render: (v) => <Button size='small' block >{v}</Button>,
+            width: '18%',
+            render: (_, record) => <Button onClick={() => showModal(record, 'patientNotSeen')
+            } size='small' block >{record.patientNotSeen}</Button>,
         },
-        {
-            title: 'Cash Count',
-            dataIndex: 'cashCount',
-            key: 'cashCount',
-            width: 150,
-            render: (v) => <Button size='small' block >{v}</Button>,
-        },
-        {
-            title: 'Credit Count',
-            dataIndex: 'creditCount',
-            key: 'creditCount',
-            width: 150,
-            render: (v) => <Button size='small' block >{v}</Button>,
-        },
+        // {
+        //     title: 'Cash Count',
+        //     dataIndex: 'cashCount',
+        //     key: 'cashCount',
+        //     width: 150,
+        //     render: (_, record) => <Button onClick={() => showModal(record, 'cashCount')
+        //     } size='small' block >{record.cashCount}</Button>,
+        // },
+        // {
+        //     title: 'Credit Count',
+        //     dataIndex: 'creditCount',
+        //     key: 'creditCount',
+        //     width: 150,
+        //     render: (_, record) => <Button onClick={() => showModal(record, 'creditCount')
+        //     } size='small' block >{record.creditCount}</Button>,
+        // },
     ];
     const modalColumns: ColumnsType<DataType> = [
         {
@@ -124,7 +129,7 @@ const DoctorPatientStatus = React.forwardRef(() => {
             title: 'Patient Name',
             dataIndex: 'patientName',
             key: 'patientName',
-            width: 150,
+            width: '150',
             // render: (v) => <Button size='small' block >{v}</Button>,
         },
         {
@@ -138,6 +143,7 @@ const DoctorPatientStatus = React.forwardRef(() => {
             dataIndex: 'actualVisitDate',
             key: 'actualVisitDate',
             width: 150,
+            render: (v) => <Typography>{moment(v).format('DD MMM YYYY')}</Typography>,
         },
         {
             title: 'IsSeen',
@@ -194,9 +200,19 @@ const DoctorPatientStatus = React.forwardRef(() => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-    const showModal = (value:any) => {
+    const showModal = (value: any, key: any) => {
+        console.log(key, value);
         const show = modalData?.filter((item: any) => {
-            return(value.userID==item.consultantDocID)
+            switch (key) {
+                case 'patientAdmitted':
+                    return (value.userID == item.consultantDocID)
+                case 'patientCheckedOut':
+                    return (value.userID == item.consultantDocID && item.patientStatusID === "3")
+                case 'patientNotSeen':
+                    return (value.userID == item.consultantDocID && item.isSeen === false)
+                case 'seenByDoc':
+                    return (value.userID == item.consultantDocID && item.isSeen === true)
+            }
         })
         setShowModalData(show);
         setIsModalOpen(true);
@@ -238,7 +254,8 @@ const DoctorPatientStatus = React.forwardRef(() => {
                     layout='vertical'
                     onFinish={getDoctorPatientList}>
                     <Space style={{ alignItems: 'end' }}>
-                        <Form.Item name="fromDate" label="From Date" rules={[{ required: true, message: "Please Select Date" }]}>
+                        <Form.Item name="fromDate" label="From Date" 
+                        rules={[{ required: true, message: "Please Select Date" }]}>
                             <DatePicker
                                 style={{ width: '100%' }}
                                 format={'DD MMM YYYY'}
@@ -249,6 +266,7 @@ const DoctorPatientStatus = React.forwardRef(() => {
                             />
                         </Form.Item>
                         <Form.Item name="doctorID" label="Doctor"
+                        initialValue={"-1"}
                             rules={[{ required: true, message: "Please Select Doctor" }]}>
                             <Select
                                 showSearch
@@ -276,7 +294,7 @@ const DoctorPatientStatus = React.forwardRef(() => {
                 <Typography style={labelStyle}>Patient Doctor Status</Typography>
                 <Card>
                     <Table size='small' columns={columns} dataSource={statusList} pagination={false} />
-                    <Row style={{background:'#40a9ff'}}></Row>
+                    <Row style={{ background: '#40a9ff' }}></Row>
                 </Card>
             </div>
         </>

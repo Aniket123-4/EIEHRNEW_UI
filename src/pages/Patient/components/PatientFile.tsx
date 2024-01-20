@@ -193,7 +193,7 @@ const PatientFile = React.forwardRef((props) => {
 
     const updateDocList = async (v: any, url: any) => {
         const fr=addDocform.getFieldsValue()
-        var re = /(?:\.([^.]+))?$/;
+        var re:any = /(?:\.([^.]+))?$/;
         var ext = re?.exec(v.file.name)[1];
         const res = await requestGetUniqueID();
         const p: any = {
@@ -256,8 +256,9 @@ const PatientFile = React.forwardRef((props) => {
         }
     }
     const previewDoc = async (item: any) => {
+        setImageUrl("")
         const params = {
-            fileName: item.patientDocID,
+            fileName: item.phyName,
             filePath: ""
         }
         const res1 = await requestGetDocuments(params);
@@ -274,7 +275,6 @@ const PatientFile = React.forwardRef((props) => {
 
     const addPatientDoc = async (values: any) => {
         var re = /(?:\.([^.]+))?$/;
-        var ext = re?.exec(docName)[1];
         console.log(values, patientData, lstType_PatientDoc)
         const paramsOfDoc = {
             "patientID": patientData?.patientID,
@@ -468,7 +468,7 @@ const PatientFile = React.forwardRef((props) => {
                                                     getValueFromEvent={(v) => getBase64(v.file.originFileObj as RcFile, (url) => {
                                                         addDocform.setFieldsValue({ docBase64: url })
                                                         setDocName(v.file.name)
-                                                        if (v.file.status === "done")
+                                                        //if (v.file.status === "done")
                                                             updateDocList(v, url)
                                                     })}
                                                     label=""
@@ -500,7 +500,7 @@ const PatientFile = React.forwardRef((props) => {
                                             </Space></>}>
                                         {docList && <List
                                             dataSource={docList}
-                                            renderItem={(item) => (
+                                            renderItem={(item:any) => (
                                                 <Card style={{ boxShadow: '2px 2px 2px #4874dc', marginTop: 8 }} key={item.docID}>
                                                     <Row style={{ alignItems: 'center', justifyContent: 'space-between' }}>
                                                         <Row>

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { EditOutlined, FilterOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { CloseOutlined, EditOutlined, FilterOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Modal, Descriptions, Typography } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
 import { requestGetCheckOutPatient, requestGetPatientCheckOutInfo, requestGetPatientSearch, requestUpdateBulkCaseCheckOut, requestUpdateCaseCheckIn, requestUpdateCaseCheckOut } from '../services/api';
@@ -175,7 +175,7 @@ const PatientCheckOut = React.forwardRef((props) => {
                 setCheckInList(response?.result)
             //}
             //if (response?.isSuccess) {
-                form.resetFields();
+                // form.resetFields();
             } else {
                 message.error(response?.msg);
             }
@@ -305,7 +305,7 @@ const PatientCheckOut = React.forwardRef((props) => {
                 options={[{ value: "1", label: "Check-Out List" }, { value: "2", label: "Check-In List" }]}
                 placeholder="Select"
             />
-            {mainType==2&&<Button onClick={updateBulkCaseCheckOut}>BulkCheckout</Button>}
+            {/* {mainType==2&&<Button onClick={updateBulkCaseCheckOut}>BulkCheckout</Button>} */}
             </>}
             style={{ boxShadow: '2px 2px 2px #4874dc'}}
             extra={
@@ -347,6 +347,7 @@ const PatientCheckOut = React.forwardRef((props) => {
                                 <Input allowClear placeholder="Input Search Text"/>
                             </Form.Item>
                             <Button htmlType='submit' type='primary'>Search</Button>
+                            <Button onClick={()=>{form.resetFields(); getList()}} type='primary' icon={<CloseOutlined />}/>
                         </Space>
                     </Form>
                 </Row>
