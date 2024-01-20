@@ -10,9 +10,8 @@ import { convertDate, convertTime } from '@/utils/helper';
 import dayjs from 'dayjs';
 import { getUserInLocalStorage } from '@/utils/common';
 import { ColumnsType } from 'antd/es/table';
-import { requestGetInvParameterMasterList, requestServiceList } from '@/pages/Complaint/services/api';
+import { requestGetInvGroup, requestGetInvParameterMasterList, requestServiceList } from '@/pages/Complaint/services/api';
 import { DataNode } from 'antd/es/tree';
-import { requestGetInvGroup } from '@/pages/Patient/services/api';
 
 
 const Investigation = ({ patientDetails = {}, patientCaseID }: any) => {
