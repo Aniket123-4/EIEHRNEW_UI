@@ -138,17 +138,17 @@ export default [
       {
         name: 'Direct Item Reciept',
         path: '/medicalStore/directItemReciept',
-        component: './Welcome',
+        component: './MedicalStore/component/DirectItemReceipt',
       },
       {
         name: 'Item Status',
         path: '/medicalStore/itemStatus',
-        component: './Welcome',
+        component: './MedicalStore/component/ItemStatus',
       },
       {
         name: 'Supplier Master',
         path: '/medicalStore/SupplierMaster',
-        component: './Welcome',
+        component: './MedicalStore/component/SupplierMaster',
       },
     ],
   },

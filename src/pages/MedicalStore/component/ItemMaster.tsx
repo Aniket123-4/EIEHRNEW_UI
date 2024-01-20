@@ -26,6 +26,7 @@ import {
   theme,
 } from "antd";
 import React, { useEffect, useRef, useState } from "react";
+import ItemList from "./ItemList";
 
 const { Option } = Select;
 
@@ -41,15 +42,13 @@ const ItemMaster = ({
   const [form] = Form.useForm();
   const [supplierForm] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [complaintType, setComplaintType] = useState<any>([
-    { value: "1", label: "Type 1" },
-  ]);
   const [rateType, setRateType] = useState<any>([]);
   const [vatApplicable, setVatApplicable] = useState(false);
   const [supplierList, setSupplierList] = useState([]);
   const [unitList, setUnitList] = useState([]);
   const [itemCatList, setItemCatList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [itemID, setItemID] = useState("-1");
 
   const [isActive, setIsActive] = useState(true);
 
@@ -128,36 +127,61 @@ const ItemMaster = ({
     values["sgstPercent"] = values.sgstPercent
       ? values.sgstPercent.toString()
       : "";
-
+    setLoading(true);
     const staticParams = {
-      itemID: -1,
+      itemID: itemID,
       userID: -1,
       formID: -1,
       type: 1,
     };
-    console.log({ ...values, ...staticParams });
     const res = await requestAddItem({ ...values, ...staticParams });
     if (res.isSuccess == true) {
       message.success(res?.result[0]?.msg);
+      form.resetFields();
+      setVatApplicable(false)
+      setLoading(false)
     }
+    setLoading(false)
   };
   const addSupplier = async (values: any) => {
     const staticParams = {
+      "supplierID": -1,
       "userID": -1,
       "formID": -1,
       "type": 1
     };
-    console.log({ ...values, ...staticParams });
+    setLoading(true)
     const res = await requestAddSupplier({ ...values, ...staticParams });
     if (res.isSuccess == true) {
       message.success(res?.result[0]?.msg);
       supplierForm.resetFields();
       handleCancel();
       getSupplierList();
+      setLoading(false);
     }
   };
   const goBack = () => {
     history.push("/");
+  };
+  const setEditField = (data: any) => {
+    form.setFieldsValue({
+      itemName: data?.itemName,
+      unitID: data?.unitID,
+      itemCode: data?.itemCode,
+      itemNameML: data?.itemNameML,
+      supplierID: data?.supplierID,
+      itemComment: data?.itemComment,
+      itemCatID: data?.itemCatID,
+      chemicalName: data?.chemicalName,
+      isVATApplicable: data?.isVATApplicable,
+      vatPercent: data?.vatPercent,
+      cgstPercent: data?.cgstPercent,
+      sgstPercent: data?.sgstPercent,
+      isActive: data?.isActive,
+    })
+    setVatApplicable(data?.isVATApplicable)
+    window.scrollTo(0, 0)
+    setItemID(data?.itemID)
   };
 
   const showModal = () => {
@@ -165,7 +189,11 @@ const ItemMaster = ({
   };
   const handleCancel = () => {
     setIsModalOpen(false);
-};
+  };
+
+  const filterOption = (input: string, supplierList?: { label: string; value: string }) =>
+    (supplierList?.label ?? '').toLowerCase().includes(input.toLowerCase());
+
   const showaddSuplier = () => {
     return (
       <Modal
@@ -175,7 +203,7 @@ const ItemMaster = ({
         footer={[]}
       >
         <Form
-        layout="horizontal"
+          layout="horizontal"
           form={supplierForm}
           onFinish={addSupplier}
         >
@@ -201,15 +229,15 @@ const ItemMaster = ({
             <Input size={"large"} placeholder="Please Enter Supplier Address" />
           </Form.Item>
           <Col span={5}>
-                <Form.Item
-                  name="isActive"
-                  rules={[{ required: true, message: "Please check" }]}
-                  valuePropName="checked"
-                  initialValue={true}
-                >
-                  <Checkbox>IsActive</Checkbox>
-                </Form.Item>
-              </Col>
+            <Form.Item
+              name="isActive"
+              rules={[{ required: true, message: "Please check" }]}
+              valuePropName="checked"
+              initialValue={true}
+            >
+              <Checkbox>IsActive</Checkbox>
+            </Form.Item>
+          </Col>
           <Button type="primary" htmlType="submit">
             Submit
           </Button>
@@ -234,11 +262,11 @@ const ItemMaster = ({
         initialValues={{}}
       >
         <>
-        {showaddSuplier()}
+          {showaddSuplier()}
           <div className="gutter-example">
             {/* <Row gutter={16}> */}
             <Row gutter={16}>
-              <Col className="gutter-row" span={6}>
+              <Col className="gutter-row" span={8}>
                 <Form.Item
                   // required={true}
                   name="itemName"
@@ -250,9 +278,9 @@ const ItemMaster = ({
                   <Input placeholder="Please Enter Item Name" />
                 </Form.Item>
               </Col>
-              <Col className="gutter-row" span={6}>
+              <Col className="gutter-row" span={8}>
                 <Form.Item
-                  name="ItemCode"
+                  name="itemCode"
                   label="Item Code"
                   rules={[
                     { required: true, message: "Please Enter Item Code" },
@@ -261,24 +289,30 @@ const ItemMaster = ({
                   <Input placeholder="Please Enter Item Code" />
                 </Form.Item>
               </Col>
-              <Col className="gutter-row" span={6}>
+              <Col className="gutter-row" span={8}>
                 <Form.Item
                   name="itemCatID"
                   label="Item Category"
                   rules={[
                     {
                       required: true,
-                      message: "Please Select Item Category",
+                      message: "Please Select Category",
                     },
                   ]}
                 >
-                  <Select options={itemCatList} placeholder="Select" />
+                  <Select showSearch
+                    filterOption={filterOption}
+                    optionFilterProp="children" options={itemCatList} placeholder="Select" />
                 </Form.Item>
               </Col>
-              <Col className="gutter-row" span={6}>
+
+            </Row>
+
+            <Row gutter={16}>
+              <Col className="gutter-row" span={8}>
                 <Form.Item
                   name="itemNameML"
-                  label="Item Name In Other Language"
+                  label="Name In Other Lang"
                   rules={[
                     {
                       required: false,
@@ -292,19 +326,18 @@ const ItemMaster = ({
                   />
                 </Form.Item>
               </Col>
-            </Row>
-
-            <Row gutter={16}>
-              <Col className="gutter-row" span={6}>
+              <Col className="gutter-row" span={8}>
                 <Form.Item
                   name="unitID"
                   label="Unit"
                   rules={[{ required: true, message: "Please Select Unit" }]}
                 >
-                  <Select options={unitList} placeholder="Select" />
+                  <Select showSearch
+                    filterOption={filterOption}
+                    optionFilterProp="children" options={unitList} placeholder="Select" />
                 </Form.Item>
               </Col>
-              <Col className="gutter-row" span={6}>
+              <Col className="gutter-row" span={8}>
                 <Form.Item
                   name="chemicalName"
                   label="Chemical Name"
@@ -315,18 +348,21 @@ const ItemMaster = ({
                   <Input placeholder="Please Enter Chemical Name" />
                 </Form.Item>
               </Col>
-              <Col className="gutter-row" span={6}>
+              <Col className="gutter-row" span={8}>
                 <Form.Item
                   name="supplierID"
                   label="Supplier"
                   rules={[
                     {
                       required: true,
-                      message: "Please Select Supplier Name",
+                      message: "Please Select Supplier",
                     },
                   ]}
                 >
                   <Select
+                    showSearch
+                    filterOption={filterOption}
+                    optionFilterProp="children"
                     options={supplierList}
                     placeholder="Select"
                     dropdownRender={(menu) => (
@@ -337,7 +373,7 @@ const ItemMaster = ({
                             icon={<PlusOutlined />}
                             onClick={showModal}
                           >
-                            Add New Supplier
+                            Add Supplier
                           </Button>
                         </Space>
                         <Divider style={{ margin: "8px 0" }} />
@@ -347,7 +383,7 @@ const ItemMaster = ({
                   />
                 </Form.Item>
               </Col>
-              <Col className="gutter-row" span={6}>
+              <Col className="gutter-row" span={8}>
                 <Form.Item
                   name="itemComment"
                   label="Comment"
@@ -468,23 +504,24 @@ const ItemMaster = ({
                   <Checkbox>IsActive</Checkbox>
                 </Form.Item>
               </Col>
+              <Col style={{ justifyContent: "flex-end" }}>
+                <Button
+                  style={{ padding: 5, width: 100, height: 40 }}
+                  type="primary"
+                  htmlType="submit"
+                >
+                  Submit
+                </Button>
+                <Button
+                  onClick={goBack}
+                  style={{ marginLeft: 10, padding: 5, width: 100, height: 40 }}
+                  type="default"
+                >
+                  Cancel
+                </Button>
+              </Col>
             </Row>
-            <Col style={{ justifyContent: "flex-end" }}>
-              <Button
-                style={{ padding: 5, width: 100, height: 40 }}
-                type="primary"
-                htmlType="submit"
-              >
-                Submit
-              </Button>
-              <Button
-                onClick={goBack}
-                style={{ marginLeft: 10, padding: 5, width: 100, height: 40 }}
-                type="default"
-              >
-                Cancel
-              </Button>
-            </Col>
+
           </div>
         </>
       </Form>
@@ -493,21 +530,25 @@ const ItemMaster = ({
 
   return (
     <PageContainer title=" " style={{}}>
-      <Space direction="vertical" size="middle" style={{ display: "flex" }}>
-        <Card
-          style={{ height: "100%", boxShadow: "2px 2px 2px #4874dc" }}
-          title="New Item"
-          // extra={[
-          //     <Button key="rest" onClick={() => {
-          //         history.push("/complaints/list")
-          //     }}
-          //     >List</Button>,
-          // ]}
-        >
-          <Spin tip="Please wait..." spinning={loading}>
-            <div style={contentStyle}>{addForm()}</div>
-          </Spin>
-        </Card>
+      <Space direction="horizontal" size="middle" style={{ display: "flex" }}>
+        <Row gutter={8}>
+          <Col span={11}>
+            <Card
+              style={{ height: 480, boxShadow: "2px 2px 2px #4874dc" }}
+              title="New Item"
+            >
+              <Spin tip="Please wait..." spinning={loading}>
+                <div>{addForm()}</div>
+              </Spin>
+            </Card>
+
+          </Col>
+          <Col span={13}>
+            <ItemList
+              refresh={loading}
+              editRecord={(data: any) => setEditField(data)}
+            /></Col>
+        </Row>
       </Space>
     </PageContainer>
   );

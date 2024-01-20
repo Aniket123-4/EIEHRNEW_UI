@@ -219,8 +219,8 @@ const PatientFilter: React.FC = ({ visible, onClose, selectedRows, loading, onFi
             // fromDate: '1900-01-21',
             // toDate: moment(new Date()).format('YYYY-MM-DD')
         });
-        console.log(filterForm.getFieldValue())
-        onFinishPatForm(filterForm.getFieldValue())
+        console.log(filterForm.getFieldsValue())
+        onFinishPatForm(filterForm.getFieldsValue())
         // onFilter(filterForm.getFieldValue());
     }
 
@@ -332,6 +332,9 @@ const PatientFilter: React.FC = ({ visible, onClose, selectedRows, loading, onFi
                     <Form.Item>
                         <Button type="primary" loading={loading} htmlType="submit">
                             Filter
+                        </Button>
+                        <Button onClick={()=>handleResetFilter()} style={{marginLeft:20}} type="primary">
+                            Clear
                         </Button>
 
                     </Form.Item>

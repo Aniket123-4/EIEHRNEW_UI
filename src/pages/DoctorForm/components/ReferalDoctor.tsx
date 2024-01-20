@@ -11,7 +11,7 @@ import dayjs from 'dayjs';
 import { getUserInLocalStorage } from '@/utils/common';
 import { ColumnsType } from 'antd/es/table';
 import { requestAddDelPatientForDoctorOPIP } from '../services/api';
-import { requestGetInvestigation } from '@/pages/Patient/services/api';
+import { requestGetInvestigation } from '@/pages/Investigation/services/api';
 
 const { RangePicker } = DatePicker;
 

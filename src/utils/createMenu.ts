@@ -61,6 +61,15 @@ const getModulePath = (name: string) => {
 
         case "Item Master":
             return "/medicalStore/itemMaster";
+            
+        case "Direct Item Receipt":
+            return "/medicalStore/directItemReciept";
+
+        case "Item Status":
+            return "/medicalStore/itemStatus";
+        
+            case "Supplier Master":
+            return "/medicalStore/SupplierMaster";
 
         case "Reception":
             return "/reception/search";

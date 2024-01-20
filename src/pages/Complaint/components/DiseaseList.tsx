@@ -353,6 +353,13 @@ const DiseaseList: React.FC = ({editRecord,refresh }:any) => {
             width: '20%'
         },
         {
+            title: 'Disease Type',
+            key: 'diseaseTypeName',
+            dataIndex: 'diseaseTypeName',
+            editable: true,
+            width: '20%'
+        },
+        {
             title: 'Special Type Name',
             key: 'specialTypeId',
             dataIndex: 'specialTypeName',
@@ -362,7 +369,7 @@ const DiseaseList: React.FC = ({editRecord,refresh }:any) => {
         {
             title: 'Action',
             dataIndex: 'operation',
-            width: '20%',
+            width: '10%',
             render: (_: any, record: Item) => {
                 const editable = isEditing(record);
                 return editable ? (

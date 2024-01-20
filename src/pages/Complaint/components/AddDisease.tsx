@@ -200,7 +200,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
 
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={6}>
+                            {/* <Col className="gutter-row" span={6}>
                                 <Form.Item
                                     name="specialTypeID"
                                     label="Special type"
@@ -214,9 +214,8 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                                         options={specialList}
                                         filterOption={filterOption}
                                     />
-                                    {/* <Input size={'large'} placeholder="Please enter special type" /> */}
                                 </Form.Item>
-                            </Col>
+                            </Col> */}
 
                         </Row>
                         <Col className="gutter-row" span={6}>
