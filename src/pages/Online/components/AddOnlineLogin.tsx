@@ -134,6 +134,19 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
             message.error('please try again');
         }
     };
+    const validateCharacters = (rule, value, callback) => {
+        const regex = /^[A-Za-z\s]+$/;
+        if (!regex.test(value)) {
+            if (value) {
+                callback('Only characters are allowed');
+            } else {
+                callback();
+            }
+
+        } else {
+            callback();
+        }
+    };
 
 
     const addForm = () => {
@@ -157,7 +170,8 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
                                 <Form.Item
                                     name="fName"
                                     label="First Name"
-                                    rules={[{ required: true, message: 'Please Enter First Name' }]}
+                                    rules={[{ required: true, message: 'Please Enter First Name' },
+                                {validator:validateCharacters}]}
                                 // initialValue={institute}
                                 >
                                     <Input size={'large'} placeholder="Please Enter First Name" />
@@ -167,7 +181,8 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
                                 <Form.Item
                                     name="mName"
                                     label="Middle Name"
-                                    rules={[{ message: 'Please Enter Middle> Name' }]}
+                                    rules={[{ message: 'Please Enter Middle> Name' },
+                                {validator:validateCharacters}]}
                                 >
                                     <Input size={'large'} placeholder="Please Enter Middle Name" />
                                 </Form.Item>
@@ -176,7 +191,8 @@ const AddOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, institu
                                 <Form.Item
                                     name="lName"
                                     label="Last Name"
-                                    rules={[{ required: true, message: 'Please Enter Last Name' }]}
+                                    rules={[{ required: true, message: 'Please Enter Last Name' },
+                                {validator:validateCharacters}]}
                                 >
                                     <Input size={'large'} placeholder="Please Enter Last Name" />
                                 </Form.Item>
