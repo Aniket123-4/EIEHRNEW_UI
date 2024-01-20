@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import { ColumnsType } from 'antd/es/table';
 import { getUserInLocalStorage } from '@/utils/common';
 import { requestAddDelPatientForDoctorOPIP } from '../services/api';
+import moment from 'moment';
 
 const { RangePicker } = DatePicker;
 
@@ -81,8 +82,8 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID }: any) => {
             const params = {
                 "patientCaseID": patientCaseID,
                 "admNo": "1",
-                "col1": values?.DisCondID,
-                "col2": values?.DischargeToID,
+                "col1": "-1",//values?.DisCondID,
+                "col2": "-1",//values?.DischargeToID,
                 "col3": values?.CondUponDischarge,
                 "col4": values?.BreifCaseSummary,
                 "col5": values?.ReasonForAdmission,
@@ -93,16 +94,16 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID }: any) => {
                 "col10": values?.FinalAdvice,
                 "col11": values?.IssuesToAddressAtFollowUP,
                 "col12": "",
-                "col13": values?.IsDocSeen,
-                "col14": values?.IsEmergency,
-                "col15": values?.PatDiseaseTypeID,
-                "col16": values?.PatSickLeaveID,
-                "col17": values?.SickLeaveDays,
-                "col18": values?.FromDateToDate,
-                "col19": values?.Reasons,
-                "col20": values?.Others,
-                "col21": values?.DischargeDate,
-                "col22": values?.NextVisitDate,
+                "col13": "",//values?.IsDocSeen,
+                "col14": "",//values?.IsEmergency,
+                "col15": "",//values?.PatDiseaseTypeID,
+                "col16": "",//values?.PatSickLeaveID,
+                "col17": "",//values?.SickLeaveDays,
+                "col18": "",//values?.FromDateToDate,
+                "col19": "",//values?.Reasons,
+                "col20": "",//values?.Others,
+                "col21": moment(values?.DischargeDate).format(dateFormat),//values?.DischargeDate,
+                "col22": moment(values?.NextVisitDate).format(dateFormat),//values?.NextVisitDate,
                 "isForDelete": false,
                 "lstType_DocPatient": [
                     {
@@ -175,8 +176,73 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID }: any) => {
             >
 
                 <Row gutter={16}>
+                    <Col span={8}>
+                        <Form.Item name="CondUponDischarge" label="Cond Upon Discharge" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="BreifCaseSummary" label="Breif Case Summary" rules={[{ required: false }]}>
+                            <Input.TextArea placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="ReasonForAdmission" label="Reason For Admission" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="ClinicalFinding" label="Clinical Finding" rules={[{ required: false }]}>
+                            <Input.TextArea placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="FinalDaigNosis" label="Final DaigNosis" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="InstructionToPateint" label="Instruction To Pateint" rules={[{ required: false }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
 
                     <Col span={8}>
+                        <Form.Item name="DischargeNotes" label="Discharge Notes" rules={[{ required: false }]}>
+                            <Input.TextArea placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="FinalAdvice" label="Final Advice" rules={[{ required: false }]}>
+                            <Input.TextArea placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="IssuesToAddressAtFollowUP" label="Issues To Address At FollowUP" rules={[{ required: false }]}>
+                            <Input.TextArea placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+
+                    <Col span={8}>
+                        <Form.Item name="DischargeDate" label="Discharge Date" rules={[{ required: false }]}>
+                            <DatePicker
+                                style={{ width: '100%' }}
+                                format={dateFormat}
+                            />
+                        </Form.Item>
+                    </Col>
+
+
+                    <Col span={8}>
+                        <Form.Item name="NextVisitDate" label="Next Visit Date" rules={[{ required: false }]}>
+                            <DatePicker
+                                style={{ width: '100%' }}
+                                format={dateFormat}
+                            />
+                        </Form.Item>
+                    </Col>
+
+                    {/* <Col span={8}>
                         <Form.Item name="DisCondID" label="DisCondID" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
@@ -187,52 +253,9 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID }: any) => {
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
-                    <Col span={8}>
-                        <Form.Item name="CondUponDischarge" label="CondUponDischarge" rules={[{ required: false }]}>
-                            <Input placeholder="Please Enter" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item name="BreifCaseSummary" label="BreifCaseSummary" rules={[{ required: false }]}>
-                            <Input placeholder="Please Enter" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item name="ReasonForAdmission" label="ReasonForAdmission" rules={[{ required: false }]}>
-                            <Input placeholder="Please Enter" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item name="ClinicalFinding" label="ClinicalFinding" rules={[{ required: false }]}>
-                            <Input placeholder="Please Enter" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item name="FinalDaigNosis" label="FinalDaigNosis" rules={[{ required: false }]}>
-                            <Input placeholder="Please Enter" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item name="InstructionToPateint" label="InstructionToPateint" rules={[{ required: false }]}>
-                            <Input placeholder="Please Enter" />
-                        </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                        <Form.Item name="DischargeNotes" label="DischargeNotes" rules={[{ required: false }]}>
-                            <Input placeholder="Please Enter" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item name="FinalAdvice" label="FinalAdvice" rules={[{ required: false }]}>
-                            <Input placeholder="Please Enter" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item name="IssuesToAddressAtFollowUP" label="IssuesToAddressAtFollowUP" rules={[{ required: false }]}>
-                            <Input placeholder="Please Enter" />
-                        </Form.Item>
-                    </Col>
+                  
+                  
+                  
                     <Col span={8}>
                         <Form.Item name="IsDocSeen" label="IsDocSeen" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
@@ -282,7 +305,7 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID }: any) => {
                         <Form.Item name="Others" label="Others" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
-                    </Col>
+                    </Col> */}
 
                 </Row>
 

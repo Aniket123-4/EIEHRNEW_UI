@@ -1,18 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, TimePicker } from 'antd';
-import { PageContainer, EditableProTable } from '@ant-design/pro-components';
-import { history } from '@umijs/max';
 import { requestGetComplaintType, requestGetSection, requestGetUserList } from '@/services/apiRequest/dropdowns';
-import type { DatePickerProps, RadioChangeEvent } from 'antd';
 import { DatePicker, Radio } from 'antd';
 import { booleanValueForOption, dateFormat } from '@/utils/constant';
-import dayjs from 'dayjs';
 import moment from 'moment';
 import { requestAddDelPatientForDoctorOPIP } from '../services/api';
 import { getUserInLocalStorage } from '@/utils/common';
-
-const { RangePicker } = DatePicker;
-
 
 
 const Complain = ({ patientDetails = {}, patientCaseID }: any) => {
@@ -57,6 +50,7 @@ const Complain = ({ patientDetails = {}, patientCaseID }: any) => {
 
     useEffect(() => {
         getComplaintType();
+ 
     }, [])
 
     const getComplaintType = async () => {
@@ -163,7 +157,7 @@ const Complain = ({ patientDetails = {}, patientCaseID }: any) => {
             setLoading(true)
             const response = await requestAddDelPatientForDoctorOPIP({ ...params });
             setLoading(false)
-
+            message.success(response?.msg);
             if (!response?.isSuccess) {
                 message.error(response?.msg);
             } else {

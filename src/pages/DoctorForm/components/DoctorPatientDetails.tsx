@@ -30,6 +30,7 @@ const { RangePicker } = DatePicker;
 const { confirm } = Modal;
 
 const DoctorPatientDetails = React.forwardRef((props) => {
+    const [msg, contextHolder] = message.useMessage();
     const [form] = Form.useForm();
     const [formFilter] = Form.useForm();
     const [loading, setLoading] = useState(false)
@@ -211,48 +212,50 @@ const DoctorPatientDetails = React.forwardRef((props) => {
 
     const patHistoryModal = () => {
 
-        const desData = [
+        let desData: any = [];
+        if (patientDetails?.result7) {
+            desData = [
+                {
+                    label: 'Allergy',
+                    key: '1',
+                    children: patientDetails?.result7.length > 0 ? patientDetails?.result7[0]?.allergy : ""
+                }, {
+                    label: 'Warnings',
+                    key: '2',
+                    children: patientDetails?.result7.length > 0 ? patientDetails?.result7[0]?.warnings : ""
+                },
+                {
+                    label: 'Addiction',
+                    key: '3',
+                    children: patientDetails?.result7.length > 0 ? patientDetails?.result7[0]?.addiction : ""
+                },
+                {
+                    label: 'Social History',
+                    key: '4',
+                    children: patientDetails?.result7.length > 0 ? patientDetails?.result7[0]?.socialHistory : ""
 
-            {
-                label: 'Allergy',
-                key: '1',
-                children: patientDetails?.result7[0]?.allergy
-            }, {
-                label: 'Warnings',
-                key: '2',
-                children: patientDetails?.result7[0]?.warnings
-            },
-            {
-                label: 'Addiction',
-                key: '3',
-                children: patientDetails?.result7[0]?.addiction
-            },
-            {
-                label: 'Social History',
-                key: '4',
-                children: patientDetails?.result7[0]?.socialHistory
-
-            }, {
-                label: 'Family History',
-                key: '5',
-                children: patientDetails?.result7[0]?.familyHistory
-            },
-            {
-                label: 'Personal History',
-                key: '6',
-                children: patientDetails?.result7[0]?.personalHistory
-            },
-            {
-                label: 'Past Medical History',
-                key: '7',
-                children: patientDetails?.result7[0]?.pastMedicalHistory
-            },
-            {
-                label: 'Obstetrics',
-                key: '8',
-                children: patientDetails?.result7[0]?.obstetrics
-            },
-        ];
+                }, {
+                    label: 'Family History',
+                    key: '5',
+                    children: patientDetails?.result7.length > 0 ? patientDetails?.result7[0]?.familyHistory : ""
+                },
+                {
+                    label: 'Personal History',
+                    key: '6',
+                    children: patientDetails?.result7.length > 0 ? patientDetails?.result7[0]?.personalHistory : ""
+                },
+                {
+                    label: 'Past Medical History',
+                    key: '7',
+                    children: patientDetails?.result7.length > 0 ? patientDetails?.result7[0]?.pastMedicalHistory : ""
+                },
+                {
+                    label: 'Obstetrics',
+                    key: '8',
+                    children: patientDetails?.result7.length > 0 ? patientDetails?.result7[0]?.obstetrics : ""
+                },
+            ];
+        }
         return (
             <>
                 <Modal
@@ -275,27 +278,30 @@ const DoctorPatientDetails = React.forwardRef((props) => {
     }
 
     return (
-        <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-            <Card
-                title=""
-                style={{ boxShadow: '2px 2px 2px #4874dc' }}
-            >
-                <Spin tip="Please wait..." spinning={loading}>
-                    <div style={contentStyle}>
-                        {patientBasicDetails ?
-                            <Tabs
-                                defaultActiveKey="0"
-                                tabPosition={'left'}
-                                style={{
-                                }}
-                                items={items}
-                                onChange={onChange}
-                            /> : null}
-                    </div>
-                </Spin>
-            </Card>
-            {patHistoryModal()}
-        </Space>
+        <>
+            {contextHolder}
+            <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                <Card
+                    title=""
+                    style={{ boxShadow: '2px 2px 2px #4874dc' }}
+                >
+                    <Spin tip="Please wait..." spinning={loading}>
+                        <div style={contentStyle}>
+                            {patientBasicDetails ?
+                                <Tabs
+                                    defaultActiveKey="0"
+                                    tabPosition={'left'}
+                                    style={{
+                                    }}
+                                    items={items}
+                                    onChange={onChange}
+                                /> : null}
+                        </div>
+                    </Spin>
+                </Card>
+                {patHistoryModal()}
+            </Space>
+        </>
     );
 });
 

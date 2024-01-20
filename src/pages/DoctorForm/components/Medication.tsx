@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, TimePicker } from 'antd';
 import { PageContainer, EditableProTable } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
-import { requestGetSection, requestGetUserList } from '@/services/apiRequest/dropdowns';
+import { requestFnGetItem, requestGetProduct, requestGetSection, requestGetUserList } from '@/services/apiRequest/dropdowns';
 import type { DatePickerProps, RadioChangeEvent } from 'antd';
 import { DatePicker, Radio } from 'antd';
 import { dateFormat } from '@/utils/constant';
@@ -20,7 +20,8 @@ const Medication = ({ patientDetails = {}, patientCaseID }: any) => {
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const { verifiedUser } = getUserInLocalStorage();
-    const [drugList, setDiseaseList] = useState([{ value: "1", label: "drug 1" }]);
+    const [drugList, setDiseaseList] = useState([]);
+    const [productList, setProductList] = useState([]);
 
     const columns: ColumnsType<any> = [
         {
@@ -64,6 +65,57 @@ const Medication = ({ patientDetails = {}, patientCaseID }: any) => {
     ];
 
 
+    useEffect(() => {
+        getItemList()
+        getProductList()
+    }, [])
+
+
+    const getItemList = async () => {
+        const params = {
+            "itemID": -1,
+            "itemCatID": -1,
+            "sectionID": -1,
+            "fundID": -1,
+            "ledgerNo": "",
+            "itemSearch": "",
+            "userID": -1,
+            "formID": 1,
+            "type": 1
+        }
+        const res = await requestFnGetItem(params);
+
+        if (res.result.length > 0) {
+            const dataMaskForDropdown = res?.result?.map((item: any) => {
+                return { value: item.itemID, label: item.itemName }
+            })
+            setDiseaseList(dataMaskForDropdown)
+        }
+    }
+    const getProductList = async () => {
+        const params = {
+            "productID": -1,
+            "sectionID": -1,
+            "itemCatID": 1,
+            "itemID": 1,
+            "productSearch": "",
+            "userID": -1,
+            "formID": -1,
+            "mainType": 2,
+            "type": 1
+        }
+        const res = await requestGetProduct(params);
+
+        if (res.result.length > 0) {
+            const dataMaskForDropdown = res?.result?.map((item: any) => {
+                return { value: item.itemID, label: item.itemName }
+            })
+            setDiseaseList(dataMaskForDropdown)
+        }
+    }
+
+
+
     const formView = () => {
 
         const onFinishPatForm = async (values: any) => {
@@ -71,16 +123,16 @@ const Medication = ({ patientDetails = {}, patientCaseID }: any) => {
                 "patientCaseID": patientCaseID,
                 "admNo": "1",
                 "col1": values?.DrugID,
-                "col2": +values?.NoOfDays,
-                "col3": +values?.QuantityPerDay,
+                "col2": "" + values?.NoOfDays,
+                "col3": "" + values?.QuantityPerDay,
                 "col4": values?.Instruction,
                 "col5": values?.Advice,
                 "col6": values?.Diet,
-                "col7": values?.ProductID,
+                "col7": "" + values?.ProductID,
                 "col8": "",
-                "col9": values?.Qty,
-                "col10": values?.QtyTimesPerDay,
-                "col11": values?.UnitIDForDoc,
+                "col9": "" + values?.Qty,
+                "col10": "" + values?.QtyTimesPerDay,
+                "col11": "" + values?.UnitIDForDoc,
                 "col12": "",
                 "col13": "",
                 "col14": "",
@@ -153,7 +205,6 @@ const Medication = ({ patientDetails = {}, patientCaseID }: any) => {
 
 
 
-        const handleChangeFilter = (value: any) => { }
 
         return (
             <Form
@@ -170,19 +221,20 @@ const Medication = ({ patientDetails = {}, patientCaseID }: any) => {
                             <Select
                                 options={drugList}
                                 placeholder="Select"
+                                showSearch
                             />
                         </Form.Item>
                     </Col>
 
                     <Col span={8}>
                         <Form.Item name="NoOfDays" label="No Of Days" rules={[{ required: true }]}>
-                            <Input placeholder="Please Enter" />
+                            <InputNumber placeholder="Please Enter" style={{ width: "100%" }} min={0} />
                         </Form.Item>
                     </Col>
 
                     <Col span={8}>
                         <Form.Item name="QuantityPerDay" label="Quantity Per Day" rules={[{ required: true }]}>
-                            <Input placeholder="Please Enter" />
+                            <InputNumber placeholder="Please Enter" style={{ width: "100%" }} min={0} />
                         </Form.Item>
                     </Col>
 
@@ -215,7 +267,7 @@ const Medication = ({ patientDetails = {}, patientCaseID }: any) => {
                     <Col span={8}>
                         <Form.Item name="ProductID" label="Product" rules={[{ required: true }]}>
                             <Select
-                                options={drugList}
+                                options={productList}
                                 placeholder="Select"
                             />
                         </Form.Item>
@@ -223,18 +275,18 @@ const Medication = ({ patientDetails = {}, patientCaseID }: any) => {
 
                     <Col span={8}>
                         <Form.Item name="Qty" label="Qty" rules={[{ required: true }]}>
-                            <InputNumber placeholder="Please Enter" style={{ width: "100%" }} />
+                            <InputNumber placeholder="Please Enter" style={{ width: "100%" }} min={0} />
                         </Form.Item>
                     </Col>
 
                     <Col span={8}>
                         <Form.Item name="QtyTimesPerDay" label="Qty Times Per Day" rules={[{ required: true }]}>
-                            <InputNumber placeholder="Please Enter" style={{ width: "100%" }} />
+                            <InputNumber placeholder="Please Enter" style={{ width: "100%" }} min={0} />
                         </Form.Item>
                     </Col>
                     <Col span={8}>
                         <Form.Item name="UnitIDForDoc" label="Unit For Doc" rules={[{ required: true }]}>
-                            <InputNumber placeholder="Please Enter" style={{ width: "100%" }} />
+                            <InputNumber placeholder="Please Enter" style={{ width: "100%" }} min={0} />
                         </Form.Item>
                     </Col>
 

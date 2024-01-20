@@ -17,7 +17,7 @@ import { getPackageId, getUserInLocalStorage, setMenu } from './utils/common';
 import { createMenu } from './utils/createMenu';
 import type { MenuProps } from 'antd';
 import { Button, Dropdown, Space, message } from 'antd';
-import PatientDetailsCommon from './pages/Patient/components/PatientDetailsCommon';
+
 
 
 /**

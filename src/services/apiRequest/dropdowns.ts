@@ -380,6 +380,30 @@ export async function requestVPreEmpType(body: any, options?: { [key: string]: a
   });
 }
 
+export async function requestFnGetItem(body: any, options?: { [key: string]: any }) {
+  return request<any>('/InventoryForm/FnGetItem', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+
+export async function requestGetProduct(body: any, options?: { [key: string]: any }) {
+  return request<any>('/InventoryForm/GetProduct', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+
 export async function requestGetUserList(
   params: {
     // query

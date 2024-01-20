@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, TimePicker } from 'antd';
+import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, Tree, TreeProps } from 'antd';
 import { PageContainer, EditableProTable } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import { requestGetSection, requestGetUserList } from '@/services/apiRequest/dropdowns';
@@ -10,14 +10,25 @@ import { convertDate, convertTime } from '@/utils/helper';
 import dayjs from 'dayjs';
 import { getUserInLocalStorage } from '@/utils/common';
 import { ColumnsType } from 'antd/es/table';
+import { requestGetInvParameterMasterList, requestServiceList } from '@/pages/Complaint/services/api';
+import { DataNode } from 'antd/es/tree';
+import { requestGetInvGroup } from '@/pages/Patient/services/api';
 
 
 const Investigation = ({ patientDetails = {}, patientCaseID }: any) => {
     const { result6 } = patientDetails;
     const [tabForm] = Form.useForm();
+    const [form] = Form.useForm();
+
     const [loading, setLoading] = useState(false);
     const { verifiedUser } = getUserInLocalStorage();
     const [diseaseList, setDiseaseList] = useState([]);
+    const [defExpandedKeys, setDefExpandedKeys] = useState<any>(["1"]);
+    const [groupList, setGroupList] = useState<DataNode[]>();
+    const [totalRate, setTotalRate] = useState<any>(0);
+    const [defCheckedKeys, setDefCheckedKeys] = useState<any>([]);
+    const [invArr, setInvArr] = useState("0");
+
 
 
     const columns: ColumnsType<any> = [
@@ -142,6 +153,149 @@ const Investigation = ({ patientDetails = {}, patientCaseID }: any) => {
 
     ];
 
+    useEffect(() => {
+        getInvGroup();
+    }, [])
+
+    const getInvGroup = async () => {
+        const params = {
+            "invGroupID": -1,
+            "discountParameterID": -1,
+            "isActive": -1,
+            "formID": -1,
+            "type": 1
+        }
+        const res = await requestGetInvGroup(params);
+        // console.log(res);
+        if (res?.result?.length > 0) {
+            const dataMaskForDropdown = res?.result?.map((item: any, index: any) => {
+                return {
+                    key: `${item.invGroupID}`, title: item.invGroupName, disableCheckbox: true,
+                }
+            })
+            setGroupList(dataMaskForDropdown)
+            console.log(defExpandedKeys)
+
+            // setDefExpandedKeys(groups)
+        }
+    }
+
+    const onExpand = (expandedKeysValue: React.Key[]) => {
+        console.log('onExpand', expandedKeysValue);
+        // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+        // or, you can remove all expanded children keys.
+        setDefExpandedKeys(expandedKeysValue);
+        // setAutoExpandParent(false);
+    };
+
+    const updateTreeData = (list: DataNode[], key: React.Key, children: DataNode[]): DataNode[] =>
+        list.map((node) => {
+            if (node.key === key) {
+                return {
+                    ...node,
+                    children,
+                };
+            }
+            if (node.children) {
+                return {
+                    ...node,
+                    children: updateTreeData(node.children, key, []),
+                };
+            }
+            return node;
+        });
+
+
+    const onLoadData = ({ key, children }: any) =>
+        new Promise<void>(async (resolve) => {
+            const params = {
+                "invParameterID": -1,
+                invGroupID: parseInt(key, 10) ? parseInt(key, 10) : 1,
+                "isActive": -1,
+                "formID": -1,
+                "type": 1
+            }
+            // console.log(loadedKeys)
+            setTimeout(async () => {
+                const res = await requestGetInvParameterMasterList(params);
+                if (res?.result?.length > 0) {
+                    const dataMaskForDropdown = res?.result?.map((item: any) => {
+                        // setDefCheckedKeys(defCheckedKeys.push(item.invParameterID))
+                        return {
+                            key: `${item.invParameterID} `, title: `${item.invName}    @${item.invRate} ₹/-`,
+                            isLeaf: true, invRate: item.invRate
+                        }
+                    })
+                    setTimeout(() => {
+                        if (dataMaskForDropdown.length > 0)
+                            setGroupList((origin) =>
+                                updateTreeData(origin, key, dataMaskForDropdown),
+                            );
+                        resolve();
+                    }, 1000);
+                }
+                else {
+                    setGroupList((origin) => updateTreeData(origin, key, []))
+                    resolve();
+                    message.error("NO INVESTIGATION PARAMETER FOUND FOR THIS GROUP");
+                }
+            }, 1000);
+
+        });
+
+    const onCheck: TreeProps['onCheck'] = (checkedKeys, info: any) => {
+        const rate = info && info?.checkedNodes?.map((item: any) => {
+            return (item?.invRate)
+        })
+
+        const totalRate = rate.reduce((a: number, b: number) => parseInt(a) + parseInt(b))
+        setTotalRate(totalRate)
+
+        tabForm.setFieldsValue({ serviceCost: totalRate })
+
+        const d = removeDuplicates(checkedKeys)
+        setInvArr(d.toString().trim())
+        setDefCheckedKeys(checkedKeys);
+    };
+
+    function removeDuplicates(arr: any[]) {
+        return [...new Set(arr)];
+    }
+
+    const getServiceList = async (ServiceID: any = -1, type: any = 1) => {
+        const params = {
+            ServiceID,
+            type
+        }
+        const res = await requestServiceList(params);
+        if (type == 3) {
+            const groups = res?.result?.map((item: any) => {
+                return item?.groupID.trim()
+            })
+            const invParams = res?.result?.map((item: any) => {
+                return item?.invParameterID + " "
+            })
+            setDefCheckedKeys(invParams)
+            setDefExpandedKeys(groups)
+            setInvArr(invParams.toString().trim())
+        }
+        if (res.result.length > 0) {
+            const data = res?.result[0]
+            // setIsActive(data?.isActive);
+            // setServiceID(data?.serviceID)
+
+            // form?.setFieldsValue({
+            //     serviceName: data?.serviceName,
+            //     serviceCost: data?.serviceCost,
+            //     invGroupID: data?.m39_InvGroupID,
+            //     sgstPercent: data?.sgstPercent,
+            //     cgstPercent: data?.cgstPercent,
+            //     serviceTo: dayjs(data?.serviceTo),
+            //     serviceFrom: dayjs(data?.serviceFrom),
+            // });
+            if (type == 1) getServiceList(params.ServiceID, 3)
+        }
+    }
 
     const formView = () => {
 
@@ -244,21 +398,44 @@ const Investigation = ({ patientDetails = {}, patientCaseID }: any) => {
 
                 <Row gutter={16}>
 
-                    <Col span={8}>
-                        <Form.Item name="InvParameterID" label="Inv Parameter" rules={[{ required: true }]}>
+                    {/* <Form.Item name="InvParameterID" label="Inv Parameter" rules={[{ required: true }]}>
                             <Select
                                 options={[]}
                                 placeholder="Select"
                             />
+                        </Form.Item> */}
+                    <Col className="gutter-row" span={8}>
+                        <Form.Item
+                            name="InvParameterID"
+                            valuePropName="checked"
+                            // initialValue={true}
+                            label={"Investigation Parameter"}
+                            rules={[{ required: false, message: 'Please select' }]}
+                        >
+                            {defExpandedKeys && <Tree
+                                checkable
+                                onExpand={onExpand}
+                                loadData={onLoadData}
+                                height={140}
+                                rootStyle={{ width: 400 }}
+                                expandedKeys={defExpandedKeys}
+                                onCheck={onCheck}
+                                checkedKeys={defCheckedKeys}
+                                treeData={groupList}
+                            />}
                         </Form.Item>
                     </Col>
+
+
+
+                </Row>
+                <Row gutter={16}>
 
                     <Col span={8}>
                         <Form.Item name="InvParameterResult" label="Inv Parameter Result" rules={[{ required: true }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
-
                     <Col span={8}>
                         <Form.Item name="InvRemark" label="Inv Remark" rules={[{ required: true }]}>
                             <Input placeholder="Please Enter" />
@@ -266,7 +443,10 @@ const Investigation = ({ patientDetails = {}, patientCaseID }: any) => {
                     </Col>
                     <Col span={8}>
                         <Form.Item name="InvParameterDate" label="Date" rules={[{ required: true }]}>
-                            <Input placeholder="Please Enter" />
+                            <DatePicker
+                                style={{ width: '100%' }}
+                                format={dateFormat}
+                            />
                         </Form.Item>
                     </Col>
                     <Col span={8}>

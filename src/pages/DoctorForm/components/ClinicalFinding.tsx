@@ -12,12 +12,13 @@ import DoctorSlotBookingList from './DoctorSlotBookingList';
 import { ColumnsType } from 'antd/es/table';
 import { getUserInLocalStorage } from '@/utils/common';
 import moment from 'moment';
+import { requestAddDelPatientForDoctorOPIP } from '../services/api';
 
 const { RangePicker } = DatePicker;
 
 
 
-const ClinicalFinding = ({ patientDetails }: any) => {
+const ClinicalFinding = ({ patientDetails, patientCaseID }: any) => {
     const { result10 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -85,11 +86,11 @@ const ClinicalFinding = ({ patientDetails }: any) => {
             const params = {
                 "patientCaseID": patientCaseID,
                 "admNo": "1",
-                "col1": values?.CFindID,
-                "col2": values?.IsNormal,
-                "col3": values?.Finding,
+                "col1": "",
+                "col2": "",
+                "col3": "",
                 "col4": "",
-                "col5": "",
+                "col5": values?.clinicalFinding,
                 "col6": "",
                 "col7": "",
                 "col8": "",
@@ -105,7 +106,7 @@ const ClinicalFinding = ({ patientDetails }: any) => {
                 "col18": "",
                 "col19": "",
                 "col20": "",
-                "col21": moment(values?.FindDate).format(dateFormat),
+                "col21": "",
                 "col22": "",
                 "isForDelete": false,
                 "lstType_DocPatient": [
@@ -179,7 +180,7 @@ const ClinicalFinding = ({ patientDetails }: any) => {
             >
 
                 <Row gutter={16}>
-                    <Col span={8}>
+                    {/* <Col span={8}>
                         <Form.Item name="CFindID" label="Find" rules={[{ required: false }]}>
                             <Select
                                 showSearch
@@ -191,8 +192,8 @@ const ClinicalFinding = ({ patientDetails }: any) => {
                                 }}
                             />
                         </Form.Item>
-                    </Col>
-                    <Col span={8}>
+                    </Col> */}
+                    {/* <Col span={8}>
                         <Form.Item name="IsNormal" label="Is Normal" rules={[{ required: false }]}>
                             <Select
                                 showSearch
@@ -201,26 +202,26 @@ const ClinicalFinding = ({ patientDetails }: any) => {
                                 options={booleanValueForOption}
                             />
                         </Form.Item>
-                    </Col>
+                    </Col> */}
 
-                    <Col span={8}>
-                        <Form.Item name="Finding" label="Finding" rules={[{ required: false }]}>
-                            <Input placeholder="Please Enter" />
+                    <Col span={18}>
+                        <Form.Item name="clinicalFinding" label="Clinical Finding" rules={[{ required: false }]}>
+                            <Input.TextArea placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
-                    <Col span={8}>
+                    {/* <Col span={8}>
                         <Form.Item name="CLINICALFINDING" label="CLINICAL FINDING" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
-                    </Col>
+                    </Col> */}
 
                     <Col span={8}>
-                        <Form.Item name="FindDate" label="Find Date" rules={[{ required: false }]}>
+                        {/* <Form.Item name="FindDate" label="Find Date" rules={[{ required: false }]}>
                             <DatePicker
                                 style={{ width: '100%' }}
                                 format={dateFormat}
                             />
-                        </Form.Item>
+                        </Form.Item> */}
                     </Col>
 
 
