@@ -18,7 +18,7 @@ const { RangePicker } = DatePicker;
 
 
 
-const VitalSign = ({ patientDetails = {}, patientCaseID }: any) => {
+const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) => {
     const { result3 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -160,12 +160,15 @@ const VitalSign = ({ patientDetails = {}, patientCaseID }: any) => {
                 const response = await requestAddDelPatientForDoctorOPIP({ ...params });
                 setLoading(false)
 
-                if (!response?.isSuccess) {
-                    message.error(response?.msg);
-                } else {
-                    message.success(response?.msg);
+                if (response?.isSuccess) {
                     tabForm.resetFields();
                 }
+                onSaveSuccess({
+                    tab: "VITAL_SIGN",
+                    response
+                })
+
+              
             } catch (e) {
                 setLoading(false)
             }
@@ -186,7 +189,7 @@ const VitalSign = ({ patientDetails = {}, patientCaseID }: any) => {
                 <Row gutter={16}>
 
                     <Col span={6}>
-                        <Form.Item name="VitalParameterID" label="VitalParameterID" rules={[{ required: true }]}>
+                        <Form.Item name="VitalParameterID" label="Vital Parameter" rules={[{ required: true }]}>
                             <Select
                                 onChange={handleChangeFilter}
                                 options={[{ value: "2", label: "Heart Rate" }]}
@@ -195,21 +198,21 @@ const VitalSign = ({ patientDetails = {}, patientCaseID }: any) => {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item name="VitalResult" label="VitalResult" rules={[{ required: true }]}>
+                        <Form.Item name="VitalResult" label="Result" rules={[{ required: true }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item name="VitalComment" label="VitalComment" rules={[{ required: true }]}>
+                        <Form.Item name="VitalComment" label="Comment" rules={[{ required: true }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item name="VitalDescp" label="VitalDescp" rules={[{ required: true }]}>
-                            <Input placeholder="Please Enter" />
+                        <Form.Item name="VitalDescp" label="Description" rules={[{ required: true }]}>
+                            <Input.TextArea placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
-                   
+
                     <Col span={6}>
                         <Form.Item name="VitalDateTime" label="Date" rules={[{ required: true }]}>
                             <DatePicker

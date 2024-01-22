@@ -8,7 +8,7 @@ import { requestAddDelPatientForDoctorOPIP } from '../services/api';
 import { getUserInLocalStorage } from '@/utils/common';
 
 
-const Complain = ({ patientDetails = {}, patientCaseID }: any) => {
+const Complain = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) => {
     const { result2 } = patientDetails;
     const [filterForm] = Form.useForm();
     const [loading, setLoading] = useState(false)
@@ -22,12 +22,13 @@ const Complain = ({ patientDetails = {}, patientCaseID }: any) => {
             key: 'complaintTypeName',
             dataIndex: 'complaintTypeName',
 
-        }, {
-            title: 'Adm No',
-            key: 'admNo',
-            dataIndex: 'admNo',
-
         },
+        // {
+        //     title: 'Adm No',
+        //     key: 'admNo',
+        //     dataIndex: 'admNo',
+
+        // },
         {
             title: 'Complaint',
             key: 'complaint',
@@ -50,7 +51,7 @@ const Complain = ({ patientDetails = {}, patientCaseID }: any) => {
 
     useEffect(() => {
         getComplaintType();
- 
+
     }, [])
 
     const getComplaintType = async () => {
@@ -84,7 +85,6 @@ const Complain = ({ patientDetails = {}, patientCaseID }: any) => {
 
         const onFinishPatForm = async (values: any) => {
             const date = moment(new Date()).format(dateFormat);
-            console.log(result2)
             const params = {
                 "patientCaseID": patientCaseID,
                 "admNo": 1,
@@ -157,12 +157,13 @@ const Complain = ({ patientDetails = {}, patientCaseID }: any) => {
             setLoading(true)
             const response = await requestAddDelPatientForDoctorOPIP({ ...params });
             setLoading(false)
-            message.success(response?.msg);
-            if (!response?.isSuccess) {
-                message.error(response?.msg);
-            } else {
-                message.success(response?.msg);
+            if (response?.isSuccess) {
+                filterForm.resetFields();
             }
+            onSaveSuccess({
+                tab: "COMPLAIN",
+                response
+            })
         };
 
 

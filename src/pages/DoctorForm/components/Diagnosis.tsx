@@ -11,12 +11,13 @@ import dayjs from 'dayjs';
 import { requestAddDelPatientForDoctorOPIP } from '../services/api';
 import { getUserInLocalStorage } from '@/utils/common';
 import { requestDiseaseList } from '@/pages/Complaint/services/api';
+import { ColumnsType } from 'antd/es/table';
 
 const { RangePicker } = DatePicker;
 
 
 
-const Diagnosis = ({ patientDetails = {}, patientCaseID }: any) => {
+const Diagnosis = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) => {
     const { result4 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -157,12 +158,13 @@ const Diagnosis = ({ patientDetails = {}, patientCaseID }: any) => {
                 const response = await requestAddDelPatientForDoctorOPIP({ ...params });
                 setLoading(false)
 
-                if (!response?.isSuccess) {
-                    message.error(response?.msg);
-                } else {
-                    message.success(response?.msg);
+                if (response?.isSuccess) {
                     tabForm.resetFields();
                 }
+                onSaveSuccess({
+                    tab: "DIAGNOSIS",
+                    response
+                })
             } catch (e) {
                 setLoading(false)
             }

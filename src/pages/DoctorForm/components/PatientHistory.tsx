@@ -15,7 +15,7 @@ const { RangePicker } = DatePicker;
 
 
 
-const PatientHistory = ({ patientDetails = {}, patientCaseID }: any) => {
+const PatientHistory = ({ patientDetails = {}, patientCaseID ,onSaveSuccess}: any) => {
     const { result7 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -140,13 +140,14 @@ const PatientHistory = ({ patientDetails = {}, patientCaseID }: any) => {
                 setLoading(true)
                 const response = await requestAddDelPatientForDoctorOPIP({ ...params });
                 setLoading(false)
-
-                if (!response?.isSuccess) {
-                    message.error(response?.msg);
-                } else {
-                    message.success(response?.msg);
+                if (response?.isSuccess) {
                     tabForm.resetFields();
                 }
+                onSaveSuccess({
+                    tab: "PATIENT_HISTORY",
+                    response
+                })
+              
             } catch (e) {
                 setLoading(false)
             }

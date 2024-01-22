@@ -1,14 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ExclamationCircleFilled, PlusOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Drawer, Form, Modal, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Tabs, Descriptions } from 'antd';
-import { PageContainer, ProDescriptions } from '@ant-design/pro-components';
-import { Table, Tag } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
 import { history, type IRoute } from 'umi';
-import { activeStatus, dateFormat } from '@/utils/constant';
-import { convertDate } from '@/utils/helper';
-import dayjs from 'dayjs';
-import moment from 'moment';
 import type { TabsProps } from 'antd';
 import { requestGetPatientForDoctorOPIP } from '../services/api';
 import GeneralInformation from './GeneralInformation';
@@ -35,74 +28,107 @@ const DoctorPatientDetails = React.forwardRef((props) => {
     const [formFilter] = Form.useForm();
     const [loading, setLoading] = useState(false)
     const { token } = theme.useToken();
-    const [list, setList] = useState([]);
-    const [patientID, setPatientID] = useState<string>();
-    const [patientNo, setPatientNo] = useState<string>();
-    const [patientCaseID, setPatientCaseID] = useState<string>();
-    const [patientCaseNo, setPatientCaseNo] = useState<string>();
+    const [patientID, setPatientID] = useState<any>();
+    const [patientNo, setPatientNo] = useState<any>();
+    const [patientCaseID, setPatientCaseID] = useState<any>();
+    const [patientCaseNo, setPatientCaseNo] = useState<any>();
     const [patientBasicDetails, setPatientBasicDetails] = useState<any>(null);
     const [patientDetails, setPatientDetails] = useState<any>();
     const [isModalOpenForPatHistory, setIsModalOpenForPatHistory] = useState(false);
+    const [defaultActiveKey, setDefaultActiveKey] = useState("BASIC_INFORMATION");
+    const [openPastCaseDrawer, setOpenPastCaseDrawer] = useState(false);
+
+    const showPastCaseDrawer = () => {
+        setOpenPastCaseDrawer(true);
+    };
+
+    const onClosePastCaseDrawer = () => {
+        setOpenPastCaseDrawer(false);
+    };
+
+
+    const onSaveSuccess = (data: any) => {
+        console.log("onSaveSuccess", data)
+        const { tab, response }: any = data;
+
+        setDefaultActiveKey(tab)
+
+
+        if (!response?.isSuccess) {
+            message.error(response?.msg);
+        } else {
+            message.success(response?.msg);
+
+        }
+
+        getPatientDetails(
+            patientID,
+            patientNo,
+            patientCaseID,
+            patientCaseNo,
+            false
+        );
+    }
 
     const items: TabsProps['items'] = [
         {
-            key: '0',
+            key: 'BASIC_INFORMATION',
             label: 'BASIC INFORMATION',
             children: patientBasicDetails && <BasicDetails patientBasicDetails={patientBasicDetails} patientCaseID={patientCaseID} />,
         }, {
-            key: '1',
+            key: 'GENERAL_INFORMATION',
             label: 'GENERAL INFORMATION',
             children: <GeneralInformation patientDetails={patientDetails} patientCaseID={patientCaseID} />,
         },
         {
-            key: '2',
+            key: 'COMPLAIN',
             label: 'COMPLAIN',
-            children: <Complain patientDetails={patientDetails} patientCaseID={patientCaseID} />,
+            children: <Complain patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
         },
         {
-            key: '3',
+            key: 'VITAL_SIGN',
             label: 'VITAL SIGN',
-            children: <VitalSign patientDetails={patientDetails} patientCaseID={patientCaseID} />,
+            children: <VitalSign patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
         },
         {
-            key: '4',
+            key: 'DIAGNOSIS',
             label: 'DIAGNOSIS',
-            children: <Diagnosis patientDetails={patientDetails} patientCaseID={patientCaseID} />,
+            children: <Diagnosis patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
         },
         {
-            key: '5',
+            key: 'MEDICATION',
             label: 'MEDICATION',
-            children: <Medication patientDetails={patientDetails} patientCaseID={patientCaseID} />,
+            children: <Medication patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
         },
         {
-            key: '7',
+            key: 'INVESTIGATION',
             label: 'INVESTIGATION',
-            children: <Investigation patientDetails={patientDetails} patientCaseID={patientCaseID} />,
+            children: <Investigation patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
         },
         {
-            key: '8',
+            key: 'PATIENT_HISTORY',
             label: 'PATIENT HISTORY',
-            children: <PatientHistory patientDetails={patientDetails} patientCaseID={patientCaseID} />,
+            children: <PatientHistory patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
         },
         {
-            key: '9',
+            key: 'PATIENT_DOCUMENT',
             label: 'PATIENT DOCUMENT',
-            children: <PatientDocument patientDetails={patientDetails} patientCaseID={patientCaseID} />,
+            children: <PatientDocument patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
         },
         {
-            key: '10',
+            key: 'REFERAL_DOCTOR',
             label: 'REFERAL DOCTOR',
-            children: <ReferalDoctor patientDetails={patientDetails} patientCaseID={patientCaseID} />,
+            children: <ReferalDoctor patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
         },
         {
-            key: '11',
+            key: 'CLINICAL_FINDING',
             label: 'CLINICAL FINDING',
-            children: <ClinicalFinding patientDetails={patientDetails} patientCaseID={patientCaseID} />,
+            children: <ClinicalFinding patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
         },
         {
-            key: '12',
+            key: 'DISCHARGE_SUMMARY',
             label: 'DISCHARGE SUMMARY',
-            children: <DischargeSummary patientDetails={patientDetails} patientCaseID={patientCaseID} />,
+            children: <DischargeSummary patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
         },
     ];
 
@@ -123,7 +149,8 @@ const DoctorPatientDetails = React.forwardRef((props) => {
             patientID,
             patientNo,
             patientCaseID,
-            patientCaseNo
+            patientCaseNo,
+            true
         );
 
         setPatientID(patientID)
@@ -131,6 +158,8 @@ const DoctorPatientDetails = React.forwardRef((props) => {
         setPatientCaseID(patientCaseID)
         setPatientCaseNo(patientCaseNo)
     }, [])
+
+
 
     const getPatientBasicDetails = async (patientID: string,
         patientNo: string,
@@ -152,7 +181,9 @@ const DoctorPatientDetails = React.forwardRef((props) => {
         patientID: string,
         patientNo: string,
         patientCaseID: string,
-        patientCaseNo: string) => {
+        patientCaseNo: string,
+        isPatientHistory: boolean
+    ) => {
 
         try {
             const staticParams = {
@@ -162,8 +193,8 @@ const DoctorPatientDetails = React.forwardRef((props) => {
                 patientNo: patientNo,
                 caseTypeID: 1,
                 patientName: '',
-                fromDate: '',
-                toDate: '',
+                fromDate: '01 Jan 1900',
+                toDate: '01 Jan 1900',
                 userID: -2,
                 formID: 1,
                 type: 2
@@ -173,8 +204,7 @@ const DoctorPatientDetails = React.forwardRef((props) => {
             const response = await requestGetPatientForDoctorOPIP({ ...staticParams });
             setLoading(false)
             setPatientDetails(response)
-
-            if (response.result7.length > 0) {
+            if (isPatientHistory && response.result7.length > 0) {
                 setIsModalOpenForPatHistory(true);
             }
 
@@ -277,19 +307,44 @@ const DoctorPatientDetails = React.forwardRef((props) => {
         )
     }
 
+    const pastCasesDrawer = () => {
+        return (
+            <Drawer title="Basic Drawer" onClose={onClosePastCaseDrawer} open={openPastCaseDrawer}>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+            </Drawer>
+        )
+    }
+
     return (
         <>
             {contextHolder}
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
                 <Card
-                    title=""
+                    title={
+                        <div>
+                            <h3 style={{ marginTop: 5 }}>
+                                {`${patientBasicDetails?.result1[0]?.candName}`}
+                            </h3>
+                            <h4 style={{ marginTop: -15 }}>
+                                {`${patientBasicDetails?.result1[0]?.patientNo}`}
+                            </h4>
+                        </div>
+                    }
                     style={{ boxShadow: '2px 2px 2px #4874dc' }}
+                    extra={<>
+                        <Button type="primary" loading={loading} onClick={showPastCaseDrawer}>
+                            Past Case
+                        </Button>
+                    </>}
                 >
+
                     <Spin tip="Please wait..." spinning={loading}>
                         <div style={contentStyle}>
                             {patientBasicDetails ?
                                 <Tabs
-                                    defaultActiveKey="0"
+                                    defaultActiveKey={defaultActiveKey}
                                     tabPosition={'left'}
                                     style={{
                                     }}
@@ -300,7 +355,8 @@ const DoctorPatientDetails = React.forwardRef((props) => {
                     </Spin>
                 </Card>
                 {patHistoryModal()}
-            </Space>
+                {pastCasesDrawer()}
+            </Space >
         </>
     );
 });

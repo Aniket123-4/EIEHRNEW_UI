@@ -15,7 +15,7 @@ const { RangePicker } = DatePicker;
 
 
 
-const DischargeSummary = ({ patientDetails = {}, patientCaseID }: any) => {
+const DischargeSummary = ({ patientDetails = {}, patientCaseID,onSaveSuccess }: any) => {
     const { result8 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -61,18 +61,7 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID }: any) => {
             dataIndex: 'insuranceComp',
 
         },
-        {
-            title: 'Action',
-            key: 'action',
-            fixed: 'right',
-            render: (_, record) => (
-                <Space size="middle">
-                    <Button size={'small'} onClick={() => {
-                    }}>action</Button>
-
-                </Space>
-            ),
-        },
+       
     ];
 
 
@@ -151,13 +140,14 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID }: any) => {
                 setLoading(true)
                 const response = await requestAddDelPatientForDoctorOPIP({ ...params });
                 setLoading(false)
-
-                if (!response?.isSuccess) {
-                    message.error(response?.msg);
-                } else {
-                    message.success(response?.msg);
+                if (response?.isSuccess) {
                     tabForm.resetFields();
                 }
+                onSaveSuccess({
+                    tab: "DISCHARGE_SUMMARY",
+                    response
+                })
+              
             } catch (e) {
                 setLoading(false)
             }

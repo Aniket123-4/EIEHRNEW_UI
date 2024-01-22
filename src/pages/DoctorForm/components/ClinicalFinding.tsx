@@ -1,82 +1,28 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, TimePicker } from 'antd';
-import { PageContainer, EditableProTable } from '@ant-design/pro-components';
-import { history } from '@umijs/max';
-import { requestGetSection, requestGetUserList } from '@/services/apiRequest/dropdowns';
-import type { DatePickerProps, RadioChangeEvent } from 'antd';
-import { DatePicker, Radio } from 'antd';
-import { booleanValueForOption, dateFormat } from '@/utils/constant';
-import { convertDate, convertTime } from '@/utils/helper';
-import dayjs from 'dayjs';
-import DoctorSlotBookingList from './DoctorSlotBookingList';
+import React, { useState } from 'react';
+import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Table, message, TimePicker } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { getUserInLocalStorage } from '@/utils/common';
-import moment from 'moment';
 import { requestAddDelPatientForDoctorOPIP } from '../services/api';
 
-const { RangePicker } = DatePicker;
 
-
-
-const ClinicalFinding = ({ patientDetails, patientCaseID }: any) => {
+const ClinicalFinding = ({ patientDetails, patientCaseID, onSaveSuccess }: any) => {
     const { result10 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const { verifiedUser } = getUserInLocalStorage();
-    const [sections, setSections] = useState<any>([])
-    const [doctorList, setDoctorList] = useState<any>([])
-    const [invParameterList, setInvParameterList] = useState([]);
 
     const columns: ColumnsType<any> = [
         {
-            title: 'Name',
-            key: 'patNameTitle',
-            dataIndex: 'patNameTitle',
+            title: 'Clinical Finding',
+            key: 'clinicalFinding',
+            dataIndex: 'clinicalFinding',
 
         }, {
-            title: 'Patient Number',
-            key: 'patientNo',
-            dataIndex: 'patientNo',
+            title: 'Entry Date',
+            key: 'entryDate',
+            dataIndex: 'entryDate',
 
-        },
-        {
-            title: 'Case Number',
-            key: 'patientCaseNo',
-            dataIndex: 'patientCaseNo',
-        },
-        {
-            title: 'Age',
-            key: 'age',
-            dataIndex: 'age',
-
-        }, {
-            title: 'Section',
-            key: 'sectionName',
-            dataIndex: 'sectionName',
-
-        }, {
-            title: 'Doctor Name',
-            key: 'doctorName',
-            dataIndex: 'doctorName',
-
-        }, {
-            title: 'Insurance Comp',
-            key: 'insuranceComp',
-            dataIndex: 'insuranceComp',
-
-        },
-        {
-            title: 'Action',
-            key: 'action',
-            fixed: 'right',
-            render: (_, record) => (
-                <Space size="middle">
-                    <Button size={'small'} onClick={() => {
-                    }}>action</Button>
-
-                </Space>
-            ),
-        },
+        }
     ];
 
 
@@ -149,19 +95,21 @@ const ClinicalFinding = ({ patientDetails, patientCaseID }: any) => {
                 ],
                 "userID": verifiedUser?.userID,
                 "formID": -1,
-                "type": 12
+                "type": 13
             }
             try {
                 setLoading(true)
                 const response = await requestAddDelPatientForDoctorOPIP({ ...params });
                 setLoading(false)
 
-                if (!response?.isSuccess) {
-                    message.error(response?.msg);
-                } else {
-                    message.success(response?.msg);
+                if (response?.isSuccess) {
                     tabForm.resetFields();
                 }
+                onSaveSuccess({
+                    tab: "CLINICAL_FINDING",
+                    response
+                })
+
             } catch (e) {
                 setLoading(false)
             }

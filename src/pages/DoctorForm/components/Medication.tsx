@@ -14,7 +14,7 @@ import { ColumnsType } from 'antd/es/table';
 
 const { RangePicker } = DatePicker;
 
-const Medication = ({ patientDetails = {}, patientCaseID }: any) => {
+const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) => {
     const { result1 } = patientDetails;
 
     const [tabForm] = Form.useForm();
@@ -192,12 +192,13 @@ const Medication = ({ patientDetails = {}, patientCaseID }: any) => {
                 const response = await requestAddDelPatientForDoctorOPIP({ ...params });
                 setLoading(false)
 
-                if (!response?.isSuccess) {
-                    message.error(response?.msg);
-                } else {
-                    message.success(response?.msg);
+                if (response?.isSuccess) {
                     tabForm.resetFields();
                 }
+                onSaveSuccess({
+                    tab: "MEDICATION",
+                    response
+                })
             } catch (e) {
                 setLoading(false)
             }
@@ -265,7 +266,7 @@ const Medication = ({ patientDetails = {}, patientCaseID }: any) => {
                 <Row gutter={16}>
 
                     <Col span={8}>
-                        <Form.Item name="ProductID" label="Product" rules={[{ required: true }]}>
+                        <Form.Item name="ProductID" label="Product" rules={[{ required: false }]}>
                             <Select
                                 options={productList}
                                 placeholder="Select"

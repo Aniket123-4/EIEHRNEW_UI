@@ -15,7 +15,7 @@ import { requestGetInvestigation } from '@/pages/Investigation/services/api';
 
 const { RangePicker } = DatePicker;
 
-const ReferalDoctor = ({ patientDetails = {}, patientCaseID }: any) => {
+const ReferalDoctor = ({ patientDetails = {}, patientCaseID,onSaveSuccess }: any) => {
     const { result9 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -24,12 +24,13 @@ const ReferalDoctor = ({ patientDetails = {}, patientCaseID }: any) => {
     const [doctorList, setDoctorList] = useState<any>([])
     const [invParameterList, setInvParameterList] = useState([]);
     const columns: ColumnsType<any> = [
-        {
-            title: 'Adm No',
-            key: 'admNo',
-            dataIndex: 'admNo',
+        // {
+        //     title: 'Adm No',
+        //     key: 'admNo',
+        //     dataIndex: 'admNo',
 
-        }, {
+        // },
+         {
             title: 'Doctor Name',
             key: 'doctorName',
             dataIndex: 'doctorName',
@@ -196,13 +197,14 @@ const ReferalDoctor = ({ patientDetails = {}, patientCaseID }: any) => {
                 setLoading(true)
                 const response = await requestAddDelPatientForDoctorOPIP({ ...params });
                 setLoading(false)
-
-                if (!response?.isSuccess) {
-                    message.error(response?.msg);
-                } else {
-                    message.success(response?.msg);
+                if (response?.isSuccess) {
                     tabForm.resetFields();
                 }
+                onSaveSuccess({
+                    tab: "REFERAL_DOCTOR",
+                    response
+                })
+               
             } catch (e) {
                 setLoading(false)
             }
@@ -222,7 +224,7 @@ const ReferalDoctor = ({ patientDetails = {}, patientCaseID }: any) => {
 
                 <Row gutter={16}>
                     <Col span={8}>
-                        <Form.Item name="SectionID" label="SectionID" rules={[{ required: false }]}>
+                        <Form.Item name="SectionID" label="Section" rules={[{ required: false }]}>
                             <Select
                                 showSearch
                                 placeholder="Select"
@@ -235,7 +237,7 @@ const ReferalDoctor = ({ patientDetails = {}, patientCaseID }: any) => {
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item name="DoctorID" label="DoctorID" rules={[{ required: false }]}>
+                        <Form.Item name="DoctorID" label="Doctor" rules={[{ required: false }]}>
                             <Select
                                 showSearch
                                 placeholder="Select"
