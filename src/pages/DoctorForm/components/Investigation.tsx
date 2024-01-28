@@ -302,7 +302,7 @@ const Investigation = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: an
             "col3": values?.InvRemark,
             "col4": "",
             "col5": "",
-            "col6": values?.NoOfInjection,
+            "col6": ""+values?.NoOfInjection,
             "col7": invArr,
             "col8": "",
             "col9": "",
@@ -447,7 +447,7 @@ const Investigation = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: an
                     </Col>
                     <Col span={8}>
                         <Form.Item name="NoOfInjection" label="No Of Injection" rules={[{ required: true }]}>
-                            <Input placeholder="Please Enter" />
+                            <InputNumber placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
                     <Col span={8}>

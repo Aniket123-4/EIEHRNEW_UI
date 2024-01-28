@@ -25,41 +25,61 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID,onSaveSuccess }: 
     const columns: ColumnsType<any> = [
         {
             title: 'Name',
-            key: 'patNameTitle',
-            dataIndex: 'patNameTitle',
+            key: 'disCondName',
+            dataIndex: 'disCondName',
 
         },
         {
-            title: 'Patient Number',
-            key: 'patientNo',
-            dataIndex: 'patientNo',
+            title: 'Breif Case Summary',
+            key: 'breifCaseSummary',
+            dataIndex: 'breifCaseSummary',
 
         },
         {
-            title: 'Case Number',
-            key: 'patientCaseNo',
-            dataIndex: 'patientCaseNo',
+            title: 'Clinical Finding',
+            key: 'clinicalFinding',
+            dataIndex: 'clinicalFinding',
         },
         {
-            title: 'Age',
-            key: 'age',
-            dataIndex: 'age',
+            title: 'Cond Upon Discharge',
+            key: 'condUponDischarge',
+            dataIndex: 'condUponDischarge',
 
         }, {
-            title: 'Section',
-            key: 'sectionName',
-            dataIndex: 'sectionName',
+            title: 'Dis Cond Name',
+            key: 'disCondName',
+            dataIndex: 'disCondName',
 
         }, {
-            title: 'Doctor Name',
-            key: 'doctorName',
-            dataIndex: 'doctorName',
+            title: 'Date',
+            key: 'dischargeDateVar',
+            dataIndex: 'dischargeDateVar',
+
+        },
+         {
+            title: 'Notes',
+            key: 'dischargeNotes',
+            dataIndex: 'dischargeNotes',
 
         }, {
-            title: 'Insurance Comp',
-            key: 'insuranceComp',
-            dataIndex: 'insuranceComp',
+            title: 'Discharge To Name',
+            key: 'dischargeToName',
+            dataIndex: 'dischargeToName',
 
+        },
+        {
+            title: 'Duration Of Illness',
+            key: 'durationOfIllness',
+            dataIndex: 'durationOfIllness',
+        },
+          {
+            title: 'Final Advice ML',
+            key: 'finalAdviceML',
+            dataIndex: 'finalAdviceML',
+        },  {
+            title: 'Final Daignosis',
+            key: 'finalDaigNosis',
+            dataIndex: 'finalDaigNosis',
         },
        
     ];
@@ -315,7 +335,7 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID,onSaveSuccess }: 
             <Card>
                 {formView()}
             </Card>
-            <Table
+          <Table
                 columns={columns}
                 size="small"
                 dataSource={result8}

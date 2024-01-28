@@ -16,6 +16,7 @@ import { convertDate, convertTime } from '@/utils/helper';
 import { activeStatus, activeStatusOnly, dateFormat } from '@/utils/constant';
 import { requestAddPatDocAppointments, requestGetPatDocAppointment } from '../services/api';
 import dayjs from 'dayjs';
+import moment from 'moment';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -207,7 +208,7 @@ const DoctorSlotAppointListDetails = React.forwardRef((props) => {
         confirm({
             title: 'Are you sure delete this Slot?',
             icon: <ExclamationCircleFilled />,
-            content: `Slot From ${dayjs(fromDate).format(dateFormat)} to ${dayjs(toDate).format(dateFormat)}`,
+            content: `Slot From ${moment(fromDate).format(dateFormat)} to ${moment(toDate).format(dateFormat)}`,
             okText: 'Yes',
             okType: 'danger',
             cancelText: 'No',
@@ -226,7 +227,7 @@ const DoctorSlotAppointListDetails = React.forwardRef((props) => {
         >
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
                 <Card
-                    title={`Slot From ${dayjs(fromDate).format(dateFormat)} to ${dayjs(toDate).format(dateFormat)}`}
+                    title={`Slot From ${moment(fromDate).format(dateFormat)} to ${moment(toDate).format(dateFormat)}`}
                     style={{ boxShadow: '2px 2px 2px #4874dc' }}
                 >
                     <div style={contentStyle}>

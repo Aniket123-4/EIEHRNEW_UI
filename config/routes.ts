@@ -191,6 +191,16 @@ export default [
         path: '/patient/DoctorPatientStatus',
         component: './Patient/components/DoctorPatientStatus',
       },
+      {
+        name: 'Patient',
+        path: '/patient/search',
+        component: './Patient/components/PatientList',
+      },
+      {
+        name: 'Patient',
+        path: '/patient/billing',
+        component: './Patient/components/PatientBilling',
+      },
     ],
   },
   {
@@ -238,18 +248,6 @@ export default [
         path: '/booking/appointment-booking',
         component: './Booking/components/AppointmentBooking',
       }
-    ],
-  },
-  {
-    name: 'patient',
-    path: '/patient',
-    routes: [
-      {
-        name: 'Patient',
-        path: '/patient/search',
-        component: './Patient/components/PatientList',
-      },
-
     ],
   },
 

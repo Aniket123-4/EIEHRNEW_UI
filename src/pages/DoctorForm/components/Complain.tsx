@@ -191,7 +191,7 @@ const Complain = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) =>
                     </Col>
 
                     <Col span={6}>
-                        <Form.Item name="IsML" label="is ML" rules={[{ required: true }]}>
+                        <Form.Item name="IsML" label="is ML" rules={[{ required: false }]}>
                             <Select
                                 onChange={handleChangeFilter}
                                 options={booleanValueForOption}
@@ -200,12 +200,12 @@ const Complain = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) =>
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item name="ComplaintML" label="Complaint ML" rules={[{ required: true }]}>
+                        <Form.Item name="ComplaintML" label="Complaint ML" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item name="Complain" label="Complain" rules={[{ required: true }]}>
+                        <Form.Item name="Complain" label="Complain" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>

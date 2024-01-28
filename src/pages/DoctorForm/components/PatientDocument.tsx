@@ -43,7 +43,7 @@ const PatientDocument = ({ patientDetails = {} }: any) => {
 
     const downloadDoc = async (item: any) => {
         const params = {
-            fileName: item.patientDocID,
+            fileName: item.phyName,
             filePath: ""
         }
         const res1 = await requestGetDocuments(params);
@@ -73,7 +73,7 @@ const PatientDocument = ({ patientDetails = {} }: any) => {
 
     const previewDoc = async (item: any) => {
         const params = {
-            fileName: item.patientDocID,
+            fileName: item.phyName,
             filePath: ""
         }
         const res1 = await requestGetDocuments(params);

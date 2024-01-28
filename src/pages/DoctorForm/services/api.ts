@@ -27,3 +27,16 @@ export async function requestAddDelPatientForDoctorOPIP(body: any, options?: { [
 
 
   
+export async function requestGetItemBalance(body: any, options?: { [key: string]: any }) {
+  return request<any>('/InventoryForm/GetItemBalance', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+
+  

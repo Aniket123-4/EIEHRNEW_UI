@@ -174,8 +174,44 @@ export async function requestUpdateCaseCheckIn(body: any, options?: { [key: stri
     ...(options || {}),
   });
 }
+
 export async function requestGetDoctorPatientList(body: any, options?: { [key: string]: any }) {
   return request<any>('Reports/GetDoctorWiseAna', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+
+
+export async function requestGetPatientBill(body: any, options?: { [key: string]: any }) {
+  return request<any>('GetPatientBill', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+export async function requestAddPatientBill(body: any, options?: { [key: string]: any }) {
+  return request<any>('AddPatientBill', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+export async function requestGetPatientBillNo(body: any, options?: { [key: string]: any }) {
+  return request<any>('GetPatientBillNo', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

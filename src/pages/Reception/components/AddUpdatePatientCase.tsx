@@ -55,7 +55,8 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
     const [batteryOfServiceVisible, setBatteryOfServiceVisible] = useState<any>(false)
     const [receiptData, setReceiptData] = useState<any>({})
 
-
+    console.log("--------------");
+    console.log({ props });
 
     useEffect(() => {
         getSectionList();
@@ -103,14 +104,14 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
             proDiagnosis: proDiagnosis,
             patientFileNo: patientData?.patientNo,
             deductablePercentage: checkinData?.result2[0]?.compRebatePercentage ? checkinData?.result2[0]?.compRebatePercentage : 100,
-            allergy: checkinData?.result1[0]?.allergy?checkinData?.result1[0]?.allergy:"",
-            warnings: checkinData?.result1[0]?.warnings?checkinData?.result1[0]?.warnings:"",
-            addiction: checkinData?.result1[0]?.addiction?checkinData?.result1[0]?.addiction:"",
-            socialHistory: checkinData?.result1[0]?.socialHistory?checkinData?.result1[0]?.socialHistory:"",
-            familyHistory: checkinData?.result1[0]?.familyHistory?checkinData?.result1[0]?.familyHistory:"",
-            personalHistory: checkinData?.result1[0]?.personalHistory?checkinData?.result1[0]?.personalHistory:"",
-            pastMedicalHistory: checkinData?.result1[0]?.pastMedicalHistory?checkinData?.result1[0]?.pastMedicalHistory:"",
-            obstetrics: checkinData?.result1[0]?.obstetrics?checkinData?.result1[0]?.obstetrics:"",
+            allergy: checkinData?.result1[0]?.allergy ? checkinData?.result1[0]?.allergy : "",
+            warnings: checkinData?.result1[0]?.warnings ? checkinData?.result1[0]?.warnings : "",
+            addiction: checkinData?.result1[0]?.addiction ? checkinData?.result1[0]?.addiction : "",
+            socialHistory: checkinData?.result1[0]?.socialHistory ? checkinData?.result1[0]?.socialHistory : "",
+            familyHistory: checkinData?.result1[0]?.familyHistory ? checkinData?.result1[0]?.familyHistory : "",
+            personalHistory: checkinData?.result1[0]?.personalHistory ? checkinData?.result1[0]?.personalHistory : "",
+            pastMedicalHistory: checkinData?.result1[0]?.pastMedicalHistory ? checkinData?.result1[0]?.pastMedicalHistory : "",
+            obstetrics: checkinData?.result1[0]?.obstetrics ? checkinData?.result1[0]?.obstetrics : "",
             isNextVisit: true,
             priority: 0,
             invParameterID: '',
@@ -134,7 +135,7 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
             invGroupID: -1,
             isActive: -1,
             formID: -1,
-            type: 2
+            type: 1
         }
         const res = await requestGetInvParameterMasterList(params1);
         // console.log(res);
@@ -231,7 +232,7 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
             serviceID: serviceID,
             isNextVisit: false,
             patientFoundID: 1,
-            preEmpTypeID: 1,
+            preEmpTypeID: props?.preEmpType,
             admTypeID: 1,
             caseType: 1,
         }
@@ -483,20 +484,21 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
 
                                     </Col>
                                     <Col span={8}>
-                                        <Form.Item name="deductablePercentage" label="Deductable Percentage" rules={[{ required: true }]}>
+                                        <Form.Item name="deductablePercentage" label="Patient payable Percentage" rules={[{ required: true }]}>
                                             <Input />
                                         </Form.Item>
                                     </Col>
-                                    <Col span={8}>
-                                        <Form.Item name="invParameterID" label="Inv Parameter" rules={[{ required: false }]}>
-                                            <Select
-                                                onChange={(data) => handleChangeFilter(data, "invParameterID")}
-                                                options={invParameter}
-                                                showSearch
-                                            />
-                                        </Form.Item>
+                                    {props?.preEmpType === "1" ?
+                                        <Col span={8}>
+                                            <Form.Item name="invParameterID" label="Inv Parameter" rules={[{ required: props?.preEmpType === "1" ? true : false }]}>
+                                                <Select
+                                                    onChange={(data) => handleChangeFilter(data, "invParameterID")}
+                                                    options={invParameter}
+                                                    showSearch
+                                                />
+                                            </Form.Item>
 
-                                    </Col>
+                                        </Col> : null}
                                 </Row>
                             </Card>
 

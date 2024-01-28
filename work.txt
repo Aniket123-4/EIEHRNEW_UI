@@ -1,0 +1,38 @@
+
+http://103.12.1.132:8056/api/MasterForm/GetVitalParameter
+
+Vital Parameter dropdown (Vital tab)
+
+
+Deductable Percentage == patient payable Percentage
+
+
+
+
+drop down bill no in Billing Details
+/api/GetPatientBillNo
+
+{
+  "patientCaseID": "4697307429349901111",
+  "patientCaseNo": "",
+  "admNo": 1,
+  "isCancel": false,
+  "userID": -1,
+  "formID": -1,
+  "type": 2
+}
+
+
+patientBillID
+: 
+-1
+
+after selete the billin no dropdown we need to call 
+http://103.12.1.132:8056/api/GetPatientBill
+{"patientCaseID":"4697307429349901111","patientCaseNo":"","admNo":"1","patientBillID":-1,"userID":-1,"formID":-1,"type":1}
+
+
+
+
+GetPatientBill
+result1 me total ana chahiye

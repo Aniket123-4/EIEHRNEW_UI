@@ -413,7 +413,6 @@ export async function requestGetUserList(
   },
   options?: { [key: string]: any },
 ) {
-  console.log(params)
   return request<any>('/Login/GetUserList', {
     method: 'GET',
     params: {

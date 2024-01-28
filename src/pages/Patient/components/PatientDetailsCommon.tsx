@@ -3,13 +3,7 @@ import { EditOutlined, FilterOutlined, InfoCircleOutlined, PlusOutlined } from '
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Descriptions, DescriptionsProps, Avatar } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
 import { requestFnGetPatientSearch, requestGetPatientHeader, requestGetPatientVisitNo } from '../services/api';
-import { requestGetInstituteList } from '@/pages/Institute/services/api';
-import { PageContainer } from '@ant-design/pro-components';
-import { Table, Tag } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
-import PatientFilter from '@/components/Filters/PatientFilter';
-import { getUserInLocalStorage } from '@/utils/common';
-import { requestAddPatRequest } from '@/pages/Booking/services/api';
+
 
 const { Option } = Select;
 
@@ -179,7 +173,7 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
             const dataMaskForDropdown = res?.result?.map((item: any) => {
                 return { value: item.patientCaseID, label: item.admNo }
             })
-            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
+            dataMaskForDropdown.unshift({ value: "-1", label: "All" });
             setAdmissionNo(dataMaskForDropdown)
         }
     }
@@ -188,6 +182,7 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
         getPatientVisitNo(v)
     }
     const handleChangeAdmission = (v: any) => {
+        console.log({ props, "admNo": v?.label });
         Object.keys(props).length ? props?.onChange({ ...props?.patData, "admNo": v?.label }) : null;
     }
     const onChange = (value: string) => {
@@ -226,8 +221,8 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
                             filterOption={filterOption}
                             notFoundContent={null}
                             options={(patientList).map((d) => ({
-                                value: d.value,
-                                label: d.label,
+                                value: d?.value,
+                                label: d?.label,
                             }))}
                         />
                     </Form.Item>

@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, TimePicker } from 'antd';
 import { PageContainer, EditableProTable } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
-import { requestFnGetItem, requestGetProduct, requestGetSection, requestGetUserList } from '@/services/apiRequest/dropdowns';
+import { requestFnGetItem, requestGetItemCat, requestGetProduct, requestGetSection, requestGetUserList } from '@/services/apiRequest/dropdowns';
 import type { DatePickerProps, RadioChangeEvent } from 'antd';
 import { DatePicker, Radio } from 'antd';
 import { dateFormat } from '@/utils/constant';
 import { convertDate, convertTime } from '@/utils/helper';
 import dayjs from 'dayjs';
 import { getUserInLocalStorage } from '@/utils/common';
-import { requestAddDelPatientForDoctorOPIP } from '../services/api';
+import { requestAddDelPatientForDoctorOPIP, requestGetItemBalance } from '../services/api';
 import { ColumnsType } from 'antd/es/table';
 
 const { RangePicker } = DatePicker;
@@ -22,6 +22,8 @@ const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) 
     const { verifiedUser } = getUserInLocalStorage();
     const [drugList, setDiseaseList] = useState([]);
     const [productList, setProductList] = useState([]);
+    const [balance, setBalance] = useState([]);
+    const [itemCat, setItemCat] = useState([]);
 
     const columns: ColumnsType<any> = [
         {
@@ -66,12 +68,13 @@ const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) 
 
 
     useEffect(() => {
-        getItemList()
+        getItemCat();
         getProductList()
     }, [])
 
 
-    const getItemList = async () => {
+    const getItemList = async (item: any) => {
+        console.log(item)
         const params = {
             "itemID": -1,
             "itemCatID": -1,
@@ -90,6 +93,55 @@ const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) 
                 return { value: item.itemID, label: item.itemName }
             })
             setDiseaseList(dataMaskForDropdown)
+            setBalance(null)
+        }
+    }
+
+
+    const getItemCat = async () => {
+
+        const params = {
+            "itemCatID": -1,
+            "sectionID": -1,
+            "fundID": -1,
+            "userID": -1,
+            "formID": -1,
+            "mainType": 2,
+            "type": 1
+        }
+        const res = await requestGetItemCat(params);
+
+        if (res.result.length > 0) {
+            const dataMaskForDropdown = res?.result.map((item: any) => {
+                return { value: item.itemCatID, label: `${item.itemCatName}` }
+            })
+            console.log({ dataMaskForDropdown })
+            setItemCat(dataMaskForDropdown)
+        }
+    }
+
+    const getItemBalance = async (item: any) => {
+        console.log({ item })
+        const params = {
+            "itemID": item,
+            "itemCatID": 1,
+            "sectionID": 0,
+            "fundID": 0,
+            "productID": 0,
+            "unitID": 0,
+            "curDate": "",
+            "userID": -1,
+            "formID": 1,
+            "type": 1
+        }
+        const res = await requestGetItemBalance(params);
+
+        if (res.result.length > 0) {
+            const dataMaskForDropdown = res?.result.map((item: any) => {
+                return { value: item.itemID, label: `${item.itemName} ${item.balanceQuantity}` }
+            })
+            console.log({ dataMaskForDropdown })
+            setBalance(dataMaskForDropdown)
         }
     }
     const getProductList = async () => {
@@ -216,16 +268,55 @@ const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) 
             >
 
                 <Row gutter={16}>
-
                     <Col span={8}>
-                        <Form.Item name="DrugID" label="Drug" rules={[{ required: true }]}>
+                        <Form.Item name="ItemCategory" label="Item Category" rules={[{ required: true }]}>
+                            <Select
+                                options={itemCat}
+                                placeholder="Select"
+                                showSearch
+                                onChange={(item) => getItemList(item)}
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item name="Drug" label="Drug" rules={[{ required: true }]}>
                             <Select
                                 options={drugList}
+                                placeholder="Select"
+                                showSearch
+                                onChange={getItemBalance}
+                            />
+                        </Form.Item>
+                    </Col>
+
+                    <Col span={8}>
+                        <Form.Item name="DrugID" label="Item" rules={[{ required: true }]}>
+                            <Select
+                                options={balance}
                                 placeholder="Select"
                                 showSearch
                             />
                         </Form.Item>
                     </Col>
+
+
+
+
+
+                </Row>
+
+
+
+                <Row gutter={16}>
+
+                    {/* <Col span={8}>
+                        <Form.Item name="ProductID" label="Product" rules={[{ required: false }]}>
+                            <Select
+                                options={productList}
+                                placeholder="Select"
+                            />
+                        </Form.Item>
+                    </Col> */}
 
                     <Col span={8}>
                         <Form.Item name="NoOfDays" label="No Of Days" rules={[{ required: true }]}>
@@ -236,41 +327,6 @@ const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) 
                     <Col span={8}>
                         <Form.Item name="QuantityPerDay" label="Quantity Per Day" rules={[{ required: true }]}>
                             <InputNumber placeholder="Please Enter" style={{ width: "100%" }} min={0} />
-                        </Form.Item>
-                    </Col>
-
-                </Row>
-
-                <Row gutter={16}>
-
-                    <Col span={8}>
-                        <Form.Item name="Instruction" label="Instruction" rules={[{ required: true }]}>
-                            <Input placeholder="Please Enter" />
-                        </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                        <Form.Item name="Advice" label="Advice" rules={[{ required: true }]}>
-                            <Input placeholder="Please Enter" />
-                        </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                        <Form.Item name="Diet" label="Diet" rules={[{ required: true }]}>
-                            <Input placeholder="Please Enter" />
-                        </Form.Item>
-                    </Col>
-
-                </Row>
-
-                <Row gutter={16}>
-
-                    <Col span={8}>
-                        <Form.Item name="ProductID" label="Product" rules={[{ required: false }]}>
-                            <Select
-                                options={productList}
-                                placeholder="Select"
-                            />
                         </Form.Item>
                     </Col>
 
@@ -290,6 +346,25 @@ const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) 
                             <InputNumber placeholder="Please Enter" style={{ width: "100%" }} min={0} />
                         </Form.Item>
                     </Col>
+
+                    <Col span={8}>
+                        <Form.Item name="Instruction" label="Instruction" rules={[{ required: true }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+
+                    <Col span={8}>
+                        <Form.Item name="Advice" label="Advice" rules={[{ required: true }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+
+                    <Col span={8}>
+                        <Form.Item name="Diet" label="Diet" rules={[{ required: true }]}>
+                            <Input placeholder="Please Enter" />
+                        </Form.Item>
+                    </Col>
+
 
                 </Row>
 

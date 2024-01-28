@@ -61,14 +61,14 @@ const getModulePath = (name: string) => {
 
         case "Item Master":
             return "/medicalStore/itemMaster";
-            
+
         case "Direct Item Receipt":
             return "/medicalStore/directItemReciept";
 
         case "Item Status":
             return "/medicalStore/itemStatus";
-        
-            case "Supplier Master":
+
+        case "Supplier Master":
             return "/medicalStore/SupplierMaster";
 
         case "Reception":
@@ -76,6 +76,9 @@ const getModulePath = (name: string) => {
 
         case "Doctor Patient":
             return "/doctor/patient-list";
+
+        case "Patient Billing":
+            return "/patient/billing";
 
         default:
             if (verifiedUser.userTypeID === "11") {

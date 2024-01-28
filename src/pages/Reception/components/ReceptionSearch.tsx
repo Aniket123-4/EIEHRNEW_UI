@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { EditOutlined, FilterOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Typography, Form, Input, Row, Select, Space, message, theme, Card, Radio, Modal, Tabs, TabsProps, InputNumber, Spin } from 'antd';
+import { Button, Col, DatePicker, Typography, Form, Input, Row, Select, Space, message, theme, Card, Radio, Modal, Tabs, TabsProps, InputNumber, Spin, Checkbox, CheckboxProps } from 'antd';
 import { Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import PatientFilter from '@/components/Filters/PatientFilter';
@@ -12,7 +12,7 @@ import { requestGetPatientSearch } from '@/pages/Patient/services/api';
 import { dateFormat } from '@/utils/constant';
 import { requestGetPatientDailyCount, requestGetPatientSearchOPIP } from '../services/api';
 import AddUpdatePatientCase from './AddUpdatePatientCase';
-import { requestGetSection, requestVPreEmpType } from '@/services/apiRequest/dropdowns';
+import { requestGetSection, requestGetUserList, requestVPreEmpType } from '@/services/apiRequest/dropdowns';
 import dayjs from 'dayjs';
 
 const { Option } = Select;
@@ -44,6 +44,9 @@ const ReceptionSearch = React.forwardRef((props) => {
     const [selectedPreEmpTypeError, setSelectedPreEmpTypeError] = useState(false);
     const [selectedPatientData, setSelectedPatientData] = useState({});
     const [selectedTab, setSelectedTab] = useState('1');
+    const [isDateFilterMandatory, setIsDateFilterMandatory] = useState(true);
+    const [sections, setSections] = useState<any>([])
+    const [doctorList, setDoctorList] = useState<any>([{ value: -1, label: "All" }])
 
 
     const onChange = (key: string) => {
@@ -87,12 +90,12 @@ const ReceptionSearch = React.forwardRef((props) => {
             dataIndex: 'patientCaseNo',
             key: 'patientCaseNo',
         },
-        {
-            title: 'PreEmp Type',
-            dataIndex: 'vPreEmpType',
-            render: (text) => <a>{text}</a>,
-            key: 'vPreEmpType',
-        },
+        // {
+        //     title: 'PreEmp Type',
+        //     dataIndex: 'vPreEmpType',
+        //     render: (text) => <a>{text}</a>,
+        //     key: 'vPreEmpType',
+        // },
         {
             title: 'DOB',
             dataIndex: 'dob',
@@ -148,6 +151,7 @@ const ReceptionSearch = React.forwardRef((props) => {
     useEffect(() => {
         getVPreEmpType();
         getPatientDailyCount();
+        getSectionList();
         filterForm.setFieldsValue({
             fromToDate: [dayjs(moment(), dateFormat), dayjs(moment(), dateFormat)],
             patientPhoneNo: '',
@@ -172,6 +176,9 @@ const ReceptionSearch = React.forwardRef((props) => {
         })
     }, [])
 
+    useEffect(() => {
+        console.log("doctorList->", { doctorList })
+    }, [doctorList])
 
     const onSelectPreEmp = (value: any) => {
         setSelectedPreEmpType(value)
@@ -200,16 +207,16 @@ const ReceptionSearch = React.forwardRef((props) => {
             type: 6,
             preEmpTypeID: selectedPreEmpType
         }
-        console.log({params});
-        console.log({selectedType,patientData})
-        if(selectedType===2||selectedType===3){
+        console.log({ params });
+        console.log({ selectedType, patientData })
+        if (selectedType === 2 || selectedType === 3) {
             setSelectedPreEmpType(patientData?.vPreEmpType)
         }
         setLoadingCheckin(true)
         const response = await requestGetPatientSearchOPIP(params);
         setLoadingCheckin(false)
         setPatientCheckInData(response)
-      
+
 
         if (!response?.isSuccess) {
             message.error(response?.msg);
@@ -218,6 +225,42 @@ const ReceptionSearch = React.forwardRef((props) => {
         showModal()
     }
 
+    const getSectionList = async () => {
+        const params = {
+            "sectionID": -1,
+            "userID": -1,
+            "formID": -1,
+            "type": 1
+        }
+        const res = await requestGetSection(params);
+
+        if (res.result.length > 0) {
+
+            const dataMaskForDropdown = res?.result?.map((item: any) => {
+                return { value: item.sectionID, label: item.sectionName }
+            });
+            dataMaskForDropdown.unshift({ value: -1, label: "All" });
+            setSections(dataMaskForDropdown)
+        }
+    }
+
+    const getDoctorList = async (value: any, item: any) => {
+        const params = {
+            "CommonID": item.value,
+            "Type": 3,
+        }
+
+        const res = await requestGetUserList(params);
+        if (res.data.length > 0) {
+            const dataMaskForDropdown = res?.data?.map((item: any) => {
+                return { value: item.userID, label: item.userName }
+            })
+            console.log({ doctorList })
+            const doc = [...doctorList, ...dataMaskForDropdown]
+            console.log({ doc })
+            setDoctorList(doc)
+        }
+    }
 
     const getPatientDailyCount = async () => {
         try {
@@ -282,53 +325,66 @@ const ReceptionSearch = React.forwardRef((props) => {
         }
     }
 
+    const onPressSectionList = (value: any, item: any) => {
+        getDoctorList(value, item)
+    }
 
+    const layout = {
+        labelCol: { span: 8 },
+        wrapperCol: { span: 16 },
+    };
+
+    /* eslint-disable no-template-curly-in-string */
+    const validateMessages = {
+        required: '${label} is required!',
+        types: {
+            email: '${label} is not a valid email!',
+            number: '${label} is not a valid number!',
+        }
+    };
+    /* eslint-enable no-template-curly-in-string */
+
+    const onFinishPatForm = async (values: any) => {
+        if (!values.fromToDate) {
+            values['fromDate'] = '1900-01-21';
+            values['toDate'] = moment(new Date()).format('YYYY-MM-DD');
+        } else {
+            values['fromDate'] = moment(values.fromToDate[0]).format('YYYY-MM-DD');
+            values['toDate'] = moment(values.fromToDate[1]).format('YYYY-MM-DD');
+        }
+
+        console.log({ isDateFilterMandatory })
+
+        if (!isDateFilterMandatory) {
+            values['fromDate'] = '1900-01-01';
+            values['toDate'] = '1900-01-01';
+        }
+
+        const params = {
+            ...values,
+            patientID: -1,
+            userID: -1,
+            formID: -1,
+            type: +selectedType
+        }
+        console.log(params);
+        const response = await requestGetPatientSearchOPIP(params);
+        setLoading(false)
+        setList(response?.result)
+
+        if (response?.isSuccess) {
+        } else {
+            message.error(response?.msg);
+        }
+    };
+
+    const onChangeDateFilterMandatory: CheckboxProps['onChange'] = (e) => {
+        setIsDateFilterMandatory(e.target.checked)
+    };
+
+    const handleChangeFilter = (value: any) => { }
 
     const filterVisitForm = () => {
-
-        const layout = {
-            labelCol: { span: 8 },
-            wrapperCol: { span: 16 },
-        };
-
-        /* eslint-disable no-template-curly-in-string */
-        const validateMessages = {
-            required: '${label} is required!',
-            types: {
-                email: '${label} is not a valid email!',
-                number: '${label} is not a valid number!',
-            }
-        };
-        /* eslint-enable no-template-curly-in-string */
-
-        const onFinishPatForm = async (values: any) => {
-            if (!values.fromToDate) {
-                values['fromDate'] = '1900-01-21';
-                values['toDate'] = moment(new Date()).format('YYYY-MM-DD');
-            } else {
-                values['fromDate'] = moment(values.fromToDate[0]).format('YYYY-MM-DD');
-                values['toDate'] = moment(values.fromToDate[1]).format('YYYY-MM-DD');
-            }
-
-            const params = {
-                ...values,
-                patientID: -1,
-                userID: -1,
-                formID: -1,
-                type: +selectedType
-            }
-            console.log(params);
-            const response = await requestGetPatientSearchOPIP(params);
-            setLoading(false)
-            setList(response?.result)
-
-            if (response?.isSuccess) {
-            } else {
-                message.error(response?.msg);
-            }
-        };
-
-        const handleChangeFilter = (value: any) => { }
         return (
             <Form
                 form={filterForm}
@@ -345,12 +401,14 @@ const ReceptionSearch = React.forwardRef((props) => {
                                 style={{ width: "100%" }}
                             />
                         </Form.Item>
+                        <Checkbox checked={isDateFilterMandatory} onChange={onChangeDateFilterMandatory}>Date filter required</Checkbox>
+
                     </Col>
                 </Row>
 
                 <Row gutter={16}>
 
-                    <Col span={24}>
+                    <Col span={24} style={{ marginTop: 15 }}>
                         <Form.Item name="patientCaseID" label="Patient Case" rules={[{ required: false }]}>
                             <Select
                                 onChange={handleChangeFilter}
@@ -401,9 +459,10 @@ const ReceptionSearch = React.forwardRef((props) => {
                     <Col span={12}>
                         <Form.Item name="sectionID" label="Section" rules={[{ required: false }]}>
                             <Select
-                                onChange={handleChangeFilter}
-                                options={[{ value: -1, label: "All" }]}
-                                defaultValue={-1}
+                                showSearch
+                                options={sections}
+                                defaultActiveFirstOption={true}
+                                onChange={onPressSectionList}
                             />
                         </Form.Item>
                     </Col>
@@ -414,8 +473,8 @@ const ReceptionSearch = React.forwardRef((props) => {
                         <Form.Item name="consultantDocID" label="Consultant Doc" rules={[{ required: false }]}>
                             <Select
                                 onChange={handleChangeFilter}
-                                options={[{ value: -1, label: "All" }]}
-                                defaultValue={-1}
+                                options={doctorList}
+                                defaultActiveFirstOption={true}
                             />
                         </Form.Item>
                     </Col>

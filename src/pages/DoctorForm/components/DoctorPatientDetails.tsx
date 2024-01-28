@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ExclamationCircleFilled, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Modal, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Tabs, Descriptions } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Modal, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Tabs, Descriptions, List } from 'antd';
 import { history, type IRoute } from 'umi';
 import type { TabsProps } from 'antd';
 import { requestGetPatientForDoctorOPIP } from '../services/api';
@@ -307,12 +307,48 @@ const DoctorPatientDetails = React.forwardRef((props) => {
         )
     }
 
+    const onPressOnCase = (item: any) => {
+        console.log(item)
+        const patientID: string = item?.patientID;
+        // const patientNo: string = patientNo;
+        const patientCaseID: string = item?.patientCaseID;
+        const patientCaseNo: string = item?.patientCaseNo;
+
+        getPatientDetails(
+            patientID,
+            patientNo,
+            patientCaseID,
+            patientCaseNo,
+            false
+        );
+        onClosePastCaseDrawer();
+    }
+
     const pastCasesDrawer = () => {
+
+
         return (
-            <Drawer title="Basic Drawer" onClose={onClosePastCaseDrawer} open={openPastCaseDrawer}>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
+            <Drawer title="Patient Past Cases" onClose={onClosePastCaseDrawer} open={openPastCaseDrawer}>
+                {patientDetails ?
+                    <List
+                        itemLayout="vertical"
+                        dataSource={patientDetails?.result11}
+                        renderItem={(item, index) => (
+
+                            <List.Item>
+                                <Card
+                                    hoverable={true}
+                                    onClick={() => onPressOnCase(item)}
+                                    bodyStyle={{ padding: 5, margin: 5 }}
+                                >
+                                    <h3>{`Case No: ${item?.patientCaseNo}`}</h3>
+                                    <div dangerouslySetInnerHTML={{ __html: item?.displayName }} />
+                                </Card>
+
+                            </List.Item>
+
+                        )}
+                    /> : null}
             </Drawer>
         )
     }
@@ -362,3 +398,4 @@ const DoctorPatientDetails = React.forwardRef((props) => {
 });
 
 export default DoctorPatientDetails;
+
