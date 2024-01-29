@@ -382,7 +382,19 @@ const section_array:{sectionID:any; sectionName:any; sectionCode:any; parentSect
             message.error(defaultLoginFailureMessage);
         }
     }
+    const validateCharacters = (rule, value, callback) => {
+        const regex = /^[A-Za-z\s]+$/;
+        if (!regex.test(value)) {
+            if (value) {
+                callback('Only characters are allowed');
+            } else {
+                callback();
+            }
 
+        } else {
+            callback();
+        }
+    };
     const onFinish = (values: any) => {
         console.log('Received values of form: ', values);
         requestForValidateOTP(values);

@@ -649,6 +649,8 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
             setLoading(false)
             if (msg.isSuccess === true) {
                 form.resetFields();
+                setIstType_Pat([])
+                setLstType_Patient([])
                 message.success(msg.msg);
                 return;
             } else {
@@ -664,6 +666,19 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
     const goBack = () => {
         history.push("/")
     }
+    const validateCharacters = (rule, value, callback) => {
+        const regex = /^[A-Za-z\s]+$/;
+        if (!regex.test(value)) {
+            if (value) {
+                callback('Only characters are allowed');
+            } else {
+                callback();
+            }
+
+        } else {
+            callback();
+        }
+    };
 
     const onChange = (e: CheckboxChangeEvent) => {
         const addressFields = form.getFieldsValue()
@@ -883,7 +898,8 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                             <Form.Item
                                 name={'col3'}
                                 label="Contact Name"
-                                rules={[{ required: false, message: 'Please Enter Contact Name' }]}
+                                rules={[{ required: false, message: 'Please Enter Contact Name' },
+                                {validator:validateCharacters}]}
                             >
                                 <Input maxLength={30} placeholder="Please Enter Contact Name" />
                             </Form.Item>
@@ -1027,7 +1043,8 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                             <Form.Item
                                 name={'col3'}
                                 label="Contact Name"
-                                rules={[{ required: false, message: 'Please Enter Contact Name' }]}
+                                rules={[{ required: false, message: 'Please Enter Contact Name' },
+                                {validator:validateCharacters}]}
                             >
                                 <Input maxLength={30} placeholder="Please Enter Contact Name" />
                             </Form.Item>
@@ -1174,7 +1191,8 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     <Form.Item
                                         name="fName"
                                         label="First Name"
-                                        rules={[{ required: true, message: 'Please enter First Name' }]}
+                                        rules={[{ required: true, message: 'Please enter First Name' },
+                                    {validator:validateCharacters}]}
                                     >
                                         <Input style={{ borderColor: 'blue' }} placeholder="Please enter First Name" />
                                     </Form.Item>
@@ -1183,7 +1201,8 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     <Form.Item
                                         name="mName"
                                         label="Middle Name"
-                                        rules={[{ required: false, message: 'Please enter Middle Name' }]}
+                                        rules={[{ required: false, message: 'Please enter Middle Name' },
+                                    {validator:validateCharacters}]}
                                     >
                                         <Input placeholder="Please enter Middle Name" />
                                     </Form.Item>
@@ -1192,7 +1211,8 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     <Form.Item
                                         name="lName"
                                         label="Last Name"
-                                        rules={[{ required: true, message: 'Please enter Last Name' }]}
+                                        rules={[{ required: true, message: 'Please enter Last Name' },
+                                    {validator:validateCharacters}]}
                                     >
                                         <Input placeholder="Please enter Last Name" />
                                     </Form.Item>
@@ -1201,7 +1221,8 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     <Form.Item
                                         name="fatherName"
                                         label="Father Name"
-                                        rules={[{ required: true, message: 'Please enter Father Name' }]}
+                                        rules={[{ required: true, message: 'Please enter Father Name' },
+                                        {validator:validateCharacters}]}
                                     >
                                         <Input placeholder="Please enter Father Name" />
                                     </Form.Item>
@@ -1210,7 +1231,8 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     <Form.Item
                                         name="motherName"
                                         label="Mother Name"
-                                        rules={[{ required: true, message: 'Please enter Mother Name' }]}
+                                        rules={[{ required: true, message: 'Please enter Mother Name' },
+                                        {validator:validateCharacters}]}
                                     >
                                         <Input placeholder="Please enter Mother Name" />
                                     </Form.Item>
@@ -1228,7 +1250,8 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     <Form.Item
                                         name="mNameML"
                                         label="Middle Name In Other Language"
-                                        rules={[{ required: false, message: 'Please enter Middle Name' }]}
+                                        rules={[{ required: false, message: 'Please enter Middle Name' },
+                                    {validator:validateCharacters}]}
                                     >
                                         <Input placeholder="Please enter Middle Name" />
                                     </Form.Item>

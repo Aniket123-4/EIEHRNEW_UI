@@ -694,6 +694,19 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             }
         }
     };
+    const validateCharacters = (rule, value, callback) => {
+        const regex = /^[A-Za-z\s]+$/;
+        if (!regex.test(value)) {
+            if (value) {
+                callback('Only characters are allowed');
+            } else {
+                callback();
+            }
+
+        } else {
+            callback();
+        }
+    };
     const formList = () => {
         const addFamilyItem = () => {
             let flag = 0;
@@ -739,7 +752,8 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                             <Form.Item
                                 name={'col3'}
                                 label="Contact Name"
-                                rules={[{ required: false, message: 'Please Enter Contact Name' }]}
+                                rules={[{ required: false, message: 'Please Enter Contact Name' },
+                            {validator:validateCharacters}]}
                             >
                                 <Input maxLength={30} placeholder="Please Enter Contact Name" />
                             </Form.Item>
@@ -883,7 +897,8 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                             <Form.Item
                                 name={'col3'}
                                 label="Contact Name"
-                                rules={[{ required: false, message: 'Please Enter Contact Name' }]}
+                                rules={[{ required: false, message: 'Please Enter Contact Name' },
+                            {validator:validateCharacters}]}
                             >
                                 <Input maxLength={30} placeholder="Please Enter Contact Name" />
                             </Form.Item>
@@ -1015,7 +1030,8 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         // initialValue={patient[0]?.fName}
                                         name="fName"
                                         label="First Name"
-                                        rules={[{ required: true, message: 'Please enter First Name' }]}
+                                        rules={[{ required: true, message: 'Please enter First Name' },
+                                    {validator:validateCharacters}]}
                                     >
                                         <Input style={inputStyle} placeholder="Please enter First Name" />
                                     </Form.Item>
@@ -1025,7 +1041,8 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         // initialValue={patient[0]?.mName}
                                         name="mName"
                                         label="Middle Name"
-                                        rules={[{ required: false, message: 'Please enter Middle Name' }]}
+                                        rules={[{ required: false, message: 'Please enter Middle Name' },
+                                    {validator:validateCharacters}]}
                                     >
                                         <Input style={inputStyle} placeholder="Please enter Middle Name" />
                                     </Form.Item>
@@ -1035,7 +1052,8 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         // initialValue={patient[0]?.lName}
                                         name="lName"
                                         label="Last Name"
-                                        rules={[{ required: true, message: 'Please enter Last Name' }]}
+                                        rules={[{ required: true, message: 'Please enter Last Name' },
+                                    {validator:validateCharacters}]}
                                     >
                                         <Input style={inputStyle} placeholder="Please enter Last Name" />
                                     </Form.Item>
@@ -1045,7 +1063,8 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         // initialValue={patient[0]?.fatherName}
                                         name="fatherName"
                                         label="Father Name"
-                                        rules={[{ required: true, message: 'Please enter Father Name' }]}
+                                        rules={[{ required: true, message: 'Please enter Father Name' },
+                                    {validator:validateCharacters}]}
                                     >
                                         <Input style={inputStyle} placeholder="Please enter Father Name" />
                                     </Form.Item>
@@ -1095,7 +1114,8 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         // initialValue={patient[0]?.motherNameML}
                                         name="motherNameML"
                                         label="Mother Name In Other Language"
-                                        rules={[{ required: false, message: 'Please Enter Mother Name' }]}
+                                        rules={[{ required: false, message: 'Please Enter Mother Name' },
+                                    {validator:validateCharacters}]}
                                     >
                                         <Input style={inputStyle} placeholder="Please enter Mother Name" />
                                     </Form.Item>

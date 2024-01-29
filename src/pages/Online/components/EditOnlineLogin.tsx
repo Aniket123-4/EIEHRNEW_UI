@@ -106,6 +106,19 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                 "curAddress": selectedRows?.curAddress,
             });
     }
+    const validateCharacters = (rule, value, callback) => {
+        const regex = /^[A-Za-z\s]+$/;
+        if (!regex.test(value)) {
+            if (value) {
+                callback('Only characters are allowed');
+            } else {
+                callback();
+            }
+
+        } else {
+            callback();
+        }
+    };
 
     const addOnlineLogin = async (values: any) => {
         values['dob'] = convertDate(values['dob']);
@@ -169,7 +182,8 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                     // initialValue={selectedRows?.fName}
                                     name="fName"
                                     label="First name"
-                                    rules={[{ required: true, message: 'Please enter first name' }]}
+                                    rules={[{ required: true, message: 'Please enter first name' },
+                                {validator:validateCharacters}]}
                                 // initialValue={institute}
                                 >
                                     <Input size={'large'} placeholder="Please enter first name" />
@@ -180,7 +194,8 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                     // initialValue={selectedRows?.mName}
                                     name="mName"
                                     label="Middle name"
-                                    rules={[{ message: 'Please enter middle name' }]}
+                                    rules={[{ message: 'Please enter middle name' },
+                                {validator:validateCharacters}]}
                                 >
                                     <Input size={'large'} placeholder="Please enter middle name" />
                                 </Form.Item>
@@ -190,7 +205,8 @@ const EditOnlineLogin = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                     // initialValue={selectedRows?.lName}
                                     name="lName"
                                     label="Last name"
-                                    rules={[{ required: true, message: 'Please enter last name' }]}
+                                    rules={[{ required: true, message: 'Please enter last name' },
+                                {validator:validateCharacters}]}
                                 >
                                     <Input size={'large'} placeholder="Please enter last name" />
                                 </Form.Item>
