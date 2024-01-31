@@ -17,7 +17,7 @@ const { RangePicker } = DatePicker;
 
 
 
-const Diagnosis = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) => {
+const Diagnosis = ({ patientDetails = {}, patientCaseID, onSaveSuccess,admNo }: any) => {
     const { result4 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -87,7 +87,7 @@ const Diagnosis = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) =
         const onFinishPatForm = async (values: any) => {
             const params = {
                 "patientCaseID": patientCaseID,
-                "admNo": "1",
+                "admNo":admNo,
                 "col1": values?.DiseasesID,
                 "col2": values?.DiagnosisComment,
                 "col3": "",

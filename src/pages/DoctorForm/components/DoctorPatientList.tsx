@@ -103,7 +103,7 @@ const DoctorPatientList = React.forwardRef((props) => {
             render: (_, record) => (
                 <Space size="middle">
                     <Button size={'small'} onClick={() => {
-                        history.push(`/doctor/patient-details/${record.patientID}/${record.patientNo}/${record.patientCaseID}/${record.patientCaseNo}`)
+                        history.push(`/doctor/patient-details/${record?.patientID}/${record?.patientNo}/${record?.patientCaseID}/${record?.patientCaseNo}/${record?.admNo}`)
                     }}>View</Button>
 
                 </Space>

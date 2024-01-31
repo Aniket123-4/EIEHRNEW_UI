@@ -16,7 +16,7 @@ const { RangePicker } = DatePicker;
 
 
 
-const BasicDetails = ({ patientBasicDetails = {} }: any) => {
+const BasicDetails = ({ patientBasicDetails = {},admNo }: any) => {
 
     console.log(patientBasicDetails);
 

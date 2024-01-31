@@ -16,7 +16,7 @@ const { RangePicker } = DatePicker;
 
 
 
-const PatientDocument = ({ patientDetails = {} }: any) => {
+const PatientDocument = ({ patientDetails = {},admNo }: any) => {
     const { result1 } = patientDetails;
     const [docList, setDocList] = useState<any>([])
     const [imageUrl, setImageUrl] = useState<string>();

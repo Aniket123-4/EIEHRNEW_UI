@@ -14,7 +14,7 @@ import { ColumnsType } from 'antd/es/table';
 
 const { RangePicker } = DatePicker;
 
-const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) => {
+const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess ,admNo}: any) => {
     const { result1 } = patientDetails;
 
     const [tabForm] = Form.useForm();
@@ -173,7 +173,7 @@ const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) 
         const onFinishPatForm = async (values: any) => {
             const params = {
                 "patientCaseID": patientCaseID,
-                "admNo": "1",
+                "admNo":admNo,
                 "col1": values?.DrugID,
                 "col2": "" + values?.NoOfDays,
                 "col3": "" + values?.QuantityPerDay,

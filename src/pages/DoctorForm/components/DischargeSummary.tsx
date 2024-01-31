@@ -15,7 +15,7 @@ const { RangePicker } = DatePicker;
 
 
 
-const DischargeSummary = ({ patientDetails = {}, patientCaseID,onSaveSuccess }: any) => {
+const DischargeSummary = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }: any) => {
     const { result8 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -56,7 +56,7 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID,onSaveSuccess }: 
             dataIndex: 'dischargeDateVar',
 
         },
-         {
+        {
             title: 'Notes',
             key: 'dischargeNotes',
             dataIndex: 'dischargeNotes',
@@ -72,16 +72,16 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID,onSaveSuccess }: 
             key: 'durationOfIllness',
             dataIndex: 'durationOfIllness',
         },
-          {
+        {
             title: 'Final Advice ML',
             key: 'finalAdviceML',
             dataIndex: 'finalAdviceML',
-        },  {
+        }, {
             title: 'Final Daignosis',
             key: 'finalDaigNosis',
             dataIndex: 'finalDaigNosis',
         },
-       
+
     ];
 
 
@@ -90,7 +90,7 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID,onSaveSuccess }: 
         const onFinishPatForm = async (values: any) => {
             const params = {
                 "patientCaseID": patientCaseID,
-                "admNo": "1",
+                "admNo": admNo,
                 "col1": "-1",//values?.DisCondID,
                 "col2": "-1",//values?.DischargeToID,
                 "col3": values?.CondUponDischarge,
@@ -167,7 +167,7 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID,onSaveSuccess }: 
                     tab: "DISCHARGE_SUMMARY",
                     response
                 })
-              
+
             } catch (e) {
                 setLoading(false)
             }
@@ -335,7 +335,7 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID,onSaveSuccess }: 
             <Card>
                 {formView()}
             </Card>
-          <Table
+            <Table
                 columns={columns}
                 size="small"
                 dataSource={result8}

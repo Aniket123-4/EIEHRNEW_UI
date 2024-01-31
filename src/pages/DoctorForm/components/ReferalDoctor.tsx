@@ -15,7 +15,7 @@ import { requestGetInvestigation } from '@/pages/Investigation/services/api';
 
 const { RangePicker } = DatePicker;
 
-const ReferalDoctor = ({ patientDetails = {}, patientCaseID,onSaveSuccess }: any) => {
+const ReferalDoctor = ({ patientDetails = {}, patientCaseID,onSaveSuccess,admNo }: any) => {
     const { result9 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -127,7 +127,7 @@ const ReferalDoctor = ({ patientDetails = {}, patientCaseID,onSaveSuccess }: any
         const onFinishPatForm = async (values: any) => {
             const params = {
                 "patientCaseID": patientCaseID,
-                "admNo": "1",
+                "admNo": admNo,
                 "col1": values?.DoctorID,
                 "col2": values?.InvParameterID,
                 "col3": "",

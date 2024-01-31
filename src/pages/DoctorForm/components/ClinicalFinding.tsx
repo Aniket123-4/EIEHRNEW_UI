@@ -5,7 +5,7 @@ import { getUserInLocalStorage } from '@/utils/common';
 import { requestAddDelPatientForDoctorOPIP } from '../services/api';
 
 
-const ClinicalFinding = ({ patientDetails, patientCaseID, onSaveSuccess }: any) => {
+const ClinicalFinding = ({ patientDetails, patientCaseID, onSaveSuccess,admNo }: any) => {
     const { result10 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -31,7 +31,7 @@ const ClinicalFinding = ({ patientDetails, patientCaseID, onSaveSuccess }: any) 
         const onFinishPatForm = async (values: any) => {
             const params = {
                 "patientCaseID": patientCaseID,
-                "admNo": "1",
+                "admNo": admNo,
                 "col1": "",
                 "col2": "",
                 "col3": "",

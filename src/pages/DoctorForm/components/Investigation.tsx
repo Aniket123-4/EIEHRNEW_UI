@@ -10,7 +10,7 @@ import { requestAddDelPatientForDoctorOPIP } from '../services/api';
 import moment from 'moment';
 
 
-const Investigation = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) => {
+const Investigation = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }: any) => {
     const { result6 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [form] = Form.useForm();
@@ -31,13 +31,11 @@ const Investigation = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: an
             title: 'Inv Parameter',
             key: 'invParameterName',
             dataIndex: 'invParameterName',
-            fixed: 'left',
 
         }, {
             title: 'Inv Serial No',
             key: 'invSerialNo',
             dataIndex: 'invSerialNo',
-            fixed: 'left',
         },
         {
             title: 'Date',
@@ -137,13 +135,11 @@ const Investigation = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: an
             title: 'Group',
             key: 'invGroupName',
             dataIndex: 'invGroupName',
-            fixed: 'right',
         },
         {
             title: 'Normal text',
             key: 'normaltext',
             dataIndex: 'normaltext',
-            fixed: 'right',
         },
 
     ];
@@ -296,13 +292,13 @@ const Investigation = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: an
     const onFinishPatForm = async (values: any) => {
         const params = {
             "patientCaseID": patientCaseID,
-            "admNo": "1",
+            "admNo": admNo,
             "col1": "",
             "col2": values?.InvParameterResult,
             "col3": values?.InvRemark,
             "col4": "",
             "col5": "",
-            "col6": ""+values?.NoOfInjection,
+            "col6": "" + values?.NoOfInjection,
             "col7": invArr,
             "col8": "",
             "col9": "",
@@ -474,12 +470,14 @@ const Investigation = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: an
             <Card>
                 {formView()}
             </Card>
-            <Table
-                columns={columns}
-                size="small"
-                dataSource={result6}
-                pagination={false}
-            />
+
+            <Row gutter={8}>
+                <Col span={24}>
+                    <div style={{ marginTop: 10 }}> <Table size='small' scroll={{ x: 1000 }} columns={columns} dataSource={result6} /></div>
+                </Col>
+
+            </Row>
+
         </Space>
     );
 };

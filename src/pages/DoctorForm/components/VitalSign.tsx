@@ -18,7 +18,7 @@ const { RangePicker } = DatePicker;
 
 
 
-const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) => {
+const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess,admNo }: any) => {
     const { result3 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -89,7 +89,7 @@ const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) =
             const date = moment(values?.VitalDateTime).format(dateFormat);
             const params = {
                 "patientCaseID": patientCaseID,
-                "admNo": "1",
+                "admNo": admNo,
                 "col1": values?.VitalParameterID,
                 "col2": values?.VitalResult,
                 "col3": values?.VitalComment,

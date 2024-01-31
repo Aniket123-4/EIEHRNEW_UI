@@ -8,7 +8,7 @@ import { requestAddDelPatientForDoctorOPIP } from '../services/api';
 import { getUserInLocalStorage } from '@/utils/common';
 
 
-const Complain = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) => {
+const Complain = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }: any) => {
     const { result2 } = patientDetails;
     const [filterForm] = Form.useForm();
     const [loading, setLoading] = useState(false)
@@ -87,7 +87,7 @@ const Complain = ({ patientDetails = {}, patientCaseID, onSaveSuccess }: any) =>
             const date = moment(new Date()).format(dateFormat);
             const params = {
                 "patientCaseID": patientCaseID,
-                "admNo": 1,
+                "admNo": admNo,
                 "col1": values?.ComplainTypeID,
                 "col2": values?.Complain,
                 "col3": "",

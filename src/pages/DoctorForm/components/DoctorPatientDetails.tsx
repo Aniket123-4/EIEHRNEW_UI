@@ -32,6 +32,7 @@ const DoctorPatientDetails = React.forwardRef((props) => {
     const [patientNo, setPatientNo] = useState<any>();
     const [patientCaseID, setPatientCaseID] = useState<any>();
     const [patientCaseNo, setPatientCaseNo] = useState<any>();
+    const [admNo, setAdmNo] = useState<any>();
     const [patientBasicDetails, setPatientBasicDetails] = useState<any>(null);
     const [patientDetails, setPatientDetails] = useState<any>();
     const [isModalOpenForPatHistory, setIsModalOpenForPatHistory] = useState(false);
@@ -74,61 +75,61 @@ const DoctorPatientDetails = React.forwardRef((props) => {
         {
             key: 'BASIC_INFORMATION',
             label: 'BASIC INFORMATION',
-            children: patientBasicDetails && <BasicDetails patientBasicDetails={patientBasicDetails} patientCaseID={patientCaseID} />,
+            children: patientBasicDetails && <BasicDetails patientBasicDetails={patientBasicDetails} patientCaseID={patientCaseID} admNo={admNo} />,
         }, {
             key: 'GENERAL_INFORMATION',
             label: 'GENERAL INFORMATION',
-            children: <GeneralInformation patientDetails={patientDetails} patientCaseID={patientCaseID} />,
+            children: <GeneralInformation patientDetails={patientDetails} patientCaseID={patientCaseID} admNo={admNo}/>,
         },
         {
             key: 'COMPLAIN',
             label: 'COMPLAIN',
-            children: <Complain patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
+            children: <Complain patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
         },
         {
             key: 'VITAL_SIGN',
             label: 'VITAL SIGN',
-            children: <VitalSign patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
+            children: <VitalSign patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
         },
         {
             key: 'DIAGNOSIS',
             label: 'DIAGNOSIS',
-            children: <Diagnosis patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
+            children: <Diagnosis patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
         },
         {
             key: 'MEDICATION',
             label: 'MEDICATION',
-            children: <Medication patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
+            children: <Medication patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
         },
         {
             key: 'INVESTIGATION',
             label: 'INVESTIGATION',
-            children: <Investigation patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
+            children: <Investigation patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
         },
         {
             key: 'PATIENT_HISTORY',
             label: 'PATIENT HISTORY',
-            children: <PatientHistory patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
+            children: <PatientHistory patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
         },
         {
             key: 'PATIENT_DOCUMENT',
             label: 'PATIENT DOCUMENT',
-            children: <PatientDocument patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
+            children: <PatientDocument patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
         },
         {
             key: 'REFERAL_DOCTOR',
             label: 'REFERAL DOCTOR',
-            children: <ReferalDoctor patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
+            children: <ReferalDoctor patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
         },
         {
             key: 'CLINICAL_FINDING',
             label: 'CLINICAL FINDING',
-            children: <ClinicalFinding patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
+            children: <ClinicalFinding patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
         },
         {
             key: 'DISCHARGE_SUMMARY',
             label: 'DISCHARGE SUMMARY',
-            children: <DischargeSummary patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} />,
+            children: <DischargeSummary patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
         },
     ];
 
@@ -137,6 +138,7 @@ const DoctorPatientDetails = React.forwardRef((props) => {
         const patientNo = history.location.pathname.split('/')[4];
         const patientCaseID = history.location.pathname.split('/')[5];
         const patientCaseNo = history.location.pathname.split('/')[6];
+        const admNo = history.location.pathname.split('/')[7];
 
         getPatientBasicDetails(
             patientID,
@@ -157,6 +159,7 @@ const DoctorPatientDetails = React.forwardRef((props) => {
         setPatientNo(patientNo)
         setPatientCaseID(patientCaseID)
         setPatientCaseNo(patientCaseNo)
+        setAdmNo(admNo)
     }, [])
 
 

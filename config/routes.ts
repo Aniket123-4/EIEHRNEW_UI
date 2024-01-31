@@ -262,7 +262,7 @@ export default [
       },
       {
         name: 'Patient Details',
-        path: '/doctor/patient-details/:id/:id/:id/:id',
+        path: '/doctor/patient-details/:id/:id/:id/:id/:id',
         component: './DoctorForm/components/DoctorPatientDetails',
       },
     ],
