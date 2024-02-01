@@ -14,6 +14,12 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [generateBillData, setGenerateBillData] = useState();
     const [remark, setRemark] = useState("");
+    const [patientBillDataList, setPatientBillDataList] = useState<any>(patientBillData);
+
+    useEffect(() => {
+        const data = { ...patientBillData };
+        setPatientBillDataList(data)
+    }, [patientBillData])
 
     const columns: ColumnsType<any> = [
         {
@@ -48,12 +54,13 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
             dataIndex: 'finalGrossAmount',
 
         },
-        //  {
-        //     title: 'insuranceAmtVAT',
-        //     key: 'insuranceAmtVAT',
-        //     dataIndex: 'insuranceAmtVAT',
-
-        // }
+        {
+            title: 'Action',
+            key: 'action',
+            render: (_, record) => (
+                <Button danger size={'small'} onClick={() => { deleteBill(record) }} >Delete</Button>
+            ),
+        },
 
     ];
 
@@ -89,31 +96,31 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
 
     const generateBill = async () => {
         const typPatientBill = [];
-        for (let i = 0; i < patientBillData?.result1.length; i++) {
+        for (let i = 0; i < patientBillDataList?.result1.length; i++) {
             let data = {
-                "col1": patientBillData?.result1[i]?.patientBillID,
-                "col2": patientBillData?.result1[i]?.patientBillCompID,
-                "col3": patientBillData?.result1[i]?.patientID,
-                "col4": patientBillData?.result1[i]?.patientCaseID,
-                "col5": patientBillData?.result1[i]?.admNo,
-                "col6": patientBillData?.result1[i]?.invGroupID,
-                "col7": patientBillData?.result1[i]?.discountParameterID,
-                "col8": patientBillData?.result1[i]?.invParameterID,
-                "col9": patientBillData?.result1[i]?.noOfDays,
-                "col10": patientBillData?.result1[i]?.quantityPerDay,
-                "col11": patientBillData?.result1[i]?.compID,
-                "col12": patientBillData?.result1[i]?.compRebate,
-                "col13": patientBillData?.result1[i]?.insuranceCompID,
-                "col14": patientBillData?.result1[i]?.insuranceRebate,
-                "col15": patientBillData?.result1[i]?.grossAmount,
-                "col16": patientBillData?.result1[i]?.netAmount,
-                "col17": patientBillData?.result1[i]?.finalGrossAmount,
-                "col18": patientBillData?.result1[i]?.isConsultency ? "1" : "0",
-                "col19": patientBillData?.result1[i]?.isMedic ? "1" : "0",
-                "col20": patientBillData?.result1[i]?.isRoom ? "1" : "0",
-                "col21": patientBillData?.result1[i]?.isManual ? "1" : "0",
-                "col22": remark,//patientBillData?.result1[i]?.remark,
-                "col23": patientBillData?.result1[i]?.barCode,
+                "col1": patientBillDataList?.result1[i]?.patientBillID,
+                "col2": patientBillDataList?.result1[i]?.patientBillCompID,
+                "col3": patientBillDataList?.result1[i]?.patientID,
+                "col4": patientBillDataList?.result1[i]?.patientCaseID,
+                "col5": patientBillDataList?.result1[i]?.admNo,
+                "col6": patientBillDataList?.result1[i]?.invGroupID,
+                "col7": patientBillDataList?.result1[i]?.discountParameterID,
+                "col8": patientBillDataList?.result1[i]?.invParameterID,
+                "col9": patientBillDataList?.result1[i]?.noOfDays,
+                "col10": patientBillDataList?.result1[i]?.quantityPerDay,
+                "col11": patientBillDataList?.result1[i]?.compID,
+                "col12": patientBillDataList?.result1[i]?.compRebate,
+                "col13": patientBillDataList?.result1[i]?.insuranceCompID,
+                "col14": patientBillDataList?.result1[i]?.insuranceRebate,
+                "col15": patientBillDataList?.result1[i]?.grossAmount,
+                "col16": patientBillDataList?.result1[i]?.netAmount,
+                "col17": patientBillDataList?.result1[i]?.finalGrossAmount,
+                "col18": patientBillDataList?.result1[i]?.isConsultency ? "1" : "0",
+                "col19": patientBillDataList?.result1[i]?.isMedic ? "1" : "0",
+                "col20": patientBillDataList?.result1[i]?.isRoom ? "1" : "0",
+                "col21": patientBillDataList?.result1[i]?.isManual ? "1" : "0",
+                "col22": remark,//patientBillDataList?.result1[i]?.remark,
+                "col23": patientBillDataList?.result1[i]?.barCode,
                 "col24": "",
                 "col25": "",
                 "col26": "",
@@ -160,6 +167,15 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
         }
     }
 
+    const deleteBill = (record: any) => {
+        console.log({ patientBillDataList })
+        console.log({ record: record?.patientBillCompID })
+        const data: any = { ...patientBillDataList };
+        const filteredResult = data?.result1?.filter(item => item.patientBillCompID !== record?.patientBillCompID);
+        data.result1 = filteredResult;
+        console.log(data);
+        setPatientBillDataList(data)
+    }
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -174,7 +190,6 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
     };
 
     const onChangeRemark = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        console.log(e.target.value);
         setRemark(e.target.value);
     };
 
@@ -183,7 +198,7 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
             <Table
                 columns={columns}
                 size="small"
-                dataSource={patientBillData?.result1}
+                dataSource={patientBillDataList?.result1}
                 pagination={false}
 
 

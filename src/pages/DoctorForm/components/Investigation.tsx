@@ -140,8 +140,7 @@ const Investigation = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admN
             title: 'Normal text',
             key: 'normaltext',
             dataIndex: 'normaltext',
-        },
-
+        }, 
     ];
 
     useEffect(() => {
