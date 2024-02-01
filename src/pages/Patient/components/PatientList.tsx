@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { EditOutlined, FilterOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card } from 'antd';
-import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Typography } from 'antd';
+import { requestGetGender, requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
 import { requestGetPatientSearch } from '../services/api';
 
 import { Table, Tag } from 'antd';
@@ -27,6 +27,8 @@ const PatientList = React.forwardRef((props) => {
     const { token } = theme.useToken();
     const [list, setList] = useState([]);
     const [openPatientFilter, setOpenPatientFilter] = useState(false);
+    const [gender, setGender] = useState<any>([])
+
 
 
 
@@ -34,14 +36,35 @@ const PatientList = React.forwardRef((props) => {
         color: token.colorTextTertiary,
         borderRadius: token.borderRadiusLG,
     };
+    useEffect(() => {
+        getGender();
+
+    }, [])
 
 
+    const getGender = async () => {
+        const res = await requestGetGender();
+        if (res.data.length > 0) {
+            const dataMaskForDropdown = res?.data?.map((item: any) => {
+                return { value: item.genderID, label: item.genderName }
+            })
+            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
+            setGender(dataMaskForDropdown)
+        }
+    }
+    const getGenderName = (gen:any) => {
+        const nm =gender.find((txt:any) => txt.value===gen)
+        if(nm?.value=="-1")return <Typography>{'NA'}</Typography>
+        else return <Typography>{nm?.label}</Typography>
+    }
     const columns: ColumnsType<DataType> = [
         {
             title: 'Patient No',
             dataIndex: 'patientNo',
             key: 'patientNo',
             render: (text) => <a>{text}</a>,
+            sorter: (a:any, b:any):any => a.patientNo< b.patientNo,
+            sortOrder:'ascend'
         },
         {
             title: 'Name',
@@ -67,6 +90,7 @@ const PatientList = React.forwardRef((props) => {
             title: 'Gender',
             dataIndex: 'genderName',
             key: 'genderName',
+            render: (text) => getGenderName(text)
         },
         // {
         //     title: 'civilStatusName',

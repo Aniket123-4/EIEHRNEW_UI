@@ -273,14 +273,22 @@ const PatientFile = React.forwardRef((props) => {
         }
     }
 
+    function uniqueNames(data:any,key:any){
+        return[
+            ...new Map(
+                data.map((x: any)=>[key(x),x])).values()
+        ]
+    }
+
     const addPatientDoc = async (values: any) => {
         var re = /(?:\.([^.]+))?$/;
         console.log(values, patientData, lstType_PatientDoc)
+        const lstType_PatientDoc1=uniqueNames( lstType_PatientDoc,it=>it.docName)
         const paramsOfDoc = {
             "patientID": patientData?.patientID,
             "patientCaseID": patientData?.patientCaseID,
             "docTypeID": values?.docTypeID,
-            "lstType_PatientDoc": lstType_PatientDoc,
+            "lstType_PatientDoc": lstType_PatientDoc1,
 
             "docDateTime": convertDateInSSSZFormat(dayjs()),
             "isDelete": false,

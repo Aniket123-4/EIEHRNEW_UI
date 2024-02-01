@@ -115,6 +115,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }: a
     onPageChange: () => {
       const { location } = history;
       const user = getUserInLocalStorage();
+      console.log(user)
       if (!user && location.pathname !== loginPath) {
         history.push(loginPath);
       }

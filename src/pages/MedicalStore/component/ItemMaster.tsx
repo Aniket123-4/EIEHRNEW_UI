@@ -164,6 +164,7 @@ const ItemMaster = ({
     history.push("/");
   };
   const setEditField = (data: any) => {
+    console.log(data);
     form.setFieldsValue({
       itemName: data?.itemName,
       unitID: data?.unitID,

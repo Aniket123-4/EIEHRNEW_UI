@@ -39,7 +39,9 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
 
 
     const onFinishPatForm = async (values: any) => {
+        form.resetFields(["case","AdmissionNo"])
         values['case'] = values.case ? values.case : -1;
+        setAdmissionNo([])
         const params = {
             patientNo: values?.patientNo,
             patientID: -1,
@@ -47,99 +49,107 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
             formID: 1,
             type: 1
         }
-        console.log(JSON.stringify(params));
         const response = await requestGetPatientHeader(params);
         setLoading(false)
-        console.log(response?.result);
-        const result1 = response?.result1[0];
-        if (response?.result2) {
-            const result2 = response?.result2[0];
-            setPatientImage(result2);
+        if (response?.result1 != null && response?.isSuccess == true) {
+            //console.log(response?.result1[0].candName);
+            form.setFieldValue("Search", response?.result1[0].candName)
+            const result1 = response?.result1[0];
+            if (response?.result2) {
+                const result2 = response?.result2[0];
+                setPatientImage(result2);
+            }
+
+            const caseChoiceMaskForDropdown = response?.result3?.map((item: any) => {
+                return { value: item.patientCaseID, label: item.patientCaseNo }
+            });
+            setCaseChoice(caseChoiceMaskForDropdown)
+            if(caseChoiceMaskForDropdown)
+                {
+                    form.setFieldValue("case",caseChoiceMaskForDropdown[0].value);
+                    getPatientVisitNo(caseChoiceMaskForDropdown[0].value);
+                }
+            const patentBasicDetails = [
+                {
+                    key: '1',
+                    label: 'Patient No',
+                    children: result1?.patientNo
+                },
+                {
+                    key: '2',
+                    label: 'Name',
+                    children: result1?.candName
+                },
+                {
+                    key: '3',
+                    label: 'DOB',
+                    children: result1?.dob
+                },
+                // {
+                //     key: '4',
+                //     label: 'Age',
+                //     children: result1?.age
+                // },
+                {
+                    key: '5',
+                    label: 'Address',
+                    children: result1?.curAddress
+                },
+                {
+                    key: '6',
+                    label: 'Mobile No',
+                    children: result1?.curMobileNo
+                },
+                {
+                    key: '7',
+                    label: 'Phone No',
+                    children: result1?.curPhoneNo
+                },
+                {
+                    key: '8',
+                    label: 'Civil Status',
+                    children: result1?.civilStatusName
+                },
+                {
+                    key: '9',
+                    label: 'Blood Group',
+                    children: result1?.bloodGroup
+                },
+                {
+                    key: '10',
+                    label: 'Email',
+                    children: result1?.email
+                },
+                {
+                    key: '11',
+                    label: 'Emergency Name',
+                    children: result1?.emerGencyName
+                },
+                {
+                    key: '12',
+                    label: 'Emergency Contact',
+                    children: result1?.emerGencyContact
+                },
+                {
+                    key: '13',
+                    label: 'Gender',
+                    children: result1?.genderName
+                },
+                // {
+                //     key: '14',
+                //     label: 'Insurance Company',
+                //     children: result1?.insuranceComp
+                // }
+            ];
+            setPatientData({ patentBasicDetails })
+            Object.keys(props).length ? props?.onChange({ ...result1, "patientCaseID": values.case }) : null;
+            //getGetPatientSearchList("")
         }
-        console.log(Object.keys(props).length)
-
-
-        const caseChoiceMaskForDropdown = response?.result3?.map((item: any) => {
-            return { value: item.patientCaseID, label: item.patientCaseNo }
-        });
-        setCaseChoice(caseChoiceMaskForDropdown)
-        const patentBasicDetails = [
-            {
-                key: '1',
-                label: 'Patient No',
-                children: result1?.patientNo
-            },
-            {
-                key: '2',
-                label: 'Name',
-                children: result1?.candName
-            },
-            {
-                key: '3',
-                label: 'DOB',
-                children: result1?.dob
-            },
-            // {
-            //     key: '4',
-            //     label: 'Age',
-            //     children: result1?.age
-            // },
-            {
-                key: '5',
-                label: 'Address',
-                children: result1?.curAddress
-            },
-            {
-                key: '6',
-                label: 'Mobile No',
-                children: result1?.curMobileNo
-            },
-            {
-                key: '7',
-                label: 'Phone No',
-                children: result1?.curPhoneNo
-            },
-            {
-                key: '8',
-                label: 'Civil Status',
-                children: result1?.civilStatusName
-            },
-            {
-                key: '9',
-                label: 'Blood Group',
-                children: result1?.bloodGroup
-            },
-            {
-                key: '10',
-                label: 'Email',
-                children: result1?.email
-            },
-            {
-                key: '11',
-                label: 'Emergency Name',
-                children: result1?.emerGencyName
-            },
-            {
-                key: '12',
-                label: 'Emergency Contact',
-                children: result1?.emerGencyContact
-            },
-            {
-                key: '13',
-                label: 'Gender',
-                children: result1?.genderName
-            },
-            // {
-            //     key: '14',
-            //     label: 'Insurance Company',
-            //     children: result1?.insuranceComp
-            // }
-        ];
-        setPatientData({ patentBasicDetails })
-        Object.keys(props).length ? props?.onChange({ ...result1, "patientCaseID": values.case }) : null;
-        //getGetPatientSearchList("")
-        if (!response?.isSuccess) {
-            message.error(response?.msg);
+        if (!response?.isSuccess || response?.result1 == null) {
+            setPatientImage("");
+            setPatientData({})
+            message.error("NO PATIENT FOUND");
+            form.resetFields();
         }
     };
 
@@ -171,14 +181,17 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
         const res = await requestGetPatientVisitNo(params);
         if (res.result.length > 0) {
             const dataMaskForDropdown = res?.result?.map((item: any) => {
-                return { value: item.patientCaseID, label: item.admNo }
+                return { value: item.rowID, label: item.admNo }
             })
-            dataMaskForDropdown.unshift({ value: "-1", label: "All" });
+            // dataMaskForDropdown.unshift({ value: "-1", label: "All" });
+            // if(dataMaskForDropdown)
+            //     form.setFieldValue("AdmissionNo",dataMaskForDropdown[0].value)
             setAdmissionNo(dataMaskForDropdown)
         }
     }
     const handleChangeCase = (v: any) => {
         Object.keys(props).length ? props?.onChange({ ...props?.patData, "patientCaseID": v }) : null;
+        form.resetFields(["AdmissionNo"])
         getPatientVisitNo(v)
     }
     const handleChangeAdmission = (v: any) => {
@@ -228,14 +241,14 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
                     </Form.Item>
 
                     <Form.Item name="patientNo" label="Patient No" rules={[{ required: true }]}>
-                        <Input maxLength={20} />
+                        <Input allowClear maxLength={20} />
                     </Form.Item>
                     <Form.Item>
                         <Button style={{ marginTop: 28 }} type="primary" htmlType="submit">
                             Submit
                         </Button>
                     </Form.Item>
-                    <Form.Item name="case" label="Case No" rules={[{ required: props.required ? props.required :false }]}>
+                    <Form.Item name="case" label="Case No" rules={[{ required: props.required ? props.required : false }]}>
                         <Select
                             style={{ width: 200 }}
                             onChange={handleChangeCase}
@@ -243,7 +256,7 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
                             placeholder="Select"
                         />
                     </Form.Item>
-                    <Form.Item name="AdmissionNo" label="Admission No" rules={[{ required: props.required ? props.required :false }]}>
+                    <Form.Item name="AdmissionNo" label="Admission No" rules={[{ required: props.required ? props.required : false }]}>
                         <Select
                             style={{ width: 200 }}
                             onChange={handleChangeAdmission}
@@ -264,10 +277,10 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
                         />
                     </Col>
                     <Col span={2}>
-                        {patientImage && 
-                        <Avatar size={100}
-                            style={{justifyContent:'center', color: 'black', borderColor: 'black' }}
-                            src={patientImage?.photo? `data:image/png;base64,${patientImage?.photo}`:null} >No Image</Avatar>}
+                        {patientImage &&
+                            <Avatar size={100}
+                                style={{ justifyContent: 'center', color: 'black', borderColor: 'black' }}
+                                src={patientImage?.photo ? `data:image/png;base64,${patientImage?.photo}` : null} >No Image</Avatar>}
                     </Col>
                 </Row>}
             </>
