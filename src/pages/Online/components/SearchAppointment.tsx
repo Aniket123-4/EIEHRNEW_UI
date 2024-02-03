@@ -98,11 +98,9 @@ const UserProfile = () => {
             message.error("Please login  by another user");
     }
 
-    const getAppointmentList = async (type: any = activeTab, param: any = "",) => {
+    const getAppointmentList = async (type: any = activeTab, param: any = "", urlType: any = "Online") => {
         const params = form.getFieldsValue();
-        const slotDt = convertDate(slotDate) == "Invalid Date" ? "1900-01-01" : convertDate(slotDate);
-        param['docUserID'] = param?.docUserID ? param?.docUserID : "-1";
-        params['slotDate'] = params?.slotDate ? convertDate(params?.slotDate) : "1900-01-01";
+        params['slotDate'] = convertDate(params?.slotDate);
 
 
         try {
@@ -115,14 +113,17 @@ const UserProfile = () => {
                 "userID": -1,
                 "formID": -1,
                 "type": type,
+                "urlType": urlType,
+                "show": false,
+                "exportOption": ".pdf",
                 ...params
             }
             const msg = await requestGetAppointmentSearchList(staticParams);
             if (msg.isSuccess === true) {
                 // console.log(msg);
                 setLoading(false)
-                setAppointList(msg.result)
-                // list = msg?.data.institutelist2s || [];
+                if (urlType === 'Online')
+                    setAppointList(msg.result)
             }
             setLoading(false)
         } catch (error) {
@@ -151,7 +152,6 @@ const UserProfile = () => {
     };
 
     const onTextChange = (value: any) => {
-        console.log({ value: value.target.value })
         getAppointmentList(activeTab, {})
     };
     const syncPatient = async (v: any) => {
@@ -180,8 +180,32 @@ const UserProfile = () => {
         // actionRef.current.reload();
     }
 
-    const printReport = () => {
-        var code = '\
+    const printReport = async () => {
+        const params = form.getFieldsValue();
+        params['slotDate'] = convertDate(params?.slotDate);
+        try {
+            setLoading(true);
+            const staticParams = {
+                // "phoneNo": search,
+                // "docUserID": "3693567666946061111",
+                // "slotDate": type==2 ? "1900-01-01" : slotDt,
+                "mainType": activeTab === "3" ? 2 : 1,
+                "userID": -1,
+                "formID": -1,
+                "type": activeTab,
+                "urlType": "Reports",
+                "show": false,
+                "exportOption": ".pdf",
+                ...params
+            }
+            const msg = await requestGetAppointmentSearchList(staticParams);
+            if (msg.isSuccess === true) {
+                // console.log(msg);
+                setLoading(false)
+            }
+            setLoading(false)
+
+            var code = '\
     <html>\
         <head>\
             <title></title>\
@@ -194,14 +218,19 @@ const UserProfile = () => {
     window.addEventListener(\'load\', printFunction);\
             </script>\
         </head>\
-        <body><img src="'+"src"+'" width="100%"></body>\
+        <body><img src="'+ "src" + '" width="100%"></body>\
     </html>';
 
-    window.open('data:text/html,' + code, '_blank', 'width="100%",height=600');
-        
-        //window.open(`/printPage`);
+            window.open('data:application/pdf;base64,' + msg);
+
+            //window.open(`/printPage`);
+        } catch (error) {
+            console.log({ error });
+            message.error('please try again');
+            setLoading(false)
+        }
     }
-    
+
     const columns = [
         {
             title: 'Sync Patient',
@@ -270,41 +299,42 @@ const UserProfile = () => {
             <>
                 <Card size="small">
                     <Form
-                    layout='vertical'
+                        layout='vertical'
                         form={form}
-                        initialValues={{ slotDate: dayjs(slotDate, dateFormat) }}
+                        initialValues={{ slotDate: dayjs(slotDate, dateFormat), docUserID: "-1" }}
                         onFinish={(v) => getAppointmentList(activeTab, v)}
                         onValuesChange={(_, values) => {
-                            // run(values);
+                            getAppointmentList(activeTab, values)
                         }}
                     >
                         <Space.Compact block>
-                            {type != 2 && <Form.Item style={{ width: type != 2 ? '15%' : '0%' }}
+                            <Form.Item hidden={type == 2} style={{ width: type != 2 ? '15%' : '0%' }}
                                 name="slotDate"
                             >
                                 <DatePicker
+                                    allowClear={false}
                                     //defaultValue={dayjs(slotDate, dateFormat)}
                                     // onChange={onDateChange} 
                                     size='large'
                                     format={dateFormat}
                                 />
-                            </Form.Item>}
+                            </Form.Item>
                             <Form.Item
                                 style={{ width: type != 2 ? '57%' : '72%' }}
                                 initialValue=""
                                 name="phoneNo"
                             >
                                 <Input
+                                    allowClear
                                     size='large'
                                     placeholder="Search by Mobile/Email/Patient Name"
                                     onChange={onTextChange}
                                 />
                             </Form.Item>
                             <Form.Item
-                            //label="Select Doctor"
+                                //label="Select Doctor"
                                 style={{ width: '18%' }}
                                 name="docUserID"
-                                initialValue={"-1"}
                                 rules={[{ required: true, message: 'Please select Doctor' }]}
                             >
                                 <Select
@@ -321,9 +351,9 @@ const UserProfile = () => {
                         </Space.Compact>
                     </Form>
                     <Card
-                        title={<Space style={{justifyContent:'space-between',width:'95%'}}>
+                        title={<Space style={{ justifyContent: 'space-between', width: '95%' }}>
                             <Typography>Appointment List</Typography>
-                            <Button onClick={()=>printReport()}><DownloadOutlined /></Button></Space>}
+                            <Button onClick={() => printReport()}><DownloadOutlined /></Button></Space>}
                         style={{ boxShadow: '2px 2px 2px #4874dc' }}
                     >
                         <Spin tip="Please wait..." spinning={loading}>

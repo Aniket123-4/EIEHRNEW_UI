@@ -6,6 +6,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
 import moment from 'moment';
 import { requestGetHospitalBill } from '../services/api';
+import '../services/index.css'
 
 
 
@@ -39,6 +40,7 @@ const HospitalBillingDetail = ({ }: any) => {
     const [form] = Form.useForm();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [tableData, setTableData] = useState([]);
+    const [mainData, setMainData] = useState([]);
     const [modalData, setModalData] = useState([]);
 
 
@@ -68,12 +70,15 @@ const HospitalBillingDetail = ({ }: any) => {
             "type": 1
         }
         const res = await requestGetHospitalBill(staticParams);
-        if(res.isSuccess && res.result1) {
-            const dataMaskForDropdown = res.result1.lstPayDateResp?.map((item: any,index:string) => {
-                return { key: index.toString(),...item };
+        console.log(res);
+        if (res.isSuccess && res.result) {
+            const dataMaskForDropdown = res.result.lstPayDateResp?.map((item: any, index: string) => {
+                return { key: index.toString(), ...item };
             });
             setTableData(dataMaskForDropdown)
-            console.log(res.result1);
+            setMainData({netAmountVAT:res.result.netAmountVAT,
+                totNetAmount:res.result.totNetAmount,totFinalGrossAmount:res.totFinalGrossAmount})
+            console.log(res.result);
         }
     }
 
@@ -88,7 +93,7 @@ const HospitalBillingDetail = ({ }: any) => {
             <a>hiii</a>
         )
     }
-    const showModal = (data:any) => {
+    const showModal = (data: any) => {
         setModalData(data);
         setIsModalOpen(true);
     };
@@ -118,7 +123,21 @@ const HospitalBillingDetail = ({ }: any) => {
         );
     };
 
-    const expandedRowRender = (record:any) => {
+    const expandedRowRender = (record: any) => {
+        const dataMask = record?.lstTotalPayResp.map((item: any, index: string) => {
+            return { key: index.toString(), ...item };
+        });
+        const modalColumns: TableColumnsType<ExpandedDataType> = [
+            { title: 'Name', dataIndex: 'patientName', key: 'patientName' },
+            { title: 'CaseNo', dataIndex: 'patientCaseNo', key: 'patientCaseNo' },
+            { title: 'PatientNo', dataIndex: 'patientNo', key: 'patientNo' },
+            { title: 'Admission No', dataIndex: 'admNo', key: 'admNo' },
+            { title: 'ParameterName', dataIndex: 'invParameterName', key: 'invParameterName' },
+            { title: 'Net Amount', dataIndex: 'netAmount', key: 'netAmount' },
+            { title: 'Vat', dataIndex: 'netAmountVAT', key: 'netAmountVAT' },
+            { title: 'Final Amount', dataIndex: 'finalGrossAmount', key: 'finalGrossAmount' },
+            { title: 'Quantity', dataIndex: 'qty', key: 'qty' },
+        ];
         const columns: TableColumnsType<any> = [
             { title: 'Name', dataIndex: 'patientName', key: 'patientName' },
             { title: 'PayDate', dataIndex: 'payDateVar', key: 'payDateVar' },
@@ -132,7 +151,7 @@ const HospitalBillingDetail = ({ }: any) => {
                 key: 'state',
                 render: () => <Badge status="success" text="Finished" />,
             },
-            { title: 'Action', key: 'operation', render: (_,record) => <Button size='small' onClick={() => showModal(record)}>View</Button> },
+            // { title: 'Action', key: 'operation', render: (_, record) => <Button size='small' onClick={() => showModal(record)}>View</Button> },
             // {
             //     title: 'Action',
             //     dataIndex: 'operation',
@@ -150,63 +169,49 @@ const HospitalBillingDetail = ({ }: any) => {
             //     ),
             // },
         ];
-        const data:any[] = [];
-        for (let i = 0; i < 3; ++i) {
-            data.push({
-                key: i.toString(),
-                payDate: moment().format('DD MMM YYYY'),
-                finalGrossAmount: '5000',
-                patientName: 'Ravi  Singh',
-                receiptNo: '000012',
-                patientNo: '0000011',
-                patientCaseNo: '000005',
-            });
-        }
-        return <Table size='small' columns={columns} dataSource={record?.lstTotalPayResp} pagination={false} />;
+        return <Table
+            bordered
+            size='small'
+            expandable={{
+                expandedRowRender: (record) => <Table size='small' columns={modalColumns} dataSource={record?.lstPayBIllCompResp} pagination={false} />,
+            }}
+            columns={columns} dataSource={dataMask} pagination={false} />;
     };
-    
+
     const parentColumns: TableColumnsType<ExpandedDataType> = [
-        { title: 'Pay Date', dataIndex: 'payDateVar', key: 'payDateVar', render: (txt) => <a>{txt}</a> },
+        { title: <Typography style={{ color: 'black ', fontSize: 18 }}>{'Pay Date'}</Typography>, dataIndex: 'payDateVar', key: 'payDateVar', render: (txt) => <a>{txt}</a> },
         { title: 'Final Amt', dataIndex: 'totFinalGrossAmount', key: 'totFinalGrossAmount' },
         { title: 'Net Amt', dataIndex: 'totNetAmount', key: 'totNetAmount' },
         { title: 'Discount', dataIndex: 'disCountAmt', key: 'disCountAmt' },
         { title: 'VAT', dataIndex: 'netAmountVAT', key: 'netAmountVAT' },
     ];
 
-    const data: DataType[] = [];
-    for (let i = 0; i < 3; ++i) {
-        data.push({
-            key: i.toString(),
-            name: 'Screen',
-            payDate: '2014-12-24 23:12:00',
-            grossAmount: '5000',
-            totalAmount: 5500,
-            discountAmount: '500',
-            netAmount: '6500',
-        });
-    }
-
     return (
         <>
-            {BillingModal()}
+            <Row gutter={16}>
+                <Col span={8}>
+                    <Card title="Total FinalGrossAmount" bordered={false}>
+                        totFinalGrossAmount
+                    </Card>
+                </Col>
+                <Col span={8}>
+                    <Card title="Patient Visited" bordered={false}>
+                        getPatientVisitNo
+                    </Card>
+                </Col>
+                <Col span={8}>
+                    <Card title="VAT" bordered={false}>
+                        netAmountVAT
+                    </Card>
+                </Col>
+            </Row>
             <Table
+                bordered
+                style={{borderColor:'red',paddingTop:10,borderBlockColor:'red'}}
                 columns={parentColumns}
                 expandable={{ expandedRowRender, defaultExpandedRowKeys: ['0'] }}
                 dataSource={tableData}
-                //onExpand={(e,record)=>console.log(record)}
             />
-            {/* <Table
-                columns={columns}
-                expandable={{ expandedRowRender, defaultExpandedRowKeys: ['0'] }}
-                dataSource={data}
-                size="middle"
-            />
-            <Table
-                columns={columns}
-                expandable={{ expandedRowRender, defaultExpandedRowKeys: ['0'] }}
-                dataSource={data}
-                size="small"
-            /> */}
         </>
     );
 }

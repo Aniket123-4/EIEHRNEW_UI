@@ -184,8 +184,8 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
                 return { value: item.rowID, label: item.admNo }
             })
             // dataMaskForDropdown.unshift({ value: "-1", label: "All" });
-            // if(dataMaskForDropdown)
-            //     form.setFieldValue("AdmissionNo",dataMaskForDropdown[0].value)
+            if(dataMaskForDropdown)
+                form.setFieldValue("AdmissionNo",dataMaskForDropdown[0].value)
             setAdmissionNo(dataMaskForDropdown)
         }
     }
