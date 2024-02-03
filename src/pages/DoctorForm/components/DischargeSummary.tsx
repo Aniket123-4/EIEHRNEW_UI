@@ -85,6 +85,14 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID, onSaveSuccess, a
     ];
 
 
+    useEffect(() => {
+
+        tabForm.setFieldsValue({
+            DischargeDate: moment()
+        });
+
+    }, [])
+
     const formView = () => {
 
         const onFinishPatForm = async (values: any) => {

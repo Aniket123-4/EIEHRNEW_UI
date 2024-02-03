@@ -140,11 +140,14 @@ const Investigation = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admN
             title: 'Normal text',
             key: 'normaltext',
             dataIndex: 'normaltext',
-        }, 
+        },
     ];
 
     useEffect(() => {
         getInvGroup();
+        tabForm.setFieldsValue({
+            InvParameterDate: moment()
+         });
     }, [])
 
     const getInvGroup = async () => {
@@ -293,11 +296,11 @@ const Investigation = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admN
             "patientCaseID": patientCaseID,
             "admNo": admNo,
             "col1": "",
-            "col2": values?.InvParameterResult,
-            "col3": values?.InvRemark,
+            "col2": values?.InvParameterResult ? values?.InvParameterResult : "",
+            "col3": values?.InvRemark ? values?.InvRemark : "",
             "col4": "",
             "col5": "",
-            "col6": "" + values?.NoOfInjection,
+            "col6": values?.NoOfInjection ? "" + values?.NoOfInjection : "",
             "col7": invArr,
             "col8": "",
             "col9": "",
@@ -423,17 +426,17 @@ const Investigation = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admN
                 <Row gutter={16}>
 
                     <Col span={8}>
-                        <Form.Item name="InvParameterResult" label="Inv Parameter Result" rules={[{ required: true }]}>
+                        <Form.Item name="InvParameterResult" label="Inv Parameter Result" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item name="InvRemark" label="Inv Remark" rules={[{ required: true }]}>
+                        <Form.Item name="InvRemark" label="Inv Remark" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item name="InvParameterDate" label="Date" rules={[{ required: true }]}>
+                        <Form.Item name="InvParameterDate"  label="Date" rules={[{ required: true }]}>
                             <DatePicker
                                 style={{ width: '100%' }}
                                 format={dateFormat}
@@ -441,12 +444,12 @@ const Investigation = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admN
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item name="NoOfInjection" label="No Of Injection" rules={[{ required: true }]}>
-                            <InputNumber placeholder="Please Enter" />
+                        <Form.Item name="NoOfInjection" label="No Of Injection" rules={[{ required: false }]}>
+                            <InputNumber style={{ width: '100%' }} max={1} placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item name="VolumeML" label="Volume ML" rules={[{ required: true }]}>
+                        <Form.Item name="VolumeML" label="Volume ML" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>

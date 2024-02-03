@@ -15,7 +15,7 @@ const { RangePicker } = DatePicker;
 
 
 
-const PatientHistory = ({ patientDetails = {}, patientCaseID ,onSaveSuccess,admNo}: any) => {
+const PatientHistory = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }: any) => {
     const { result7 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -62,7 +62,11 @@ const PatientHistory = ({ patientDetails = {}, patientCaseID ,onSaveSuccess,admN
             key: 'obstetrics',
             dataIndex: 'obstetrics',
         },
-
+        {
+            title: 'Entry Date',
+            key: 'entryDateVar',
+            dataIndex: 'entryDateVar',
+        }
     ];
 
     const formView = () => {
@@ -70,15 +74,15 @@ const PatientHistory = ({ patientDetails = {}, patientCaseID ,onSaveSuccess,admN
         const onFinishPatForm = async (values: any) => {
             const params = {
                 "patientCaseID": patientCaseID,
-                "admNo":admNo,
-                "col1": values?.Allergy,
-                "col2": values?.Warnings,
-                "col3": values?.Addiction,
-                "col4": values?.SocialHistory,
-                "col5": values?.FamilyHistory,
-                "col6": values?.PersonalHistory,
-                "col7": values?.PastMedicalHistory,
-                "col8": values?.Obstetrics,
+                "admNo": admNo,
+                "col1": values?.Allergy ? values?.Allergy : "",
+                "col2": values?.Warnings ? values?.Warnings : "",
+                "col3": values?.Addiction ? values?.Addiction : "",
+                "col4": values?.SocialHistory ? values?.SocialHistory : "",
+                "col5": values?.FamilyHistory ? values?.FamilyHistory : "",
+                "col6": values?.PersonalHistory ? values?.PersonalHistory : "",
+                "col7": values?.PastMedicalHistory ? values?.PastMedicalHistory : "",
+                "col8": values?.Obstetrics ? values?.Obstetrics : "",
                 "col9": "",
                 "col10": "",
                 "col11": "",
@@ -147,7 +151,7 @@ const PatientHistory = ({ patientDetails = {}, patientCaseID ,onSaveSuccess,admN
                     tab: "PATIENT_HISTORY",
                     response
                 })
-              
+
             } catch (e) {
                 setLoading(false)
             }

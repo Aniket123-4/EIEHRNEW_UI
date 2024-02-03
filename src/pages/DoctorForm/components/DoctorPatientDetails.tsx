@@ -130,7 +130,7 @@ const DoctorPatientDetails = React.forwardRef((props) => {
             key: 'DISCHARGE_SUMMARY',
             label: 'DISCHARGE SUMMARY',
             children: <DischargeSummary patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
-        },
+        }
     ];
 
     useEffect(() => {
@@ -207,8 +207,14 @@ const DoctorPatientDetails = React.forwardRef((props) => {
             const response = await requestGetPatientForDoctorOPIP({ ...staticParams });
             setLoading(false)
             setPatientDetails(response)
+            console.log("response.result7.length", response.result7)
+            console.log("response.result7.length", response.result7.length)
             if (isPatientHistory && response.result7.length > 0) {
-                setIsModalOpenForPatHistory(true);
+                const dataExists = checkDataExists(response.result7[0]);
+                console.log({ dataExists })
+                if (dataExists) {
+                    setIsModalOpenForPatHistory(true);
+                }
             }
 
             if (!response?.isSuccess) {
@@ -220,6 +226,19 @@ const DoctorPatientDetails = React.forwardRef((props) => {
             message.error(error);
         }
     }
+
+    const checkDataExists = (data: any) => {
+        const keysToCheck = ['allergy', 'warnings', 'addiction', 'socialHistory', 'familyHistory', 'personalHistory', 'pastMedicalHistory', 'obstetrics'];
+
+        for (const key of keysToCheck) {
+            if (data[key] && data[key].trim() !== "") {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     const contentStyle: React.CSSProperties = {
         color: token.colorTextTertiary,
@@ -286,6 +305,10 @@ const DoctorPatientDetails = React.forwardRef((props) => {
                     label: 'Obstetrics',
                     key: '8',
                     children: patientDetails?.result7.length > 0 ? patientDetails?.result7[0]?.obstetrics : ""
+                }, {
+                    label: 'entryDateVar',
+                    key: '8',
+                    children: patientDetails?.result7.length > 0 ? patientDetails?.result7[0]?.entryDateVar : ""
                 },
             ];
         }
