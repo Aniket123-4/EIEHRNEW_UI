@@ -90,10 +90,10 @@ const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess,admNo }: 
             const params = {
                 "patientCaseID": patientCaseID,
                 "admNo": admNo,
-                "col1": values?.VitalParameterID,
-                "col2": values?.VitalResult,
-                "col3": values?.VitalComment,
-                "col4": values?.VitalDescp,
+                "col1": values?.VitalParameterID?values?.VitalParameterID:"",
+                "col2": values?.VitalResult?values?.VitalResult:"",
+                "col3": values?.VitalComment?values?.VitalComment:"",
+                "col4": values?.VitalDescp?values?.VitalDescp:"",
                 "col5": "",
                 "col6": "",
                 "col7": "",
@@ -198,23 +198,23 @@ const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess,admNo }: 
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item name="VitalResult" label="Result" rules={[{ required: true }]}>
+                        <Form.Item name="VitalResult" label="Result" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item name="VitalComment" label="Comment" rules={[{ required: true }]}>
+                        <Form.Item name="VitalComment" label="Comment" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item name="VitalDescp" label="Description" rules={[{ required: true }]}>
+                        <Form.Item name="VitalDescp" label="Description" rules={[{ required: false }]}>
                             <Input.TextArea placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
 
                     <Col span={6}>
-                        <Form.Item name="VitalDateTime" label="Date" rules={[{ required: true }]}>
+                        <Form.Item name="VitalDateTime" label="Date" rules={[{ required: false }]}>
                             <DatePicker
                                 style={{ width: '100%' }}
                                 format={dateFormat}

@@ -54,7 +54,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
             formID: 0,
             type: 0,
             isEditorReq: "true",
-            InvRange:"0"
+            InvRange: "0"
         }
         console.log(values);
 
@@ -67,6 +67,9 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
             if (msg?.isSuccess) {
                 message.success(msg?.msg);
                 form.resetFields();
+                getInvGroupList();
+                getInvUnitList();
+                getPatientType();
                 if (investigationListRef.current) {
                     investigationListRef.current.getList();
                 }
@@ -183,28 +186,34 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
         setIsRange(data?.isRangeRequired);
         setVatApplicable(data?.isVATApplicable);
 
-        const dataMask = data1?.map((item: any) => {
-            return {
-                col1: "",
-                col2: "",
-                col3: "",
-                col4: item?.patientTypeID,
-                col5: item?.rangeFrom ? item?.rangeFrom : "0",
-                col6: item?.rangeTo ? item?.rangeTo : "0",
-                col7: "",
-                col8: "",
-                col9: "",
-                col10: "",
-                col11: "",
-                col12: "",
-                col13: "",
-                col14: "",
-                col15: "",
-                patientTypeName: item?.patientTypeName
-            }
-        });
-        console.log({ isVATApplicable: data?.isVATApplicable })
-        setLstType_Patient(dataMask)
+        if (data1.length > 0) {
+            const dataMask = data1?.map((item: any) => {
+                return {
+                    col1: "",
+                    col2: "",
+                    col3: "",
+                    col4: item?.patientTypeID,
+                    col5: item?.rangeFrom ? item?.rangeFrom : "0",
+                    col6: item?.rangeTo ? item?.rangeTo : "0",
+                    col7: "",
+                    col8: "",
+                    col9: "",
+                    col10: "",
+                    col11: "",
+                    col12: "",
+                    col13: "",
+                    col14: "",
+                    col15: "",
+                    patientTypeName: item?.patientTypeName
+                }
+            });
+            // console.log({ isVATApplicable: data?.isVATApplicable })
+            setLstType_Patient(dataMask)
+        } else {
+            getPatientType();
+        }
+
+
         form?.setFieldsValue({
             invName: data?.invName,
             invCode: data?.invCode,
@@ -336,12 +345,12 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                         optionFilterProp="children"
                                         dropdownRender={(menu) => (
                                             <>
-                                                <Space style={{ padding: 4 }}>
+                                                {/* <Space style={{ padding: 4 }}>
                                                     <Button type="primary" icon={<PlusOutlined />} onClick={addGroup}>
                                                         Add New
                                                     </Button>
                                                 </Space>
-                                                <Divider style={{ margin: '8px 0' }} />
+                                                <Divider style={{ margin: '8px 0' }} /> */}
                                                 {menu}
                                             </>
                                         )}

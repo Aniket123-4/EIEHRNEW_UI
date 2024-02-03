@@ -57,11 +57,6 @@ const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess ,admNo}:
             key: 'doctorName',
             dataIndex: 'doctorName',
 
-        }, {
-            title: 'Insurance Comp',
-            key: 'insuranceComp',
-            dataIndex: 'insuranceComp',
-
         }
 
     ];

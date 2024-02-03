@@ -87,12 +87,12 @@ const BasicDetails = ({ patientBasicDetails = {},admNo }: any) => {
             key: '13',
             label: 'Gender',
             children: result1?.genderName
-        },
-        {
-            key: '14',
-            label: 'Insurance Company',
-            children: result1?.insuranceComp
         }
+        // {
+        //     key: '14',
+        //     label: 'Insurance Company',
+        //     children: result1?.insuranceComp
+        // }
     ];
 
     return (

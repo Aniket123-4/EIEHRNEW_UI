@@ -15,7 +15,7 @@ import { requestGetInvestigation } from '@/pages/Investigation/services/api';
 
 const { RangePicker } = DatePicker;
 
-const ReferalDoctor = ({ patientDetails = {}, patientCaseID,onSaveSuccess,admNo }: any) => {
+const ReferalDoctor = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }: any) => {
     const { result9 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -30,7 +30,7 @@ const ReferalDoctor = ({ patientDetails = {}, patientCaseID,onSaveSuccess,admNo 
         //     dataIndex: 'admNo',
 
         // },
-         {
+        {
             title: 'Doctor Name',
             key: 'doctorName',
             dataIndex: 'doctorName',
@@ -128,8 +128,8 @@ const ReferalDoctor = ({ patientDetails = {}, patientCaseID,onSaveSuccess,admNo 
             const params = {
                 "patientCaseID": patientCaseID,
                 "admNo": admNo,
-                "col1": values?.DoctorID,
-                "col2": values?.InvParameterID,
+                "col1": values?.DoctorID ? values?.DoctorID : "",
+                "col2": values?.InvParameterID ? values?.InvParameterID : "",
                 "col3": "",
                 "col4": "",
                 "col5": "",
@@ -204,7 +204,7 @@ const ReferalDoctor = ({ patientDetails = {}, patientCaseID,onSaveSuccess,admNo 
                     tab: "REFERAL_DOCTOR",
                     response
                 })
-               
+
             } catch (e) {
                 setLoading(false)
             }
