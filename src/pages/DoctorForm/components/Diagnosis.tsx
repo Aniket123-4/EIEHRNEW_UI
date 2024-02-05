@@ -17,7 +17,7 @@ const { RangePicker } = DatePicker;
 
 
 
-const Diagnosis = ({ patientDetails = {}, patientCaseID, onSaveSuccess,admNo }: any) => {
+const Diagnosis = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }: any) => {
     const { result4 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -87,9 +87,9 @@ const Diagnosis = ({ patientDetails = {}, patientCaseID, onSaveSuccess,admNo }: 
         const onFinishPatForm = async (values: any) => {
             const params = {
                 "patientCaseID": patientCaseID,
-                "admNo":admNo,
+                "admNo": admNo,
                 "col1": values?.DiseasesID,
-                "col2": values?.DiagnosisComment,
+                "col2": values?.DiagnosisComment ? values?.DiagnosisComment : "",
                 "col3": "",
                 "col4": "",
                 "col5": "",
@@ -194,7 +194,7 @@ const Diagnosis = ({ patientDetails = {}, patientCaseID, onSaveSuccess,admNo }: 
                     </Col>
 
                     <Col span={12}>
-                        <Form.Item name="DiagnosisComment" label="Comment" rules={[{ required: true }]}>
+                        <Form.Item name="DiagnosisComment" label="Comment" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>

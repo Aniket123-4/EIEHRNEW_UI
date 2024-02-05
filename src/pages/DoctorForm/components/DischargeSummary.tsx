@@ -85,6 +85,14 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID, onSaveSuccess, a
     ];
 
 
+    useEffect(() => {
+
+        tabForm.setFieldsValue({
+            DischargeDate: moment()
+        });
+
+    }, [])
+
     const formView = () => {
 
         const onFinishPatForm = async (values: any) => {
@@ -93,15 +101,15 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID, onSaveSuccess, a
                 "admNo": admNo,
                 "col1": "-1",//values?.DisCondID,
                 "col2": "-1",//values?.DischargeToID,
-                "col3": values?.CondUponDischarge,
-                "col4": values?.BreifCaseSummary,
-                "col5": values?.ReasonForAdmission,
-                "col6": values?.ClinicalFinding,
-                "col7": values?.FinalDaigNosis,
-                "col8": values?.InstructionToPateint,
-                "col9": values?.DischargeNotes,
-                "col10": values?.FinalAdvice,
-                "col11": values?.IssuesToAddressAtFollowUP,
+                "col3": values?.CondUponDischarge ? values?.CondUponDischarge : "",
+                "col4": values?.BreifCaseSummary ? values?.BreifCaseSummary : "",
+                "col5": values?.ReasonForAdmission ? values?.ReasonForAdmission : "",
+                "col6": values?.ClinicalFinding ? values?.ClinicalFinding : "",
+                "col7": values?.FinalDaigNosis ? values?.FinalDaigNosis : "",
+                "col8": values?.InstructionToPateint ? values?.InstructionToPateint : "",
+                "col9": values?.DischargeNotes ? values?.DischargeNotes : "",
+                "col10": values?.FinalAdvice ? values?.FinalAdvice : "",
+                "col11": values?.IssuesToAddressAtFollowUP ? values?.IssuesToAddressAtFollowUP : "",
                 "col12": "",
                 "col13": "",//values?.IsDocSeen,
                 "col14": "",//values?.IsEmergency,

@@ -79,12 +79,12 @@ const DoctorPatientDetails = React.forwardRef((props) => {
         }, {
             key: 'GENERAL_INFORMATION',
             label: 'GENERAL INFORMATION',
-            children: <GeneralInformation patientDetails={patientDetails} patientCaseID={patientCaseID} admNo={admNo}/>,
+            children: <GeneralInformation patientDetails={patientDetails} patientCaseID={patientCaseID} admNo={admNo} />,
         },
         {
             key: 'COMPLAIN',
             label: 'COMPLAIN',
-            children: <Complain patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
+            children: <Complain patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
         },
         {
             key: 'VITAL_SIGN',
@@ -94,32 +94,32 @@ const DoctorPatientDetails = React.forwardRef((props) => {
         {
             key: 'DIAGNOSIS',
             label: 'DIAGNOSIS',
-            children: <Diagnosis patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
+            children: <Diagnosis patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
         },
         {
             key: 'MEDICATION',
             label: 'MEDICATION',
-            children: <Medication patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
+            children: <Medication patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
         },
         {
             key: 'INVESTIGATION',
             label: 'INVESTIGATION',
-            children: <Investigation patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
+            children: <Investigation patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
         },
         {
             key: 'PATIENT_HISTORY',
             label: 'PATIENT HISTORY',
-            children: <PatientHistory patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
+            children: <PatientHistory patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
         },
         {
             key: 'PATIENT_DOCUMENT',
             label: 'PATIENT DOCUMENT',
-            children: <PatientDocument patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
+            children: <PatientDocument patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
         },
         {
             key: 'REFERAL_DOCTOR',
             label: 'REFERAL DOCTOR',
-            children: <ReferalDoctor patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
+            children: <ReferalDoctor patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
         },
         {
             key: 'CLINICAL_FINDING',
@@ -129,8 +129,8 @@ const DoctorPatientDetails = React.forwardRef((props) => {
         {
             key: 'DISCHARGE_SUMMARY',
             label: 'DISCHARGE SUMMARY',
-            children: <DischargeSummary patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
-        },
+            children: <DischargeSummary patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
+        }
     ];
 
     useEffect(() => {
@@ -207,8 +207,14 @@ const DoctorPatientDetails = React.forwardRef((props) => {
             const response = await requestGetPatientForDoctorOPIP({ ...staticParams });
             setLoading(false)
             setPatientDetails(response)
+            console.log("response.result7.length", response.result7)
+            console.log("response.result7.length", response.result7.length)
             if (isPatientHistory && response.result7.length > 0) {
-                setIsModalOpenForPatHistory(true);
+                const dataExists = checkDataExists(response.result7[0]);
+                console.log({ dataExists })
+                if (dataExists) {
+                    setIsModalOpenForPatHistory(true);
+                }
             }
 
             if (!response?.isSuccess) {
@@ -220,6 +226,19 @@ const DoctorPatientDetails = React.forwardRef((props) => {
             message.error(error);
         }
     }
+
+    const checkDataExists = (data: any) => {
+        const keysToCheck = ['allergy', 'warnings', 'addiction', 'socialHistory', 'familyHistory', 'personalHistory', 'pastMedicalHistory', 'obstetrics'];
+
+        for (const key of keysToCheck) {
+            if (data[key] && data[key].trim() !== "") {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     const contentStyle: React.CSSProperties = {
         color: token.colorTextTertiary,
@@ -286,6 +305,10 @@ const DoctorPatientDetails = React.forwardRef((props) => {
                     label: 'Obstetrics',
                     key: '8',
                     children: patientDetails?.result7.length > 0 ? patientDetails?.result7[0]?.obstetrics : ""
+                }, {
+                    label: 'entryDateVar',
+                    key: '8',
+                    children: patientDetails?.result7.length > 0 ? patientDetails?.result7[0]?.entryDateVar : ""
                 },
             ];
         }
@@ -362,14 +385,19 @@ const DoctorPatientDetails = React.forwardRef((props) => {
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
                 <Card
                     title={
-                        <div>
-                            <h3 style={{ marginTop: 5 }}>
-                                {`${patientBasicDetails?.result1[0]?.candName}`}
-                            </h3>
-                            <h4 style={{ marginTop: -15 }}>
-                                {`${patientBasicDetails?.result1[0]?.patientNo}`}
-                            </h4>
-                        </div>
+                        <>
+                            {patientBasicDetails &&
+                                <div>
+                                    <h3 style={{ marginTop: 5 }}>
+                                        {`${patientBasicDetails?.result1[0]?.candName}`}
+                                    </h3>
+                                    <h4 style={{ marginTop: -15 }}>
+                                        {`${patientBasicDetails?.result1[0]?.patientNo}`}
+                                    </h4>
+                                </div>
+                            }
+                        </>
+
                     }
                     style={{ boxShadow: '2px 2px 2px #4874dc' }}
                     extra={<>

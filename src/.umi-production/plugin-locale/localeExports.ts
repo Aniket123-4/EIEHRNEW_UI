@@ -63,16 +63,6 @@ import zhTW0 from 'antd/es/locale/zh_TW';
 import lang_zhTW0 from "/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/src/locales/zh-TW.ts";
 
 export const localeInfo: {[key: string]: any} = {
-  'bn-BD': {
-    messages: {
-      ...lang_bnBD0,
-    },
-    locale: 'bn-BD',
-    antd: {
-      ...bnBD0,
-    },
-    momentLocale: 'bn-bd',
-  },
   'en-US': {
     messages: {
       ...lang_enUS0,
@@ -82,67 +72,7 @@ export const localeInfo: {[key: string]: any} = {
       ...enUS0,
     },
     momentLocale: 'en',
-  },
-  'fa-IR': {
-    messages: {
-      ...lang_faIR0,
-    },
-    locale: 'fa-IR',
-    antd: {
-      ...faIR0,
-    },
-    momentLocale: 'fa',
-  },
-  'id-ID': {
-    messages: {
-      ...lang_idID0,
-    },
-    locale: 'id-ID',
-    antd: {
-      ...idID0,
-    },
-    momentLocale: 'id',
-  },
-  'ja-JP': {
-    messages: {
-      ...lang_jaJP0,
-    },
-    locale: 'ja-JP',
-    antd: {
-      ...jaJP0,
-    },
-    momentLocale: 'ja',
-  },
-  'pt-BR': {
-    messages: {
-      ...lang_ptBR0,
-    },
-    locale: 'pt-BR',
-    antd: {
-      ...ptBR0,
-    },
-    momentLocale: 'pt-br',
-  },
-  'zh-CN': {
-    messages: {
-      ...lang_zhCN0,
-    },
-    locale: 'zh-CN',
-    antd: {
-      ...zhCN0,
-    },
-    momentLocale: 'zh-cn',
-  },
-  'zh-TW': {
-    messages: {
-      ...lang_zhTW0,
-    },
-    locale: 'zh-TW',
-    antd: {
-      ...zhTW0,
-    },
-    momentLocale: 'zh-tw',
-  },
+  }
 };
 
 /**

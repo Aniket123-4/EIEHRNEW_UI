@@ -14,7 +14,7 @@ import { ColumnsType } from 'antd/es/table';
 
 const { RangePicker } = DatePicker;
 
-const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess ,admNo}: any) => {
+const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }: any) => {
     const { result1 } = patientDetails;
 
     const [tabForm] = Form.useForm();
@@ -56,11 +56,6 @@ const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess ,admNo}:
             title: 'Doctor Name',
             key: 'doctorName',
             dataIndex: 'doctorName',
-
-        }, {
-            title: 'Insurance Comp',
-            key: 'insuranceComp',
-            dataIndex: 'insuranceComp',
 
         }
 
@@ -173,18 +168,18 @@ const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess ,admNo}:
         const onFinishPatForm = async (values: any) => {
             const params = {
                 "patientCaseID": patientCaseID,
-                "admNo":admNo,
-                "col1": values?.DrugID,
-                "col2": "" + values?.NoOfDays,
-                "col3": "" + values?.QuantityPerDay,
-                "col4": values?.Instruction,
-                "col5": values?.Advice,
-                "col6": values?.Diet,
-                "col7": "" + values?.ProductID,
+                "admNo": admNo,
+                "col1": values?.DrugID ? values?.DrugID : "",
+                "col2": values?.NoOfDays ? "" + values?.NoOfDays : "",
+                "col3": values?.QuantityPerDay ? "" + values?.QuantityPerDay : "",
+                "col4": values?.Instruction ? values?.Instruction : "",
+                "col5": values?.Advice ? values?.Advice : "",
+                "col6": values?.Diet ? values?.Diet : "",
+                "col7": values?.ProductID ? "" + values?.ProductID : "",
                 "col8": "",
-                "col9": "" + values?.Qty,
-                "col10": "" + values?.QtyTimesPerDay,
-                "col11": "" + values?.UnitIDForDoc,
+                "col9": values?.Qty ? "" + values?.Qty : "",
+                "col10": values?.QtyTimesPerDay ? "" + values?.QtyTimesPerDay : "",
+                "col11": values?.UnitIDForDoc ? "" + values?.UnitIDForDoc : "",
                 "col12": "",
                 "col13": "",
                 "col14": "",
@@ -342,25 +337,25 @@ const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess ,admNo}:
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item name="UnitIDForDoc" label="Unit For Doc" rules={[{ required: true }]}>
+                        <Form.Item name="UnitIDForDoc" label="Unit For Doc" rules={[{ required: false }]}>
                             <InputNumber placeholder="Please Enter" style={{ width: "100%" }} min={0} />
                         </Form.Item>
                     </Col>
 
                     <Col span={8}>
-                        <Form.Item name="Instruction" label="Instruction" rules={[{ required: true }]}>
+                        <Form.Item name="Instruction" label="Instruction" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
 
                     <Col span={8}>
-                        <Form.Item name="Advice" label="Advice" rules={[{ required: true }]}>
+                        <Form.Item name="Advice" label="Advice" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
 
                     <Col span={8}>
-                        <Form.Item name="Diet" label="Diet" rules={[{ required: true }]}>
+                        <Form.Item name="Diet" label="Diet" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>

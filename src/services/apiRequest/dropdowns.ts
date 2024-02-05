@@ -404,6 +404,18 @@ export async function requestGetProduct(body: any, options?: { [key: string]: an
 }
 
 
+
+export async function requestGetVitalParameter(body: any, options?: { [key: string]: any }) {
+  return request<any>('/MasterForm/GetVitalParameter', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 export async function requestGetUserList(
   params: {
     // query
