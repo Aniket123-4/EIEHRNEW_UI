@@ -1,13 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { EditOutlined, FilterOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card } from 'antd';
-import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
+import { EditOutlined, FilterOutlined, InfoCircleOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Typography, InputRef } from 'antd';
+import { requestGetGender, requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
 import { requestGetPatientSearch } from '../services/api';
 
 import { Table, Tag } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import type { ColumnType, ColumnsType } from 'antd/es/table';
 import PatientFilter from '@/components/Filters/PatientFilter';
 import { history, type IRoute } from 'umi';
+import { FilterConfirmProps } from 'antd/es/table/interface';
+import Highlighter from 'react-highlight-words';
+import { convertDate } from '@/utils/helper';
+import dayjs from 'dayjs';
 
 const { Option } = Select;
 
@@ -27,6 +31,11 @@ const PatientList = React.forwardRef((props) => {
     const { token } = theme.useToken();
     const [list, setList] = useState([]);
     const [openPatientFilter, setOpenPatientFilter] = useState(false);
+    const [gender, setGender] = useState<any>([])
+    const [searchText, setSearchText] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const searchInput = useRef<InputRef>(null);
+
 
 
 
@@ -34,19 +43,132 @@ const PatientList = React.forwardRef((props) => {
         color: token.colorTextTertiary,
         borderRadius: token.borderRadiusLG,
     };
+    useEffect(() => {
+        getGender();
+
+    }, [])
+
+    const handleSearch = (
+        selectedKeys: string[],
+        confirm: (param?: FilterConfirmProps) => void,
+        dataIndex: DataIndex,
+    ) => {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    };
+
+    const handleReset = (clearFilters: () => void) => {
+        clearFilters();
+        setSearchText('');
+    };
+    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+            <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+                <Input
+                    ref={searchInput}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                    style={{ marginBottom: 8, display: 'block' }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        onClick={() => clearFilters && handleReset(clearFilters)}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Reset
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            confirm({ closeDropdown: false });
+                            setSearchText((selectedKeys as string[])[0]);
+                            setSearchedColumn(dataIndex);
+                        }}
+                    >
+                        Filter
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            close();
+                        }}
+                    >
+                        close
+                    </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: (filtered: boolean) => (
+            <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+        ),
+        onFilter: (value, record) =>
+            record[dataIndex]
+                .toString()
+                .toLowerCase()
+                .includes((value as string).toLowerCase()),
+        onFilterDropdownOpenChange: (visible) => {
+            if (visible) {
+                setTimeout(() => searchInput.current?.select(), 100);
+            }
+        },
+        render: (text) =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ''}
+                />
+            ) : (
+                text
+            ),
+    });
 
 
+    const getGender = async () => {
+        const res = await requestGetGender();
+        if (res.data.length > 0) {
+            const dataMaskForDropdown = res?.data?.map((item: any) => {
+                return { value: item.genderID, label: item.genderName }
+            })
+            dataMaskForDropdown.unshift({ value: "-1", label: "Select" });
+            setGender(dataMaskForDropdown)
+        }
+    }
+    const getGenderName = (gen:any) => {
+        const nm =gender.find((txt:any) => txt.value===gen)
+        if(nm?.value=="-1")return <Typography>{'NA'}</Typography>
+        else return <Typography>{nm?.label}</Typography>
+    }
     const columns: ColumnsType<DataType> = [
         {
             title: 'Patient No',
             dataIndex: 'patientNo',
             key: 'patientNo',
             render: (text) => <a>{text}</a>,
+            sorter: (a:any, b:any):any => a.patientNo< b.patientNo,
+            sortOrder:'descend'
         },
         {
             title: 'Name',
             dataIndex: 'candName',
             key: 'candName',
+            ...getColumnSearchProps('candName'),
         },
         // {
         //     title: 'candNameML',
@@ -67,6 +189,7 @@ const PatientList = React.forwardRef((props) => {
             title: 'Gender',
             dataIndex: 'genderName',
             key: 'genderName',
+            render: (text) => getGenderName(text)
         },
         // {
         //     title: 'civilStatusName',
@@ -134,7 +257,7 @@ const PatientList = React.forwardRef((props) => {
             patientPhoneNo: '',
             patientDOB: '1900-01-01',
             fromDate: '1900-01-21',
-            toDate: '2023-12-21',
+            toDate: convertDate(dayjs()),
         }
         searchPatient(params)
     }

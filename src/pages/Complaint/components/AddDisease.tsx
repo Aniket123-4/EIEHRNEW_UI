@@ -18,6 +18,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
     const { token } = theme.useToken();
     const [capacity, setCapacity] = useState(1);
     const [form] = Form.useForm();
+    const [typeForm] = Form.useForm();
     const [loading, setLoading] = useState(false)
     const [diseaseType, setDiseaseType] = useState<any>([])
     const [isActive, setIsActive] = useState(true);
@@ -85,7 +86,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                 // "diseaseTypeID": values['diseaseTypeID'] ? values['diseaseTypeID'] : "-1",
                 // "diseaseTypeName": "string",
                 // "diseaseTypeCode": " string",
-                // "specialTypeID": "string",
+                "specialTypeID": "1",
                 // "isActive": isActive.toString(),
                 "sortOrder": 1,
                 "diseasesID": diseaseID,
@@ -102,6 +103,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                 message.success(msg.msg);
                 setDiseaseID("-1")
                 setIsModalOpen(false);
+                getDiseaseType();
                 return;
             } else {
                 message.error(msg.msg);
@@ -148,6 +150,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                 form={form}
                 onFinish={(values) => addDisease(values, 2)}
                 initialValues={{
+                    isActive:true
                 }}
             >
                 {/* Basic Information */}
@@ -222,7 +225,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                             <Form.Item
                                 name="isActive"
                                 valuePropName="checked"
-                                initialValue={true}
+                                //initialValue={true}
                                 // rules={[{ required: false, message: 'Please select isActive' }]}
                                 label=""
                                 rules={[{ required: false, message: 'Please select' }]}
@@ -247,7 +250,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                         footer={[
                         ]}>
                         <Form
-                            onFinish={(v) => addDisease(v = { diseaseTypeID: '-1', ...v }, 1)}>
+                            onFinish={(v) => addDisease(v = { isActive:true,diseaseTypeID: '-1', ...v }, 1)}>
 
                             <Form.Item
                                 name="diseaseTypeName"

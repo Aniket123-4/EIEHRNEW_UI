@@ -120,6 +120,8 @@ const Login: React.FC = () => {
               }));
             });
             history.push(urlParams.get('redirect') || 'package');
+            msg['selectedPackageId'] = msg?.listPackages[0]?.packagE_ID
+            setPackageId(msg?.listPackages[0]?.packagE_ID);
           } else {
             msg['selectedPackageId'] = msg?.listPackages[0]?.packagE_ID
             setPackageId(msg?.listPackages[0]?.packagE_ID);

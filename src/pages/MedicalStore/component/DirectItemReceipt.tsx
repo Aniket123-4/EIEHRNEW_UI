@@ -12,6 +12,8 @@ import {
     Card,
     Checkbox,
     Col,
+    Collapse,
+    CollapseProps,
     DatePicker,
     Divider,
     Form,
@@ -367,13 +369,11 @@ const DirectItemReceipt = ({
 
         if (check) message.error(`This Item Already Added`)
         else {
-            if(addItem.col1=="" || addItem.col3=="" || addItem.col4=="" ||addItem.col4<="0" || addItem.col5=="")
-            {
+            if (addItem.col1 == "" || addItem.col3 == "" || addItem.col4 == "" || addItem.col4 <= "0" || addItem.col5 == "") {
                 flag = 1
                 message.error(`Please Check Mandatory Field`);
             }
-            else
-            {
+            else {
                 setType_Pats([...type_Pats, addItem])
                 itemForm.resetFields()
             }
@@ -394,11 +394,16 @@ const DirectItemReceipt = ({
             <Form
                 form={itemForm}
             >
-                <Row gutter={8}>
-                    <Col span={6}>
+                <Row>
+                    {/* <Col span={10}>
+                        <Typography>
+                            Item
+                        </Typography>
+                    </Col> */}
+                <Col span={24}>
                         <Form.Item
                             name={'col2'}
-                            label="Item"
+                            label="Add Item"
                             rules={[{ required: true, message: 'Please Enter ItemID' }]}
                         >
                             <Select showSearch
@@ -410,7 +415,10 @@ const DirectItemReceipt = ({
                             />
                         </Form.Item>
                     </Col>
-                    <Col span={6}>
+                </Row>
+                <Row style={{ marginTop: 20 }} gutter={4}>
+                    
+                    <Col span={5}>
                         <Form.Item
                             name={'col1'}
                             label="Unit"
@@ -431,7 +439,7 @@ const DirectItemReceipt = ({
                                 label="ItemQty"
                                 rules={[{ required: false, message: 'Please Enter Quantity' }]}
                             >
-                                <Input style={{ textAlign: 'center' }} type='number'
+                                <Input min={1} style={{ textAlign: 'center' }} type='number'
                                     placeholder="Quantity" />
                             </Form.Item>
                             <Button style={{ marginTop: 30 }} onClick={() => updateQuantity('incQty')} icon={<PlusOutlined />}></Button>
@@ -441,7 +449,7 @@ const DirectItemReceipt = ({
                                 addonBefore={<MinusOutlined onClick={() => updateQuantity('decQty')} />}
                                 maxLength={3} placeholder="Quantity" /> */}
                     </Col>
-                    <Col span={6}>
+                    <Col span={4}>
                         <Form.Item
                             name={'col4'}
                             label="ItemRate"
@@ -449,13 +457,10 @@ const DirectItemReceipt = ({
                                 { required: true, message: 'Please Enter Item Rate' },
                             ]}
                         >
-                            <Input type='number' style={{ width: '100%' }} maxLength={10} placeholder="Please Enter Item Rate" />
+                            <Input min={1} type='number' style={{ width: '100%' }} maxLength={10} placeholder="Please Enter Item Rate" />
                         </Form.Item>
                     </Col>
-                </Row>
-                <Row style={{ marginTop: 10 }} gutter={0}>
-
-                    <Col span={7}>
+                    <Col span={5}>
                         <Form.Item
                             name={'col5'}
                             label="Expiry Date"
@@ -468,6 +473,15 @@ const DirectItemReceipt = ({
                             />
                         </Form.Item>
                     </Col>
+                    <Col style={{ marginTop: 30 }} span={4}>
+                        <Button onClick={addOneItem} type="primary">
+                            Add
+                        </Button>
+                    </Col>
+                </Row>
+                <Row style={{ marginTop: 10 }} gutter={0}>
+
+                    
                     {/* <Col span={6}>
                         <Form.Item
                             name={'col6'}
@@ -490,15 +504,17 @@ const DirectItemReceipt = ({
                             />
                         </Form.Item>
                     </Col> */}
-                    <Col style={{ marginTop: 30 }} span={5}>
-                        <Button onClick={addOneItem} type="primary">
-                            Add
-                        </Button>
-                    </Col>
                 </Row>
             </Form>
         )
     }
+    const items: CollapseProps['items'] = [
+        {
+            key: '1',
+            label: 'This is panel header with arrow icon',
+            children: <>{formList()}</>,
+        },
+    ];
 
 
     const addForm = () => {
@@ -561,15 +577,18 @@ const DirectItemReceipt = ({
                                 </Form.Item>
                             </Col>
                         </Row>
-                        <Card title={<Space direction='horizontal'>
-                            <Typography style={{ color: 'white', fontSize: 18 }}>
+                        {/* <Collapse defaultActiveKey={['1']} items={items} /> */}
+                        <Space title={<Space direction='horizontal'>
+                            <Typography style={{ fontSize: 16 }}>
                                 {"Add Items"}</Typography>
                         </Space>
                         }
-                            style={{ boxShadow: '2px 2px 2px #4874dc' }}
-                            headStyle={{ backgroundColor: '#004080', border: 0 }}>
+                            style={{ boxShadow: '1px 1px 1px 1px #4874dc',borderRadius:2}}
+                            >
+                                <Row style={{ margin: 6 }}>
                             {formList()}
-                        </Card>
+                            </Row>
+                        </Space>
                         <Row style={{ marginTop: 6 }}>
                             <Table size="small" pagination={false} columns={column} dataSource={type_Pats} scroll={{ x: '100%', y: 100 }} />
 
@@ -604,10 +623,14 @@ const DirectItemReceipt = ({
                 <Row gutter={8}>
                     <Col span={13}>
                         <Card
+                            headStyle={{ backgroundColor: '#004080', border: 0 }}
                             style={{ height: 650, boxShadow: "2px 2px 2px #4874dc" }}
-                            title="New Item"
+                            title={<Space direction='horizontal'>
+                                <Typography style={{ color: 'white', fontSize: 18 }}>
+                                    {"New Item"}</Typography>
+                            </Space>}//"New Item"
                         >
-                            <Spin tip="Please wait..." spinning={loading||loadingEdit}>
+                            <Spin tip="Please wait..." spinning={loading || loadingEdit}>
                                 <div>{addForm()}</div>
                             </Spin>
                         </Card>

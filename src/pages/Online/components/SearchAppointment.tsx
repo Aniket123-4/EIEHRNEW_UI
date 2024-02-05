@@ -5,10 +5,10 @@ import { useEffect, useRef, useState } from 'react';
 const moment = require('moment');
 import dayjs from 'dayjs';
 import { PageContainer, ProFormInstance, StepsForm } from '@ant-design/pro-components';
-import {  history, SelectLang, useIntl } from '@umijs/max';
+import { history, SelectLang, useIntl } from '@umijs/max';
 import { getUserInLocalStorage, getUserType } from '@/utils/common';
 import { requestGetAppointmentSearchList, requestGetDoctorList, requestSyncOnlinePatient } from '../services/api';
-import { SearchOutlined } from '@ant-design/icons';
+import { DownloadOutlined, SearchOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/es/form/Form';
 import { values } from 'lodash';
 
@@ -24,7 +24,7 @@ const UserProfile = () => {
     const [visible, setVisible] = useState(false);
     const [visibleAdmin, setVisibleAdmin] = useState(false);
     const [loading, setLoading] = useState(false)
-    const [form]=useForm();
+    const [form] = useForm();
     const intl = useIntl();
     const [openViewCandidate, setOpenViewCandidate] = useState(false);
     const [activeTab, setActiveTab] = useState<any>("1");
@@ -49,7 +49,7 @@ const UserProfile = () => {
     };
 
     const initialTabItems = [
-        { label: 'Mobile No', children: '', key: '1' },
+        { label: 'Search', children: '', key: '1' },
         { label: 'Today Slot', children: '', key: '2' },
         { label: 'Doctor and SlotDate', children: '', key: '3' },
     ];
@@ -57,17 +57,18 @@ const UserProfile = () => {
     useEffect(() => {
         getDoctorList()
         setVisibility()
-        getAppointmentList(activeTab, {  phoneNo: "",docUserID:defDoctor});
+    }, [])
+
+    useEffect(() => {
+        setVisibility()
+        getAppointmentList(activeTab, { phoneNo: "", docUserID: defDoctor });
     }, [defDoctor])
 
     const convertDate = (inputDateString: string) => {
         // Parse the input date string using Moment.js
-        console.log(inputDateString)
         const parsedDate = moment(inputDateString, 'DD-MMM-YYYY');
         // Format the parsed date in the desired format
         const formattedDate = parsedDate.format('YYYY-MM-DD');
-        console.log(parsedDate);
-        console.log(formattedDate);
         return formattedDate
     }
     const setVisibility = () => {
@@ -97,13 +98,10 @@ const UserProfile = () => {
             message.error("Please login  by another user");
     }
 
-    const getAppointmentList = async (type: any = activeTab, param: any = "",) => {
-        console.log(slotDate,param)
-        const slotDt = convertDate(slotDate)=="Invalid Date" ? "1900-01-01" : convertDate(slotDate);
-        param['docUserID']=param?.docUserID ? param?.docUserID : "-1";
-        param['slotDate']=param?.slotDate ? param?.slotDate : "1900-01-01";
+    const getAppointmentList = async (type: any = activeTab, param: any = "", urlType: any = "Online") => {
+        const params = form.getFieldsValue();
+        params['slotDate'] = convertDate(params?.slotDate);
 
-        
 
         try {
             setLoading(true);
@@ -111,18 +109,21 @@ const UserProfile = () => {
                 // "phoneNo": search,
                 // "docUserID": "3693567666946061111",
                 // "slotDate": type==2 ? "1900-01-01" : slotDt,
-                "mainType": 1,
+                "mainType": type === "3" ? 2 : 1,
                 "userID": -1,
                 "formID": -1,
                 "type": type,
-                ...param
+                "urlType": urlType,
+                "show": false,
+                "exportOption": ".pdf",
+                ...params
             }
             const msg = await requestGetAppointmentSearchList(staticParams);
             if (msg.isSuccess === true) {
                 // console.log(msg);
                 setLoading(false)
-                setAppointList(msg.result)
-                // list = msg?.data.institutelist2s || [];
+                if (urlType === 'Online')
+                    setAppointList(msg.result)
             }
             setLoading(false)
         } catch (error) {
@@ -135,7 +136,6 @@ const UserProfile = () => {
         try {
             setLoading(true);
             const res = await requestGetDoctorList({});
-            console.log(res);
             if (res.isSuccess === true) {
                 const dataMaskForDropdown = res?.data?.map((item: any) => {
                     return { value: item.userID, label: item.userName }
@@ -152,10 +152,9 @@ const UserProfile = () => {
     };
 
     const onTextChange = (value: any) => {
-        console.log({ value: value.target.value })
-        getAppointmentList(activeTab, { phoneNo: value.target.value })
+        getAppointmentList(activeTab, {})
     };
-    const syncPatient = async (v:any) => {
+    const syncPatient = async (v: any) => {
         console.log(v)
         const staticParams = {
             "onlinePatientID": v?.onlinePatientID,
@@ -174,42 +173,93 @@ const UserProfile = () => {
             message.error(res.msg);
         }
     };
-    const onDateChange = (date: any) => {
-        setSlotDate(moment(date).format('DD-MMM-YYYY'));
-        getDoctorList();
-    };
+
+    const filterOption = (input: string, option?: { label: string; value: string }) =>
+        (option?.label.toLowerCase() ?? '').includes(input.toLowerCase());//.toLowerCase()
     const reloadTable = () => {
         // actionRef.current.reload();
     }
+
+    const printReport = async () => {
+        const params = form.getFieldsValue();
+        params['slotDate'] = convertDate(params?.slotDate);
+        try {
+            setLoading(true);
+            const staticParams = {
+                // "phoneNo": search,
+                // "docUserID": "3693567666946061111",
+                // "slotDate": type==2 ? "1900-01-01" : slotDt,
+                "mainType": activeTab === "3" ? 2 : 1,
+                "userID": -1,
+                "formID": -1,
+                "type": activeTab,
+                "urlType": "Reports",
+                "show": false,
+                "exportOption": ".pdf",
+                ...params
+            }
+            const msg = await requestGetAppointmentSearchList(staticParams);
+            if (msg.isSuccess === true) {
+                // console.log(msg);
+                setLoading(false)
+            }
+            setLoading(false)
+
+            var code = '\
+    <html>\
+        <head>\
+            <title></title>\
+            <script>\
+    function printFunction() {\
+        window.focus();\
+        window.print();\
+        window.close();\
+    }\
+    window.addEventListener(\'load\', printFunction);\
+            </script>\
+        </head>\
+        <body><img src="'+ "src" + '" width="100%"></body>\
+    </html>';
+
+            window.open('data:application/pdf;base64,' + msg);
+
+            //window.open(`/printPage`);
+        } catch (error) {
+            console.log({ error });
+            message.error('please try again');
+            setLoading(false)
+        }
+    }
+
     const columns = [
         {
             title: 'Sync Patient',
             dataIndex: 'sync',
-            render: (text:any,record:any) => (record.patientName&&<Button onClick={()=>syncPatient(record)}>{'Sync'}</Button>),
-            width:'10%',
+            render: (text: any, record: any) => (record.patientName && <Button onClick={() => syncPatient(record)}>{'Sync'}</Button>),
+            width: '10%',
         },
         {
             title: 'Doctor Name',
             key: 'userName',
             dataIndex: 'userName',
-            width:'10%',
+            width: '10%',
         },
         {
             title: 'Department Name',
             dataIndex: 'sectionName',
             key: 'sectionName',
-            width:'25%',
+            width: '25%',
             // render: (text:any ) => <Typography>{text.toString}</Typography>,
         },
         {
             title: 'Slot Date',
             key: 'slotDate',
             dataIndex: 'slotDate',
-            render: (_: any,record: any) => <>
-            <Typography >{" "+record.slotDate +"  "+record.slotTime}</Typography>
-            <Typography >{}</Typography>
+            render: (_: any, record: any) => <>
+                <Typography >{" " + record.slotDate + "  " + record.slotTime}</Typography>
+                <Typography >{ }</Typography>
             </>,
-            width:'15%',
+            width: '15%',
         },
         // {
         //     title: 'Slot Time',
@@ -219,11 +269,11 @@ const UserProfile = () => {
         {
             title: 'Patient Name',
             dataIndex: 'patientName',
-            render: (_: any,record: any) => <>
-            <Typography >{" "+record.patientName +"  "+record.phoneNo}</Typography>
-            <Typography >{}</Typography>
+            render: (_: any, record: any) => <>
+                <Typography >{" " + record.patientName + "  " + record.phoneNo}</Typography>
+                <Typography >{ }</Typography>
             </>,
-            width:'15%',
+            width: '15%',
         },
         // {
         //     title: 'Mobile No',
@@ -231,17 +281,17 @@ const UserProfile = () => {
         //     dataIndex: 'phoneNo',
         // },
         {
-            title: 'Patient Case No',
+            title: 'Patient No',
             dataIndex: 'patientNo',
             // render: (text) => <a>{text}</a>,
         },
         {
             title: 'Remark',
-            key:'remark',
+            key: 'remark',
             dataIndex: 'remark',
             //  render: (text:any,record:any) => (<Button onClick={()=>syncPatient(record)}>{'Sync'}</Button>),
         },
-        
+
 
     ];
     const appointmentSearch = (type: any) => {
@@ -249,56 +299,61 @@ const UserProfile = () => {
             <>
                 <Card size="small">
                     <Form
-                    form={form}
-                        // initialValues={{slotDate:dayjs('11-01-2023'),phoneNo:""}}
+                        layout='vertical'
+                        form={form}
+                        initialValues={{ slotDate: dayjs(slotDate, dateFormat), docUserID: "-1" }}
                         onFinish={(v) => getAppointmentList(activeTab, v)}
                         onValuesChange={(_, values) => {
-                            // run(values);
+                            getAppointmentList(activeTab, values)
                         }}
                     >
                         <Space.Compact block>
-                            {type!=2&&<Form.Item style={{width:type!=2 ?'15%' :'0%'}}
-                                initialValue={dayjs()}
+                            <Form.Item hidden={type == 2} style={{ width: type != 2 ? '15%' : '0%' }}
                                 name="slotDate"
-                                >
+                            >
                                 <DatePicker
-                                    defaultValue={dayjs(slotDate, dateFormat)}
+                                    allowClear={false}
+                                    //defaultValue={dayjs(slotDate, dateFormat)}
                                     // onChange={onDateChange} 
                                     size='large'
-                                    //defaultValue={dayjs(slotDate)}
                                     format={dateFormat}
-                                    />
-                            </Form.Item>}
+                                />
+                            </Form.Item>
                             <Form.Item
-                                style={{width:type!=2 ?'57%':'72%'}}
+                                style={{ width: type != 2 ? '57%' : '72%' }}
                                 initialValue=""
                                 name="phoneNo"
                             >
                                 <Input
+                                    allowClear
                                     size='large'
                                     placeholder="Search by Mobile/Email/Patient Name"
-                                // onChange={onTextChange}
+                                    onChange={onTextChange}
                                 />
                             </Form.Item>
                             <Form.Item
-                                style={{width:'18%'}}
-                                    name="docUserID"
-                                    initialValue={"-1"}
-                                    rules={[{ required: true, message: 'Please select Doctor' }]}
-                                >
-                                    <Select
-                                        size='large'
-                                        placeholder="Select Doctor"
-                                        // optionFilterProp="children"
-                                        options={doctorList}
-                                        onSelect={(d)=>setDefDoctor(d)}
-                                    />
-                                </Form.Item>
+                                //label="Select Doctor"
+                                style={{ width: '18%' }}
+                                name="docUserID"
+                                rules={[{ required: true, message: 'Please select Doctor' }]}
+                            >
+                                <Select
+                                    showSearch
+                                    filterOption={filterOption}
+                                    size='large'
+                                    placeholder="Select Doctor"
+                                    // optionFilterProp="children"
+                                    options={doctorList}
+                                    onSelect={(d) => setDefDoctor(d)}
+                                />
+                            </Form.Item>
                             <Button style={{ width: 100 }} size='large' type="primary" htmlType="submit" shape="default" icon={<SearchOutlined />} />
                         </Space.Compact>
                     </Form>
                     <Card
-                        title="Appointment List"
+                        title={<Space style={{ justifyContent: 'space-between', width: '95%' }}>
+                            <Typography>Appointment List</Typography>
+                            <Button onClick={() => printReport()}><DownloadOutlined /></Button></Space>}
                         style={{ boxShadow: '2px 2px 2px #4874dc' }}
                     >
                         <Spin tip="Please wait..." spinning={loading}>
@@ -313,7 +368,7 @@ const UserProfile = () => {
                                 // }}
                                 onRow={(record, rowIndex) => {
                                     return {
-                                    //   onClick: (event) => {syncPatient(record)}, // click row
+                                        //   onClick: (event) => {syncPatient(record)}, // click row
                                     };
                                 }}
                             />
@@ -334,8 +389,10 @@ const UserProfile = () => {
                 <Tabs
                     tabPosition={'top'}
                     items={initialTabItems}
-                    onChange={(activeKey) => { setActiveTab(activeKey); 
-                        getAppointmentList(activeKey, { phoneNo: "",docUserID:defDoctor }) }}
+                    onChange={(activeKey) => {
+                        setActiveTab(activeKey);
+                        getAppointmentList(activeKey, { phoneNo: "", docUserID: defDoctor })
+                    }}
                 />
                 <div style={{ marginTop: 30 }}>
                     {activeTab === "1" && appointmentSearch(1)}

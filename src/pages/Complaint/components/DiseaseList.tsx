@@ -417,6 +417,7 @@ const DiseaseList: React.FC = ({editRecord,refresh }:any) => {
                 style={{ boxShadow: '2px 2px 2px #4874dc' }}
             >
                 <Table
+                    size='small'
                     components={{
                         body: {
                             cell: EditableCell,

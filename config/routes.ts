@@ -153,6 +153,17 @@ export default [
     ],
   },
   {
+    name: 'Billing',
+    path: '/billing',
+    routes: [
+      {
+        name: 'Hospital Billing Detail',
+        path: '/billing/hospitalBillingDetail',
+        component: './Billing/component/HospitalBillingDetail',
+      },
+    ],
+  },
+  {
     name: 'patient',
     path: '/patient',
     routes: [
@@ -323,6 +334,10 @@ export default [
   {
     path: '/',
     redirect: '/welcome',
+  },
+  {
+    path: '/printPage',
+    component: '../components/Print/PrintReport',
   },
   {
     path: '/candidate-dashboard',

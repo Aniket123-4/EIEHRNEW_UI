@@ -45,7 +45,7 @@ export async function requestGetPatientList(body: any, options?: { [key: string]
   });
 }
 export async function requestGetAppointmentSearchList(body: any, options?: { [key: string]: any }) {
-  return request<any>('Online/GetAppointmentSearch', {
+  return request<any>(`${body.urlType}/GetAppointmentSearch`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
