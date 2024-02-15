@@ -193,9 +193,9 @@ const NewTokenNo = React.forwardRef(() => {
             };
             setLoading(true)
             const res = await requestGetTokenNoQueueJump({ ...staticParams });
-            const result = res.result2
+            const result = res.result1
             setLoading(false)
-            if (res.isSuccess === true && res.result2.length > 0) {
+            if (res.isSuccess === true && res.result1.length > 0) {
                 console.log(result)
                 setStatusData(result)
                 
@@ -263,7 +263,7 @@ const NewTokenNo = React.forwardRef(() => {
                                 <Col span={4}>Patient No</Col>
                                 <Col span={4}>Token No</Col>
                                 <Col span={4}>Case No</Col>
-                                <Col span={4}>Patient Name</Col>
+                                <Col span={4}>Admission No</Col>
                                 <Col span={4}>Patient Name</Col>
                                 <Col span={4}>Doctor Name</Col>
                                 {/* <Button onClick={getTokenNoQueueJump}></Button> */}

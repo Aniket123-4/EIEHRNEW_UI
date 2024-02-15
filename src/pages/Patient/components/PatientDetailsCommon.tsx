@@ -55,6 +55,7 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
             //console.log(response?.result1[0].candName);
             form.setFieldValue("Search", response?.result1[0].candName)
             const result1 = response?.result1[0];
+            console.log(result1)
             if (response?.result2) {
                 const result2 = response?.result2[0];
                 setPatientImage(result2);
@@ -68,82 +69,148 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
                 {
                     form.setFieldValue("case",caseChoiceMaskForDropdown[0].value);
                     getPatientVisitNo(caseChoiceMaskForDropdown[0].value);
+                    // Object.keys(props).length ? props?.onChange({ ...result1, "patientCaseID": values.case }) : null;
+                    props?.onChange({ ...result1, "patientCaseID": caseChoiceMaskForDropdown[0].value });
+                    const patentBasicDetails = [
+                        {
+                            key: '1',
+                            label: 'Patient No',
+                            children: result1?.patientNo
+                        },
+                        {
+                            key: '2',
+                            label: 'Name',
+                            children: result1?.candName
+                        },
+                        {
+                            key: '3',
+                            label: 'DOB',
+                            children: result1?.dob
+                        },
+                        {
+                            key: '5',
+                            label: 'Address',
+                            children: result1?.curAddress
+                        },
+                        {
+                            key: '6',
+                            label: 'Mobile No',
+                            children: result1?.curMobileNo
+                        },
+                        {
+                            key: '7',
+                            label: 'Phone No',
+                            children: result1?.curPhoneNo
+                        },
+                        {
+                            key: '8',
+                            label: 'Civil Status',
+                            children: result1?.civilStatusName
+                        },
+                        {
+                            key: '9',
+                            label: 'Blood Group',
+                            children: result1?.bloodGroup
+                        },
+                        {
+                            key: '10',
+                            label: 'Email',
+                            children: result1?.email
+                        },
+                        {
+                            key: '11',
+                            label: 'Emergency Name',
+                            children: result1?.emerGencyName
+                        },
+                        {
+                            key: '12',
+                            label: 'Emergency Contact',
+                            children: result1?.emerGencyContact
+                        },
+                        {
+                            key: '13',
+                            label: 'Gender',
+                            children: result1?.genderName
+                        },
+                    ];
+                    setPatientData({ patentBasicDetails })
                 }
-            const patentBasicDetails = [
-                {
-                    key: '1',
-                    label: 'Patient No',
-                    children: result1?.patientNo
-                },
-                {
-                    key: '2',
-                    label: 'Name',
-                    children: result1?.candName
-                },
-                {
-                    key: '3',
-                    label: 'DOB',
-                    children: result1?.dob
-                },
-                // {
-                //     key: '4',
-                //     label: 'Age',
-                //     children: result1?.age
-                // },
-                {
-                    key: '5',
-                    label: 'Address',
-                    children: result1?.curAddress
-                },
-                {
-                    key: '6',
-                    label: 'Mobile No',
-                    children: result1?.curMobileNo
-                },
-                {
-                    key: '7',
-                    label: 'Phone No',
-                    children: result1?.curPhoneNo
-                },
-                {
-                    key: '8',
-                    label: 'Civil Status',
-                    children: result1?.civilStatusName
-                },
-                {
-                    key: '9',
-                    label: 'Blood Group',
-                    children: result1?.bloodGroup
-                },
-                {
-                    key: '10',
-                    label: 'Email',
-                    children: result1?.email
-                },
-                {
-                    key: '11',
-                    label: 'Emergency Name',
-                    children: result1?.emerGencyName
-                },
-                {
-                    key: '12',
-                    label: 'Emergency Contact',
-                    children: result1?.emerGencyContact
-                },
-                {
-                    key: '13',
-                    label: 'Gender',
-                    children: result1?.genderName
-                },
-                // {
-                //     key: '14',
-                //     label: 'Insurance Company',
-                //     children: result1?.insuranceComp
-                // }
-            ];
-            setPatientData({ patentBasicDetails })
-            Object.keys(props).length ? props?.onChange({ ...result1, "patientCaseID": values.case }) : null;
-            //getGetPatientSearchList("")
+                else{
+                    const patentBasicDetails = [
+                        {
+                            key: '1',
+                            label: 'Patient No',
+                            children: result1?.patientNo
+                        },
+                        {
+                            key: '2',
+                            label: 'Name',
+                            children: result1?.candName
+                        },
+                        {
+                            key: '3',
+                            label: 'DOB',
+                            children: result1?.dob
+                        },
+                        // {
+                        //     key: '4',
+                        //     label: 'Age',
+                        //     children: result1?.age
+                        // },
+                        {
+                            key: '5',
+                            label: 'Address',
+                            children: result1?.curAddress
+                        },
+                        {
+                            key: '6',
+                            label: 'Mobile No',
+                            children: result1?.curMobileNo
+                        },
+                        {
+                            key: '7',
+                            label: 'Phone No',
+                            children: result1?.curPhoneNo
+                        },
+                        {
+                            key: '8',
+                            label: 'Civil Status',
+                            children: result1?.civilStatusName
+                        },
+                        {
+                            key: '9',
+                            label: 'Blood Group',
+                            children: result1?.bloodGroup
+                        },
+                        {
+                            key: '10',
+                            label: 'Email',
+                            children: result1?.email
+                        },
+                        {
+                            key: '11',
+                            label: 'Emergency Name',
+                            children: result1?.emerGencyName
+                        },
+                        {
+                            key: '12',
+                            label: 'Emergency Contact',
+                            children: result1?.emerGencyContact
+                        },
+                        {
+                            key: '13',
+                            label: 'Gender',
+                            children: result1?.genderName
+                        },
+                        // {
+                        //     key: '14',
+                        //     label: 'Insurance Company',
+                        //     children: result1?.insuranceComp
+                        // }
+                    ];
+                    setPatientData({ patentBasicDetails })
+                    props?.onChange({ ...result1, "patientCaseID": values.case });
+                }
         }
         if (!response?.isSuccess || response?.result1 == null) {
             setPatientImage("");
@@ -162,7 +229,7 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
             "type": 1
         }
         const res = await requestFnGetPatientSearch(params);
-        if (res.result.length > 0) {
+        if (res?.result?.length > 0) {
             const dataMaskForDropdown = res?.result?.map((item: any) => {
                 return { value: item.patientNo, label: item.patientName }
             })

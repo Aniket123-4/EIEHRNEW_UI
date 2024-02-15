@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Footer from '@/components/Footer';
 import { login } from '@/services/apiRequest/api';
 import {
@@ -24,6 +24,7 @@ import { FormattedMessage, history, SelectLang, useIntl, useModel, Helmet } from
 import { Alert, message, Tabs, Button, Divider, Space } from 'antd';
 import { flushSync } from 'react-dom';
 import { setPackageId } from '@/utils/common';
+import { requestGetDocuments } from '@/pages/Candidate/services/api';
 
 type LoginType = 'phone' | 'account';
 
@@ -77,7 +78,11 @@ const Login: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
   const intl = useIntl();
   const [loginType, setLoginType] = useState<LoginType>('phone');
+  const [imgBase64, setImageBase64] = useState<string>('');
 
+  useEffect(() => {
+    getImgUrl();
+  }, [])
   const containerClassName = useEmotionCss(() => {
     return {
       display: 'flex',
@@ -160,14 +165,25 @@ const Login: React.FC = () => {
       message.error(defaultLoginFailureMessage);
     }
   };
+  const getImgUrl = async () => {
+    const params = {
+      fileName: "Ayuroma_wellness.jpeg",
+      filePath: ""
+    }
+    const res = await requestGetDocuments(params);
+    setImageBase64(res.result)
+    console.log(imgBase64)
+  }
 
   return (
     <div
     >
       <LoginFormPage
-        backgroundImageUrl="https://www.shutterstock.com/shutterstock/photos/1401561251/display_1500/stock-photo-modern-microscope-for-operations-in-surgery-room-at-the-hospital-background-1401561251.jpg"
-        title="EIEHR "
-        subTitle={<><h2>Medical portal</h2><h6>Powered by <br/>MULTIFACET SOFTWARE SYSTEMS PRIVATE LIMITED</h6></>}
+      // style={{height:window.innerHeight, justifyContent:'initial',backgroundRepeat:'no-repeat'}}
+        backgroundImageUrl={`data:image/png;base64,${imgBase64}`}
+        // backgroundImageUrl="https://www.shutterstock.com/shutterstock/photos/1401561251/display_1500/stock-photo-modern-microscope-for-operations-in-surgery-room-at-the-hospital-background-1401561251.jpg"
+        title="Ayuroma Wellness Center"
+        subTitle={<h3 style={{color:'red',textAlign:'end',paddingRight:90}}>(Since 1991)</h3>}
         actions={
           <div
             style={{
@@ -207,7 +223,7 @@ const Login: React.FC = () => {
               </Button>
 
               <Button
-              disabled
+                disabled
                 size='middle'
                 style={{ width: 300 }}
                 type="default"
@@ -218,8 +234,8 @@ const Login: React.FC = () => {
                 Add Hospital/Doctor
               </Button>
 
-              <Button
-              disabled
+              {/* <Button
+                disabled
                 size='middle'
                 style={{ width: 300 }}
                 type="default"
@@ -228,7 +244,7 @@ const Login: React.FC = () => {
                   history.push(urlParams.get('redirect') || '/user/InstitututeUserActivation');
                 }}>
                 Hospital/Doctor Activation
-              </Button>
+              </Button> */}
             </Space>
           </div>
         }

@@ -12,6 +12,7 @@ import { getUserInLocalStorage } from '@/utils/common';
 import { ColumnsType } from 'antd/es/table';
 import { requestAddDelPatientForDoctorOPIP } from '../services/api';
 import { requestGetInvestigation } from '@/pages/Investigation/services/api';
+import { requestGetInvestigationParameter } from '@/pages/Complaint/services/api';
 
 const { RangePicker } = DatePicker;
 
@@ -100,15 +101,14 @@ const ReferalDoctor = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admN
     const getInvParameter = async () => {
         try {
             const staticParams = {
-                invParameterID: -1,
-                invGroupID: -1,
-                isActive: -1,
-                formID: -1,
-                type: 1
+                "invParameterID": -1,
+                "invGroupID": -1,
+                "isActive": -1,
+                "type": 2
             };
 
             setLoading(true)
-            const response = await requestGetInvestigation({ ...staticParams });
+            const response = await requestGetInvestigationParameter({ ...staticParams });
             setLoading(false)
 
             const dataMaskForDropdown = response?.result?.map((item: any) => {

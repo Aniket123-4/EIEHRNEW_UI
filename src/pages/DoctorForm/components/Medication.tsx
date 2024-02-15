@@ -11,17 +11,25 @@ import dayjs from 'dayjs';
 import { getUserInLocalStorage } from '@/utils/common';
 import { requestAddDelPatientForDoctorOPIP, requestGetItemBalance } from '../services/api';
 import { ColumnsType } from 'antd/es/table';
+import Typography from 'antd/es/typography/Typography';
+import moment from 'moment';
 
 const { RangePicker } = DatePicker;
 
 const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }: any) => {
-    const { result1 } = patientDetails;
+    const { result5 } = patientDetails;
 
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const { verifiedUser } = getUserInLocalStorage();
     const [drugList, setDiseaseList] = useState([]);
     const [productList, setProductList] = useState([]);
+    const [instructionList, setInstructionList] = useState([
+        {value: "Serve with Tea", label: "Serve with Tea" },
+        {value: "Serve with Water", label: "Serve with Water" },
+        {value: "Serve with Milk", label: "Serve with Milk" },
+        {value: "Serve with Honey", label: "Serve with Honey" },
+    ]);
     const [balance, setBalance] = useState([]);
     const [itemCat, setItemCat] = useState([]);
 
@@ -60,6 +68,45 @@ const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }
         }
 
     ];
+    const columns1: ColumnsType<any> = [
+        {
+            title: 'Prescribed By',
+            key: 'enterBy',
+            dataIndex: 'enterBy',
+        },
+        {
+            title: 'Drug Name',
+            key: 'drugName',
+            dataIndex: 'drugName',
+
+        },
+        {
+            title: 'QtyTimesPerDay',
+            key: 'qtyTimesPerDay',
+            dataIndex: 'qtyTimesPerDay',
+        },
+        {
+            title: 'No Of Days',
+            key: 'noOfDays',
+            dataIndex: 'noOfDays',
+        },
+        {
+            title: 'QtyPerDay',
+            key: 'quantityPerDay',
+            dataIndex: 'quantityPerDay',
+        },
+        {
+            title: 'QtyCal',
+            key: 'qtyCal',
+            dataIndex: 'qtyCal',
+        },
+        {
+            title: 'EntryDate',
+            key: 'entryDate',
+            dataIndex: 'entryDate',
+            render: (text) => <Typography>{moment(text).format('DD MMM YYYY')}</Typography>
+        },
+    ];
 
 
     useEffect(() => {
@@ -72,7 +119,7 @@ const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }
         console.log(item)
         const params = {
             "itemID": -1,
-            "itemCatID": -1,
+            "itemCatID": item,
             "sectionID": -1,
             "fundID": -1,
             "ledgerNo": "",
@@ -90,6 +137,11 @@ const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }
             setDiseaseList(dataMaskForDropdown)
             setBalance(null)
         }
+        // else if(res.isSuccess)
+        // {
+        //     setBalance([])
+        // setDiseaseList([])
+        // }
     }
 
 
@@ -132,12 +184,20 @@ const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }
         const res = await requestGetItemBalance(params);
 
         if (res.result.length > 0) {
+            // const check = dd.includes(values.col2);
+            const sum = res.result.reduce((accumulator, object) => {
+                return accumulator + parseInt(object.balanceQuantity, 10);
+            }, 0);
             const dataMaskForDropdown = res?.result.map((item: any) => {
-                return { value: item.itemID, label: `${item.itemName} ${item.balanceQuantity}` }
+                return { value: item.itemID, label: `${item.itemName} ${sum}` }
             })
-            console.log({ dataMaskForDropdown })
+            // ...new Set(dataMaskForDropdown.map((element) => element.age))
+            
+            // console.log({ dataMaskForDropdown })
             setBalance(dataMaskForDropdown)
         }
+        else if (res.isSuccess)
+            setBalance([])
     }
     const getProductList = async () => {
         const params = {
@@ -344,7 +404,11 @@ const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }
 
                     <Col span={8}>
                         <Form.Item name="Instruction" label="Instruction" rules={[{ required: false }]}>
-                            <Input placeholder="Please Enter" />
+                        <Select
+                                options={instructionList}
+                                placeholder="Select"
+                            />
+                            {/* <Input placeholder="Please Enter" /> */}
                         </Form.Item>
                     </Col>
 
@@ -381,9 +445,9 @@ const Medication = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }
             </Card>
 
             <Table
-                columns={columns}
+                columns={columns1}
                 size="small"
-                dataSource={result1}
+                dataSource={result5}
                 pagination={false}
             />
         </Space>

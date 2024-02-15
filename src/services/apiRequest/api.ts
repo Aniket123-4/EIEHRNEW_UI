@@ -55,3 +55,13 @@ export async function updateCandidateProfileImage(body: API.LoginParams, options
     ...(options || {}),
   });
 }
+export async function onlinePatientAppoinmentReceipt(body: any, options?: { [key: string]: any }) {
+  return request<any>('Reports/OnlinePatientAppoinmentReceipt', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}

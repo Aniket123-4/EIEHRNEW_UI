@@ -4,9 +4,11 @@ import { useModel } from '@umijs/max';
 import { Card, theme, Image, Divider, Space, Avatar, Typography, Row, Col, Progress, Spin, Table, Button, message, Tag } from 'antd';
 import { getUserInLocalStorage } from '@/utils/common';
 import { requestGetCandidateList } from './Candidate/services/api';
-import { InsertRowAboveOutlined, PrinterOutlined, UserOutlined } from '@ant-design/icons';
+import { DownloadOutlined, InsertRowAboveOutlined, PrinterOutlined, UserOutlined } from '@ant-design/icons';
 import Chart from 'react-google-charts';
 import { requestSyncOnlinePatient } from './Online/services/api';
+import { onlinePatientAppoinmentReceipt } from '@/services/apiRequest/api';
+import PrintReport from '@/components/Print/PrintReport';
 const { Title, Text, Link } = Typography;
 
 const CandidateDashboard: React.FC = () => {
@@ -17,6 +19,8 @@ const CandidateDashboard: React.FC = () => {
   const [analysis, setAnalysis] = useState<any>([]);
   const [loading, setLoading] = useState(false)
   const [printDataRecord, setPrintDataRecord] = useState([])
+  const [base64Data, setBase64Data] = useState<string>();
+  const [showPdf, setShowPdf] = useState<any>(false);
 
 
   useEffect(() => {
@@ -149,7 +153,7 @@ const CandidateDashboard: React.FC = () => {
   const printData = async (record: any) => {
     await setTimeout(setPrintDataRecord(record), 3000);
     setLoading(true)
-      
+
     var printContents = document.getElementById("printData").innerHTML;
     // var WinPrint = window.open('', '', );
     //   WinPrint?.document.write(printContent!);
@@ -187,13 +191,38 @@ const CandidateDashboard: React.FC = () => {
     }
 
   };
+  const printReport = async () => {
+    try {
+      setLoading(true);
+      const staticParams = {
+        "onlinePatientID": verifiedUser?.userID,
+        "userID": -1, "formID": -1, "type": 2,
+        "show": false,
+        "exportOption": ".pdf"
+      }
+      const res = await onlinePatientAppoinmentReceipt(staticParams);
+      setBase64Data(res)
+      setShowPdf(true)
+      if (res.isSuccess === true) {
+        setLoading(false)
+      }
+      setLoading(false)
+    } catch (error) {
+      console.log({ error });
+      message.error('please try again');
+      setLoading(false)
+    }
+  }
+  const handleCancel = () => {
+    setShowPdf(false);
+  };
   const options = {
     title: "Analysis of visits",
     sliceVisibilityThreshold: 0.2, // 20%
   };
   return (
     <PageContainer
-    loading={loading}
+      loading={loading}
       header={{
         title: ``,
         breadcrumb: {
@@ -201,6 +230,8 @@ const CandidateDashboard: React.FC = () => {
         },
       }}
     >
+      {console.log(base64Data)}
+      {base64Data &&<PrintReport showModal={showPdf} base64Data={base64Data} onCancel={handleCancel} />}
       <Card>
 
         <div style={{
@@ -279,7 +310,10 @@ const CandidateDashboard: React.FC = () => {
         />
         <Divider orientation="left"><h4></h4></Divider>
         <Card
-          title="Appointment Data"
+          // title="Appointment Data"
+          title={<Space style={{ justifyContent: 'space-between', width: '95%' }}>
+            <Typography>Appointment List</Typography>
+            <Button onClick={() => printReport()}><DownloadOutlined /></Button></Space>}
           style={{ boxShadow: '2px 2px 2px #4874dc' }}
         >
           <Spin tip="Please wait..." spinning={loading}>

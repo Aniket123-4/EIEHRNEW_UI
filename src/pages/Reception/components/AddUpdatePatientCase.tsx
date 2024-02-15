@@ -4,7 +4,7 @@ import moment from 'moment';
 import { dateFormat } from '@/utils/constant';
 import { requestAddUpdatePatientCase, requestGetPatientDailyCount, requestGetPatientSearchOPIP } from '../services/api';
 import { requestGetSection, requestGetUserList } from '@/services/apiRequest/dropdowns';
-import { requestGetInvParameterMasterList } from '@/pages/Complaint/services/api';
+import { requestGetInvParameterMasterList, requestGetInvestigationParameter } from '@/pages/Complaint/services/api';
 import { ProColumns } from '@ant-design/pro-components';
 import { ProDescriptions } from '@ant-design/pro-components';
 import { convertDate, convertDateInSSSZFormat } from '@/utils/helper';
@@ -131,13 +131,12 @@ const AddUpdatePatientCase = React.forwardRef((props) => {
 
     const getInvParameter = async () => {
         const params1 = {
-            invParameterID: -1,
-            invGroupID: -1,
-            isActive: -1,
-            formID: -1,
-            type: 1
+            "invParameterID":-1,
+            "invGroupID":-1,
+            "isActive":-1,
+            "type":2
         }
-        const res = await requestGetInvParameterMasterList(params1);
+        const res = await requestGetInvestigationParameter(params1);
         // console.log(res);
         // if (res?.result?.length > 0) {
         const dataMaskForDropdown = res?.result?.map((item: any) => {
