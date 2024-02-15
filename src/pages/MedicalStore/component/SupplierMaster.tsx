@@ -73,6 +73,19 @@ const SupplierMaster = ({
     const goBack = () => {
         history.push("/");  
     };
+    const validateCharacters = (rule, value, callback) => {
+    const regex = /^[A-Za-z\s]+$/;
+    if (!regex.test(value)) {
+        if (value) {
+            callback('Only characters are allowed');
+        } else {
+            callback();
+        }
+
+    } else {
+        callback();
+    }
+};
     const setEditField = (data: any) => {
         console.log(data)
         supplierForm.setFieldsValue({
@@ -98,7 +111,8 @@ const SupplierMaster = ({
                         <Form.Item
                             name="supplierName"
                             label="Supplier Name"
-                            rules={[{ required: true, message: "Please Enter Supplier Name" }]}
+                            rules={[{ required: true, message: "Please Enter Supplier Name" },
+                            {validator:validateCharacters}]}
                         >
                             <Input placeholder="Please Enter Supplier Name" />
                         </Form.Item>

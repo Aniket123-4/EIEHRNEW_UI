@@ -430,6 +430,7 @@ const DirectItemReceipt = ({
                             />
                         </Form.Item>
                     </Col>
+                    
                     <Col span={6}>
                         <Space.Compact style={{ justifyContent: 'space-between', width: '60%' }}>
                             <Button style={{ marginTop: 30 }} onClick={() => updateQuantity('decQty')} icon={<MinusOutlined />} ></Button>
@@ -532,7 +533,7 @@ const DirectItemReceipt = ({
                             <Col className="gutter-row" span={8}>
                                 <Form.Item
                                     name="issueVoucherNo"
-                                    label="Issue VoucherNo"
+                                    label="Receipt Voucher No"
                                     rules={[
                                         { required: true, message: "Please Enter VoucherNo" },
                                     ]}
@@ -544,7 +545,7 @@ const DirectItemReceipt = ({
                                 <Form.Item
                                     initialValue={dayjs()}
                                     name="issueDate"
-                                    label="Issue Date"
+                                    label="Receipt Date"
                                     rules={[
                                         { required: true, message: "Please Choose Issue Date" },
                                     ]}
@@ -625,10 +626,7 @@ const DirectItemReceipt = ({
                         <Card
                             headStyle={{ backgroundColor: '#004080', border: 0 }}
                             style={{ height: 650, boxShadow: "2px 2px 2px #4874dc" }}
-                            title={<Space direction='horizontal'>
-                                <Typography style={{ color: 'white', fontSize: 18 }}>
-                                    {"New Item"}</Typography>
-                            </Space>}//"New Item"
+                            title="Direct Item Receipt"
                         >
                             <Spin tip="Please wait..." spinning={loading || loadingEdit}>
                                 <div>{addForm()}</div>

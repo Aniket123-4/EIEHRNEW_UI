@@ -101,7 +101,7 @@ const Complain = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }: 
                 <Row gutter={16}>
 
                     <Col span={6}>
-                        <Form.Item name="ComplainTypeID" label="Complain Type" rules={[{ required: true }]}>
+                        <Form.Item name="ComplainTypeID" label="Complaint Type" rules={[{ required: true }]}>
                             <Select
                                 showSearch
                                 onChange={handleChangeFilter}
@@ -128,7 +128,7 @@ const Complain = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }: 
                         </Form.Item>
                     </Col> */}
                     <Col span={6}>
-                        <Form.Item name="Complain" label="Complain" rules={[{ required: false }]}>
+                        <Form.Item name="Complain" label="Complaint" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>

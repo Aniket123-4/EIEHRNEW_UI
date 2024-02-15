@@ -119,8 +119,8 @@ const DoctorPatientDetails = React.forwardRef((props) => {
         },
         {
             key: 'REFERAL_DOCTOR',
-            label: 'REFERAL DOCTOR',
-            children: <ReferalDoctor patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
+            label: 'REFERRAL DOCTOR',
+            children: <ReferalDoctor patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
         },
         {
             key: 'CLINICAL_FINDING',

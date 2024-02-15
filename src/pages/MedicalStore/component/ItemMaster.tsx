@@ -160,9 +160,23 @@ const ItemMaster = ({
       setLoading(false);
     }
   };
+  
   const goBack = () => {
     history.push("/");
   };
+  const validateCharacters = (rule, value, callback) => {
+    const regex = /^[A-Za-z\s]+$/;
+    if (!regex.test(value)) {
+        if (value) {
+            callback('Only characters are allowed');
+        } else {
+            callback();
+        }
+
+    } else {
+        callback();
+    }
+};
   const setEditField = (data: any) => {
     console.log(data);
     form.setFieldsValue({
@@ -274,6 +288,7 @@ const ItemMaster = ({
                   label="Item Name"
                   rules={[
                     { required: true, message: "Please Enter Item Name" },
+                    {validator:validateCharacters}
                   ]}
                 >
                   <Input placeholder="Please Enter Item Name" />

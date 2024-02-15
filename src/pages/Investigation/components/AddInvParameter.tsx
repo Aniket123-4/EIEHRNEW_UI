@@ -421,14 +421,14 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                     valuePropName="checked"
                                     initialValue={false}
                                 >
-                                    <Checkbox onChange={(e => { setVatApplicable(e.target.checked) })}>VAT Applicable</Checkbox>
+                                    <Checkbox onChange={(e => { setVatApplicable(e.target.checked) })}>GST Applicable</Checkbox>
                                 </Form.Item>
                             </Col>
                             {vatApplicable &&
                                 <Col className="gutter-row" span={6}>
                                     <Form.Item
                                         name="vatPercent"
-                                        label="VAT Percent"
+                                        label="GST Percent"
                                         rules={[{ required: vatApplicable ? true : false, message: 'Please enter' }]}
                                     >
                                         <InputNumber

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ExclamationCircleFilled, PlusOutlined } from '@ant-design/icons';
+import { ExclamationCircleFilled, PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Modal, theme, Spin, Card } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
@@ -10,19 +10,25 @@ import {
     ProColumns,
 } from '@ant-design/pro-components';
 import { Table, Tag } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import type { ColumnType, ColumnsType } from 'antd/es/table';
 import { FormattedMessage, history } from '@umijs/max';
 import { convertDate, convertTime } from '@/utils/helper';
 import { activeStatus, activeStatusOnly, dateFormat } from '@/utils/constant';
 import { requestAddPatDocAppointments, requestGetPatDocAppointment } from '../services/api';
 import dayjs from 'dayjs';
 import moment from 'moment';
+import Highlighter from 'react-highlight-words';
+import { FilterConfirmProps } from 'antd/es/table/interface';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { confirm } = Modal;
 
 const DoctorSlotAppointListDetails = React.forwardRef((props) => {
+    const [searchText, setSearchText] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const searchInput = useRef<InputRef>(null);
+
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false)
     const { token } = theme.useToken();
@@ -65,6 +71,7 @@ const DoctorSlotAppointListDetails = React.forwardRef((props) => {
             dataIndex: 'userName',
             key: 'userName',
             render: (text) => <a>{text}</a>,
+            ...getColumnSearchProps('userName'),
         },
         {
             title: 'Slot Date',
@@ -203,7 +210,93 @@ const DoctorSlotAppointListDetails = React.forwardRef((props) => {
         console.log({ value });
         setSelectedIsActive(value)
     };
+    const handleSearch = (
+        selectedKeys: string[],
+        confirm: (param?: FilterConfirmProps) => void,
+        dataIndex: DataIndex,
+    ) => {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    };
 
+    
+    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+            <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+                <Input
+                    ref={searchInput}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                    style={{ marginBottom: 8, display: 'block' }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        onClick={() => clearFilters && handleReset(clearFilters)}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Reset
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            confirm({ closeDropdown: false });
+                            setSearchText((selectedKeys as string[])[0]);
+                            setSearchedColumn(dataIndex);
+                        }}
+                    >
+                        Filter
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            close();
+                        }}
+                    >
+                        close
+                    </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: (filtered: boolean) => (
+            <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+        ),
+        onFilter: (value, record) =>
+            record[dataIndex]
+                .toString()
+                .toLowerCase()
+                .includes((value as string).toLowerCase()),
+        onFilterDropdownOpenChange: (visible) => {
+            if (visible) {
+                setTimeout(() => searchInput.current?.select(), 100);
+            }
+        },
+        render: (text) =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ''}
+                />
+            ) : (
+                text
+            ),
+    });
     const showDeleteConfirm = () => {
         confirm({
             title: 'Are you sure delete this Slot?',
@@ -277,3 +370,7 @@ const DoctorSlotAppointListDetails = React.forwardRef((props) => {
 });
 
 export default DoctorSlotAppointListDetails;
+
+function handleReset(clearFilters: () => void): void {
+    throw new Error('Function not implemented.');
+}
