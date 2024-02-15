@@ -40,7 +40,7 @@ import { requestGetDocuments } from "@/pages/Candidate/services/api";
 
 const { Option } = Select;
 
-const PrintReport = ({printData}: any) => {
+const PrintReport = ({ base64Data }: any) => {
     const formRef = useRef<any>();
     const { token } = theme.useToken();
     const [form] = Form.useForm();
@@ -58,6 +58,7 @@ const PrintReport = ({printData}: any) => {
     };
 
     useEffect(() => {
+        console.log(base64Data)
         getItemList();
     }, []);
 
@@ -106,24 +107,14 @@ const PrintReport = ({printData}: any) => {
     }
 
     return (
-        <PageContainer title=" " style={{}}>
-            <Space direction="horizontal" size="middle" style={{ display: "flex" }}>
-                <Row gutter={8}>
-                    <Col span={13}>
-                        <Card
-                            headStyle={{ backgroundColor: '#004080', border: 0 }}
-                            style={{ height: 650, boxShadow: "2px 2px 2px #4874dc" }}
-                            
-                        >
-                            {/* <Spin tip="Please wait..." spinning={loading || loadingEdit}>
-                                
-                            </Spin> */}
-                        </Card>
-
-                    </Col>
-                </Row>
-            </Space>
-        </PageContainer>
+        <Card
+            headStyle={{ backgroundColor: '#004080', border: 0 }}
+            style={{ boxShadow: "2px 2px 2px #4874dc", width: '100%' }}
+        >
+            <embed type="application/pdf" height="200" width='100%'
+                src={`data:application/pdf;base64,${base64Data}`}>
+            </embed>
+        </Card>
     );
 };
 

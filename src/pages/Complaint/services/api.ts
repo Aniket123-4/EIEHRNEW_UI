@@ -115,6 +115,16 @@ export async function requestGetInvParameterMasterList(body: any, options?: { [k
     ...(options || {}),
   });
 }
+export async function requestGetInvestigationParameter(body: any, options?: { [key: string]: any }) {
+  return request<any>('MasterForm/GetInvestigationParameter', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
 export async function requestAddService(body: any, options?: { [key: string]: any }) {
   return request<any>('MasterForm/AddService', {
     method: 'POST',

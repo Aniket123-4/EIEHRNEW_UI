@@ -126,8 +126,8 @@ const ItemStatus = React.forwardRef((props) => {
             title: 'eslDate',
             dataIndex: 'eslDate',
             key: 'eslDate',
+            render: (text) => <label>{moment(text).format('DD-MMM-YYYY')}</label>,
             // render: (text) => <Typography>{dayjs().format('DD-MMM-YYYY')}</Typography>,
-            format: 'DD-MMM-YYYY'
         },
         // {
         //     title: 'Action',

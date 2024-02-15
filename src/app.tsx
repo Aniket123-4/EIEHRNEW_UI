@@ -90,8 +90,9 @@ const UserMenu = ({ initialState }: any) => {
   >
     <a onClick={(e) => e.preventDefault()}>
       <Space>
-        {getUserInLocalStorage()?.verifiedUser?.userTypeID === "1" && <span>{'Admin'}</span>}
-        {getUserInLocalStorage()?.verifiedUser?.userTypeID !== "1" && <span>{getUserInLocalStorage()?.verifiedUser?.firstName}</span>}
+        {getUserInLocalStorage()?.verifiedUser?.userTypeID === "1" && getUserInLocalStorage()?.verifiedUser?.userID==="-2" ? 
+          <span>{'Admin'}</span> :
+          <span>{getUserInLocalStorage()?.verifiedUser?.userName.toString().toUpperCase()}</span>}
         <UserOutlined />
       </Space>
     </a>

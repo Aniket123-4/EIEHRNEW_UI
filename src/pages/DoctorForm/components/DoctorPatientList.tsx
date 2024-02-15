@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ExclamationCircleFilled, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Modal, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Modal, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Input, Typography } from 'antd';
 import { PageContainer, ProDescriptions } from '@ant-design/pro-components';
 import { Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
@@ -90,8 +90,22 @@ const DoctorPatientList = React.forwardRef((props) => {
             key: 'curMobileNo',
             dataIndex: 'curMobileNo',
 
-        }, {
-            title: 'Ins App Status',
+        }, 
+        {
+            title: 'Doctor Seen',
+            key: 'isDocSeen',
+            dataIndex: 'isDocSeen',
+            render:(text)=><Tag color={text == true ? 'success' : 'error'}>{text == true ? 'Yes' : 'No'}</Tag>,
+        },
+        {
+            title: 'Paid Amount',
+            key: 'isPaid',
+            dataIndex: 'isPaid',
+            render:(text)=><Tag color={text == true ? 'success' : 'error'}>{text == true ? 'Yes' : 'No'}</Tag>,
+
+        },
+        {
+            title: 'Payment Mode',
             key: 'insAppStatus',
             dataIndex: 'insAppStatus',
 
@@ -184,6 +198,17 @@ const DoctorPatientList = React.forwardRef((props) => {
                                     <RangePicker
                                         format={dateFormat}
                                         style={{ width: "100%" }}
+                                        size={'large'}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col className="gutter-row" span={8}>
+                                <Form.Item
+                                    name="patientName"
+                                    rules={[{ required: false, message: 'Please select' }]}
+                                >
+                                    <Input
+                                        placeholder='Patient Name'
                                         size={'large'}
                                     />
                                 </Form.Item>

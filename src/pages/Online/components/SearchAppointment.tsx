@@ -11,6 +11,7 @@ import { requestGetAppointmentSearchList, requestGetDoctorList, requestSyncOnlin
 import { DownloadOutlined, SearchOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/es/form/Form';
 import { values } from 'lodash';
+import PrintReport from '@/components/Print/PrintReport';
 
 const { Option } = Select;
 
@@ -31,6 +32,8 @@ const UserProfile = () => {
     const [doctorList, setDoctorList] = useState<any>([{ value: "-1", label: "All" }]);
     const [defDoctor, setDefDoctor] = useState<any>("");
     const [slotDate, setSlotDate] = useState<any>(dayjs());
+    const [base64Data, setBase64Data] = useState<any>("");
+    const [showPdf, setShowPdf] = useState<any>(false);
 
     const [appointList, setAppointList] = useState([]);
     const { verifiedUser } = getUserInLocalStorage();
@@ -181,6 +184,7 @@ const UserProfile = () => {
     }
 
     const printReport = async () => {
+
         const params = form.getFieldsValue();
         params['slotDate'] = convertDate(params?.slotDate);
         try {
@@ -198,8 +202,10 @@ const UserProfile = () => {
                 "exportOption": ".pdf",
                 ...params
             }
-            const msg = await requestGetAppointmentSearchList(staticParams);
-            if (msg.isSuccess === true) {
+            const res = await requestGetAppointmentSearchList(staticParams);
+            setBase64Data(res)
+            setShowPdf(true)
+            if (res.isSuccess === true) {
                 // console.log(msg);
                 setLoading(false)
             }
@@ -221,7 +227,7 @@ const UserProfile = () => {
         <body><img src="'+ "src" + '" width="100%"></body>\
     </html>';
 
-            window.open('data:application/pdf;base64,' + msg);
+            // window.open('data:application/pdf;base64,' + res);
 
             //window.open(`/printPage`);
         } catch (error) {
@@ -294,6 +300,10 @@ const UserProfile = () => {
 
 
     ];
+
+    const handleCancel = () => {
+        setShowPdf(false);
+    };
     const appointmentSearch = (type: any) => {
         return (datatype === 'Admin' &&
             <>
@@ -400,7 +410,7 @@ const UserProfile = () => {
                     {activeTab === "3" && appointmentSearch(3)}
                 </div>
             </Card>
-
+            <PrintReport showModal={showPdf} base64Data={base64Data} onCancel={handleCancel}/>
         </PageContainer>
     );
 };

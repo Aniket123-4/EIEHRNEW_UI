@@ -11,6 +11,7 @@ const { Title, Text, Link } = Typography;
 const Welcome: React.FC = () => {
   const { token } = theme.useToken();
   const [selectedRows, setSelectedRows] = useState<Object>({});
+  const [patientData, setPatientData] = useState<any>();
 
   useEffect(() => {
     // getUserDetails();
@@ -50,7 +51,9 @@ const Welcome: React.FC = () => {
         },
       }}
     >
-      {getUserType() === "Admin" ? <PatientDetailsCommon /> : null}
+      {getUserType() === "Admin" ? 
+                <PatientDetailsCommon patData={patientData}
+                onChange={(value: any) => setPatientData(value)} /> : null}
     </PageContainer>
   );
 };

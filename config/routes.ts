@@ -161,6 +161,11 @@ export default [
         path: '/billing/hospitalBillingDetail',
         component: './Billing/component/HospitalBillingDetail',
       },
+      {
+        name: 'Patient Pharmacy Billing',
+        path: '/billing/PatientPharmacyBilling',
+        component: './Billing/component/PatientPharmacyBilling',
+      },
     ],
   },
   {
@@ -342,6 +347,10 @@ export default [
   {
     path: '/candidate-dashboard',
     component: './CandidateDashboard',
+  },
+  {
+    path: '/igLogin',
+    component: './Patient/components/IGLogin',
   },
   {
     path: '*',

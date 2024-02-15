@@ -83,8 +83,9 @@ const DoctorPatientDetails = React.forwardRef((props) => {
         },
         {
             key: 'COMPLAIN',
-            label: 'COMPLAIN',
-            children: <Complain patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
+            label: 'PRESCRIPTION',
+            children: [<Complain patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
+            <Medication patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />]
         },
         {
             key: 'VITAL_SIGN',
@@ -96,11 +97,11 @@ const DoctorPatientDetails = React.forwardRef((props) => {
             label: 'DIAGNOSIS',
             children: <Diagnosis patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
         },
-        {
-            key: 'MEDICATION',
-            label: 'MEDICATION',
-            children: <Medication patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
-        },
+        // {
+        //     key: 'MEDICATION',
+        //     label: 'MEDICATION',
+        //     children: <Medication patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
+        // },
         {
             key: 'INVESTIGATION',
             label: 'INVESTIGATION',
@@ -207,7 +208,7 @@ const DoctorPatientDetails = React.forwardRef((props) => {
             const response = await requestGetPatientForDoctorOPIP({ ...staticParams });
             setLoading(false)
             setPatientDetails(response)
-            console.log("response.result7.length", response.result7)
+            console.log("response.result5.length", response.result5)
             console.log("response.result7.length", response.result7.length)
             if (isPatientHistory && response.result7.length > 0) {
                 const dataExists = checkDataExists(response.result7[0]);

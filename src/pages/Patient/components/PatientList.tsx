@@ -114,7 +114,7 @@ const PatientList = React.forwardRef((props) => {
             </div>
         ),
         filterIcon: (filtered: boolean) => (
-            <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+            <SearchOutlined style={{ color: filtered ? '#1677ff' : 'gray', fontSize:17 }} />
         ),
         onFilter: (value, record) =>
             record[dataIndex]
