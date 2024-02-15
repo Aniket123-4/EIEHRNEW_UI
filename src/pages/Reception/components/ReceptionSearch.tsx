@@ -382,6 +382,34 @@ const ReceptionSearch = React.forwardRef((props) => {
         setIsDateFilterMandatory(e.target.checked)
     };
 
+    const handleResetFilter = async () => {
+        await filterForm.resetFields();
+        await filterForm.setFieldsValue({
+            fromToDate: [dayjs(moment(), dateFormat), dayjs(moment(), dateFormat)],
+            patientPhoneNo: '',
+            fromDate: '1900-11-21T12:47:26.406Z',
+            toDate: '2023-12-21T12:47:26.406Z',
+            patientCaseID: -1,
+            patientCaseNo: '',
+            patientID: -1,
+            patientNo: '',
+            patientUIDNo: '',
+            caseTypeID: -1,
+            sectionID: -1,
+            consultantDocID: -1,
+            patientFileNo: '',
+            patientName: '',
+            patientMobile: '',
+            patientPhone: '',
+            userID: -1,
+            formID: -1,
+            type: 1,
+            preEmpTypeID: -1
+        });
+        console.log(filterForm.getFieldsValue())
+        onFinishPatForm(filterForm.getFieldsValue())
+        // onFilter(filterForm.getFieldValue());
+    }
     const handleChangeFilter = (value: any) => { }
 
     const filterVisitForm = () => {
@@ -470,7 +498,7 @@ const ReceptionSearch = React.forwardRef((props) => {
 
                 <Row gutter={16}>
                     <Col span={12}>
-                        <Form.Item name="consultantDocID" label="Consultant Doc" rules={[{ required: false }]}>
+                        <Form.Item name="consultantDocID" label="Doctor" rules={[{ required: false }]}>
                             <Select
                                 onChange={handleChangeFilter}
                                 options={doctorList}
@@ -502,6 +530,9 @@ const ReceptionSearch = React.forwardRef((props) => {
                     <Button type="primary" loading={loading} htmlType="submit">
                         Filter
                     </Button>
+                    <Button onClick={()=>handleResetFilter()} style={{marginLeft:20}} type="primary">
+                            Clear
+                        </Button>
                 </Form.Item>
             </Form >
         )

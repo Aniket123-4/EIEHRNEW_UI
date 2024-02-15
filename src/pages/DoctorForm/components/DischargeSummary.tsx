@@ -215,12 +215,12 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID, onSaveSuccess, a
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item name="FinalDaigNosis" label="Final DaigNosis" rules={[{ required: false }]}>
+                        <Form.Item name="FinalDaigNosis" label="Final Diagnnposis" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item name="InstructionToPateint" label="Instruction To Pateint" rules={[{ required: false }]}>
+                        <Form.Item name="InstructionToPateint" label="Instruction To Patient" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>

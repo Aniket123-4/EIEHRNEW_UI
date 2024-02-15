@@ -555,6 +555,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
         values['uidDocName'] = patientDocUpload?.uidDocName ? patientDocUpload.uidDocName : "";
         values['uidDocExt'] = patientDocUpload?.uidDocExt ? patientDocUpload.uidDocExt : "";
         values['uidDocID'] = patientDocUpload?.uidDocID ? patientDocUpload.uidDocID : 0;
+        values['civilStatusID'] = values?.civilStatusID ? values.civilStatusID : ' ';
 
 
         try {
@@ -1287,7 +1288,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     <Form.Item
                                         name="eMail"
                                         label="Email"
-                                        rules={[{ required: true, type: 'email', message: 'Please enter Email' }]}
+                                        rules={[{ required: false, type: 'email', message: 'Please enter Email' }]}
                                     >
                                         <Input maxLength={80} placeholder="Please enter Email" />
                                     </Form.Item>
@@ -1335,7 +1336,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     <Form.Item
                                         name="civilStatusID"
                                         label="Civil Status"
-                                        rules={[{ required: true, message: 'Please choose the Civil Status' }]}
+                                        rules={[{ required: false, message: 'Please choose the Civil Status' }]}
                                     >
                                         <Select
                                             placeholder="Please choose the Civil Status"

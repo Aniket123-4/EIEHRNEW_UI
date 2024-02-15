@@ -53,6 +53,7 @@ const PatientCheckOut = React.forwardRef((props) => {
             dataIndex: 'patientNo',
             key: 'patientNo',
             render: (text) => <a>{text}</a>,
+            sorter: (a:any, b:any):any=> a.patientNo<b.patientNo,
         },
         {
             title: 'Patient Name',

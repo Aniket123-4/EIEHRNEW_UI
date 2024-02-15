@@ -291,7 +291,7 @@ const PatientFilter: React.FC = ({ visible, onClose, selectedRows, loading, onFi
                             defaultValue={-1}
                         />
                     </Form.Item>
-                    <Form.Item name="serviceTypeID" label="Service Type" rules={[{ required: false }]}>
+                    <Form.Item hidden name="serviceTypeID" label="Service Type" rules={[{ required: false }]}>
                         <Select
                             onChange={handleChangeFilter}
                             options={serviceTypeChoices}
