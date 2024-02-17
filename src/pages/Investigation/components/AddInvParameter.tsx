@@ -126,8 +126,8 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
     const getInvGroupList = async () => {
         const params = {
             "invGroupID": -1,
-            "discountParameterID": 1,
-            "isActive": 1,
+            "discountParameterID": -1,
+            "isActive": -1,
             "formID": -1,
             "type": 1
         }

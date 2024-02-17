@@ -48,7 +48,8 @@ const Diagnosis = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
             key: 'diagnosisComment',
             dataIndex: 'diagnosisComment',
 
-        }, {
+        }, 
+        {
             title: 'Disease Type',
             key: 'diseaseTypeName',
             dataIndex: 'diseaseTypeName',
@@ -204,11 +205,11 @@ const Diagnosis = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
                         </Form.Item>
                     </Col>
 
-                    <Col span={12}>
+                    {/* <Col span={12}>
                         <Form.Item name="DiagnosisComment" label="Comment" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
-                    </Col>
+                    </Col> */}
                 </Row>
 
                 <Form.Item>
@@ -233,6 +234,7 @@ const Diagnosis = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
             />
         </Space>
     );
+
 };
 
 export default Diagnosis;

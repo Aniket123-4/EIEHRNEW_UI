@@ -551,7 +551,7 @@ const ItemMaster = ({
           <Col span={11}>
             <Card
               style={{ height: 480, boxShadow: "2px 2px 2px #4874dc" }}
-              title="New Item"
+              title="Item Master"
             >
               <Spin tip="Please wait..." spinning={loading}>
                 <div>{addForm()}</div>

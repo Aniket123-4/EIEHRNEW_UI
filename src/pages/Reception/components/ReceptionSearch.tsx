@@ -290,11 +290,11 @@ const ReceptionSearch = React.forwardRef((props) => {
         return (
             <>
                 {selectedType === 1 ? <>
-                    <Title level={5}>Preemp Type</Title>
+                    <Title level={5}>Case Type</Title>
                     <Select
                         label="Preemp Type"
                         size={'middle'}
-                        placeholder="Preemp Type"
+                        placeholder="Case Type"
                         style={{ width: 300, marginTop: -10 }}
                         options={preEmpType}
                         onChange={data => onSelectPreEmp(data)}
@@ -364,6 +364,7 @@ const ReceptionSearch = React.forwardRef((props) => {
             ...values,
             patientID: -1,
             userID: -1,
+            patientCaseID:'-1',
             formID: -1,
             type: +selectedType
         }
@@ -434,7 +435,7 @@ const ReceptionSearch = React.forwardRef((props) => {
                     </Col>
                 </Row>
 
-                <Row gutter={16}>
+                {/* <Row gutter={16}>
 
                     <Col span={24} style={{ marginTop: 15 }}>
                         <Form.Item name="patientCaseID" label="Patient Case" rules={[{ required: false }]}>
@@ -445,7 +446,7 @@ const ReceptionSearch = React.forwardRef((props) => {
                             />
                         </Form.Item>
                     </Col>
-                </Row>
+                </Row> */}
 
                 <Row gutter={16}>
                     <Col span={12}>
@@ -485,7 +486,7 @@ const ReceptionSearch = React.forwardRef((props) => {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item name="sectionID" label="Section" rules={[{ required: false }]}>
+                        <Form.Item name="sectionID" label="Specialization" rules={[{ required: false }]}>
                             <Select
                                 showSearch
                                 options={sections}

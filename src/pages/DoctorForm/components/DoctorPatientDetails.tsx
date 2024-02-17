@@ -85,6 +85,7 @@ const DoctorPatientDetails = React.forwardRef((props) => {
             key: 'COMPLAIN',
             label: 'PRESCRIPTION',
             children: [<Complain patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
+            <Diagnosis patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
             <Medication patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />]
         },
         {
@@ -95,18 +96,19 @@ const DoctorPatientDetails = React.forwardRef((props) => {
         {
             key: 'DIAGNOSIS',
             label: 'DIAGNOSIS',
-            children: <Diagnosis patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
+            children: [<Diagnosis patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
+            <Investigation patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />]
         },
         // {
         //     key: 'MEDICATION',
         //     label: 'MEDICATION',
         //     children: <Medication patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
         // },
-        {
-            key: 'INVESTIGATION',
-            label: 'INVESTIGATION',
-            children: <Investigation patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
-        },
+        // {
+        //     key: 'INVESTIGATION',
+        //     label: 'INVESTIGATION',
+        //     children: <Investigation patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
+        // },
         {
             key: 'PATIENT_HISTORY',
             label: 'PATIENT HISTORY',

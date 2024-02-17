@@ -517,6 +517,8 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
 
                 "curHouseNo": "0",
                 "curAddress": "",
+                "curVillage" :"",
+                "curtehsil" :"",
                 "curPinCode": "",
                 "curStateID": "-1",
                 "curDistrictID": "-1",
@@ -688,6 +690,8 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                 {
                     "perHouseNo": addressFields.curHouseNo,
                     "perAddress": addressFields.curAddress,
+                    "perVillage": addressFields.curVillage,
+                    "perTehsil": addressFields.curTehsil,
                     "perPinCode": addressFields.curPinCode,
                     "perStateID": addressFields.curStateID,
                     "perDistrictID": addressFields.curDistrictID,
@@ -697,11 +701,14 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                     "perPhoneCC": addressFields.curPhoneCC,
                     "perPhoneAC": addressFields.curPhoneAC,
                     "perPhoneNo": addressFields.curPhoneNo,
+                    
                 });
         else
             form.setFieldsValue({
                 "perHouseNo": "",
                 "perAddress": "",
+                "perVillage": "",
+                "perTehsil": "",
                 "perPinCode": "",
                 "perStateID": "",
                 "perDistrictID": "",
@@ -711,6 +718,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                 "perPhoneCC": "",
                 "perPhoneAC": "",
                 "perPhoneNo": "",
+                
             })
     };
 
@@ -1417,6 +1425,24 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                 </Col>
                                 <Col span={6}>
                                     <Form.Item
+                                        name="curvillage"
+                                        label="Village"
+                                        rules={[{ required: false, message: 'Please Enter The Village' }]}
+                                    >
+                                        <Input maxLength={80} placeholder="Please Enter The Village" />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={6}>
+                                    <Form.Item
+                                        name="curtehsil"
+                                        label="Tehsil"
+                                        rules={[{ required: false, message: 'Please Enter The Tehsil' }]}
+                                    >
+                                        <Input maxLength={80} placeholder="Please Enter The Tehsil" />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={6}>
+                                    <Form.Item
                                         name="curPinCode"
                                         label="PinCode"
                                         rules={[{ required: false, message: 'Please Enter The PinCode' },
@@ -1561,6 +1587,24 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         rules={[{ required: false, message: 'Please Enter The Address' }]}
                                     >
                                         <Input maxLength={80} placeholder="Please Enter The Address" />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={6}>
+                                    <Form.Item
+                                        name="curvillage"
+                                        label="Village"
+                                        rules={[{ required: false, message: 'Please Enter The Village' }]}
+                                    >
+                                        <Input maxLength={80} placeholder="Please Enter The Village" />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={6}>
+                                    <Form.Item
+                                        name="curtehsil"
+                                        label="Tehsil"
+                                        rules={[{ required: false, message: 'Please Enter The Tehsil' }]}
+                                    >
+                                        <Input maxLength={80} placeholder="Please Enter The Tehsil" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>

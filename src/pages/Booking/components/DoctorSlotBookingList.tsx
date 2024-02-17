@@ -29,23 +29,23 @@ const DoctorSlotBookingList = React.forwardRef((props) => {
 
     const columns: ColumnsType<any> = [
         {
-            title: 'Name',
+            title: 'Doctor',
             dataIndex: 'docUserName',
             key: 'docUserName',
             render: (text) => <a>{text}</a>,
         },
         {
-            title: 'noOfSlotPerHrs',
+            title: 'No. of Slots',
             dataIndex: 'noOfSlotPerHrs',
             key: 'noOfSlotPerHrs',
         },
         {
-            title: 'SlotFromDate',
+            title: 'From date',
             dataIndex: 'displaySlotFromDate',
             key: 'displaySlotFromDate',
         },
         {
-            title: 'DisplaySlotToDate',
+            title: 'To Date',
             key: 'displaySlotToDate',
             dataIndex: 'displaySlotToDate',
 
