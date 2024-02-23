@@ -3,7 +3,7 @@ import {
     PageContainer,
     StepsForm,
 } from '@ant-design/pro-components';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Divider, Checkbox, Typography, Tabs, Upload, Table, Popconfirm } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Divider, Checkbox, Typography, Tabs, Upload, Table, Popconfirm, CollapseProps } from 'antd';
 
 import { useEffect, useRef, useState } from 'react';
 import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
@@ -517,8 +517,6 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
 
                 "curHouseNo": "0",
                 "curAddress": "",
-                "curVillage" :"",
-                "curtehsil" :"",
                 "curPinCode": "",
                 "curStateID": "-1",
                 "curDistrictID": "-1",
@@ -690,8 +688,6 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                 {
                     "perHouseNo": addressFields.curHouseNo,
                     "perAddress": addressFields.curAddress,
-                    "perVillage": addressFields.curVillage,
-                    "perTehsil": addressFields.curTehsil,
                     "perPinCode": addressFields.curPinCode,
                     "perStateID": addressFields.curStateID,
                     "perDistrictID": addressFields.curDistrictID,
@@ -701,14 +697,11 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                     "perPhoneCC": addressFields.curPhoneCC,
                     "perPhoneAC": addressFields.curPhoneAC,
                     "perPhoneNo": addressFields.curPhoneNo,
-                    
                 });
         else
             form.setFieldsValue({
                 "perHouseNo": "",
                 "perAddress": "",
-                "perVillage": "",
-                "perTehsil": "",
                 "perPinCode": "",
                 "perStateID": "",
                 "perDistrictID": "",
@@ -718,7 +711,6 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                 "perPhoneCC": "",
                 "perPhoneAC": "",
                 "perPhoneNo": "",
-                
             })
     };
 
@@ -1155,6 +1147,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
     }
 
     const addPatientRegForm = () => {
+        
         return (
             <PageContainer
                 style={{ width: '100%' }}
@@ -1246,7 +1239,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         <Input placeholder="Please enter Mother Name" />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
+                                {/* <Col span={6}>
                                     <Form.Item
                                         name="fNameML"
                                         label="First Name In Other Language"
@@ -1291,7 +1284,8 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     >
                                         <Input placeholder="Please enter Mother Name" />
                                     </Form.Item>
-                                </Col>
+                                </Col> */}
+                                
                                 <Col span={6}>
                                     <Form.Item
                                         name="eMail"
@@ -1987,7 +1981,6 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                             name="isVIP"
                             valuePropName="checked"
                             label=""
-                            rules={[{ required: false, message: 'Please Enter The HouseNo' }]}
                         >
                             <Checkbox>isVIP</Checkbox>
 
