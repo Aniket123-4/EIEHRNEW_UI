@@ -251,7 +251,7 @@ const UserProfile = () => {
             width: '10%',
         },
         {
-            title: 'Department Name',
+            title: 'Specialization',
             dataIndex: 'sectionName',
             key: 'sectionName',
             width: '25%',

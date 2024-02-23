@@ -30,7 +30,7 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID, onSaveSuccess, a
 
         },
         {
-            title: 'Breif Case Summary',
+            title: 'Brief Case Summary',
             key: 'breifCaseSummary',
             dataIndex: 'breifCaseSummary',
 
@@ -200,7 +200,7 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID, onSaveSuccess, a
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item name="BreifCaseSummary" label="Breif Case Summary" rules={[{ required: false }]}>
+                        <Form.Item name="BreifCaseSummary" label="Brief Case Summary" rules={[{ required: false }]}>
                             <Input.TextArea placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
@@ -215,7 +215,7 @@ const DischargeSummary = ({ patientDetails = {}, patientCaseID, onSaveSuccess, a
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item name="FinalDaigNosis" label="Final Diagnnposis" rules={[{ required: false }]}>
+                        <Form.Item name="FinalDaigNosis" label="Final Diagnosis" rules={[{ required: false }]}>
                             <Input placeholder="Please Enter" />
                         </Form.Item>
                     </Col>

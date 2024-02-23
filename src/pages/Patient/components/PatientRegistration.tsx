@@ -3,7 +3,7 @@ import {
     PageContainer,
     StepsForm,
 } from '@ant-design/pro-components';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Divider, Checkbox, Typography, Tabs, Upload, Table, Popconfirm } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Divider, Checkbox, Typography, Tabs, Upload, Table, Popconfirm, CollapseProps } from 'antd';
 
 import { useEffect, useRef, useState } from 'react';
 import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
@@ -1147,6 +1147,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
     }
 
     const addPatientRegForm = () => {
+        
         return (
             <PageContainer
                 style={{ width: '100%' }}
@@ -1238,7 +1239,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         <Input placeholder="Please enter Mother Name" />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
+                                {/* <Col span={6}>
                                     <Form.Item
                                         name="fNameML"
                                         label="First Name In Other Language"
@@ -1283,7 +1284,8 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     >
                                         <Input placeholder="Please enter Mother Name" />
                                     </Form.Item>
-                                </Col>
+                                </Col> */}
+                                
                                 <Col span={6}>
                                     <Form.Item
                                         name="eMail"
@@ -1413,6 +1415,24 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         rules={[{ required: false, message: 'Please Enter The Address' }]}
                                     >
                                         <Input maxLength={80} placeholder="Please Enter The Address" />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={6}>
+                                    <Form.Item
+                                        name="curvillage"
+                                        label="Village"
+                                        rules={[{ required: false, message: 'Please Enter The Village' }]}
+                                    >
+                                        <Input maxLength={80} placeholder="Please Enter The Village" />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={6}>
+                                    <Form.Item
+                                        name="curtehsil"
+                                        label="Tehsil"
+                                        rules={[{ required: false, message: 'Please Enter The Tehsil' }]}
+                                    >
+                                        <Input maxLength={80} placeholder="Please Enter The Tehsil" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1561,6 +1581,24 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         rules={[{ required: false, message: 'Please Enter The Address' }]}
                                     >
                                         <Input maxLength={80} placeholder="Please Enter The Address" />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={6}>
+                                    <Form.Item
+                                        name="curvillage"
+                                        label="Village"
+                                        rules={[{ required: false, message: 'Please Enter The Village' }]}
+                                    >
+                                        <Input maxLength={80} placeholder="Please Enter The Village" />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={6}>
+                                    <Form.Item
+                                        name="curtehsil"
+                                        label="Tehsil"
+                                        rules={[{ required: false, message: 'Please Enter The Tehsil' }]}
+                                    >
+                                        <Input maxLength={80} placeholder="Please Enter The Tehsil" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1943,7 +1981,6 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                             name="isVIP"
                             valuePropName="checked"
                             label=""
-                            rules={[{ required: false, message: 'Please Enter The HouseNo' }]}
                         >
                             <Checkbox>isVIP</Checkbox>
 

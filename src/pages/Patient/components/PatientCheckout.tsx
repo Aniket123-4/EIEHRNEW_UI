@@ -76,7 +76,7 @@ const PatientCheckOut = React.forwardRef((props) => {
             key: 'patientCaseNo',
         },
         {
-            title: 'PreEmp Type',
+            title: 'Case Type',
             dataIndex: 'vPreEmpTypeName',
             key: 'vPreEmpTypeName',
         },

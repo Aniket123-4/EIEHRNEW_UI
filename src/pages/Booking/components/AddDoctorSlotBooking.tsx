@@ -35,6 +35,11 @@ const AddDoctorSlotBooking = () => {
             timeRange: "",
             week: [
                 {
+                    id: "0",
+                    name: "All",
+                    selected: false
+                },
+                {
                     id: "1",
                     name: "Sun",
                     selected: false
@@ -77,6 +82,11 @@ const AddDoctorSlotBooking = () => {
             timeRange: "",
             week: [
                 {
+                    id: "0",
+                    name: "All",
+                    selected: false
+                },
+                {
                     id: "1",
                     name: "Sun",
                     selected: false
@@ -118,6 +128,7 @@ const AddDoctorSlotBooking = () => {
             name: "Slot 3",
             timeRange: "",
             week: [
+                
                 {
                     id: "1",
                     name: "Sun",
@@ -361,13 +372,13 @@ const AddDoctorSlotBooking = () => {
                             <Col className="gutter-row" span={6}>
                                 <Form.Item
                                     name="sectionId"
-                                    label="Section"
+                                    label="Specialization"
                                     rules={[{ required: true, message: 'Please select' }]}
                                 >
                                     <Select
                                         showSearch
                                         filterOption={filterOption}
-                                        placeholder="Section"
+                                        placeholder="Specialization"
                                         optionFilterProp="children"
                                         options={sections}
                                         size={'large'}
