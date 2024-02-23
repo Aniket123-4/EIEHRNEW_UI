@@ -32,6 +32,16 @@ export async function requestGetPatientPharmaBill(body: any, options?: { [key: s
       ...(options || {}),
     });
   }
+export async function requestGetPatientPharmaBillReport(body: any, options?: { [key: string]: any }) {
+    return request<any>('Reports/GetPatientPharmaBill', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: body,
+      ...(options || {}),
+    });
+  }
 export async function requestGetItemBalanceWithBaarCode(body: any, options?: { [key: string]: any }) {
     return request<any>('InventoryForm/GetItemBalanceWithBaarCode_1', {
       method: 'POST',

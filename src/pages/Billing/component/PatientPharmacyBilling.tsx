@@ -1,154 +1,29 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { PageContainer, ProDescriptions } from '@ant-design/pro-components';
-import { Card, theme, Image, Divider, Space, Avatar, Typography, Row, Col, Table, Button, Tabs, Select, Modal, message, Input, Popconfirm, Tag, Dropdown, MenuProps } from 'antd';
+import { Card, theme, Image, Divider, Space, Avatar, Typography, Row, Col, Table, Button, Tabs, Select, Modal, message, Input, Popconfirm, Tag, Dropdown, MenuProps, InputNumber } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { DownOutlined, MinusOutlined, PlayCircleFilled, PlusOutlined } from '@ant-design/icons';
+import { DownOutlined, MinusOutlined, PlayCircleFilled, PlusOutlined, PrinterOutlined } from '@ant-design/icons';
 import { TabsProps } from 'antd/lib';
 import moment from 'moment';
 import { dateFormat } from '@/utils/constant';
 import PatientDetailsCommon from '@/pages/Patient/components/PatientDetailsCommon';
 import { requestAddPatientBill, requestGetPatientBillNo } from '@/pages/Patient/services/api';
-import { requestAddPatientPharmaBill, requestGetItemBalanceWithBaarCode, requestGetPatientPharmaBill } from '../services/api';
+import { requestAddPatientPharmaBill, requestGetItemBalanceWithBaarCode, requestGetPatientPharmaBill, requestGetPatientPharmaBillReport } from '../services/api';
+import PrintReport from '@/components/Print/PrintReport';
 const { Title, Text, Link } = Typography;
 
-const TabGenerateBill = ({ patientBillData, patientData }: any) => {
+const TabGenerateBill = ({ patientBillData, isLoading, editableColumns, disableBtn, ChangePrice }: any) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [generateBillData, setGenerateBillData] = useState();
     const [remark, setRemark] = useState("");
     const [patientBillDataList, setPatientBillDataList] = useState<any>(patientBillData);
-    const [rateDropDown, setRateDropDown] = useState<any>([]);
-    const [disableBtn, setDisableBtn] = useState<any>(true);
+    // const [disableBtn, setDisableBtn] = useState<any>(true);
+
 
     useEffect(() => {
         const data = { ...patientBillData };
         setPatientBillDataList(data)
-        // setRate(data)
-    }, [patientBillDataList])
-    const rateColumns = [
-        {
-            title: 'Voucher No',
-            dataIndex: 'voucherNo',
-            key: 'voucherNo',
-            render: (_, record) => <Button onClick={() => ChangePrice(record, "status")}>{record?.voucherNo}</Button>
-        },
-        {
-            title: 'Unit',
-            dataIndex: 'unitName',
-            key: 'unitName',
-        },
-        {
-            title: 'PricePerUnit',
-            dataIndex: 'salePricePerUnit',
-            key: 'salePricePerUnit',
-        },
-        {
-            title: 'IsBilled',
-            dataIndex: 'isBilled',
-            key: 'isBilled',
-            render: (text: any) => <Typography>{text == true ? "YES" : "NO"}</Typography>
-        },
-        {
-            title: 'Expiry Date',
-            dataIndex: 'eslDate',
-            key: 'eslDate',
-            render: (text: any) => <Typography>{moment(text).format('DD MMM YYYY')}</Typography>
-        },
-        {
-            title: 'Balance Qty',
-            dataIndex: 'balanceQuantity',
-            key: 'balanceQuantity',
-        },
-        {
-            title: 'BalQtySum',
-            dataIndex: 'balQuantitySum',
-            key: 'balQuantitySum',
-        }
-    ];
-
-    const ChangePrice = async (data: any, status: any) => {
-        if (status != "status") {
-            var qty: any = parseInt(data?.qty);
-            const qtyIndex = patientBillDataList.result1.findIndex((obj => obj.invParameterID == data.invParameterID));
-            if (status == 'incQty') {
-                patientBillDataList.result1[qtyIndex].qty = ++qty
-                const netAmt = data.salePricePerUnit * patientBillDataList.result1[qtyIndex].qty * parseInt(patientBillDataList.result1[qtyIndex].compRebate, 10) / 100;
-                patientBillDataList.result1[qtyIndex].salePricePerUnit = data.salePricePerUnit
-                patientBillDataList.result1[qtyIndex].expDate = data.eslDate
-                patientBillDataList.result1[qtyIndex].netAmount = netAmt
-                patientBillDataList.result1[qtyIndex].finalGrossAmount = netAmt
-                patientBillDataList.result1[qtyIndex].grossAmount = data.salePricePerUnit * patientBillDataList.result1[qtyIndex].qty
-
-                patientBillDataList.result2[0].totNetAmount = patientBillDataList?.result1?.reduce((n: any, { netAmount }: any) => parseInt(n, 10) + parseInt(netAmount, 10), 0);
-                patientBillDataList.result2[0].totFinalGrossAmount = patientBillDataList?.result1?.reduce((n: any, { finalGrossAmount }: any) => parseInt(n, 10) + parseInt(finalGrossAmount, 10), 0);
-                patientBillDataList.result2[0].totGrossAmt = patientBillDataList?.result1?.reduce((n: any, { grossAmount }: any) => parseInt(n, 10) + parseInt(grossAmount, 10), 0);
-                patientBillDataList.result2[0].actualPayAmt = patientBillDataList?.result1?.reduce((n: any, { netAmount }: any) => parseInt(n, 10) + parseInt(netAmount, 10), 0);
-                setPatientBillDataList(patientBillDataList)
-            }
-            if (status == 'decQty') {
-                patientBillDataList.result1[qtyIndex].qty = --qty
-            }
-        }
-        else {
-            const objIndex = patientBillDataList.result1.findIndex((obj => obj?.invParameterID == data?.itemID));
-            const netAmt = data.salePricePerUnit * patientBillDataList.result1[objIndex].qty * parseInt(patientBillDataList.result1[objIndex].compRebate, 10) / 100;
-
-            patientBillDataList.result1[objIndex].salePricePerUnit = data.salePricePerUnit
-            patientBillDataList.result1[objIndex].expDate = data.eslDate
-            patientBillDataList.result1[objIndex].netAmount = netAmt
-            patientBillDataList.result1[objIndex].finalGrossAmount = netAmt
-            patientBillDataList.result1[objIndex].grossAmount = data.salePricePerUnit * patientBillDataList.result1[objIndex].qty
-
-
-            patientBillDataList.result1?.map((item: any, index: number) => {
-                if (patientBillDataList.result1[index].netAmount != 0)
-                    setDisableBtn(false)
-            })
-            patientBillDataList.result2[0].totNetAmount = patientBillDataList?.result1?.reduce((n: any, { netAmount }: any) => parseInt(n, 10) + parseInt(netAmount, 10), 0);
-            patientBillDataList.result2[0].totFinalGrossAmount = patientBillDataList?.result1?.reduce((n: any, { finalGrossAmount }: any) => parseInt(n, 10) + parseInt(finalGrossAmount, 10), 0);
-            patientBillDataList.result2[0].totGrossAmt = patientBillDataList?.result1?.reduce((n: any, { grossAmount }: any) => parseInt(n, 10) + parseInt(grossAmount, 10), 0);
-            patientBillDataList.result2[0].actualPayAmt = patientBillDataList?.result1?.reduce((n: any, { netAmount }: any) => parseInt(n, 10) + parseInt(netAmount, 10), 0);
-            setPatientBillDataList(patientBillDataList)
-            console.log(data, patientBillDataList.result2);
-        }
-    }
-    const setRate = async (data: any, open: any) => {
-        if (open) {
-            const params1 = {
-                "baarCode": "",
-                "itemID": data?.invParameterID,
-                "itemCatID": -1,
-                "sectionID": -1,
-                "fundID": -1,
-                "productID": -1,
-                "unitID": -1,
-                "curDate": moment(),
-                "userID": -1,
-                "formID": -1,
-                "type": 2
-            }
-            const res = await requestGetItemBalanceWithBaarCode(params1);
-            if (res) {
-                const dataMaskDropDown = res?.result?.map((item: any, index: number) => {
-                    return {
-                        key: index,
-                        value: item.itemInID,
-                        label: (
-                            <>
-                                {res?.result.length == index + 1 &&
-                                    <Table
-                                        columns={rateColumns}
-                                        size="small"
-                                        dataSource={res?.result}
-                                        pagination={false}
-                                    />}
-                            </>
-                        )
-                    }
-                })
-                setRateDropDown(dataMaskDropDown)
-            }
-        }
-    }
+    }, [patientBillData, isLoading])
     const getItemWithBarCode = async (itemId: any) => {
         const params1 = {
             "baarCode": "",
@@ -165,72 +40,7 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
         }
         const res1 = await requestGetItemBalanceWithBaarCode(params1);
     }
-    const columns: ColumnsType<any> = [
-        {
-            title: 'Inv Parameter',
-            key: 'invParameterName',
-            dataIndex: 'invParameterName',
-            render: (_, record) => <Dropdown onOpenChange={(open) => setRate(record, open)} menu={{ items: rateDropDown }}>
-                <a onClick={(e) => e.preventDefault()}>
-                    <Space>
-                        {record?.invParameterName}
-                        <DownOutlined />
-                    </Space>
-                </a>
-            </Dropdown>
-        },
-        {
-            title: 'Dose',
-            key: 'dose',
-            dataIndex: 'dose',
-        },
-        {
-            title: 'PricePerUnit',
-            key: 'salePricePerUnit',
-            dataIndex: 'salePricePerUnit',
-        },
-        {
-            title: 'Qty',
-            key: 'qty',
-            dataIndex: 'qty',
-            render: (_, record) => <Space.Compact style={{ justifyContent: 'space-between', width: 150 }}>
-                <Button onClick={() => ChangePrice(record, 'decQty')} icon={<MinusOutlined />} ></Button>
 
-                <Input min={1} style={{ textAlign: 'center' }} type='number'
-                    placeholder="Quantity" value={record.qty} />
-                <Button onClick={() => ChangePrice(record, 'incQty')} icon={<PlusOutlined />}></Button>
-            </Space.Compact>
-        },
-        {
-            title: 'Gross Amount',
-            key: 'grossAmount',
-            dataIndex: 'grossAmount',
-
-        },
-        {
-            title: 'Rebate',
-            key: 'compRebate',
-            dataIndex: 'compRebate',
-        },
-        {
-            title: 'Final Gross Amount',
-            key: 'finalGrossAmount',
-            dataIndex: 'finalGrossAmount',
-        },
-        {
-            title: 'Net Amount',
-            key: 'netAmount',
-            dataIndex: 'netAmount',
-        },
-        {
-            title: 'Action',
-            key: 'action',
-            render: (_, record) => (
-                <Button danger size={'small'} onClick={() => { deleteBill(record) }} >Delete</Button>
-            ),
-        },
-
-    ];
 
     const columns1 = [
         {
@@ -330,8 +140,8 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
         },
     ];
 
-    const generateBill = async () => {
-        console.log(patientBillDataList.result1)
+    const generateBill = async (value: any = { type: 1, patientBillID: -1 }) => {
+        console.log(patientBillDataList.result1, "patientBillDataList,", value)
         const typPatientBill = [];
         for (let i = 0; i < patientBillDataList?.result1.length; i++) {
             let data = {
@@ -383,7 +193,7 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
             "typPatientBill": typPatientBill,
             "totDiscountAmt": 0,
             "billDate": moment(new Date()).format(dateFormat),
-            "patientBillID": -1,
+            "patientBillID": value?.patientBillID,
             "paidAmt": 0,
             "payDate": "",
             "payTypeID": -1,
@@ -392,14 +202,19 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
             "isCancel": false,
             "userID": -1,
             "formID": -1,
-            "type": 1
+            "type": value?.type
         }
         if (disableBtn === false) {
             const res = await requestAddPatientPharmaBill(staticParams);
             if (res.isSuccess) {
                 setRemark("")
-                setGenerateBillData(res)
-                showModal();
+                if (value?.patientBillID == -1) {
+                    setGenerateBillData(res)
+                    showModal();
+                }
+                else {
+                    message.success(res.msg)
+                }
             } else {
                 message.error(res.msg);
             }
@@ -437,7 +252,7 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
     return (
         <>
             <Table
-                columns={columns}
+                columns={editableColumns}
                 size="small"
                 dataSource={patientBillDataList?.result1}
                 pagination={false}
@@ -476,7 +291,7 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
                                             }
                                         }}
                                     >
-                                        {'Pay Bill'}
+                                        {'Save Bill'}
                                     </Button>
 
                                 </Col>
@@ -498,9 +313,10 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
                         type={'primary'}
                         onClick={() => {
                             handleCancel()
+                            generateBill({ type: 2, patientBillID: generateBillData?.result[0]?.billID })
                         }}
                     >
-                        {'Ok'}
+                        {'Pay'}
                     </Button>
                 </>}
             >
@@ -511,25 +327,28 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
     )
 }
 
-const TabBillReceipt = ({ patientBillData, patientData }: any) => {
+const TabBillReceipt = ({ patientBillData, patientData, tabChange }: any) => {
     const [patientBillNoData, setPatientBillNoData] = useState<any>([]);
     const [patientBill, setPatientBill] = useState<any>();
     const [loading, setLoading] = useState<any>(false);
+    const [base64Data, setBase64Data] = useState<any>("");
+    const [showPdf, setShowPdf] = useState<any>(false);
 
     const columns: ColumnsType<any> = [
         {
-            title: 'Inv Parameter',
+            title: 'Medicine',
             key: 'invParameterName',
             dataIndex: 'invParameterName',
 
-        }, {
-            title: 'Pre Emp Type',
-            key: 'vPreEmpType',
-            dataIndex: 'vPreEmpType',
-
         },
+        // {
+        //     title: 'Case Type',
+        //     key: 'vPreEmpType',
+        //     dataIndex: 'vPreEmpType',
+
+        // },
         {
-            title: 'Rebate',
+            title: 'Payable Amt',
             key: 'compRebate',
             dataIndex: 'compRebate',
         },
@@ -554,18 +373,18 @@ const TabBillReceipt = ({ patientBillData, patientData }: any) => {
 
     useEffect(() => {
         getPatientBillNo();
-    }, [])
+    }, [tabChange])
 
     const getPatientBillNo = async () => {
-        console.log(patientData)
+        console.log(patientBillData)
         const staticParams = {
             "patientCaseID": patientData?.patientCaseID,
             "patientCaseNo": "",
-            "admNo": patientData?.admNo,
+            "admNo": patientBillData?.result3[0]?.admNo,
             "isCancel": false,
             "userID": -1,
             "formID": -1,
-            "type": 2
+            "type": 1
         }
 
         const res = await requestGetPatientBillNo(staticParams);
@@ -582,7 +401,7 @@ const TabBillReceipt = ({ patientBillData, patientData }: any) => {
         const staticParams = {
             "patientCaseID": patientData?.patientCaseID,
             "patientCaseNo": "",
-            "admNo": patientData?.admNo,
+            "admNo": patientBillData?.result3[0]?.admNo,
             "patientBillID": patientBillID,
             "userID": -1,
             "formID": -1,
@@ -679,6 +498,37 @@ const TabBillReceipt = ({ patientBillData, patientData }: any) => {
         console.log(e);
 
     };
+    const handleCancel = () => {
+        setShowPdf(false);
+    };
+    const printReport = async () => {
+        try {
+            setLoading(true);
+            const staticParams = {
+                "patientCaseID": patientData?.patientCaseID,
+                "patientCaseNo": "",
+                "admNo": patientBillData?.result3[0]?.admNo,
+                "patientBillID": patientBill?.result1[0]?.patientBillID,
+
+                "userID": -1,
+                "formID": -1,
+                "type": 1,
+                "show": false,
+                "exportOption": ".pdf"
+            }
+            const res = await requestGetPatientPharmaBillReport(staticParams);
+            setBase64Data(res?.result)
+            setShowPdf(true)
+            if (res.isSuccess === true) {
+                setLoading(false)
+            }
+            setLoading(false)
+        } catch (error) {
+            console.log({ error });
+            message.error('please try again');
+            setLoading(false)
+        }
+    }
 
 
     return (
@@ -687,13 +537,14 @@ const TabBillReceipt = ({ patientBillData, patientData }: any) => {
                 <Col span={8}>
                     <label>{'Bill No'}</label><br />
                     <Select
-                        style={{ width: '80%' }}
+                        style={{ width: '95%' }}
                         onChange={handleChangeFilter}
                         placeholder={"Select"}
                         options={patientBillNoData}
                     />
                 </Col>
-                <Col span={8}>
+                <Col span={2}>
+                <label>{''}</label><br />
                     {patientBill?.result1?.length > 0 ?
                         <Popconfirm
                             title="Cancel Bill"
@@ -704,7 +555,7 @@ const TabBillReceipt = ({ patientBillData, patientData }: any) => {
                             cancelText="No"
                         >
                             <Button
-                                style={{ marginTop: 20 }}
+                                // style={{ marginTop: 22 }}
                                 size={'middle'} type='primary'
                                 danger
                             >
@@ -712,8 +563,13 @@ const TabBillReceipt = ({ patientBillData, patientData }: any) => {
                             </Button>
                         </Popconfirm> : null}
 
-
+                    {base64Data&&<PrintReport showModal={showPdf} base64Data={base64Data} onCancel={handleCancel} onOk={handleCancel} />}
+                </Col >
+                <Col span={4}>
+                    <label>{''}</label><br />
+                    <Button onClick={printReport} style={{ marginLeft: 5, }} icon={<PrinterOutlined />}></Button>
                 </Col>
+                <Col span={8}></Col>
             </Row>
 
             <Table
@@ -734,24 +590,162 @@ const PatientPharmacyBilling: React.FC = () => {
     const [patientData, setPatientData] = useState<any>();
     const [patientBillData, setPatientBillData] = useState<any>();
     const [rateList, setRateList] = useState<any>([]);
+    const [tabChange, setTabChange] = useState<any>(true);
+    const [rateDropDown, setRateDropDown] = useState<any>([]);
+    const [disableBtn, setDisableBtn] = useState<any>(true);
+    const [loading, setLoading] = useState<any>(0);
+
+    useEffect(() => {
+        getPatientBill();
+    }, [patientData])
+
+    useEffect(() => {
+        console.log(patientBillData)
+    }, [patientBillData])
+
+    const updatePrice = (data: any) => {
+        setPatientBillData(data)
+        console.log(patientBillData)
+    }
+    const columns: ColumnsType<any> = [
+        {
+            title: 'Inv Parameter',
+            key: 'invParameterName',
+            dataIndex: 'invParameterName',
+            render: (_, record) => <Dropdown onOpenChange={(open) => setRate(record, open)} menu={{ items: rateDropDown }}>
+                <a onClick={(e) => e.preventDefault()}>
+                    <Space>
+                        {record?.invParameterName}
+                        <DownOutlined />
+                    </Space>
+                </a>
+            </Dropdown>
+        },
+        {
+            title: 'Dose',
+            key: 'dose',
+            dataIndex: 'dose',
+        },
+        {
+            title: 'PricePerUnit',
+            key: 'salePricePerUnit',
+            dataIndex: 'salePricePerUnit',
+        },
+        {
+            title: 'Quantity',
+            key: 'qty',
+            dataIndex: 'qty',
+            render: (_, record) => <Space.Compact style={{ justifyContent: 'space-between', width: 120 }}>
+                <Button onClick={() => ChangePrice(record, 'decQty')} icon={<MinusOutlined />} ></Button>
+
+                <InputNumber disabled min={1} style={{ textAlign: 'center' }}
+                    placeholder="Quantity" value={record.qty} />
+                <Button onClick={() => ChangePrice(record, 'incQty')} icon={<PlusOutlined />}></Button>
+            </Space.Compact>
+        },
+        {
+            title: 'Gross Amount',
+            key: 'grossAmount',
+            dataIndex: 'grossAmount',
+
+        },
+        {
+            title: 'Payable Amt',
+            key: 'compRebate',
+            dataIndex: 'compRebate',
+        },
+        {
+            title: 'Final Gross Amount',
+            key: 'finalGrossAmount',
+            dataIndex: 'finalGrossAmount',
+        },
+        {
+            title: 'Net Amount',
+            key: 'netAmount',
+            dataIndex: 'netAmount',
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (_, record) => (
+                <Button danger size={'small'} onClick={() => { deleteBill(record) }} >Delete</Button>
+            ),
+        },
+
+    ];
+
+
+    const ChangePrice = async (data: any, status: any) => {
+        setLoading(loading + 1)
+        if (status != "status") {
+            var qty: any = parseInt(data?.qty);
+            const qtyIndex = patientBillData.result1.findIndex((obj => obj.invParameterID == data.invParameterID));
+            if (status == 'incQty') {
+                patientBillData.result1[qtyIndex].qty = ++qty
+            }
+            if (status == 'decQty') {
+                patientBillData.result1[qtyIndex].qty = --qty
+            }
+            const netAmt = data.salePricePerUnit * patientBillData.result1[qtyIndex].qty * parseInt(patientBillData.result1[qtyIndex].compRebate, 10) / 100;
+            patientBillData.result1[qtyIndex].salePricePerUnit = data.salePricePerUnit
+            patientBillData.result1[qtyIndex].expDate = data.eslDate
+            patientBillData.result1[qtyIndex].netAmount = netAmt
+            patientBillData.result1[qtyIndex].finalGrossAmount = netAmt
+            patientBillData.result1[qtyIndex].grossAmount = data.salePricePerUnit * patientBillData.result1[qtyIndex].qty
+
+            patientBillData.result2[0].totNetAmount = patientBillData?.result1?.reduce((n: any, { netAmount }: any) => parseInt(n, 10) + parseInt(netAmount, 10), 0);
+            patientBillData.result2[0].totFinalGrossAmount = patientBillData?.result1?.reduce((n: any, { finalGrossAmount }: any) => parseInt(n, 10) + parseInt(finalGrossAmount, 10), 0);
+            patientBillData.result2[0].totGrossAmt = patientBillData?.result1?.reduce((n: any, { grossAmount }: any) => parseInt(n, 10) + parseInt(grossAmount, 10), 0);
+            patientBillData.result2[0].actualPayAmt = patientBillData?.result1?.reduce((n: any, { netAmount }: any) => parseInt(n, 10) + parseInt(netAmount, 10), 0);
+            await setPatientBillData(patientBillData)
+        }
+        else {
+            const objIndex = patientBillData.result1.findIndex((obj => obj?.invParameterID == data?.itemID));
+            const netAmt = data.salePricePerUnit * patientBillData.result1[objIndex].qty * parseInt(patientBillData.result1[objIndex].compRebate, 10) / 100;
+
+            patientBillData.result1[objIndex].salePricePerUnit = data.salePricePerUnit
+            patientBillData.result1[objIndex].expDate = data.eslDate
+            patientBillData.result1[objIndex].netAmount = netAmt
+            patientBillData.result1[objIndex].finalGrossAmount = netAmt
+            patientBillData.result1[objIndex].finalSalePricePerUnit = data.salePricePerUnit
+            patientBillData.result1[objIndex].grossAmount = data.salePricePerUnit * patientBillData.result1[objIndex].qty
+
+
+            patientBillData.result1?.map((item: any, index: number) => {
+                if (patientBillData.result1[index].netAmount != 0)
+                    setDisableBtn(false)
+            })
+            patientBillData.result2[0].totNetAmount = patientBillData?.result1?.reduce((n: any, { netAmount }: any) => parseInt(n, 10) + parseInt(netAmount, 10), 0);
+            patientBillData.result2[0].totFinalGrossAmount = patientBillData?.result1?.reduce((n: any, { finalGrossAmount }: any) => parseInt(n, 10) + parseInt(finalGrossAmount, 10), 0);
+            patientBillData.result2[0].totGrossAmt = patientBillData?.result1?.reduce((n: any, { grossAmount }: any) => parseInt(n, 10) + parseInt(grossAmount, 10), 0);
+            patientBillData.result2[0].actualPayAmt = patientBillData?.result1?.reduce((n: any, { netAmount }: any) => parseInt(n, 10) + parseInt(netAmount, 10), 0);
+            await setPatientBillData(patientBillData)
+            updatePrice(patientBillData)
+        }
+    }
 
     const tabItems: TabsProps['items'] = [
         {
             key: '1',
             label: 'Generate Bill',
-            children: <TabGenerateBill patientData={patientData} patientBillData={patientBillData} />,
+            children: <TabGenerateBill
+                disableBtn={disableBtn}
+                // setCalcData={(v:any,t:any)=>setRate(v,t)} 
+                editableColumns={columns}
+                patientData={patientData}
+                patientBillData={patientBillData}
+                ChangePrice={ChangePrice}
+                isLoading={loading}
+            />,
         },
         {
             key: '2',
             label: 'Bill Receipt',
-            children: <TabBillReceipt patientData={patientData} patientBillData={patientBillData} />,
+            children: <TabBillReceipt tabChange={tabChange} patientData={patientData} patientBillData={patientBillData} />,
         }
     ];
 
 
-    useEffect(() => {
-        getPatientBill();
-    }, [patientData])
 
     const getPatientBill = async () => {
         const staticParams = {
@@ -767,9 +761,91 @@ const PatientPharmacyBilling: React.FC = () => {
         setPatientBillData(res)
     }
 
+    const rateColumns = [
+        {
+            title: 'Voucher No',
+            dataIndex: 'voucherNo',
+            key: 'voucherNo',
+            render: (_, record) => <Button onClick={() => ChangePrice(record, "status")}>{record?.voucherNo}</Button>
+        },
+        {
+            title: 'Unit',
+            dataIndex: 'unitName',
+            key: 'unitName',
+        },
+        {
+            title: 'PricePerUnit',
+            dataIndex: 'salePricePerUnit',
+            key: 'salePricePerUnit',
+        },
+        {
+            title: 'IsBilled',
+            dataIndex: 'isBilled',
+            key: 'isBilled',
+            render: (text: any) => <Typography>{text == true ? "YES" : "NO"}</Typography>
+        },
+        {
+            title: 'Expiry Date',
+            dataIndex: 'eslDate',
+            key: 'eslDate',
+            render: (text: any) => <Typography>{moment(text).format('DD MMM YYYY')}</Typography>
+        },
+        {
+            title: 'Balance Qty',
+            dataIndex: 'balanceQuantity',
+            key: 'balanceQuantity',
+        },
+        {
+            title: 'BalQtySum',
+            dataIndex: 'balQuantitySum',
+            key: 'balQuantitySum',
+        }
+    ];
+
+
+    const setRate = async (data: any, open: any) => {
+        if (open) {
+            const params1 = {
+                "baarCode": "",
+                "itemID": data?.invParameterID,
+                "itemCatID": -1,
+                "sectionID": -1,
+                "fundID": -1,
+                "productID": -1,
+                "unitID": -1,
+                "curDate": moment(),
+                "userID": -1,
+                "formID": -1,
+                "type": 2
+            }
+            const res = await requestGetItemBalanceWithBaarCode(params1);
+            if (res) {
+                const dataMaskDropDown = res?.result?.map((item: any, index: number) => {
+                    return {
+                        key: index,
+                        value: item.itemInID,
+                        label: (
+                            <>
+                                {res?.result.length == index + 1 &&
+                                    <Table
+                                        columns={rateColumns}
+                                        size="small"
+                                        dataSource={res?.result}
+                                        pagination={false}
+                                    />}
+                            </>
+                        )
+                    }
+                })
+                setRateDropDown(dataMaskDropDown)
+            }
+        }
+    }
+
     const onChangePatientData = (data: any) => {
-        console.log("onChangePatientData", data)
+        console.log("onChangePatientData", patientBillData)
         setPatientData(data)
+        setTabChange(tabChange + 1)
     }
 
     return (
@@ -791,7 +867,7 @@ const PatientPharmacyBilling: React.FC = () => {
                 />
                 <Card title="Billing Details"
                 >
-                    <Tabs defaultActiveKey="1" items={tabItems} />
+                    <Tabs onChange={(v) => setTabChange(v)} defaultActiveKey="1" items={tabItems} />
 
                 </Card>
             </Space>

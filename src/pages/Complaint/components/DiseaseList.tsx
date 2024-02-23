@@ -337,11 +337,6 @@ const DiseaseList: React.FC = ({editRecord,refresh }:any) => {
             editable: true,
             width: '15%',
             render: (text: any) => 
-            // <Typography align="center" style={{
-            //     width: '80%',
-            //     backgroundColor: text == true ? '#00FF00' : '#EBEBE4', borderRadius: 10,
-            // }}>
-            //     {text == true ? 'Active' : 'InActive'}</Typography>,
             <Tag color={text == true ? 'success' : 'error'}>{text == true ? 'Active' : 'InActive'}</Tag>,
 
         },

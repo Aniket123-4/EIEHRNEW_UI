@@ -217,6 +217,7 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
             setPatientData({})
             message.error("NO PATIENT FOUND");
             form.resetFields();
+            props?.onChange([])
         }
     };
 

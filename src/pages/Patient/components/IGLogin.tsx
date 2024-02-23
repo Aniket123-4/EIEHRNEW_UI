@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { CloseOutlined, EditOutlined, FilterOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Modal, Descriptions, Typography } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Modal, Descriptions, Typography, Checkbox } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
 import { requestGetCheckOutPatient, requestGetPatientCheckOutInfo, requestGetPatientSearch, requestUpdateBulkCaseCheckOut, requestUpdateCaseCheckIn, requestUpdateCaseCheckOut } from '../services/api';
 
@@ -37,6 +37,7 @@ const IGLogin = React.forwardRef((props) => {
     const [checkedPatient, setCheckedPatient] = useState([]);
     const [checkoutInfo, setCheckoutInfo] = useState([]);
     const [mainType, setMainType] = useState(2);
+    const [stepPos, setStepPos] = useState(0);
 
 
 
@@ -45,98 +46,11 @@ const IGLogin = React.forwardRef((props) => {
         color: token.colorTextTertiary,
         borderRadius: token.borderRadiusLG,
     };
+    const contentStyle1: React.CSSProperties = {
+        justifyContent: 'center', textAlign: 'center', alignItems: 'center', marginTop: 20
+    };
 
 
-    const columns: ColumnsType<DataType> = [
-        {
-            title: 'Patient No',
-            dataIndex: 'patientNo',
-            key: 'patientNo',
-            render: (text) => <a>{text}</a>,
-        },
-        {
-            title: 'Patient Name',
-            dataIndex: 'patName',
-            key: 'patName',
-        },
-        {
-            title: 'Doctor Name',
-            dataIndex: 'consultantDocName',
-            key: 'consultantDocName',
-        },
-        {
-            title: 'Patient FileNo',
-            dataIndex: 'patientFileNo',
-            key: 'patientFileNo',
-        },
-        {
-            title: 'Patient CaseNo',
-            dataIndex: 'patientCaseNo',
-            key: 'patientCaseNo',
-        },
-        {
-            title: 'PreEmp Type',
-            dataIndex: 'vPreEmpTypeName',
-            key: 'vPreEmpTypeName',
-        },
-        {
-            title: 'Status',
-            dataIndex: 'statusName',
-            key: 'statusName',
-            render: (text) => <Tag color={text === "CHECK-IN" ? "success" : "error"}>{text}</Tag>,
-        },
-
-        {
-            title: 'Action',
-            key: 'action',
-            render: (_, record) => (
-                <Space size="middle">
-                    <Button onClick={() => {
-                        record?.patientStatusID == 1 && getPatientCheckOutInfo(record)
-                        record?.patientStatusID == 3 && updatePatientStatusToCheckIn(record)
-                    }}
-                        size={'small'} type='primary' >
-                        {record?.patientStatusID == 1 ? "Checkout" : "CheckIn"}
-                    </Button>
-                </Space>
-            ),
-        },
-    ];
-    const checkoutColumns: ColumnsType<DataType> = [
-        {
-            title: 'SlNo',
-            dataIndex: 'slno',
-            key: 'slno',
-            //render: (text) => <a>{text}</a>,
-        },
-        {
-            title: 'Activity Name',
-            dataIndex: 'activityName',
-            key: 'activityName',
-            render: (text) => <a>{text}</a>,
-        },
-        {
-            title: 'Status',
-            dataIndex: 'activityStatus',
-            key: 'activityStatus',
-        },
-        {
-            title: 'IsOk',
-            dataIndex: 'isOk',
-            key: 'isOk',
-            render: (text: any) =>
-                <Tag color={text == true ? 'success' : 'error'}>{text == true ? 'Yes' : 'No'}</Tag>,
-        },
-        {
-            title: 'IsPresent',
-            dataIndex: 'isPresent',
-            key: 'isPresent',
-            render: (text: any) =>
-                <Tag color={text == true ? 'success' : 'error'}>{text == true ? 'Yes' : 'No'}</Tag>,
-
-        },
-
-    ];
 
     useEffect(() => {
         getList();
@@ -304,76 +218,174 @@ const IGLogin = React.forwardRef((props) => {
             description: '',
         },
     ];
+    const plainOptions = ['Admitted', 'Not Admitted', 'Under Home Treatment'];
 
     return (
         <PageContainer
             title=" "
             style={{}}>
-            <Row >
+            <Row gutter={5}>
                 <Col span={12}>
-                    <img height={300} width={500} src='https://d2aq6dqxahe4ka.cloudfront.net/themes/front/page/react/images/startfr3/web/webStep1.png'>
+                    <img height={'80%'} width={500} src='https://d2aq6dqxahe4ka.cloudfront.net/themes/front/page/react/images/startfr3/web/webStep1.png'>
                     </img>
-                    <Typography>
-                        Thousands Are Raising Funds
-                        Online On ImpactGuru
-                        You Can Too!
-                    </Typography>
                 </Col>
                 <Col span={12} >
                     <Card
                         title={""}
-                        style={{ boxShadow: '2px 2px 2px #4874dc',height: 500,}}
+                        style={{ boxShadow: '2px 2px 2px #4874dc', height: 500, }}
                     >
                         <>
-                            <Steps current={0} labelPlacement="vertical" items={items} />
-                            <Row>
-                                <Typography>
-                                    I am raising funds for :
-                                </Typography>
-                                <Select
-                                    style={{ width: 200 }}
-                                    defaultValue={"1"}
-                                    options={[{ value: "1", label: "Medical" }]}
-                                    placeholder="Select"
-                                />
-                            </Row>
-                            <Row>
-                                <Typography>
-                                    The raised funds will help :
-                                </Typography>
-                                <Select
-                                    style={{ width: 200 }}
-                                    defaultValue={"1"}
-                                    options={[{ value: "1", label: "Myself" },
-                                    { value: "2", label: "Spouse" },
-                                    { value: "3", label: "Sibling" },
-                                    { value: "4", label: "Child" },
-                                    { value: "5", label: "Family" }]}
-                                    placeholder="Select"
-                                />
-                            </Row>
-                            <Row>
-                                <Col span={4}>
-                                    <Select
-                                        defaultValue={"+91"}
-                                        options={[{ value: "+91", label: "+91" }]}
-                                        placeholder="Select"
-                                    /></Col>
-                                <Col span={20}>
-                                    <Input placeholder="Please Enter" />
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Button type='primary'
-                                    // onClick={updateCaseCheckout}
+                            <Steps current={stepPos} labelPlacement="vertical" items={items} />
+                            {stepPos == 0 && <Space size={[8, 16]} wrap direction='vertical'>
+                                <Form
+                                style={{paddingTop:25}}
+                                // form={linkMedForm}
+                                // onFinish={(value) => linkDisease(value, 2)}
+                                >
+                                    <Form.Item
+                                        name="raising for"
+                                        label="I am raising funds for :"
                                     >
-                                    Submit</Button>
-                            </Row>
+                                        <Select
+                                            style={{ width: 200 }}
+                                            defaultValue={"1"}
+                                            options={[{ value: "1", label: "Medical" }]}
+                                            placeholder="Select"
+                                        />
+
+                                    </Form.Item>
+                                    <Form.Item
+                                        // style={{ width: '48%' }}
+                                        name="raisingfundr"
+                                        label="The raised funds will help :"
+                                    >
+                                        <Select
+                                            style={{ width: 200 }}
+                                            defaultValue={"1"}
+                                            options={[{ value: "1", label: "Myself" },
+                                            { value: "2", label: "Spouse" },
+                                            { value: "3", label: "Sibling" },
+                                            { value: "4", label: "Child" },
+                                            { value: "5", label: "Family" }]}
+                                            placeholder="Select"
+                                        />
+                                    </Form.Item>
+
+
+                                    <Form.Item
+                                        name="curMobileNo"
+                                        label=""
+                                        rules={[
+                                            { required: false, type: 'string', message: 'Please Enter Mobile Number' },
+                                            {
+                                                pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
+                                                message: 'Please enter a valid mobile number',
+                                            }
+                                        ]}
+                                    >
+                                        <Space direction='horizontal' style={{justifyContent:'center'}}>
+                                            <Select
+                                                defaultValue={"1"}
+                                                options={[{ value: "1", label: "+91" }]}
+                                                placeholder="Select"
+                                            />
+                                            <Input maxLength={10} placeholder="Please enter mobile number" />
+                                        </Space>
+                                    </Form.Item>
+                                </Form>
+                                <Row>
+                                    <Button type='primary'
+                                        onClick={() => setStepPos(1)}
+                                    >
+                                        Next</Button>
+                                </Row>
+                            </Space>}
+                            {stepPos == 1 && <>
+
+
+                                <Form
+                                    layout="vertical"
+                                    style={{paddingTop:15}}
+                                // form={linkMedForm}
+                                // onFinish={(value) => linkDisease(value, 2)}
+                                >
+                                    <Row style={{ justifyContent: 'space-between' }}>
+                                        <Form.Item
+                                            style={{ width: '48%' }}
+                                            name="name"
+                                            label="Enter Your Name"
+                                            rules={[{ required: true, message: 'Please Enter Your Name' }]}
+                                        >
+                                            <Input maxLength={6} placeholder="Please Enter Your Name" />
+
+                                        </Form.Item>
+                                        <Form.Item
+                                            style={{ width: '48%' }}
+                                            name="disease"
+                                            label="Enter Disease"
+                                            rules={[{ required: true, message: 'Please Disease' }]}
+                                        >
+                                            <Input maxLength={6} placeholder="Please Disease" />
+
+                                        </Form.Item>
+                                    </Row>
+                                    <Row style={{ justifyContent: 'space-between' }}>
+                                        <Form.Item
+                                            style={{ width: '48%' }}
+                                            name="goalAmt"
+                                            label="Enter goal Amount"
+                                            rules={[{ required: true, message: 'Please Enter goalAmt' }]}
+                                        >
+                                            <Input maxLength={6} placeholder="Please Enter goalAmt" />
+
+                                        </Form.Item>
+                                        <Form.Item
+                                            style={{ width: '48%' }}
+                                            name="age"
+                                            label="Enter Age"
+                                            rules={[{ required: true, message: 'Please Enter Age' }]}
+                                        >
+                                            <Input maxLength={6} placeholder="Please Enter Age" />
+
+                                        </Form.Item>
+
+                                    </Row>
+                                    <Form.Item
+                                        // style={{ width: '48%' }}
+                                        name="cityName"
+                                        label="City Name"
+                                        rules={[{ required: true, message: 'Please Enter City Name' }]}
+                                    >
+                                        <Input maxLength={6} placeholder="Please Enter City Name" />
+
+                                    </Form.Item>
+                                    <Form.Item
+                                        // style={{ width: '48%' }}
+                                        valuePropName="checked"
+                                        name="age"
+                                        label="Is Patient"
+                                        rules={[{ required: true, message: 'Please Select' }]}
+                                    >
+                                        <Checkbox.Group options={plainOptions} defaultValue={['Apple']} />
+                                    </Form.Item>
+                                </Form>
+                                <Row style={{ justifyContent: 'space-between', width: '30%' }}>
+                                    {stepPos == 1 && <Button type='primary'
+                                        onClick={() => setStepPos(0)}
+                                    >
+                                        Prev</Button>}
+                                    <Button type='primary'
+                                        onClick={() => setStepPos(1)}
+                                    >
+                                        Next</Button>
+
+                                </Row>
+                            </>}
                         </>
                     </Card>
                 </Col>
             </Row>
-        </PageContainer>
+        </PageContainer >
 
     );
 });

@@ -198,6 +198,16 @@ export async function requestGetPatientBill(body: any, options?: { [key: string]
     ...(options || {}),
   });
 }
+export async function requestGetPatientBillReport(body: any, options?: { [key: string]: any }) {
+  return request<any>('Reports/GetPatientBill', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
 
 export async function requestAddPatientBill(body: any, options?: { [key: string]: any }) {
   return request<any>('AddPatientBill', {

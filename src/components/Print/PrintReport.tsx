@@ -40,7 +40,8 @@ import { requestGetDocuments } from "@/pages/Candidate/services/api";
 
 const { Option } = Select;
 
-const PrintReport = ({ base64Data }: any) => {
+const PrintReport = ({ base64Data, showModal, onCancel, onOk }: any) => {
+    console.log(base64Data)
     const formRef = useRef<any>();
     const { token } = theme.useToken();
     const [form] = Form.useForm();
@@ -57,10 +58,6 @@ const PrintReport = ({ base64Data }: any) => {
         // height: 350
     };
 
-    useEffect(() => {
-        console.log(base64Data)
-        getItemList();
-    }, []);
 
     const previewDoc = async (item: any) => {
         const params = {
@@ -107,14 +104,21 @@ const PrintReport = ({ base64Data }: any) => {
     }
 
     return (
-        <Card
-            headStyle={{ backgroundColor: '#004080', border: 0 }}
-            style={{ boxShadow: "2px 2px 2px #4874dc", width: '100%' }}
-        >
-            <embed type="application/pdf" height="200" width='100%'
-                src={`data:application/pdf;base64,${base64Data}`}>
-            </embed>
-        </Card>
+        <Modal  width={"100%"} style={{height:500, top:5}} open={showModal} onCancel={onCancel} onOk={onCancel}>
+            <Spin spinning={loading}>
+                <Card
+                    headStyle={{ backgroundColor: '#004080', border: 0 }}
+                    style={{ boxShadow: "2px 2px 2px #4874dc", width: '100%' }}
+                >
+                    <embed onLoadStart={() => setLoading(true)}
+                            onLoadedData={() => setLoading(false)}
+                            type="application/pdf"
+                            height="500" width='100%'
+                            src={`data:application/pdf;base64,${base64Data}`}>
+                    </embed>
+                </Card>
+            </Spin>
+        </Modal>
     );
 };
 
