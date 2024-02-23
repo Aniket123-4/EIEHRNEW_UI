@@ -545,7 +545,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
             });
     }
     const addPatientReg = async (values: any) => {
-        values['dob'] = convertDate(values.dob); 
+        values['dob'] = convertDate(values.dob);
         values['isVIP'] = values.isVIP ? values.isVIP : false;
         values['passIssueDate'] =values.passIssueDate? convertDate(values.passIssueDate) : '1900-01-01';
         values['signature'] = values?.signature ? values.signature : '';
@@ -561,18 +561,18 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
         try {
             const staticParams = {
                 // "fName": "",
-                // "fNameML": "",
+                "fNameML": "",
                 // "mName": "",
-                // "mNameML": "string",
+                "mNameML": "",
                 // "lName": "string",
-                // "lNameML": "string",
+                "lNameML": "",
                 // "genderID": 0,
                 // "fatherName": "string",
-                // "fatherNameML": "string",
+                "fatherNameML": "",
                 // "motherName": "string",
-                // "motherNameML": "string",
+                "motherNameML": "",
                 // "dob": "2023-12-04T05:39:01.048Z",
-                // "birthPlace": "string",
+                "birthPlace": "",
                 // "civilStatusID": 0,  
                 // "bGroupID": 0, 
                 // "religionID": 0,  
@@ -1147,8 +1147,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
     }
 
     const addPatientRegForm = () => {
-        
-        return (
+                return (
             <PageContainer
                 style={{ width: '100%' }}
             // title={'Patient Registration'}
@@ -1157,17 +1156,17 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                     title={
                         <Row align={'middle'}>
                             <Form
-                                // onFinish={getPatientSearch}
-                                >
+                            // onFinish={getPatientSearch}
+                            >
                                 <Form.Item
                                     style={{ paddingTop: 15 }}
                                     name={"patientNo"}
                                     label="Search by Patient No :"
                                     rules={[{ required: true, message: 'Please Enter Patient Number' }]}>
                                     {/* <Input style={{ width: 200, marginLeft: 10 }}></Input> */}
-                                    <Search placeholder="Input Search Text" 
-                                    loading={loading}
-                                    onSearch={(v)=>getPatientSearch({patientNo:v})} enterButton />
+                                    <Search placeholder="Input Search Text"
+                                        loading={loading}
+                                        onSearch={(v)=>getPatientSearch({patientNo:v})} enterButton />
                                 </Form.Item>
                             </Form>
                             {/* <Typography>Search by Patient No :</Typography>
@@ -1194,7 +1193,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         name="fName"
                                         label="First Name"
                                         rules={[{ required: true, message: 'Please enter First Name' },
-                                    {validator:validateCharacters}]}
+                                        {validator:validateCharacters}]}
                                     >
                                         <Input style={{ borderColor: 'blue' }} placeholder="Please enter First Name" />
                                     </Form.Item>
@@ -1204,7 +1203,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         name="mName"
                                         label="Middle Name"
                                         rules={[{ required: false, message: 'Please enter Middle Name' },
-                                    {validator:validateCharacters}]}
+                                        {validator:validateCharacters}]}
                                     >
                                         <Input placeholder="Please enter Middle Name" />
                                     </Form.Item>
@@ -1214,7 +1213,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         name="lName"
                                         label="Last Name"
                                         rules={[{ required: true, message: 'Please enter Last Name' },
-                                    {validator:validateCharacters}]}
+                                        {validator:validateCharacters}]}
                                     >
                                         <Input placeholder="Please enter Last Name" />
                                     </Form.Item>
@@ -1233,8 +1232,8 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     <Form.Item
                                         name="motherName"
                                         label="Mother Name"
-                                        rules={[{ required: true, message: 'Please enter Mother Name' },
-                                        {validator:validateCharacters}]}
+                                        rules={[{ required: false, message: 'Please enter Mother Name' },
+                                        { validator: validateCharacters }]}
                                     >
                                         <Input placeholder="Please enter Mother Name" />
                                     </Form.Item>
@@ -1285,23 +1284,28 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         <Input placeholder="Please enter Mother Name" />
                                     </Form.Item>
                                 </Col> */}
-                                
                                 <Col span={6}>
                                     <Form.Item
-                                        name="eMail"
-                                        label="Email"
-                                        rules={[{ required: false, type: 'email', message: 'Please enter Email' }]}
+                                        name="genderID"
+                                        label="Gender"
+                                        rules={[{ required: true, message: 'Please choose the Gender' }]}
                                     >
-                                        <Input maxLength={80} placeholder="Please enter Email" />
+                                        <Select
+                                            placeholder="Please choose the Gender"
+                                            options={gender}
+                                        />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
                                     <Form.Item
-                                        name="alternateEmail"
-                                        label="Alternate Email"
-                                        rules={[{ required: false, type: 'email', message: 'Please enter an alternate Email' }]}
+                                        name="civilStatusID"
+                                        label="Marital Status"
+                                        rules={[{ required: false, message: 'Please choose the Civil Status' }]}
                                     >
-                                        <Input maxLength={80} placeholder="Please Enter Alternate Email" />
+                                        <Select
+                                            placeholder="Please choose the Civil Status"
+                                            options={civilStatus}
+                                        />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1322,28 +1326,23 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         />
                                     </Form.Item>
                                 </Col>
+
                                 <Col span={6}>
                                     <Form.Item
-                                        name="genderID"
-                                        label="Gender"
-                                        rules={[{ required: true, message: 'Please choose the Gender' }]}
+                                        name="eMail"
+                                        label="Email"
+                                        rules={[{ required: false, type: 'email', message: 'Please enter Email' }]}
                                     >
-                                        <Select
-                                            placeholder="Please choose the Gender"
-                                            options={gender}
-                                        />
+                                        <Input maxLength={80} placeholder="Please enter Email" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
                                     <Form.Item
-                                        name="civilStatusID"
-                                        label="Civil Status"
-                                        rules={[{ required: false, message: 'Please choose the Civil Status' }]}
+                                        name="alternateEmail"
+                                        label="Alternate Email"
+                                        rules={[{ required: false, type: 'email', message: 'Please enter an alternate Email' }]}
                                     >
-                                        <Select
-                                            placeholder="Please choose the Civil Status"
-                                            options={civilStatus}
-                                        />
+                                        <Input maxLength={80} placeholder="Please Enter Alternate Email" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
@@ -1392,7 +1391,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     </Form.Item>
                                 </Col>
                             </Row>
-                        </Card>
+                                                    </Card>
                         <Divider orientation="left"><h4></h4></Divider>
                         <Card title={<Typography style={{ color: 'white', fontSize: 18 }}>
                             {"Current Address"}</Typography>}
@@ -1873,7 +1872,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         rules={[{ required: true, message: 'Please Select The DocType' }]}
                                     >
                                         <Select
-                                        onSelect={onDocTypeSelect}
+                                            onSelect={onDocTypeSelect}
                                             placeholder="Please Choose The DocName"
                                             options={docType}
                                         />
@@ -1881,7 +1880,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                 </Col>
                                 <Col span={6}>
                                     <Form.Item
-                                    
+
                                         name="vUniqueName"
                                         label="Document Number"
                                         rules={[
@@ -1909,15 +1908,15 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="passIssuePlace"
-                                        label="Document Issue Place"
-                                        rules={[{ required: false, message: 'Please Enter The Doc Issue Place' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please Enter The Doc Issue Place" />
-                                    </Form.Item>
-                                </Col>
+                                    <Col span={6}>
+                                        <Form.Item
+                                            name="passIssuePlace"
+                                            label="Document Issue Place"
+                                            rules={[{ required: false, message: 'Please Enter The Doc Issue Place' }]}
+                                        >
+                                            <Input maxLength={80} placeholder="Please Enter The Doc Issue Place" />
+                                        </Form.Item>
+                                    </Col>
                                 </>}
                             </Row>
                             <Col span={6}>

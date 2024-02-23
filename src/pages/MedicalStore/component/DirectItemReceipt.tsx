@@ -627,8 +627,8 @@ const DirectItemReceipt = ({
                             headStyle={{ backgroundColor: '#004080', border: 0 }}
                             style={{ height: 650, boxShadow: "2px 2px 2px #4874dc" }}
                             title={<Space direction='horizontal'  style={{ alignItems: 'space-between' }}>
-                    <Typography style={{color:'white',fontSize:18}}>Direct Item Receipt</Typography>
-                    </Space>}
+                            <Typography style={{color:'white',fontSize:18}}>Direct Item Receipt</Typography>
+                        </Space>}
                         >
                             <Spin tip="Please wait..." spinning={loading || loadingEdit}>
                                 <div>{addForm()}</div>

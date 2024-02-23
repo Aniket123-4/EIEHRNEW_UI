@@ -135,6 +135,26 @@ export async function requestAddService(body: any, options?: { [key: string]: an
     ...(options || {}),
   });
 }
+export async function requestLinkDisease(body: any, options?: { [key: string]: any }) {
+  return request<any>('MasterForm/AddUpdateDiseaseLink', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function requestGetDiseaseLink(body: any, options?: { [key: string]: any }) {
+  return request<any>('MasterForm/GetDiseaseLink', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
 
 
 /**  POST /api/login/account */

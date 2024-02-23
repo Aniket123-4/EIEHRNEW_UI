@@ -124,6 +124,11 @@ export default [
         path: '/master/AddInvServices',
         component: './Complaint/components/AddInvService',
       },
+      {
+        name: 'InfraStructure',
+        path: '/master/AddDiseaseLink',
+        component: './Complaint/components/AddDiseaseLink',
+      },
     ],
   },
   {

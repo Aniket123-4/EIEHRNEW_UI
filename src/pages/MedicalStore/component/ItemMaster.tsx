@@ -118,21 +118,23 @@ const ItemMaster = ({
   };
 
   const addItem = async (values: any) => {
-    values["vatPercent"] = values.vatPercent
-      ? values.vatPercent.toString()
-      : "";
+    const suppliers=values?.supplierID.map((item:any)=>{
+      return item
+  })
     values["cgstPercent"] = values.cgstPercent
       ? values.cgstPercent.toString()
       : "";
     values["sgstPercent"] = values.sgstPercent
       ? values.sgstPercent.toString()
       : "";
+    values["supplierID"] = values.supplierID? values.supplierID.toString(): "";
     setLoading(true);
     const staticParams = {
       itemID: itemID,
       userID: -1,
       formID: -1,
       type: 1,
+      vatPercent:"0",
     };
     const res = await requestAddItem({ ...values, ...staticParams });
     if (res.isSuccess == true) {
@@ -378,6 +380,8 @@ const ItemMaster = ({
                   <Select
                     showSearch
                     filterOption={filterOption}
+                    mode="multiple"
+                    maxTagCount= 'responsive'
                     optionFilterProp="children"
                     options={supplierList}
                     placeholder="Select"
@@ -429,34 +433,10 @@ const ItemMaster = ({
                       setVatApplicable(e.target.checked);
                     }}
                   >
-                    VAT Applicable
+                    GST Applicable
                   </Checkbox>
                 </Form.Item>
               </Col>
-              {vatApplicable && (
-                <Col className="gutter-row" span={6}>
-                  <Form.Item
-                    name="vatPercent"
-                    label="VAT Percent"
-                    rules={[
-                      {
-                        required: vatApplicable ? true : false,
-                        message: "Please enter",
-                      },
-                    ]}
-                  >
-                    <InputNumber
-                      style={{ width: "100%" }}
-                      // size={"large"}
-                      placeholder="Please enter"
-                      formatter={(value) => `${value}%`}
-                      parser={(value) => value!.replace("%", "")}
-                      min={0}
-                      max={100}
-                    />
-                  </Form.Item>
-                </Col>
-              )}
 
               {vatApplicable && (
                 <Col className="gutter-row" span={6}>
@@ -522,7 +502,6 @@ const ItemMaster = ({
               </Col>
               <Col style={{ justifyContent: "flex-end" }}>
                 <Button
-                  style={{ padding: 5, width: 100, height: 40 }}
                   type="primary"
                   htmlType="submit"
                 >
@@ -530,7 +509,7 @@ const ItemMaster = ({
                 </Button>
                 <Button
                   onClick={goBack}
-                  style={{ marginLeft: 10, padding: 5, width: 100, height: 40 }}
+                  style={{ marginLeft: 10}}
                   type="default"
                 >
                   Cancel

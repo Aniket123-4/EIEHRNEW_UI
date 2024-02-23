@@ -2,12 +2,13 @@ import React, { useRef, useState, useEffect } from 'react';
 import { PageContainer, ProDescriptions } from '@ant-design/pro-components';
 import { Card, theme, Image, Divider, Space, Avatar, Typography, Row, Col, Table, Button, Tabs, Select, Modal, message, Input, Popconfirm } from 'antd';
 import PatientDetailsCommon from './PatientDetailsCommon';
-import { requestAddPatientBill, requestGetPatientBill, requestGetPatientBillNo } from '../services/api';
+import { requestAddPatientBill, requestGetPatientBill, requestGetPatientBillNo, requestGetPatientBillReport } from '../services/api';
 import { ColumnsType } from 'antd/es/table';
-import { PlayCircleFilled } from '@ant-design/icons';
+import { PlayCircleFilled, PrinterOutlined } from '@ant-design/icons';
 import { TabsProps } from 'antd/lib';
 import moment from 'moment';
 import { dateFormat } from '@/utils/constant';
+import PrintReport from '@/components/Print/PrintReport';
 const { Title, Text, Link } = Typography;
 
 const TabGenerateBill = ({ patientBillData, patientData }: any) => {
@@ -268,25 +269,22 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
     )
 }
 
-const TabBillReceipt = ({ patientBillData, patientData }: any) => {
+const TabBillReceipt = ({ patientBillData, patientData,tabChange }: any) => {
     const [patientBillNoData, setPatientBillNoData] = useState<any>([]);
     const [patientBill, setPatientBill] = useState<any>();
     const [loading, setLoading] = useState<any>(false);
+     const [base64Data, setBase64Data] = useState<any>("");
+    const [showPdf, setShowPdf] = useState<any>(false);
 
     const columns: ColumnsType<any> = [
         {
-            title: 'Inv Parameter',
+            title: 'Test',
             key: 'invParameterName',
             dataIndex: 'invParameterName',
 
-        }, {
-            title: 'Pre Emp Type',
-            key: 'vPreEmpType',
-            dataIndex: 'vPreEmpType',
-
         },
         {
-            title: 'Rebate',
+            title: 'Payable Amt',
             key: 'compRebate',
             dataIndex: 'compRebate',
         },
@@ -304,6 +302,26 @@ const TabBillReceipt = ({ patientBillData, patientData }: any) => {
             title: 'Final Gross Amount',
             key: 'finalGrossAmount',
             dataIndex: 'finalGrossAmount',
+        },
+        {
+            title: 'Days',
+            key: 'noOfDays',
+            dataIndex: 'noOfDays',
+        },
+        {
+            title: 'QtyPerDay',
+            key: 'quantityPerDay',
+            dataIndex: 'quantityPerDay',
+        },
+        {
+            title: 'Quantity',
+            key: 'qty',
+            dataIndex: 'qty',
+
+        }, {
+            title: 'Remark',
+            key: 'remark',
+            dataIndex: 'remark',
 
         }
 
@@ -311,14 +329,46 @@ const TabBillReceipt = ({ patientBillData, patientData }: any) => {
 
     useEffect(() => {
         getPatientBillNo();
-    }, [])
+    }, [tabChange])
+
+    const handleCancel = () => {
+        setShowPdf(false);
+    };
+    const printReport = async () => {
+        try {
+            setLoading(true);
+            const staticParams = {
+                "patientCaseID": patientData?.patientCaseID,
+                "patientCaseNo": "",
+                "admNo": patientBillData?.result3[0]?.admNo,
+                "patientBillID": patientBill?.result1[0]?.patientBillID,
+
+                "userID": -1,
+                "formID": -1,
+                "type": 1,
+                "show": false,
+                "exportOption": ".pdf"
+            }
+            const res = await requestGetPatientBillReport(staticParams);
+            setBase64Data(res?.result)
+            setShowPdf(true)
+            if (res.isSuccess === true) {
+                setLoading(false)
+            }
+            setLoading(false)
+        } catch (error) {
+            console.log({ error });
+            message.error('please try again');
+            setLoading(false)
+        }
+    }
 
     const getPatientBillNo = async () => {
         console.log(patientData)
         const staticParams = {
             "patientCaseID": patientData?.patientCaseID,
             "patientCaseNo": "",
-            "admNo": patientData?.admNo,
+            "admNo": patientBillData?.result3[0]?.admNo,
             "isCancel": false,
             "userID": -1,
             "formID": -1,
@@ -339,7 +389,7 @@ const TabBillReceipt = ({ patientBillData, patientData }: any) => {
         const staticParams = {
             "patientCaseID": patientData?.patientCaseID,
             "patientCaseNo": "",
-            "admNo": patientData?.admNo,
+            "admNo": patientBillData?.result3[0]?.admNo,
             "patientBillID": patientBillID,
             "userID": -1,
             "formID": -1,
@@ -452,7 +502,7 @@ const TabBillReceipt = ({ patientBillData, patientData }: any) => {
                         options={patientBillNoData}
                     />
                 </Col>
-                <Col span={8}>
+                <Col span={2}>
                     {patientBill?.result1?.length > 0 ?
                         <Popconfirm
                             title="Cancel Bill"
@@ -470,9 +520,14 @@ const TabBillReceipt = ({ patientBillData, patientData }: any) => {
                                 Cancel
                             </Button>
                         </Popconfirm> : null}
-
+                        {base64Data&&<PrintReport showModal={showPdf} base64Data={base64Data} onCancel={handleCancel} onOk={handleCancel} />}
 
                 </Col>
+                <Col span={4}>
+                    <label>{''}</label><br />
+                    <Button onClick={printReport} style={{ marginLeft: 5, }} icon={<PrinterOutlined />}></Button>
+                </Col>
+                <Col span={8}></Col>
             </Row>
 
             <Table
@@ -492,6 +547,7 @@ const PatientBilling: React.FC = () => {
 
     const [patientData, setPatientData] = useState<any>();
     const [patientBillData, setPatientBillData] = useState<any>();
+    const [tabChange, setTabChange] = useState<any>(true);
 
     const tabItems: TabsProps['items'] = [
         {
@@ -502,7 +558,7 @@ const PatientBilling: React.FC = () => {
         {
             key: '2',
             label: 'Bill Receipt',
-            children: <TabBillReceipt patientData={patientData} patientBillData={patientBillData} />,
+            children: <TabBillReceipt tabChange={tabChange} patientData={patientData} patientBillData={patientBillData} />,
         }
     ];
 
@@ -529,6 +585,7 @@ const PatientBilling: React.FC = () => {
     const onChangePatientData = (data: any) => {
         console.log("onChangePatientData", data)
         setPatientData(data)
+        setTabChange(tabChange + 1)
     }
 
     return (

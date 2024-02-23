@@ -40,7 +40,7 @@ const HospitalBillingDetail = ({ }: any) => {
     const [form] = Form.useForm();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [tableData, setTableData] = useState([]);
-    const [mainData, setMainData] = useState([]);
+    const [mainData, setMainData] = useState<any>([]);
     const [modalData, setModalData] = useState([]);
 
 
@@ -64,7 +64,7 @@ const HospitalBillingDetail = ({ }: any) => {
     const getHospitalBill = async () => {
         const staticParams = {
             "fromDate": "19000101",
-            "toDate": "20240202",
+            "toDate": moment(),
             "userID": -2,
             "formID": -1,
             "type": 1
@@ -76,8 +76,11 @@ const HospitalBillingDetail = ({ }: any) => {
                 return { key: index.toString(), ...item };
             });
             setTableData(dataMaskForDropdown)
-            setMainData({netAmountVAT:res.result.netAmountVAT,
-                totNetAmount:res.result.totNetAmount,totFinalGrossAmount:res.totFinalGrossAmount})
+            setMainData({
+                netAmountVAT: res?.result?.netAmountVAT,
+                totNetAmount: res?.result?.totNetAmount,
+                totFinalGrossAmount: res?.result?.totFinalGrossAmount
+            })
             console.log(res.result);
         }
     }
@@ -171,6 +174,7 @@ const HospitalBillingDetail = ({ }: any) => {
         ];
         return <Table
             bordered
+            className={'ant-table1'}
             size='small'
             expandable={{
                 expandedRowRender: (record) => <Table size='small' columns={modalColumns} dataSource={record?.lstPayBIllCompResp} pagination={false} />,
@@ -179,7 +183,7 @@ const HospitalBillingDetail = ({ }: any) => {
     };
 
     const parentColumns: TableColumnsType<ExpandedDataType> = [
-        { title: <Typography style={{ color: 'black ', fontSize: 18 }}>{'Pay Date'}</Typography>, dataIndex: 'payDateVar', key: 'payDateVar', render: (txt) => <a>{txt}</a> },
+        { title: 'Pay Date', dataIndex: 'payDateVar', key: 'payDateVar', render: (txt) => <a>{txt}</a> },
         { title: 'Final Amt', dataIndex: 'totFinalGrossAmount', key: 'totFinalGrossAmount' },
         { title: 'Net Amt', dataIndex: 'totNetAmount', key: 'totNetAmount' },
         { title: 'Discount', dataIndex: 'disCountAmt', key: 'disCountAmt' },
@@ -190,24 +194,25 @@ const HospitalBillingDetail = ({ }: any) => {
         <>
             <Row gutter={16}>
                 <Col span={8}>
-                    <Card title="Total FinalGrossAmount" bordered={false}>
-                        totFinalGrossAmount
+                    <Card title="Total NetAmount" bordered={false}>
+                        {mainData?.netAmountVAT}
                     </Card>
                 </Col>
                 <Col span={8}>
-                    <Card title="Patient Visited" bordered={false}>
-                        getPatientVisitNo
+                    <Card title="Total GrossAmount" bordered={false}>
+                        {mainData?.totFinalGrossAmount}
                     </Card>
                 </Col>
                 <Col span={8}>
                     <Card title="VAT" bordered={false}>
-                        netAmountVAT
+                        {mainData?.netAmountVAT}
                     </Card>
                 </Col>
             </Row>
             <Table
+            size="small"
+                className={"ant-table "}
                 bordered
-                style={{borderColor:'red',paddingTop:10,borderBlockColor:'red'}}
                 columns={parentColumns}
                 expandable={{ expandedRowRender, defaultExpandedRowKeys: ['0'] }}
                 dataSource={tableData}

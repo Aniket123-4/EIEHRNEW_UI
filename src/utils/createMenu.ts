@@ -17,6 +17,9 @@ const getModulePath = (name: string) => {
         case "Complaint Master":
             return "/master/addComplaint";
 
+        case "InfraStructure":
+            return "/master/AddDiseaseLink";
+
         case "Investigation Parameter":
             return "/investigation/AddInvParameter";
 

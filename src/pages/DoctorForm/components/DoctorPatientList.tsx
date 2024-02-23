@@ -57,7 +57,6 @@ const DoctorPatientList = React.forwardRef((props) => {
             title: 'Patient Number',
             key: 'patientNo',
             dataIndex: 'patientNo',
-
         },
         {
             title: 'Case Number',
@@ -92,28 +91,32 @@ const DoctorPatientList = React.forwardRef((props) => {
 
         }, 
         {
-            title: 'Doctor Seen',
-            key: 'isDocSeen',
-            dataIndex: 'isDocSeen',
-            render:(text)=><Tag color={text == true ? 'success' : 'error'}>{text == true ? 'Yes' : 'No'}</Tag>,
-        },
-        {
-            title: 'Paid Amount',
-            key: 'isPaid',
-            dataIndex: 'isPaid',
-            render:(text)=><Tag color={text == true ? 'success' : 'error'}>{text == true ? 'Yes' : 'No'}</Tag>,
-
-        },
-        {
             title: 'Payment Mode',
             key: 'insAppStatus',
             dataIndex: 'insAppStatus',
 
         },
         {
+            title: 'Doctor Seen',
+            key: 'isDocSeen',
+            dataIndex: 'isDocSeen',
+            fixed: 'right',
+            width: 100,
+            render:(text)=><Tag color={text == true ? 'success' : 'error'}>{text == true ? 'Yes' : 'No'}</Tag>,
+        },
+        {
+            title: 'Paid Amount',
+            key: 'isPaid',
+            dataIndex: 'isPaid',
+            width: 100,
+            fixed: 'right',
+            render:(text)=><Tag color={text == true ? 'success' : 'error'}>{text == true ? 'Yes' : 'No'}</Tag>,
+        },
+        {
             title: 'Action',
             key: 'action',
             fixed: 'right',
+            width: 100,
             render: (_, record) => (
                 <Space size="middle">
                     <Button size={'small'} onClick={() => {
@@ -132,7 +135,7 @@ const DoctorPatientList = React.forwardRef((props) => {
     const getList = async () => {
         try {
 
-            const { dateRange, isActive } = formFilter.getFieldsValue()
+            const { dateRange, isActive, patientName } = formFilter.getFieldsValue()
             let slotFromDate = convertDate(dateRange[0]);
             let slotToDate = convertDate(dateRange[1]);
 
@@ -144,7 +147,7 @@ const DoctorPatientList = React.forwardRef((props) => {
                 patientID: -1,
                 patientNo: '',
                 caseTypeID: 1,
-                patientName: '',
+                patientName: patientName ? patientName :'',
                 fromDate: slotFromDate,
                 toDate: slotToDate,
                 userID: verifiedUser?.userID,
@@ -208,6 +211,7 @@ const DoctorPatientList = React.forwardRef((props) => {
                                     rules={[{ required: false, message: 'Please select' }]}
                                 >
                                     <Input
+                                    onChange={(e:any) =>getList()}
                                         placeholder='Patient Name'
                                         size={'large'}
                                     />
@@ -260,12 +264,14 @@ const DoctorPatientList = React.forwardRef((props) => {
                 </Spin>
             </Card>
             <Card
-                title={`Patient List (Total ${list.length})`}
+                title={`Patient List (Total ${list?.length})`}
                 style={{ boxShadow: '2px 2px 2px #4874dc' }}
             >
 
                 <div style={contentStyle}>
                     <Table
+                        // scroll={x:'90%'}
+                        scroll={{ x: 2000 }}
                         columns={columns}
                         dataSource={list}
                         pagination={false}
