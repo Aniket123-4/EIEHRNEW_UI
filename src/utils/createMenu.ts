@@ -88,6 +88,9 @@ const getModulePath = (name: string) => {
 
         case "Patient Pharmacy Billing":
             return "/billing/PatientPharmacyBilling";
+        
+        case "Pay Partial Pharmacy Billing":
+            return "/billing/PatientPartialPharmacyBilling";
 
         default:
             if (verifiedUser.userTypeID === "11") {

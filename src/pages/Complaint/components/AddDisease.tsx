@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card, Checkbox, Divider, Modal } from 'antd';
+import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, Typography, Card, Checkbox, Divider, Modal, Upload } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
 import { requestAddComplaint, requestAddDisease, requestDiseaseList, requestDiseaseTypeList, requestSpecialList } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
@@ -8,6 +8,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
 import DiseaseList from './DiseaseList';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { RcFile } from 'antd/es/upload';
 
 
 const { Option } = Select;
@@ -26,6 +27,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
     const [data, setData] = useState([]);
     const [diseaseID, setDiseaseID] = useState("-1");
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [diseaseDoc, addDiseaseDoc] = useState<any>("");
 
 
 
@@ -53,7 +55,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
             })
             setSpecialist(dataMaskForDropdown)
             form.setFieldsValue({
-                specialTypeID:"1"
+                specialTypeID: "1"
             })
         }
     }
@@ -79,7 +81,8 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
     }
 
     const addDisease = async (values: any, type: number = 1) => {
-        values['isActive'] =values.isActive.toString();
+        console.log(diseaseDoc)
+        values['isActive'] = values.isActive.toString();
         // values['diseaseTypeID'] = values.diseaseTypeID ? values.diseaseTypeID.toString() : "-1";
         try {
             const staticParams = {
@@ -90,6 +93,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                 // "isActive": isActive.toString(),
                 "sortOrder": 1,
                 "diseasesID": diseaseID,
+                "diseasesImage": diseaseDoc.docBase64,
                 "formID": -1,
                 "type": type
 
@@ -128,14 +132,35 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-    
-    const setEditField = (data:any) => {
+
+    const getBase64 = async (img: RcFile, callback: (url: string) => void) => {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => callback(reader.result as string));
+        reader.readAsDataURL(img);
+    };
+
+    const onUpload = (info: any) => {
+        // if (info.file.status !== 'uploading') {
+        //     console.log(info.file, info.fileList);
+        // }
+        if (info.file.status === 'done') {
+            getBase64(info.file.originFileObj as RcFile, async (url) => {
+                // console.log(url, info.file.name)
+                addDiseaseDoc({ docBase64: url, docName: info.file.name })
+            })
+        } else if (info.file.status === 'error') {
+            message.error(`${info.file.name} file upload failed.`);
+        }
+
+    }
+
+    const setEditField = (data: any) => {
         form.setFieldsValue({
-            diseaseTypeName:data?.diseaseName,
-            diseaseTypeCode:data?.diseaseCodeICD,
-            diseaseTypeID:data?.diseaseTypeID,
-            specialTypeID:data?.specialTypeID,
-            isActive:data?.isActive,
+            diseaseTypeName: data?.diseaseName,
+            diseaseTypeCode: data?.diseaseCodeICD,
+            diseaseTypeID: data?.diseaseTypeID,
+            specialTypeID: data?.specialTypeID,
+            isActive: data?.isActive,
         })
         window.scrollTo(0, 0)
         setDiseaseID(data?.diseaseID)
@@ -150,7 +175,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                 form={form}
                 onFinish={(values) => addDisease(values, 2)}
                 initialValues={{
-                    isActive:true
+                    isActive: true
                 }}
             >
                 {/* Basic Information */}
@@ -203,22 +228,19 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
 
                                 </Form.Item>
                             </Col>
-                            {/* <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={6}>
                                 <Form.Item
-                                    name="specialTypeID"
-                                    label="Special type"
-                                    rules={[{ required: true, message: 'Please enter special type' }]}
+                                    name="diseasesImage"
+                                    label="Select Image"
+                                    rules={[{ required: false, message: 'Please Select Image' }]}
                                 >
-                                    <Select
-                                        showSearch
-                                        size={'large'}
-                                        placeholder="Select Special Type"
-                                        optionFilterProp="children"
-                                        options={specialList}
-                                        filterOption={filterOption}
-                                    />
+                                    <Upload
+                                        onChange={onUpload}
+                                    >
+                                        <Button icon={<UploadOutlined />}>Upload</Button>
+                                    </Upload>
                                 </Form.Item>
-                            </Col> */}
+                            </Col>
 
                         </Row>
                         <Col className="gutter-row" span={6}>
@@ -250,7 +272,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                         footer={[
                         ]}>
                         <Form
-                            onFinish={(v) => addDisease(v = { isActive:true,diseaseTypeID: '-1', ...v }, 1)}>
+                            onFinish={(v) => addDisease(v = { isActive: true, diseaseTypeID: '-1', ...v }, 1)}>
 
                             <Form.Item
                                 name="diseaseTypeName"
@@ -282,7 +304,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                             <Button type="primary" htmlType="submit">
                                 Submit
                             </Button>
-                            <Button style={{marginLeft:10}} onClick={handleCancel}
+                            <Button style={{ marginLeft: 10 }} onClick={handleCancel}
                                 type="default" >
                                 Cancel
                             </Button>
@@ -316,7 +338,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                 </Card>
                 <DiseaseList
                     refresh={loading}
-                    editRecord={(data:any)=>setEditField(data)}/>
+                    editRecord={(data: any) => setEditField(data)} />
             </Space>
         </PageContainer>
     );

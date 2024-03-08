@@ -204,7 +204,7 @@ const ItemList = ({ refresh, editRecord }: any) => {
             "itemSearch": "",
             "userID": -1,
             "formID": -1,
-            "type": 1
+            "type": 2
         }
         setLoading(true)
         const res = await requestGetItem(staticParams);

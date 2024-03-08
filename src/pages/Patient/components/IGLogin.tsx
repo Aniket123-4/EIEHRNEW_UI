@@ -236,43 +236,75 @@ const IGLogin = React.forwardRef((props) => {
                     >
                         <>
                             <Steps current={stepPos} labelPlacement="vertical" items={items} />
-                            {stepPos == 0 && <Space size={[8, 16]} wrap direction='vertical'>
+                            {stepPos == 0 && <Space style={{width:'100%'}} size={[8, 16]} wrap direction='vertical'>
                                 <Form
-                                style={{paddingTop:25}}
+                                    style={{ paddingTop: 25 }}
                                 // form={linkMedForm}
                                 // onFinish={(value) => linkDisease(value, 2)}
                                 >
-                                    <Form.Item
-                                        name="raising for"
-                                        label="I am raising funds for :"
+                                    <div
+                                        style={{
+                                            borderRadius: 5,
+                                            display: 'flex',
+                                            // justifyContent: 'center',
+                                            paddingLeft:10,
+                                            textAlign: 'center',
+                                            backgroundColor: '#cae4d7',
+                                            height: 60,
+                                            alignItems: 'center'
+                                        }}
                                     >
-                                        <Select
-                                            style={{ width: 200 }}
-                                            defaultValue={"1"}
-                                            options={[{ value: "1", label: "Medical" }]}
-                                            placeholder="Select"
-                                        />
+                                        <Form.Item
+                                            style={{ paddingTop: 25 }}
+                                            name="raising for"
+                                            label="I am raising funds for :"
+                                        >
+                                            <Select
+                                                style={{ width: 220 }}
+                                                defaultValue={"1"}
+                                                options={[{ value: "1", label: "Medical" },
+                                                { value: "2", label: "Personal Cause" }, { value: "3", label: "Non Profit" },
+                                                { value: "4", label: "Creative Ideas" }]}
+                                                placeholder="Select"
+                                            />
 
-                                    </Form.Item>
-                                    <Form.Item
-                                        // style={{ width: '48%' }}
-                                        name="raisingfundr"
-                                        label="The raised funds will help :"
+                                        </Form.Item>
+                                    </div>
+
+                                    <div
+                                        style={{
+                                            marginTop: 20,
+                                            paddingLeft:10,
+                                            borderRadius: 5,
+                                            display: 'flex',
+                                            // justifyContent: 'center',
+                                            textAlign: 'center',
+                                            backgroundColor: '#cae4d7',
+                                            height: 60,
+                                            alignItems: 'center'
+                                        }}
                                     >
-                                        <Select
-                                            style={{ width: 200 }}
-                                            defaultValue={"1"}
-                                            options={[{ value: "1", label: "Myself" },
-                                            { value: "2", label: "Spouse" },
-                                            { value: "3", label: "Sibling" },
-                                            { value: "4", label: "Child" },
-                                            { value: "5", label: "Family" }]}
-                                            placeholder="Select"
-                                        />
-                                    </Form.Item>
+                                        <Form.Item
+                                            style={{ paddingTop: 25 }}
+                                            name="raisingfundr"
+                                            label="The raised funds will help :"
+                                        >
+                                            <Select
+                                                style={{ width: 200 }}
+                                                defaultValue={"1"}
+                                                options={[{ value: "1", label: "Myself" },
+                                                { value: "2", label: "Spouse" },
+                                                { value: "3", label: "Sibling" },
+                                                { value: "4", label: "Child" },
+                                                { value: "5", label: "Family" }]}
+                                                placeholder="Select"
+                                            />
+                                        </Form.Item>
+                                    </div>
 
 
                                     <Form.Item
+                                    style={{ paddingTop: 25 }}
                                         name="curMobileNo"
                                         label=""
                                         rules={[
@@ -283,7 +315,7 @@ const IGLogin = React.forwardRef((props) => {
                                             }
                                         ]}
                                     >
-                                        <Space direction='horizontal' style={{justifyContent:'center'}}>
+                                        <Space direction='horizontal' style={{ justifyContent: 'center' }}>
                                             <Select
                                                 defaultValue={"1"}
                                                 options={[{ value: "1", label: "+91" }]}
@@ -305,7 +337,7 @@ const IGLogin = React.forwardRef((props) => {
 
                                 <Form
                                     layout="vertical"
-                                    style={{paddingTop:15}}
+                                    style={{ paddingTop: 15 }}
                                 // form={linkMedForm}
                                 // onFinish={(value) => linkDisease(value, 2)}
                                 >
@@ -362,7 +394,7 @@ const IGLogin = React.forwardRef((props) => {
                                     <Form.Item
                                         // style={{ width: '48%' }}
                                         valuePropName="checked"
-                                        name="age"
+                                        name="isPatient"
                                         label="Is Patient"
                                         rules={[{ required: true, message: 'Please Select' }]}
                                     >

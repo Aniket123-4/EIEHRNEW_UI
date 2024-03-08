@@ -65,11 +65,11 @@ const PatientCheckOut = React.forwardRef((props) => {
             dataIndex: 'consultantDocName',
             key: 'consultantDocName',
         },
-        {
-            title: 'Patient FileNo',
-            dataIndex: 'patientFileNo',
-            key: 'patientFileNo',
-        },
+        // {
+        //     title: 'Patient FileNo',
+        //     dataIndex: 'patientFileNo',
+        //     key: 'patientFileNo',
+        // },
         {
             title: 'Patient CaseNo',
             dataIndex: 'patientCaseNo',

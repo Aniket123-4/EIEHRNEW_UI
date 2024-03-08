@@ -171,6 +171,11 @@ export default [
         path: '/billing/PatientPharmacyBilling',
         component: './Billing/component/PatientPharmacyBilling',
       },
+      {
+        name: 'Pay Partial Pharmacy Billing',
+        path: '/billing/PatientPartialPharmacyBilling',
+        component: './Billing/component/PatientPartialPharmacyBilling',
+      },
     ],
   },
   {
@@ -279,12 +284,12 @@ export default [
       {
         name: 'Doctor',
         path: '/doctor/patient-list',
-        component: './DoctorForm/components/DoctorPatientList',
+        component: './DoctorForm2/components/DoctorPatientList',
       },
       {
         name: 'Patient Details',
         path: '/doctor/patient-details/:id/:id/:id/:id/:id',
-        component: './DoctorForm/components/DoctorPatientDetails',
+        component: './DoctorForm2/components/DoctorPatientDetails',
       },
     ],
   },

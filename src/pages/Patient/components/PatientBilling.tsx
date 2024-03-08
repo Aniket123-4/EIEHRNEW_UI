@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { PageContainer, ProDescriptions } from '@ant-design/pro-components';
-import { Card, theme, Image, Divider, Space, Avatar, Typography, Row, Col, Table, Button, Tabs, Select, Modal, message, Input, Popconfirm } from 'antd';
+import { Card, theme, Image, Divider, Space, Avatar, Typography, Row, Col, Table, Button, Tabs, Select, Modal, message, Input, Popconfirm, Form } from 'antd';
 import PatientDetailsCommon from './PatientDetailsCommon';
 import { requestAddPatientBill, requestGetPatientBill, requestGetPatientBillNo, requestGetPatientBillReport } from '../services/api';
 import { ColumnsType } from 'antd/es/table';
@@ -24,40 +24,47 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
 
     const columns: ColumnsType<any> = [
         {
-            title: 'Inv Parameter',
+            title: 'Test Parameter',
             key: 'invParameterName',
             dataIndex: 'invParameterName',
+            width: '30%'
 
         }, {
-            title: 'Pre Emp Type',
+            title: 'Case Type',
             key: 'vPreEmpType',
             dataIndex: 'vPreEmpType',
-
+            width: '10%'
         },
         {
-            title: 'Rebate',
+            title: 'Payable %',
+            width: '10%',
             key: 'compRebate',
             dataIndex: 'compRebate',
         },
         {
-            title: 'Gross Amount',
-            key: 'grossAmount',
-            dataIndex: 'grossAmount',
-
-        }, {
-            title: 'Net Amount',
-            key: 'netAmount',
-            dataIndex: 'netAmount',
-
-        }, {
-            title: 'Final Gross Amount',
+            title: 'Final Gross Amt',
+            width: '10%',
             key: 'finalGrossAmount',
             dataIndex: 'finalGrossAmount',
+        },
+        {
+            title: 'Disc Amt',
+            key: 'grossAmount',
+            width: '10%',
+            dataIndex: 'remainingAmt',
+
+        },
+        {
+            title: 'Net Amt',
+            key: 'netAmount',
+            width: '10%',
+            dataIndex: 'netAmount',
 
         },
         {
             title: 'Action',
             key: 'action',
+            width: '10%',
             render: (_, record) => (
                 <Button danger size={'small'} onClick={() => { deleteBill(record) }} >Delete</Button>
             ),
@@ -67,29 +74,33 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
 
     const columns1 = [
         {
-            title: 'Net Amount',
+            title: 'Final Gross Amt',
+            dataIndex: 'totFinalGrossAmount',
+            key: 'totFinalGrossAmount',
+        },
+        {
+            title: 'Total Disc Amt',
+            dataIndex: 'disCountAmt',
+            key: 'disCountAmt',
+        },
+
+        // {
+        //     title: 'Gross Amt',
+        //     dataIndex: 'totGrossAmt',
+        //     key: 'totGrossAmt',
+        // },
+        {
+            title: 'Balance Amt',
+            dataIndex: 'balanceAmt',
+            key: 'balanceAmt',
+        },
+        {
+            title: 'Net Amt',
             dataIndex: 'totNetAmount',
             key: 'totNetAmount',
         },
         {
-            title: 'Gross Amount',
-            dataIndex: 'totGrossAmt',
-            key: 'totGrossAmt',
-        },
-        {
-            title: 'Final Gross Amount',
-            dataIndex: 'totFinalGrossAmount',
-            key: 'totFinalGrossAmount',
-        }, {
-            title: 'Discount Amount',
-            dataIndex: 'disCountAmt',
-            key: 'disCountAmt',
-        }, {
-            title: 'Balance Amount',
-            dataIndex: 'balanceAmt',
-            key: 'balanceAmt',
-        }, {
-            title: 'Actual Pay Amount',
+            title: 'Actual Pay Amt',
             dataIndex: 'actualPayAmt',
             key: 'actualPayAmt',
         },
@@ -163,18 +174,36 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
             setRemark("")
             setGenerateBillData(res)
             showModal();
+            // getPatientBill();
         } else {
             message.error(res.msg);
         }
     }
 
     const deleteBill = (record: any) => {
+        
+
+
         console.log({ patientBillDataList })
         console.log({ record: record?.patientBillCompID })
         const data: any = { ...patientBillDataList };
         const filteredResult = data?.result1?.filter(item => item.patientBillCompID !== record?.patientBillCompID);
         data.result1 = filteredResult;
-        console.log(data);
+
+        function calculateSum(array:any, property:any) {
+            let sum = 0;
+            array.forEach((element:any) => {
+                sum += parseFloat(element[property]);
+            });
+            return sum;
+        }
+        data.result2[0].totNetAmount = calculateSum(data.result1, 'netAmount');
+        data.result2[0].actualPayAmt = calculateSum(data.result1, 'netAmount');
+        data.result2[0].totFinalGrossAmount = calculateSum(data.result1, 'finalGrossAmount');
+        data.result2[0].grossAmount = calculateSum(data.result1, 'grossAmount');
+        data.result2[0].disCountAmt = calculateSum(data.result1, 'remainingAmt');
+
+        console.log(data.result2[0]);
         setPatientBillDataList(data)
     }
 
@@ -269,11 +298,12 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
     )
 }
 
-const TabBillReceipt = ({ patientBillData, patientData,tabChange }: any) => {
+const TabBillReceipt = ({ patientBillData, patientData, tabChange }: any) => {
+    const [form] = Form.useForm();
     const [patientBillNoData, setPatientBillNoData] = useState<any>([]);
     const [patientBill, setPatientBill] = useState<any>();
     const [loading, setLoading] = useState<any>(false);
-     const [base64Data, setBase64Data] = useState<any>("");
+    const [base64Data, setBase64Data] = useState<any>("");
     const [showPdf, setShowPdf] = useState<any>(false);
 
     const columns: ColumnsType<any> = [
@@ -281,54 +311,45 @@ const TabBillReceipt = ({ patientBillData, patientData,tabChange }: any) => {
             title: 'Test',
             key: 'invParameterName',
             dataIndex: 'invParameterName',
-
+            width: '30%'
         },
         {
-            title: 'Payable Amt',
+            title: 'Payable %',
             key: 'compRebate',
             dataIndex: 'compRebate',
+            width: '10%'
         },
-        {
-            title: 'Gross Amount',
-            key: 'grossAmount',
-            dataIndex: 'grossAmount',
-
-        }, {
-            title: 'Net Amount',
-            key: 'netAmount',
-            dataIndex: 'netAmount',
-
-        }, {
-            title: 'Final Gross Amount',
+        // {
+        //     title: 'Gross Amt',
+        //     key: 'grossAmount',
+        //     dataIndex: 'grossAmount',
+        //     width: '10%'
+        // },
+         {
+            title: 'Final Gross Amt',
             key: 'finalGrossAmount',
+            width: '10%',
             dataIndex: 'finalGrossAmount',
         },
         {
-            title: 'Days',
-            key: 'noOfDays',
-            dataIndex: 'noOfDays',
+            title: 'Net Amt',
+            key: 'netAmount',
+            dataIndex: 'netAmount',
+            width: '10%'
         },
         {
-            title: 'QtyPerDay',
-            key: 'quantityPerDay',
-            dataIndex: 'quantityPerDay',
-        },
-        {
-            title: 'Quantity',
-            key: 'qty',
-            dataIndex: 'qty',
-
-        }, {
             title: 'Remark',
             key: 'remark',
             dataIndex: 'remark',
-
+            width: '30%'
         }
 
     ];
 
     useEffect(() => {
         getPatientBillNo();
+        form.resetFields(['Bill_No'])
+        setPatientBill([])
     }, [tabChange])
 
     const handleCancel = () => {
@@ -342,7 +363,6 @@ const TabBillReceipt = ({ patientBillData, patientData,tabChange }: any) => {
                 "patientCaseNo": "",
                 "admNo": patientBillData?.result3[0]?.admNo,
                 "patientBillID": patientBill?.result1[0]?.patientBillID,
-
                 "userID": -1,
                 "formID": -1,
                 "type": 1,
@@ -494,13 +514,22 @@ const TabBillReceipt = ({ patientBillData, patientData,tabChange }: any) => {
         <>
             <Row>
                 <Col span={8}>
-                    <label>{'Bill No'}</label><br />
-                    <Select
-                        style={{ width: '80%' }}
-                        onChange={handleChangeFilter}
-                        placeholder={"Select"}
-                        options={patientBillNoData}
-                    />
+                    {/* <label>{'Bill No'}</label><br /> */}
+                    <Form
+                        form={form}
+                    >
+                        <Form.Item
+                            name={'Bill_No'}
+                            label={'Bill No'}>
+                            <Select
+                                style={{ width: '80%' }}
+                                onChange={handleChangeFilter}
+                                placeholder={"Select"}
+                                options={patientBillNoData}
+                            />
+                        </Form.Item>
+                    </Form>
+
                 </Col>
                 <Col span={2}>
                     {patientBill?.result1?.length > 0 ?
@@ -513,25 +542,26 @@ const TabBillReceipt = ({ patientBillData, patientData,tabChange }: any) => {
                             cancelText="No"
                         >
                             <Button
-                                style={{ marginTop: 20 }}
+                                // style={{ marginTop: 20 }}
                                 size={'middle'} type='primary'
                                 danger
                             >
                                 Cancel
                             </Button>
                         </Popconfirm> : null}
-                        {base64Data&&<PrintReport showModal={showPdf} base64Data={base64Data} onCancel={handleCancel} onOk={handleCancel} />}
+                    {base64Data && <PrintReport showModal={showPdf}
+                        base64Data={base64Data} onCancel={handleCancel} onOk={handleCancel} />}
 
                 </Col>
                 <Col span={4}>
-                    <label>{''}</label><br />
+                    {/* <label>{''}</label><br /> */}
                     <Button onClick={printReport} style={{ marginLeft: 5, }} icon={<PrinterOutlined />}></Button>
                 </Col>
                 <Col span={8}></Col>
             </Row>
 
             <Table
-                style={{ marginTop: 30 }}
+                // style={{ marginTop: 30 }}
                 columns={columns}
                 size="small"
                 dataSource={patientBill?.result1}
@@ -578,8 +608,22 @@ const PatientBilling: React.FC = () => {
             "type": 1
         }
         const res = await requestGetPatientBill(staticParams);
+        const data1 = res?.result1?.map((item: any) => {
+            return (item.remainingAmt)
+        })
+        if (data1) {
+            var sum = data1.reduce((accumulator: any, currentValue: any) => {
+                return parseFloat(accumulator) + parseFloat(currentValue)
+            }, 0)
+            res.result2[0]['disCountAmt'] = sum.toString();
+            console.log(data1, res);
+            setPatientBillData(res)
+        }
+        else {
+            setPatientBillData(res)
 
-        setPatientBillData(res)
+        }
+
     }
 
     const onChangePatientData = (data: any) => {
