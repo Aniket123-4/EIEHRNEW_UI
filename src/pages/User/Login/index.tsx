@@ -182,8 +182,9 @@ const Login: React.FC = () => {
       // style={{height:window.innerHeight, justifyContent:'initial',backgroundRepeat:'no-repeat'}}
         backgroundImageUrl={`data:image/png;base64,${imgBase64}`}
         // backgroundImageUrl="https://www.shutterstock.com/shutterstock/photos/1401561251/display_1500/stock-photo-modern-microscope-for-operations-in-surgery-room-at-the-hospital-background-1401561251.jpg"
-        title="Ayuroma Wellness Center"
-        subTitle={<h3 style={{color:'red',textAlign:'end',paddingRight:90}}>(Since 1991)</h3>}
+        title="वैद्यराज मदन मोहन सिंह's"
+        subTitle={<><h1 style={{color:'black'}}>Ayuroma Wellness Center</h1>
+        <h3 style={{color:'red',textAlign:'end',paddingRight:100}}>(Since 1991)</h3></>}
         actions={
           <div
             style={{

@@ -7,6 +7,9 @@ import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
 import moment from 'moment';
 import { requestGetHospitalBill } from '../services/api';
 import '../services/index.css'
+import { dateFormat } from '@/utils/constant';
+import dayjs from 'dayjs';
+import { convertDate } from '@/utils/helper';
 
 
 
@@ -32,7 +35,7 @@ const items = [
     { key: '1', label: 'Action 1' },
     { key: '2', label: 'Action 2' },
 ];
-
+const { RangePicker } = DatePicker;
 
 const HospitalBillingDetail = ({ }: any) => {
     const formRef = useRef<any>();
@@ -57,14 +60,17 @@ const HospitalBillingDetail = ({ }: any) => {
 
 
     useEffect(() => {
-        getHospitalBill();
+        getHospitalBill({dateRange:["1900-01-01 00:00:00",moment()]});
         // getRateType();
     }, [])
 
-    const getHospitalBill = async () => {
+    const getHospitalBill = async (values:any) => {
+        values['fromDate']=convertDate(values?.dateRange[0]);
+        values['toDate']=convertDate(values?.dateRange[1]);;
+        console.log(values)
         const staticParams = {
-            "fromDate": "19000101",
-            "toDate": moment(),
+            "fromDate": values?.fromDate,
+            "toDate": values?.toDate,
             "userID": -2,
             "formID": -1,
             "type": 1
@@ -192,6 +198,45 @@ const HospitalBillingDetail = ({ }: any) => {
 
     return (
         <>
+            <Form
+                ref={formRef}
+                layout="horizontal"
+                form={form}
+                onFinish={getHospitalBill}
+                preserve={true}
+                scrollToFirstError={true}
+            >
+                <>
+                    <Card className="gutter-example">
+                        <Row gutter={16}>
+
+                            <Col className="gutter-row" span={8}>
+                                <Form.Item
+                                    initialValue={[dayjs('1900-01-01'), dayjs()]}
+                                    name="dateRange"
+                                    label="From - To Date"
+                                    rules={[{ required: true, message: 'Please select' }]}
+                                >
+                                    <RangePicker
+                                        defaultValue={[dayjs('1900-01-01'), dayjs()]}
+                                        format={dateFormat}
+                                        style={{ width: "100%" }}
+                                        size={'large'}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col style={{ justifyContent: 'flex-end'}}>
+                                <Button style={{ padding: 5, width: 100, height: 40 }} type="primary" htmlType="submit">
+                                    Submit
+                                </Button>
+                                {/* <Button onClick={goBack} style={{ marginLeft: 10, padding: 5, width: 100, height: 40 }} type="default" >
+                                    Cancel
+                                </Button> */}
+                            </Col>
+                        </Row>
+                    </Card>
+                </>
+            </Form>
             <Row gutter={16}>
                 <Col span={8}>
                     <Card title="Total NetAmount" bordered={false}>

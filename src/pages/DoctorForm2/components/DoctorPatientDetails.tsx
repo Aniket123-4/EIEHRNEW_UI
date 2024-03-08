@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ExclamationCircleFilled, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Modal, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Tabs, Descriptions, List } from 'antd';
+import { DownOutlined, ExclamationCircleFilled, PlusOutlined, PrinterOutlined } from '@ant-design/icons';
+import { Button, Col, DatePicker, Drawer, Form, Modal, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Tabs, Descriptions, List, Tree, Collapse, Typography } from 'antd';
 import { history, type IRoute } from 'umi';
 import type { TabsProps } from 'antd';
-import { requestGetPatientForDoctorOPIP } from '../services/api';
+import { requestGetPatientForDoctorOPIP, requestGetPatientForDoctorOPIPRep } from '../services/api';
 import GeneralInformation from './GeneralInformation';
 import Complain from './Complain';
 import VitalSign from './VitalSign';
@@ -17,6 +17,9 @@ import PatientDocument from './PatientDocument';
 import { requestGetPatientHeader } from '@/pages/Patient/services/api';
 import BasicDetails from './BasicDetails';
 import DischargeSummary from './DischargeSummary';
+import Item from 'antd/es/list/Item';
+import moment from 'moment';
+import PrintReport from '@/components/Print/PrintReport';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -36,8 +39,11 @@ const DoctorPatientDetails = React.forwardRef((props) => {
     const [patientBasicDetails, setPatientBasicDetails] = useState<any>(null);
     const [patientDetails, setPatientDetails] = useState<any>();
     const [isModalOpenForPatHistory, setIsModalOpenForPatHistory] = useState(false);
-    const [defaultActiveKey, setDefaultActiveKey] = useState("BASIC_INFORMATION");
+    const [defaultActiveKey, setDefaultActiveKey] = useState("DIAGNOSIS");
     const [openPastCaseDrawer, setOpenPastCaseDrawer] = useState(false);
+
+    const [base64Data, setBase64Data] = useState<any>("");
+    const [showPdf, setShowPdf] = useState<any>(false);
 
     const showPastCaseDrawer = () => {
         setOpenPastCaseDrawer(true);
@@ -85,9 +91,9 @@ const DoctorPatientDetails = React.forwardRef((props) => {
             key: 'COMPLAIN',
             label: 'PRESCRIPTION',
             children: [<Complain patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
-            // <Diagnosis patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
-            // <Medication patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />
-        ]
+                // <Diagnosis patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
+                // <Medication patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />
+            ]
         },
         {
             key: 'VITAL_SIGN',
@@ -98,8 +104,8 @@ const DoctorPatientDetails = React.forwardRef((props) => {
             key: 'DIAGNOSIS',
             label: 'DIAGNOSIS',
             children: [<Diagnosis patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
-            // <Investigation patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />
-        ]
+                // <Investigation patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />
+            ]
         },
         {
             key: 'MEDICATION',
@@ -124,7 +130,7 @@ const DoctorPatientDetails = React.forwardRef((props) => {
         {
             key: 'REFERAL_DOCTOR',
             label: 'REFERRAL DOCTOR',
-            children: <ReferalDoctor patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo}/>,
+            children: <ReferalDoctor patientDetails={patientDetails} patientCaseID={patientCaseID} onSaveSuccess={onSaveSuccess} admNo={admNo} />,
         },
         {
             key: 'CLINICAL_FINDING',
@@ -212,8 +218,8 @@ const DoctorPatientDetails = React.forwardRef((props) => {
             const response = await requestGetPatientForDoctorOPIP({ ...staticParams });
             setLoading(false)
             setPatientDetails(response)
-            console.log("response.result5.length", response.result5)
-            console.log("response.result7.length", response.result7.length)
+            // console.log("response.result5.length", response.result5)
+            // console.log("response.result7.length", response.result7.length)
             if (isPatientHistory && response.result7.length > 0) {
                 const dataExists = checkDataExists(response.result7[0]);
                 console.log({ dataExists })
@@ -264,6 +270,7 @@ const DoctorPatientDetails = React.forwardRef((props) => {
 
     const handleCancel = () => {
         setIsModalOpenForPatHistory(false);
+        setShowPdf(false);
     };
 
 
@@ -338,12 +345,15 @@ const DoctorPatientDetails = React.forwardRef((props) => {
         )
     }
 
-    const onPressOnCase = (item: any) => {
+    const onPressOnCase = (item: any, visit: any) => {
         console.log(item)
         const patientID: string = item?.patientID;
         // const patientNo: string = patientNo;
         const patientCaseID: string = item?.patientCaseID;
         const patientCaseNo: string = item?.patientCaseNo;
+        setAdmNo(visit)
+        setPatientCaseNo(item?.patientCaseNo)
+        setPatientCaseID(item?.patientCaseID)
 
         getPatientDetails(
             patientID,
@@ -357,31 +367,122 @@ const DoctorPatientDetails = React.forwardRef((props) => {
 
     const pastCasesDrawer = () => {
 
+        const groupedCases: any = {};
+
+        patientDetails?.result11.forEach((obj: any, index: number) => {
+            groupedCases[obj.patientCaseNo] =
+                groupedCases[obj.patientCaseNo] || [];
+            groupedCases[obj.patientCaseNo].push(obj);
+        })
+
+        // const groupedCases1 = Object.groupBy(patientDetails?.result11, ({ patientCaseNo }: any) => patientCaseNo);
+        // Output
+        // {
+        //     patientDetails ?
+
+        //         <List
+        //             itemLayout="vertical"
+        //             dataSource={[groupedCases]}
+        //             renderItem={(item: any, index: number) => (
+
+        //                 <List.Item>
+
+        //                     <Card
+        //                         hoverable={true}
+        //                         onClick={() => onPressOnCase(item)}
+        //                         bodyStyle={{ padding: 5, margin: 5 }}
+        //                     >
+        //                         <h3>{`Case No: ${item?.patientCaseNo}`}</h3>
+        //                         <div dangerouslySetInnerHTML={{ __html: item?.displayName }} />
+        //                     </Card>
+
+        //                 </List.Item>
+
+        //             )}
+        //         />
+        //         : null
+        // }
 
         return (
             <Drawer title="Patient Past Cases" onClose={onClosePastCaseDrawer} open={openPastCaseDrawer}>
-                {patientDetails ?
-                    <List
-                        itemLayout="vertical"
-                        dataSource={patientDetails?.result11}
-                        renderItem={(item, index) => (
 
-                            <List.Item>
-                                <Card
-                                    hoverable={true}
-                                    onClick={() => onPressOnCase(item)}
-                                    bodyStyle={{ padding: 5, margin: 5 }}
-                                >
-                                    <h3>{`Case No: ${item?.patientCaseNo}`}</h3>
-                                    <div dangerouslySetInnerHTML={{ __html: item?.displayName }} />
-                                </Card>
-
-                            </List.Item>
-
-                        )}
-                    /> : null}
+                {
+                    groupedCases && Object.keys(groupedCases).map((patientCase: any, i) => {
+                        return (
+                            <div>
+                                <Collapse
+                                    style={{ backgroundColor: (patientCase == patientCaseNo ? '#AFDBF5' : 'white') }}
+                                    size="small"
+                                    items={[{
+                                        key: '1',
+                                        label:
+                                            <Row style={{ justifyContent: 'space-between' }}>
+                                                <Typography>{`Case No: ${patientCase}`}</Typography>
+                                                <Button onClick={() => onPressOnCase(groupedCases[patientCase][0], false)} size='small'>{'All'}</Button>
+                                            </Row>,
+                                        children:
+                                            <Row style={{ width: '100%' }}>
+                                                {groupedCases[patientCase].map((item: any) => {
+                                                    return (
+                                                        <Card
+                                                            style={{
+                                                                backgroundColor: (patientCase == patientCaseNo &&
+                                                                    item?.admNo == admNo ? '#AFDBF5' : 'white'),
+                                                                width: '50%', height: 100
+                                                            }}
+                                                            hoverable={true}
+                                                            onClick={() => onPressOnCase(item, item?.admNo)}
+                                                            bodyStyle={{ padding: 5, margin: 5 }}
+                                                        >
+                                                            <h3>{`Visit No: ${item?.admNo}`}</h3>
+                                                            <h5>{`Visit Date: ${moment(item?.actualVisitDate).format('DD MMM YYYY')}`}</h5>
+                                                            {/* <div dangerouslySetInnerHTML={{ __html: item?.displayName }} /> */}
+                                                        </Card>
+                                                    )
+                                                })}
+                                            </Row>
+                                    }]}
+                                />
+                            </div>
+                        )
+                    })
+                }
             </Drawer>
         )
+    }
+
+    const printReport = async () => {
+        try {
+            setLoading(true);
+            const staticParams = {
+                
+                "patientCaseID": patientCaseID,
+                "patientCaseNo": patientCaseNo,
+                "patientID": patientID,
+                "patientNo": patientNo,
+                "caseTypeID": 1,
+                "admNo":admNo,
+                patientName: '',
+                fromDate: '01 Jan 1900',
+                toDate: '01 Jan 1900',
+                "userID": -1,
+                "formID": -1,
+                "type": 2,
+                "show": true,
+                "exportOption": ".pdf"
+            }
+            const res = await requestGetPatientForDoctorOPIPRep(staticParams);
+            setBase64Data(res?.result)
+            setShowPdf(true)
+            if (res.isSuccess === true) {
+                setLoading(false)
+            }
+            setLoading(false)
+        } catch (error) {
+            console.log({ error });
+            message.error('please try again');
+            setLoading(false)
+        }
     }
 
     return (
@@ -406,6 +507,7 @@ const DoctorPatientDetails = React.forwardRef((props) => {
                     }
                     style={{ boxShadow: '2px 2px 2px #4874dc' }}
                     extra={<>
+                        <Button onClick={printReport} style={{ marginLeft: 5, }} icon={<PrinterOutlined />}></Button>
                         <Button type="primary" loading={loading} onClick={showPastCaseDrawer}>
                             Past Case
                         </Button>
@@ -417,12 +519,16 @@ const DoctorPatientDetails = React.forwardRef((props) => {
                             {patientBasicDetails ?
                                 <Tabs
                                     defaultActiveKey={defaultActiveKey}
-                                    tabPosition={'left'}
+                                    tabPosition={'top'}
                                     style={{
                                     }}
                                     items={items}
                                     onChange={onChange}
                                 /> : null}
+                                {base64Data && 
+                                <PrintReport showModal={showPdf} 
+                                base64Data={base64Data} onCancel={handleCancel} 
+                                onOk={handleCancel} />}
                         </div>
                     </Spin>
                 </Card>

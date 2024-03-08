@@ -5,7 +5,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
 import DiseaseList from './DiseaseList';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
-import { requestDiseaseTypeList, requestGetDiseaseLink, requestGetInvParameterMasterList, requestLinkDisease } from '../services/api';
+import { requestDiseaseList, requestDiseaseTypeList, requestGetDiseaseLink, requestGetInvParameterMasterList, requestLinkDisease } from '../services/api';
 import { requestGetInvParameter, requestGetInvestigation } from '@/pages/Investigation/services/api';
 import { requestGetItem } from '@/pages/MedicalStore/services/api';
 import DiseaseLinkedList from './DiseaseLinkedList';
@@ -15,6 +15,7 @@ import { TableRowSelection } from 'antd/es/table/interface';
 
 
 const { Option } = Select;
+const { TextArea } = Input;
 
 interface Item {
     key: string;
@@ -67,7 +68,7 @@ const AddDiseaseLink = () => {
 
 
     useEffect(() => {
-        getDiseaseType();
+        getDiseaseList();
         getInvParameter();
         getItemList()
     }, [])
@@ -100,8 +101,6 @@ const AddDiseaseLink = () => {
                 };
                 setItemList([...itemList])
                 check.push(item.itemID);
-                // setEditingKey(item?.itemID);
-                // linkMedForm.setFieldsValue(item)
             })
             setSelectedRowKeys(check)
             getDiseaseLinkedList(diseaseId, 1)
@@ -118,35 +117,6 @@ const AddDiseaseLink = () => {
         console.log(itemList)
         setLoading(false)
     }
-    const handleChangeFilter = (data: any) => {
-        console.log(data)
-    }
-    const edit = (record: Partial<Item> & { key: React.Key }, checked: boolean) => {
-        setEditingKey(record.key);
-        const index: boolean = checkedList.find((item: any) => record.key === item);
-        // const check = dd.includes(values.col2);
-        // const index: any = itemList.find((item: any) => record.key === item?.key);
-        // itemList[index]=[{isSuccess:true}]
-        const i = itemList.findIndex(x => x.key === record.key)
-        itemList[i] = { ...record, isSuccess: checked }
-        setItemList([...itemList])
-        if (checked) {
-            if (!index) setCheckedList([record.key, ...checkedList])
-            linkMedForm.setFieldsValue({
-                noOfDays: record?.noOfDays,
-                noOfTimesPerDay: "",
-                qtyPerTimes: "",
-                instruction: "",
-                advice: "",
-                diet: "",
-                ...record
-            });
-        }
-        if (!checked) {
-            const newData = checkedList.filter((item: any) => item !== record?.key);
-            setCheckedList(newData)
-        }
-    };
     const getItemList = async () => {
         const staticParams = {
             "itemID": -1,
@@ -195,17 +165,18 @@ const AddDiseaseLink = () => {
         return dataMaskForDropdown;
         // }
     }
-    const getDiseaseType = async () => {
+    const getDiseaseList = async () => {
         const params = {
-            "diseaseTypeID": -1,
-            "specialTypeID": -1,
-            "isActive": -1,
+            "diseaseID": "-1",
+            "diseaseTypeID": "-1",
+            "specialTypeID": "-1",
+            "isActive": "-1",
             "type": 1
         }
-        const res = await requestDiseaseTypeList(params);
+        const res = await requestDiseaseList(params);
         if (res?.result?.length > 0) {
             const dataMaskForDropdown = res?.result?.map((item: any, index: number) => {
-                return { value: item.diseaseTypeID, label: item.diseaseTypeName }
+                return { value: item.diseaseID, label: item.diseaseName }
             })
             setDiseaseType(dataMaskForDropdown)
         }
@@ -292,30 +263,7 @@ const AddDiseaseLink = () => {
             }
         }
     };
-    const onChange = (e: CheckboxChangeEvent) => {
-        formRef.current?.setFieldsValue({
-            isActive: e.target.checked
-        })
-    };
 
-    const showModal = () => {
-        setIsModalOpen(true);
-    };
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
-
-    const setEditField = (data: any) => {
-        form.setFieldsValue({
-            diseaseTypeName: data?.diseaseName,
-            diseaseTypeCode: data?.diseaseCodeICD,
-            diseaseTypeID: data?.diseaseTypeID,
-            specialTypeID: data?.specialTypeID,
-            isActive: data?.isActive,
-        })
-        window.scrollTo(0, 0)
-        setDiseaseID(data?.diseaseID)
-    };
     const onEditingRecord = async (value: any, record: any) => {
         console.log(value)
         const i = itemList.findIndex(x => x.key === record.key)
@@ -323,14 +271,19 @@ const AddDiseaseLink = () => {
         await setItemList([...itemList])
         console.log(itemList, i)
     }
+    let timer: any;
 
-    const saveData = async (record: any) => {
-        // setItemList([])
-        const newItem = linkMedForm.getFieldsValue()
-        const i = itemList.findIndex(x => x.key === record.key)
-        itemList[i] = { ...newItem, key: record.key, medicine: record.medicine }
-        await setItemList([...itemList])
-        setEditingKey('');
+    const waitTime = 1000;
+
+    function doneTyping(value: any, record: any) {
+        onEditingRecord(value, record);
+        console.log(`The user is done typing: ${value}`);
+    }
+    const onChangeEdit = (value: any, record: any) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            doneTyping(value, record);
+        }, waitTime);
     }
 
     const columns = [
@@ -339,26 +292,6 @@ const AddDiseaseLink = () => {
             dataIndex: 'medicine',
             key: 'medicine',
             width: '19%',
-            // fixed: 'left',
-            // render: (text: any) => <Checkbox>{text}</Checkbox>,
-            // render: (_: any, record: any) => {
-            //     const editable = isEditing(record);
-            //     return (
-            //         <>
-            //             <Checkbox
-            //                 checked={checkedList.find((item: any) => record?.key === item)}
-            //                 // disabled={editingKey !== ''} 
-            //                 // onClick={(t: any) => {
-            //                 //     edit(record, t.target.checked)
-            //                 // }}
-            //                 onChange={(t: any) => {
-            //                     edit(record, t.target.checked)
-            //                 }}
-            //             >{record?.medicine}</Checkbox>
-
-            //         </>
-            //     )
-            // }
         },
         {
             title: 'No of Days',
@@ -367,8 +300,11 @@ const AddDiseaseLink = () => {
             width: '10%',
             // editable: true,
             render: (_: any, record: any) => <Input
-            type='number'
-                onChange={(e: any) => onEditingRecord({ "noOfDays": e.target.value }, record,)}
+                onInputCapture={() => console.log("onInputCapture")}
+                onBlur={(e: any) => console.log("onBlur", e.target.value)}
+                min={1}
+                type='number'
+                onChange={(e: any) => onChangeEdit({ "noOfDays": e.target.value }, record,)}
                 size='small' disabled={record.isSuccess === false} defaultValue={record.noOfDays}></Input>,
         },
         {
@@ -377,8 +313,8 @@ const AddDiseaseLink = () => {
             key: 'noOfTimesPerDay',
             width: '10%',
             editable: true,
-            render: (_: any, record: any) => <Input size='small' type='number'
-                onChange={(e: any) => onEditingRecord({ "noOfTimesPerDay": e.target.value }, record,)}
+            render: (_: any, record: any) => <Input min={1} size='small' type='number'
+                onChange={(e: any) => onChangeEdit({ "noOfTimesPerDay": e.target.value }, record,)}
                 disabled={record.isSuccess === false}
                 defaultValue={record.noOfTimesPerDay}></Input>,
         },
@@ -388,8 +324,8 @@ const AddDiseaseLink = () => {
             key: 'qtyPerTimes',
             editable: true,
             width: '10%',
-            render: (_: any, record: any) => <Input size='small' type='number'
-                onChange={(e: any) => onEditingRecord({ "qtyPerTimes": e.target.value }, record,)}
+            render: (_: any, record: any) => <Input min={1} size='small' type='number'
+                onChange={(e: any) => onChangeEdit({ "qtyPerTimes": e.target.value }, record,)}
                 disabled={record.isSuccess === false} defaultValue={record.qtyPerTimes}></Input>,
         },
         {
@@ -398,9 +334,9 @@ const AddDiseaseLink = () => {
             key: 'instruction',
             width: '19%',
             editable: true,
-            render: (_: any, record: any) => <Input size='small'
-                onChange={(e: any) => onEditingRecord({ "instruction": e.target.value }, record,)}
-                disabled={record.isSuccess === false} defaultValue={record.instruction}></Input>,
+            render: (_: any, record: any) => <TextArea size='small' autoSize
+                onChange={(e: any) => onChangeEdit({ "instruction": e.target.value }, record,)}
+                disabled={record.isSuccess === false} defaultValue={record.instruction}></TextArea>,
         },
         {
             title: 'Advice',
@@ -408,9 +344,9 @@ const AddDiseaseLink = () => {
             key: 'advice',
             width: '17%',
             editable: true,
-            render: (_: any, record: any) => <Input size='small'
-                onChange={(e: any) => onEditingRecord({ "advice": e.target.value }, record,)}
-                disabled={record.isSuccess === false} defaultValue={record.advice}></Input>,
+            render: (_: any, record: any) => <TextArea size='small' autoSize
+                onChange={(e: any) => onChangeEdit({ "advice": e.target.value }, record,)}
+                disabled={record.isSuccess === false} defaultValue={record.advice}></TextArea>,
         },
         {
             title: 'Diet',
@@ -418,27 +354,47 @@ const AddDiseaseLink = () => {
             key: 'diet',
             width: '15%',
             editable: true,
-            render: (_: any, record: any) => <Input size='small'
-            onChange={(e:any)=>onEditingRecord({"diet":e.target.value},record,)} 
-                disabled={record.isSuccess === false} defaultValue={record.diet}></Input>,
+            render: (_: any, record: any) => <TextArea size='small' autoSize
+                onChange={(e: any) => onChangeEdit({ "diet": e.target.value }, record,)}
+                disabled={record.isSuccess === false} defaultValue={record.diet}></TextArea>,
         },
-        {
-            title: 'Save',
-            dataIndex: 'diseaseID',
-            key: 'diseaseID',
-            width: '2%',
-            // sorter: (a, b) => a.diseaseID - b.diseaseID,
-            // sortDirections:'descend',
-            render: (_: any, record: any) => {
-                const editable = isEditing(record);
-                return editable ? (
-                    <Button onClick={() => saveData(record)} size='small'>ok</Button>
-                ) : null
-                // <Button onClick={() => edit(record,true)} size='small' icon={<EditOutlined />}/>
-            }
-        },
-
     ];
+    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+        console.log('selectedRowKeys changed: ', newSelectedRowKeys, selectedRowKeys);
+        setSelectedRowKeys(newSelectedRowKeys);
+    };
+    const rowSelection: TableRowSelection<DataType> = {
+        selectedRowKeys,
+        onChange: (selectedRowKeys, selectedRows) => {
+            onSelectChange(selectedRowKeys)
+        },
+        onSelect: (record, selected, selectedRows) => {
+            const i = itemList.findIndex(x => x.key === record.key)
+            itemList[i] = { ...record, isSuccess: selected }
+            setItemList([...itemList])
+
+            console.log(record, selected, selectedRows);
+        },
+        onSelectAll: (selected, selectedRows, changeRows) => {
+            const arr = itemList.map((item: any) => {
+                return {
+                    ...item,
+                    isSuccess: selected
+                }
+            })
+            setSelectedRowKeys(selectedRows);
+            setItemList(arr)
+        },
+    };
+
+    const filterOption = (input: string, option?: { label: string; value: string }) =>
+        (option?.label.toLowerCase() ?? '').includes(input.toLowerCase());//.toLowerCase()
+
+    const onChangeCheck: GetProp<typeof Checkbox.Group, 'onChange'> = (checkedValues: any) => {
+        setCheckedTest(checkedValues);
+        console.log(checkedValues, checkedTest)
+    };
+    
     const EditableCell: React.FC<EditableCellProps> = ({
         editing,
         dataIndex,
@@ -473,57 +429,10 @@ const AddDiseaseLink = () => {
             </td>
         );
     };
-    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-        console.log('selectedRowKeys changed: ', newSelectedRowKeys, selectedRowKeys);
-        setSelectedRowKeys(newSelectedRowKeys);
-    };
-
-    // const rowSelection = {
-    //     selectedRowKeys,
-    //     onChange: onSelectChange,
-    // };
-    const rowSelection: TableRowSelection<DataType> = {
-        selectedRowKeys,
-        onChange: (selectedRowKeys, selectedRows) => {
-            onSelectChange(selectedRowKeys)
-        },
-        onSelect: (record, selected, selectedRows) => {
-            edit(record, selected)
-            console.log(record, selected, selectedRows);
-        },
-        onSelectAll: (selected, selectedRows, changeRows) => {
-            console.log(selected, selectedRows, changeRows);
-        },
-    };
-    const mergedColumns = columns.map((col) => {
-        if (!col.editable) {
-            return col;
-        }
-        return {
-            ...col,
-            onCell: (record: Item) => ({
-                record,
-                inputType: col.dataIndex === 'medicine' ? 'text' : 'checked',
-                dataIndex: col.key,
-                title: col.title,
-                editing: record.isSuccess == true//isEditing(record),
-            }),
-        };
-    });
-
-    const filterOption = (input: string, option?: { label: string; value: string }) =>
-        (option?.label.toLowerCase() ?? '').includes(input.toLowerCase());//.toLowerCase()
-
-    const onChangeCheck: GetProp<typeof Checkbox.Group, 'onChange'> = (checkedValues: any) => {
-        setCheckedTest(checkedValues);
-        console.log(checkedValues, checkedTest)
-    };
     const linkDiseaseMedicineForm = () => {
         return (
-
             <Row>
                 <Card
-
                     title="Medicine"
                     style={{ width: '70%', boxShadow: '2px 2px 2px #4874dc' }}
                     extra={[]}
@@ -532,13 +441,14 @@ const AddDiseaseLink = () => {
                         form={linkMedForm}
                         component={false}>
                         <Table
+                            scroll={{ y: 470 }}
                             rowSelection={rowSelection}
+                            rowClassName="editable-row"
                             components={{
                                 body: {
                                     cell: EditableCell,
                                 },
                             }}
-                            rowClassName="editable-row"
                             size='small'
                             dataSource={itemList}
                             columns={columns}
@@ -546,7 +456,7 @@ const AddDiseaseLink = () => {
                         />
                     </Form>
                     <Col style={{ justifyContent: 'flex-end' }}>
-                        <Button onClick={() => linkDisease(itemList, 2)} style={{ width: 100 }} size='large' type="primary" htmlType="submit">
+                        <Button onClick={() => linkDisease(itemList, 2)} style={{ width: 100 }} type="primary" htmlType="submit">
                             Link
                         </Button>
                         <Button onClick={goBack}
@@ -556,18 +466,16 @@ const AddDiseaseLink = () => {
                     </Col>
                 </Card>
 
-
-
                 <Card
-                    title="Test"
+                    title="Test Parameter"
                     style={{ width: '30%', boxShadow: '2px 2px 2px #4874dc' }}
-
-                    extra={[]}
                 >
-                    <Checkbox.Group style={{ width: '100%' }} options={invParameterID}
-                        onChange={onChangeCheck}
-                        value={checkedTest}
-                    />
+                    <Col style={{ height: 500, overflow: 'auto' }}>
+                        <Checkbox.Group style={{ width: '100%', }} options={invParameterID}
+                            onChange={onChangeCheck}
+                            value={checkedTest}
+                        />
+                    </Col>
                 </Card>
             </Row>
         )

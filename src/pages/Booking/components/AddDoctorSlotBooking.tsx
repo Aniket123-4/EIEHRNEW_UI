@@ -230,29 +230,29 @@ const AddDoctorSlotBooking = () => {
         }
         console.log({
             params
-        });
+        },values);
 
 
-        try {
-            setLoading(true)
-            const response = await requestAddPatDocAppointments(params);
-            setLoading(false)
-            console.log(response);
+        // try {
+        //     setLoading(true)
+        //     const response = await requestAddPatDocAppointments(params);
+        //     setLoading(false)
+        //     console.log(response);
 
-            if (response?.isSuccess) {
-                message.success(response?.msg);
-                form.resetFields();
-                // if (investigationListRef.current) {
-                //     investigationListRef.current.getList();
-                // }
-            } else {
-                message.error(response?.msg);
-            }
-        } catch (error) {
-            setLoading(false)
-            console.log({ error });
-            message.error(error);
-        }
+        //     if (response?.isSuccess) {
+        //         message.success(response?.msg);
+        //         form.resetFields();
+        //         // if (investigationListRef.current) {
+        //         //     investigationListRef.current.getList();
+        //         // }
+        //     } else {
+        //         message.error(response?.msg);
+        //     }
+        // } catch (error) {
+        //     setLoading(false)
+        //     console.log({ error });
+        //     message.error(error);
+        // }
 
     }
 
@@ -330,7 +330,7 @@ const AddDoctorSlotBooking = () => {
                                                                 valuePropName="checked"
                                                                 label="aa"
                                                                 name={[day.name, 'selected']}>
-                                                                <Checkbox>{slots[key]['week'][day.key]['name']}</Checkbox>
+                                                                <Checkbox onChange={()=>form.setFieldValue(slots[0].week[7].selected,true)}>{slots[key]['week'][day.key]['name']}</Checkbox>
                                                             </Form.Item>
                                                         </Space>
                                                     ))}

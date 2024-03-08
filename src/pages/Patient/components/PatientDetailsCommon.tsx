@@ -68,9 +68,9 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
             if(caseChoiceMaskForDropdown)
                 {
                     form.setFieldValue("case",caseChoiceMaskForDropdown[0].value);
-                    getPatientVisitNo(caseChoiceMaskForDropdown[0].value);
+                    const d=await getPatientVisitNo(caseChoiceMaskForDropdown[0].value);
                     // Object.keys(props).length ? props?.onChange({ ...result1, "patientCaseID": values.case }) : null;
-                    props?.onChange({ ...result1, "patientCaseID": caseChoiceMaskForDropdown[0].value });
+                    props?.onChange({ ...result1, "patientCaseID": caseChoiceMaskForDropdown[0].value,"admNo": d});
                     const patentBasicDetails = [
                         {
                             key: '1',
@@ -253,8 +253,11 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
             })
             // dataMaskForDropdown.unshift({ value: "-1", label: "All" });
             if(dataMaskForDropdown)
-                form.setFieldValue("AdmissionNo",dataMaskForDropdown[0].value)
+                {
+                    form.setFieldValue("AdmissionNo",dataMaskForDropdown[0].value)
+                }
             setAdmissionNo(dataMaskForDropdown)
+            return dataMaskForDropdown[0].value
         }
     }
     const handleChangeCase = (v: any) => {

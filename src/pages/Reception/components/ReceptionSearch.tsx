@@ -14,6 +14,7 @@ import { requestGetPatientDailyCount, requestGetPatientSearchOPIP } from '../ser
 import AddUpdatePatientCase from './AddUpdatePatientCase';
 import { requestGetSection, requestGetUserList, requestVPreEmpType } from '@/services/apiRequest/dropdowns';
 import dayjs from 'dayjs';
+import '../services/styles.css'
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -84,6 +85,11 @@ const ReceptionSearch = React.forwardRef((props) => {
             dataIndex: 'candName',
             key: 'candName',
             fixed: 'left',
+            width:'20%',
+            render: (_, record) => <Row style={{justifyContent:'space-between'}}>
+                <Typography>{record?.candName}</Typography>
+                {record?.isVIP &&<Tag color={"green"}>{"Vip" }</Tag>}
+            </Row>,
         },
         {
             title: 'Case No',
@@ -305,7 +311,10 @@ const ReceptionSearch = React.forwardRef((props) => {
                 </> : null}
 
 
-                <div style={{ marginTop: 10 }}> <Table size='small' scroll={{ x: 1000 }} columns={columns} dataSource={list} /></div>
+                <div style={{ marginTop: 10 }}> <Table
+                // rowClassName={(record, index) => record.isVIP=== true ?  'table-row-dark': 'table-row-light'}
+
+                size='small' scroll={{ x: 1000 }} columns={columns} dataSource={list} /></div>
             </>
         )
     }

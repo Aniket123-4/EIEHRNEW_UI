@@ -54,6 +54,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
             formID: 0,
             type: 0,
             isEditorReq: "true",
+            invNameML:'',
             InvRange: "0"
         }
         console.log(values);
@@ -245,7 +246,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                             {...restField}
                                             label="Patient Type"
                                             name={[name, 'patientTypeName']}
-                                            rules={[{ required: true, message: 'Patient Type' }]}
+                                            rules={[{ required: false, message: 'Patient Type' }]}
                                         >
                                             <Input disabled placeholder="Patient Type" />
                                         </Form.Item>
@@ -256,7 +257,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                             {...restField}
                                             label="Range From"
                                             name={[name, 'col5']}
-                                            rules={[{ required: true, message: 'Range From' }]}
+                                            rules={[{ required: false, message: 'Range From' }]}
                                         >
                                             <InputNumber stringMode style={{ width: '100%' }} placeholder="Range From" />
                                         </Form.Item>
@@ -267,7 +268,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                             {...restField}
                                             label="Range To"
                                             name={[name, 'col6']}
-                                            rules={[{ required: true, message: 'Range To' }]}
+                                            rules={[{ required: false, message: 'Range To' }]}
                                         >
                                             <InputNumber stringMode style={{ width: '100%' }} placeholder="Range To" />
                                         </Form.Item>
@@ -367,7 +368,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                         </Row>
 
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={6}>
+                            {/* <Col className="gutter-row" span={6}>
                                 <Form.Item
                                     name="invNameML"
                                     label="Unit Name in Other Language"
@@ -375,7 +376,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                 >
                                     <Input size={'large'} placeholder="Please enter" />
                                 </Form.Item>
-                            </Col>
+                            </Col> */}
                             <Col className="gutter-row" span={6}>
                                 <Form.Item
                                     name="isService"
@@ -513,11 +514,12 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
 
     return (
         <PageContainer
+        title=" "
         // style={{ backgroundColor: '#4874dc', height: 120 }}
         >
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
                 <Card
-                    title="Create investigation"
+                    title="Create Investigation Test"
                     style={{ boxShadow: '2px 2px 2px #4874dc' }}
                 >
                     <Spin tip="Please wait..." spinning={loading}>
