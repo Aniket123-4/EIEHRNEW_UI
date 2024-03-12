@@ -60,7 +60,7 @@ const HospitalBillingDetail = ({ }: any) => {
 
 
     useEffect(() => {
-        getHospitalBill({dateRange:["1900-01-01 00:00:00",moment()]});
+        getHospitalBill({dateRange:[moment().subtract(1, 'months'),moment()]});
         // getRateType();
     }, [])
 
@@ -111,10 +111,10 @@ const HospitalBillingDetail = ({ }: any) => {
             { title: 'Name', dataIndex: 'patientName', key: 'patientName' },
             { title: 'CaseNo', dataIndex: 'patientCaseNo', key: 'patientCaseNo' },
             { title: 'PatientNo', dataIndex: 'patientNo', key: 'patientNo' },
-            { title: 'Admission No', dataIndex: 'admNo', key: 'admNo' },
+            { title: 'Visit No', dataIndex: 'admNo', key: 'admNo' },
             { title: 'ParameterName', dataIndex: 'invParameterName', key: 'invParameterName' },
             { title: 'Net Amount', dataIndex: 'netAmount', key: 'netAmount' },
-            { title: 'Vat', dataIndex: 'netAmountVAT', key: 'netAmountVAT' },
+            { title: 'GST', dataIndex: 'netAmountVAT', key: 'netAmountVAT' },
             { title: 'Final Amount', dataIndex: 'finalGrossAmount', key: 'finalGrossAmount' },
             { title: 'Quantity', dataIndex: 'qty', key: 'qty' },
         ];
@@ -140,10 +140,10 @@ const HospitalBillingDetail = ({ }: any) => {
             { title: 'Name', dataIndex: 'patientName', key: 'patientName' },
             { title: 'CaseNo', dataIndex: 'patientCaseNo', key: 'patientCaseNo' },
             { title: 'PatientNo', dataIndex: 'patientNo', key: 'patientNo' },
-            { title: 'Admission No', dataIndex: 'admNo', key: 'admNo' },
+            { title: 'Visit No', dataIndex: 'admNo', key: 'admNo' },
             { title: 'ParameterName', dataIndex: 'invParameterName', key: 'invParameterName' },
             { title: 'Net Amount', dataIndex: 'netAmount', key: 'netAmount' },
-            { title: 'Vat', dataIndex: 'netAmountVAT', key: 'netAmountVAT' },
+            { title: 'GST', dataIndex: 'netAmountVAT', key: 'netAmountVAT' },
             { title: 'Final Amount', dataIndex: 'finalGrossAmount', key: 'finalGrossAmount' },
             { title: 'Quantity', dataIndex: 'qty', key: 'qty' },
         ];
@@ -193,7 +193,7 @@ const HospitalBillingDetail = ({ }: any) => {
         { title: 'Final Amt', dataIndex: 'totFinalGrossAmount', key: 'totFinalGrossAmount' },
         { title: 'Net Amt', dataIndex: 'totNetAmount', key: 'totNetAmount' },
         { title: 'Discount', dataIndex: 'disCountAmt', key: 'disCountAmt' },
-        { title: 'VAT', dataIndex: 'netAmountVAT', key: 'netAmountVAT' },
+        { title: 'GST', dataIndex: 'netAmountVAT', key: 'netAmountVAT' },
     ];
 
     return (
@@ -212,7 +212,7 @@ const HospitalBillingDetail = ({ }: any) => {
 
                             <Col className="gutter-row" span={8}>
                                 <Form.Item
-                                    initialValue={[dayjs('1900-01-01'), dayjs()]}
+                                    initialValue={[dayjs().subtract(1, 'months'), dayjs()]}
                                     name="dateRange"
                                     label="From - To Date"
                                     rules={[{ required: true, message: 'Please select' }]}

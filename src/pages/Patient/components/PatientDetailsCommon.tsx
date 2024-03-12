@@ -55,7 +55,7 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
             //console.log(response?.result1[0].candName);
             form.setFieldValue("Search", response?.result1[0].candName)
             const result1 = response?.result1[0];
-            console.log(result1)
+            // console.log(result1)
             if (response?.result2) {
                 const result2 = response?.result2[0];
                 setPatientImage(result2);
@@ -257,7 +257,7 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
                     form.setFieldValue("AdmissionNo",dataMaskForDropdown[0].value)
                 }
             setAdmissionNo(dataMaskForDropdown)
-            return dataMaskForDropdown[0].value
+            return dataMaskForDropdown[dataMaskForDropdown.length-1].value
         }
     }
     const handleChangeCase = (v: any) => {

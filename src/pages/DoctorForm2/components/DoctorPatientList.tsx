@@ -44,10 +44,11 @@ const DoctorPatientList = React.forwardRef((props) => {
         //     key: 'noOfSlotPerHrs',
         // },
         {
-            title: 'Admission Date',
+            title: 'Visit Date',
             dataIndex: 'admissionDate',
             key: 'admissionDate',
             fixed: 'left',
+            width:120
         },
         {
             title: 'Name',
@@ -56,36 +57,38 @@ const DoctorPatientList = React.forwardRef((props) => {
             fixed: 'left',
         },
         {
-            title: 'Patient Number',
+            title: 'Patient No',
             key: 'patientNo',
             dataIndex: 'patientNo',
+            width:100
+
         },
         {
-            title: 'Case Number',
+            title: 'Case No',
             key: 'patientCaseNo',
             dataIndex: 'patientCaseNo',
-
+            width:90
         },
         {
-            title: 'Admission Type',
+            title: 'Visit No',
             key: 'admNo',
             dataIndex: 'admNo',
-
+            width:90
         }, {
-            title: 'Token Number',
+            title: 'Token No',
             key: 'tokenNo',
             dataIndex: 'tokenNo',
-
+            width:80,
         }, {
             title: 'Age',
             key: 'age',
             dataIndex: 'age',
-
+            width:60
         }, {
             title: 'Gender',
             key: 'genderName',
             dataIndex: 'genderName',
-
+            width:80
         }, {
             title: 'Mobile Number',
             key: 'curMobileNo',
@@ -301,7 +304,7 @@ const DoctorPatientList = React.forwardRef((props) => {
                 <div style={contentStyle}>
                     <Table
                         // scroll={x:'90%'}
-                        scroll={{ x: 2000 }}
+                        scroll={{ x: 1500 }}
                         columns={columns}
                         dataSource={tempList}
                         pagination={false}

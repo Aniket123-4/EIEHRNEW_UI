@@ -234,9 +234,10 @@ const ItemList = ({ refresh, editRecord }: any) => {
                 {itemList &&
                     <Spin tip="Please wait..." spinning={loading}>
                         <Table
-                            scroll={{ y: 270 }}
+                            scroll={{ y: 300 }}
                             columns={columns}
                             dataSource={itemList}
+                            size='small'
                         // rowClassName="editable-row"
                         // pagination={{
                         //     onChange: cancel,

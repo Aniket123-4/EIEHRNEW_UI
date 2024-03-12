@@ -95,14 +95,15 @@ const DoctorSlotBookingList = React.forwardRef((props) => {
 
 
     const submitDeleteAll = async (data: any) => {
-        const { userSlotId, docUserID, displaySlotFromDate, displaySlotToDate } = data;
+        const { userSlotID, docUserID, displaySlotFromDate, displaySlotToDate } = data;
+        console.log(docUserID, userSlotID)
 
         const { dateRange, isActive } = formFilter.getFieldsValue()
         let slotFromDate = convertDate(dateRange[0]);
         let slotToDate = convertDate(dateRange[1]);
 
         const requestParams = {
-            userSlotID: userSlotId,
+            userSlotID: userSlotID,
             docUserID: docUserID,
             noOfSlotPerHrs: 3,
             slotFromDate: moment(slotFromDate).format(dateFormat),
@@ -110,7 +111,7 @@ const DoctorSlotBookingList = React.forwardRef((props) => {
             fromHrs: '00:00:00',
             toHrs: '00:00:00',
             isActive: false,
-            isForDelete: false,
+            isForDelete: true,
             userWeekSlotID: '',
             formID: -1,
             type: 3,
@@ -129,7 +130,9 @@ const DoctorSlotBookingList = React.forwardRef((props) => {
 
             if (response?.isSuccess) {
                 message.success(response?.msg);
-                history.push('/booking/doctor-slot-booking');
+                const formValue = formFilter.getFieldsValue()
+                filterSubmit(formValue)
+                // history.push('/booking/doctor-slot-booking');
             } else {
                 message.error(response?.msg);
             }
@@ -170,7 +173,10 @@ const DoctorSlotBookingList = React.forwardRef((props) => {
             setLoading(true)
             const response = await requestGetPatDocAppointment({ ...params });
             setLoading(false)
-            setList(response?.result)
+            const dataMask = response?.result?.map((item: any, index: string) => {
+                return { key: index.toString(), ...item };
+            });
+            setList(dataMask)
             if (!response?.isSuccess) {
                 message.error(response?.msg);
             }
@@ -267,89 +273,91 @@ const DoctorSlotBookingList = React.forwardRef((props) => {
             >
 
                 <div style={contentStyle}>
-                    <Table
-                        columns={columns}
-                        dataSource={list}
-                        expandable={{
-                            expandedRowRender: (record) => <div>
-                                <Space>
-                                    <Card
-                                        size="small"
-                                        title={'Slot 1'}
-                                    >
-                                        <div>
-                                            <ProDescriptions
-                                                dataSource={record}
-                                                bordered={true}
-                                                size={'small'}
-                                                columns={[
-                                                    {
-                                                        title: 'From Hours',
-                                                        dataIndex: 'displayFromHrs',
-                                                        span: 3
-                                                    },
-                                                    {
-                                                        title: 'To Hours',
-                                                        dataIndex: 'displayToHrs',
-                                                        span: 3
-                                                    }
-                                                ]}
-                                            />
-                                        </div>
-                                    </Card>
-                                    <Card
-                                        size="small"
-                                        title={'Slot 2'}
-                                    >
-                                        <div>
-                                            <ProDescriptions
-                                                dataSource={record}
-                                                bordered={true}
-                                                size={'small'}
-                                                columns={[
-                                                    {
-                                                        title: 'From Hours',
-                                                        dataIndex: 'displayFromHrs2',
-                                                        span: 3
-                                                    },
-                                                    {
-                                                        title: 'To Hours',
-                                                        dataIndex: 'displayToHrs2',
-                                                        span: 3
-                                                    }
-                                                ]}
-                                            />
-                                        </div>
-                                    </Card>
-                                    <Card
-                                        size="small"
-                                        title={'Slot 3'}
-                                    >
-                                        <div>
-                                            <ProDescriptions
-                                                dataSource={record}
-                                                bordered={true}
-                                                size={'small'}
-                                                columns={[
-                                                    {
-                                                        title: 'From Hours',
-                                                        dataIndex: 'displayFromHrs3',
-                                                        span: 3
-                                                    },
-                                                    {
-                                                        title: 'To Hours',
-                                                        dataIndex: 'displayToHrs3',
-                                                        span: 3
-                                                    }
-                                                ]}
-                                            />
-                                        </div>
-                                    </Card>
-                                </Space>
-                            </div>,
-                            rowExpandable: (record) => record.name !== 'Not Expandable',
-                        }}
-                    />
+                    <Spin spinning={loading}>
+                        <Table
+                            columns={columns}
+                            dataSource={list}
+                            expandable={{
+                                expandedRowRender: (record) => <div>
+                                    <Space>
+                                        <Card
+                                            size="small"
+                                            title={'Slot 1'}
+                                        >
+                                            <div>
+                                                <ProDescriptions
+                                                    dataSource={record}
+                                                    bordered={true}
+                                                    size={'small'}
+                                                    columns={[
+                                                        {
+                                                            title: 'From Hours',
+                                                            dataIndex: 'displayFromHrs',
+                                                            span: 3
+                                                        },
+                                                        {
+                                                            title: 'To Hours',
+                                                            dataIndex: 'displayToHrs',
+                                                            span: 3
+                                                        }
+                                                    ]}
+                                                />
+                                            </div>
+                                        </Card>
+                                        <Card
+                                            size="small"
+                                            title={'Slot 2'}
+                                        >
+                                            <div>
+                                                <ProDescriptions
+                                                    dataSource={record}
+                                                    bordered={true}
+                                                    size={'small'}
+                                                    columns={[
+                                                        {
+                                                            title: 'From Hours',
+                                                            dataIndex: 'displayFromHrs2',
+                                                            span: 3
+                                                        },
+                                                        {
+                                                            title: 'To Hours',
+                                                            dataIndex: 'displayToHrs2',
+                                                            span: 3
+                                                        }
+                                                    ]}
+                                                />
+                                            </div>
+                                        </Card>
+                                        <Card
+                                            size="small"
+                                            title={'Slot 3'}
+                                        >
+                                            <div>
+                                                <ProDescriptions
+                                                    dataSource={record}
+                                                    bordered={true}
+                                                    size={'small'}
+                                                    columns={[
+                                                        {
+                                                            title: 'From Hours',
+                                                            dataIndex: 'displayFromHrs3',
+                                                            span: 3
+                                                        },
+                                                        {
+                                                            title: 'To Hours',
+                                                            dataIndex: 'displayToHrs3',
+                                                            span: 3
+                                                        }
+                                                    ]}
+                                                />
+                                            </div>
+                                        </Card>
+                                    </Space>
+                                </div>,
+                                rowExpandable: (record) => record.name !== 'Not Expandable',
+                            }}
+                        />
+                    </Spin>
                 </div>
             </Card>
         </Space>
