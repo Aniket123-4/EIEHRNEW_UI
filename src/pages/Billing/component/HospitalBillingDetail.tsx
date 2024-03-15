@@ -249,7 +249,7 @@ const HospitalBillingDetail = ({ }: any) => {
                     </Card>
                 </Col>
                 <Col span={8}>
-                    <Card title="VAT" bordered={false}>
+                    <Card title="GST" bordered={false}>
                         {mainData?.netAmountVAT}
                     </Card>
                 </Col>

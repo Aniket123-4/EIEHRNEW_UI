@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, TimePicker } from 'antd';
+import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, TimePicker, Typography } from 'antd';
 import { PageContainer, EditableProTable } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import { requestGetSection, requestGetUserList, requestGetVitalParameter } from '@/services/apiRequest/dropdowns';
@@ -12,6 +12,7 @@ import { requestAddDelPatientForDoctorOPIP } from '../services/api';
 import { getUserInLocalStorage } from '@/utils/common';
 import moment from 'moment';
 import { CloseOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
 
 const { RangePicker } = DatePicker;
 
@@ -21,7 +22,7 @@ const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
     const { result3 } = patientDetails;
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
-    const [vitals, setVitals] = useState([]);
+    const [vitals, setVitals] = useState<any>([]);
     const { verifiedUser } = getUserInLocalStorage();
     const [lstType_Patient, setLstType_Patient] = useState([]);
 
@@ -75,7 +76,7 @@ const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
             key: 'vitalDescp',
             dataIndex: 'vitalDescp',
 
-        }, 
+        },
         {
             title: 'Enter By',
             key: 'enterBy',
@@ -85,7 +86,7 @@ const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
         {
             title: 'Delete',
             key: 'delete',
-            render: (_, record) => <CloseOutlined style={{ alignItems: 'center', color: 'red' }} onClick={() => onFinishPatForm(record, true)}/>
+            render: (_, record) => <CloseOutlined style={{ alignItems: 'center', color: 'red' }} onClick={() => onFinishPatForm(record, true)} />
 
         }
 
@@ -106,110 +107,110 @@ const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
 
         if (res.result.length > 0) {
             const dataMaskForDropdown = res?.result.map((item: any) => {
-                return { value: item.vitalParameterID, label: `${item.vitalParameterName}` }
+                return { value: item.vitalParameterID, label: `${item.vitalParameterName}`, name: `${item.vitalParameterName}` }
             })
             console.log({ dataMaskForDropdown })
             setVitals(dataMaskForDropdown)
         }
     }
-    const onFinishPatForm = async (values: any,isDelete:any=false) => {
-        console.log(values)
-        const date = moment(values?.vitalDateTime).format(dateFormat);
-        const params = {
-            "patientCaseID": patientCaseID,
-            "admNo": admNo,
-            "col1": values?.vitalParameterID ? values?.vitalParameterID : "",
-            "col2": values?.vitalResult ? values?.vitalResult : "",
-            "col3": values?.vitalComment ? values?.vitalComment : "",
-            "col4": values?.vitalDescp ? values?.vitalDescp : "",
-            "col5": isDelete ? values?.admNo : "",
-            "col6": isDelete ? values?.vitalSerialNo : "",
-            "col7": "",
-            "col8": "",
-            "col9": "",
-            "col10": "",
-            "col11": "",
-            "col12": "",
-            "col13": "",
-            "col14": "",
-            "col15": "",
-            "col16": "",
-            "col17": "",
-            "col18": "",
-            "col19": "",
-            "col20": "",
-            "col21": date,
-            "col22": date,
-            "isForDelete": isDelete,
-            "lstType_DocPatient": [
-                {
-                    "col1": "",
-                    "col2": "",
-                    "col3": "",
-                    "col4": "",
-                    "col5": "",
-                    "col6": "",
-                    "col7": "",
-                    "col8": "",
-                    "col9": "",
-                    "col10": "",
-                    "col11": "",
-                    "col12": "",
-                    "col13": "",
-                    "col14": "",
-                    "col15": ""
-                }
-            ],
-            "lstType_Patient": [
-                {
-                    "col1": "",
-                    "col2": "",
-                    "col3": "",
-                    "col4": "",
-                    "col5": "",
-                    "col6": "",
-                    "col7": "",
-                    "col8": "",
-                    "col9": "",
-                    "col10": "",
-                    "col11": "",
-                    "col12": "",
-                    "col13": "",
-                    "col14": "",
-                    "col15": ""
-                }
-            ],
-            "userID": verifiedUser?.userID,
-            "formID": -1,
-            "type": 2
-        }
-        try {
-            setLoading(true)
-            const response = await requestAddDelPatientForDoctorOPIP({ ...params });
-            setLoading(false)
-
-            if (response?.isSuccess) {
-                tabForm.resetFields();
+    const onFinishPatForm = async (value: any, isDelete: any = false) => {
+        console.log(value)
+        value?.tab.map(async (values: any, index: number) => {
+            const date = moment(values?.vitalDateTime).format(dateFormat);
+            console.log(value?.tab.length, index)
+            const params = {
+                "patientCaseID": patientCaseID,
+                "admNo": admNo,
+                "col1": values?.value ? values?.value : "",
+                "col2": values?.vitalResult ? values?.vitalResult : "",
+                "col3": values?.vitalComment ? values?.vitalComment : "",
+                "col4": values?.vitalDescp ? values?.vitalDescp : "",
+                "col5": isDelete ? values?.admNo : "",
+                "col6": isDelete ? values?.vitalSerialNo : "",
+                "col7": "",
+                "col8": "",
+                "col9": "",
+                "col10": "",
+                "col11": "",
+                "col12": "",
+                "col13": "",
+                "col14": "",
+                "col15": "",
+                "col16": "",
+                "col17": "",
+                "col18": "",
+                "col19": "",
+                "col20": "",
+                "col21": date,
+                "col22": date,
+                "isForDelete": isDelete,
+                "lstType_DocPatient": [
+                    {
+                        "col1": "",
+                        "col2": "",
+                        "col3": "",
+                        "col4": "",
+                        "col5": "",
+                        "col6": "",
+                        "col7": "",
+                        "col8": "",
+                        "col9": "",
+                        "col10": "",
+                        "col11": "",
+                        "col12": "",
+                        "col13": "",
+                        "col14": "",
+                        "col15": ""
+                    }
+                ],
+                "lstType_Patient": [
+                    {
+                        "col1": "",
+                        "col2": "",
+                        "col3": "",
+                        "col4": "",
+                        "col5": "",
+                        "col6": "",
+                        "col7": "",
+                        "col8": "",
+                        "col9": "",
+                        "col10": "",
+                        "col11": "",
+                        "col12": "",
+                        "col13": "",
+                        "col14": "",
+                        "col15": ""
+                    }
+                ],
+                "userID": verifiedUser?.userID,
+                "formID": -1,
+                "type": 2
             }
-            onSaveSuccess({
-                tab: "VITAL_SIGN",
-                response
-            })
+            try {
+                setLoading(true)
+                const response = await requestAddDelPatientForDoctorOPIP({ ...params });
+                setLoading(false)
+
+                if (response?.isSuccess && index === value?.tab.length - 1) {
+                    tabForm.resetFields();
+                }
+                if (index === value?.tab.length - 1) {
+                    onSaveSuccess({
+                        tab: "VITAL_SIGN",
+                        response
+                    })
+                }
 
 
-        } catch (e) {
-            setLoading(false)
-        }
+            } catch (e) {
+                setLoading(false)
+            }
+        })
     };
 
 
     const formView = () => {
-
-        
-
-
         const handleChangeFilter = (value: any) => { }
-
         return (
             <Form
                 form={tabForm}
@@ -217,8 +218,79 @@ const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
                 layout="vertical"
                 size={'small'}
             >
+                {vitals.length > 0 &&
+                    <Form.List initialValue={vitals} name={'tab'}>
+                        {(vital, { add, remove }) => (
+                            <div>
+                                <Col>
+                                    <Row style={{ justifyContent: 'space-between', marginBottom: 20, backgroundColor: 'lightgreen', padding: 10 }}>
+                                        <Col span={4}><Typography style={{ fontWeight: '700', fontSize: 16 }}>Vital Parameter</Typography></Col>
+                                        <Col span={4}><Typography style={{ fontWeight: '700', fontSize: 16 }}>Comment</Typography></Col>
+                                        <Col span={4}><Typography style={{ fontWeight: '700', fontSize: 16 }}>Date</Typography></Col>
+                                        <Col span={4}><Typography style={{ fontWeight: '700', fontSize: 16 }}>Result</Typography></Col>
+                                        <Col span={4}><Typography style={{ fontWeight: '700', fontSize: 16 }}>Description</Typography></Col>
+                                    </Row>
 
-                <Row gutter={16}>
+                                    {vital.map(({ key, name, ...restField }) => (
+                                        <Row style={{ justifyContent: 'space-between' }}>
+                                            <Col span={4}>
+                                                <Form.Item
+                                                    {...restField}
+                                                    label=""
+                                                    name={[name, 'vitalParameterID']}
+                                                    rules={[{ required: false, message: 'Vital Parameter' }]}
+                                                >
+                                                    <Typography>{vitals[key].name}</Typography>
+                                                </Form.Item>
+
+                                            </Col>
+                                            <Col span={4}><Form.Item
+                                                {...restField}
+                                                label=""
+                                                name={[name, 'vitalResult']}
+                                                rules={[{ required: false, message: 'Vital Parameter' }]}
+                                            >
+                                                <Input placeholder="" />
+                                            </Form.Item></Col>
+                                            <Col span={4}><Form.Item
+                                                {...restField}
+                                                initialValue={dayjs()}
+                                                label=""
+                                                name={[name, 'vitalDateTime']}
+                                                rules={[{ required: false, message: 'Vital Date' }]}
+                                            >
+                                                <DatePicker
+                                                    style={{ width: '100%' }}
+                                                    defaultValue={dayjs()}
+                                                    format={dateFormat}
+                                                />
+                                            </Form.Item></Col>
+                                            <Col span={4}><Form.Item
+                                                {...restField}
+                                                label=""
+                                                name={[name, 'vitalComment']}
+                                                rules={[{ required: false, message: 'Vital Comment' }]}
+                                            >
+                                                <Input placeholder="" />
+                                            </Form.Item></Col>
+                                            <Col span={4}><Form.Item
+                                                {...restField}
+                                                label=""
+                                                name={[name, 'vitalDescp']}
+                                                rules={[{ required: false, message: 'Vital Description' }]}
+                                            >
+                                                <Input placeholder="" />
+                                            </Form.Item></Col>
+                                        </Row>
+                                    ))}
+
+                                </Col>
+
+                            </div>
+                        )}
+                    </Form.List>}
+
+                {/* <Row gutter={16}>
 
                     <Col span={6}>
                         <Form.Item name="vitalParameterID" label="Vital Parameter" rules={[{ required: true }]}>
@@ -255,7 +327,7 @@ const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
                     </Col>
 
 
-                </Row>
+                </Row> */}
 
                 <Form.Item>
                     <Button type="primary" loading={loading} htmlType="submit">

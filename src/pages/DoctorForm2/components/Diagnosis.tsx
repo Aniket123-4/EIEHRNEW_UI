@@ -593,7 +593,7 @@ const Diagnosis = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
             if (response1?.isSuccess) {
                 onSaveSuccess({
                     tab: "INVESTIGATION",
-                    response1
+                    response:response1
                 })
             }
         } catch (e) {
@@ -934,7 +934,7 @@ const Diagnosis = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
                     </Row>
                     <Collapse items={[{
                         key: '1',
-                        label: 'Investigation List',
+                        label: 'Test List',
                         children: <Card
                             // title="Investigation List"
                             hoverable
@@ -944,7 +944,7 @@ const Diagnosis = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
                                     scroll={{ y: 200 }}
                                     // style={{ width: '100%', height: 250 }}
                                     columns={[{
-                                        title: 'Investigation',
+                                        title: 'Test',
                                         key: 'label',
                                         dataIndex: 'label',
                                         render: (_, record) => <Row style={{ justifyContent: 'space-between' }}><Typography>{record.label}</Typography>
@@ -958,7 +958,7 @@ const Diagnosis = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
                         >
                             <Select
                                 labelInValue
-                                value={"Search Investigation"}
+                                value={"Search Test"}
                                 style={{ width: '100%' }}
                                 showSearch
                                 options={invParameterID}

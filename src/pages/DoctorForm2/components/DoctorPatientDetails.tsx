@@ -63,6 +63,7 @@ const DoctorPatientDetails = React.forwardRef((props) => {
 
         if (!response?.isSuccess) {
             message.error(response?.msg);
+            console.log(response);
         } else {
             message.success(response?.msg);
 
@@ -230,6 +231,7 @@ const DoctorPatientDetails = React.forwardRef((props) => {
 
             if (!response?.isSuccess) {
                 message.error(response?.msg);
+                console.log(response);
             }
         } catch (error) {
             setLoading(false)

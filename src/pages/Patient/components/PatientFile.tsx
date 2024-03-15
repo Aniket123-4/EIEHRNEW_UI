@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Image, Select, Space, message, theme, Card, Descriptions, Row, Col, List, Typography } from 'antd';
+import { Button, Form, Input, Image, Select, Space, message, theme, Card, Descriptions, Row, Col, List, Typography, Spin } from 'antd';
 
 import { requestAddOnlinePatDoc, requestAddUpdatePatientDoc, requestFileUpload, requestGetPatientDoc, requestGetPatientHeader } from '../services/api';
 import { getUserInLocalStorage } from '@/utils/common';
@@ -45,7 +45,7 @@ const PatientFile = React.forwardRef((props) => {
     const [docName, setDocName] = useState<any>("")
     const [docType, setDocType] = useState<any>("-1")
     const [groupList, setGroupList] = useState([]);
-    const [invParameter, setInvParameter] = useState([]);
+    const [invParameter, setInvParameter] = useState([{ value: "-1", label: "Select" }]);
 
     const [lstType_PatientDoc, setlstType_PatientDoc] = useState<any>([])
     const { verifiedUser } = getUserInLocalStorage();
@@ -192,8 +192,8 @@ const PatientFile = React.forwardRef((props) => {
     }
 
     const updateDocList = async (v: any, url: any) => {
-        const fr=addDocform.getFieldsValue()
-        var re:any = /(?:\.([^.]+))?$/;
+        const fr = addDocform.getFieldsValue()
+        var re: any = /(?:\.([^.]+))?$/;
         var ext = re?.exec(v.file.name)[1];
         const res = await requestGetUniqueID();
         const p: any = {
@@ -245,13 +245,16 @@ const PatientFile = React.forwardRef((props) => {
             "type": type
 
         }
+        setLoading(true)
         const res = await requestGetPatientDoc(params);
+        setLoading(false)
+
         if (res.isSuccess = true) {
-            if(type==1){
+            if (type == 1) {
                 setDocList(res.result)
             }
-            if(type==2){
-                downloadZipDoc({file:res?.result1,docName:res?.result})
+            if (type == 2) {
+                downloadZipDoc({ file: res?.result1, docName: res?.result })
             }
         }
     }
@@ -273,17 +276,17 @@ const PatientFile = React.forwardRef((props) => {
         }
     }
 
-    function uniqueNames(data:any,key:any){
-        return[
+    function uniqueNames(data: any, key: any) {
+        return [
             ...new Map(
-                data.map((x: any)=>[key(x),x])).values()
+                data.map((x: any) => [key(x), x])).values()
         ]
     }
 
     const addPatientDoc = async (values: any) => {
         var re = /(?:\.([^.]+))?$/;
         console.log(values, patientData, lstType_PatientDoc)
-        const lstType_PatientDoc1=uniqueNames( lstType_PatientDoc,it=>it.docName)
+        const lstType_PatientDoc1 = uniqueNames(lstType_PatientDoc, it => it.docName)
         const paramsOfDoc = {
             "patientID": patientData?.patientID,
             "patientCaseID": patientData?.patientCaseID,
@@ -300,11 +303,12 @@ const PatientFile = React.forwardRef((props) => {
         // lstType_PatientDoc.map((item)=>{
         //     console.log(item)
         // })
+        setLoading(true)
         const res = await requestAddUpdatePatientDoc(paramsOfDoc);
         if (res?.isSuccess == true) {
             lstType_PatientDoc.map(async (item: any) => {
                 const param1 = {
-                    "fileName": item?.patientDocID+"."+item?.docExt,
+                    "fileName": item?.patientDocID + "." + item?.docExt,
                     "data": item.base64
                 }
                 const res1 = await requestFileUpload(param1);
@@ -317,7 +321,10 @@ const PatientFile = React.forwardRef((props) => {
             })
             message.success(res.msg)
             setlstType_PatientDoc([])
+            setLoading(false)
         }
+        setLoading(false)
+        addDocform.resetFields()
     }
     const downloadDoc = async (item: any) => {
         const params = {
@@ -349,7 +356,7 @@ const PatientFile = React.forwardRef((props) => {
         }
     }
     const downloadZipDoc = async (item: any) => {
-        
+
         //window.location.href = `data:application/octet-stream;base64,${res1.result}`;
         if (item?.file) {
             fetch(window.location.href)
@@ -359,7 +366,7 @@ const PatientFile = React.forwardRef((props) => {
                     const a = document.createElement('a');
                     a.style.display = 'none';
                     a.href = url;
-                    a.download = prompt("Enter filename and extension (e.g. myImage.jpg):", window.location.href.split('\/').pop() === "" ? window.location.hostname + ".html" : item.docName+".zip");
+                    a.download = prompt("Enter filename and extension (e.g. myImage.jpg):", window.location.href.split('\/').pop() === "" ? window.location.hostname + ".html" : item.docName + ".zip");
                     document.body.appendChild(a);
                     if (a.download !== "null") {
                         a.click();
@@ -430,118 +437,122 @@ const PatientFile = React.forwardRef((props) => {
                             <Col span={5}>{patientData.dob}</Col>
                             <Col span={14}>{patientData.curAddress}</Col>
                         </Row> */}
-                        <Card>
-                            <Row>
-                                <Col span={12}>
-                                    <Card
-                                        title={
-                                            <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                                                <Typography>
-                                                    {'New Upload'}
-                                                </Typography>
-                                            </Row>
-                                        }>
+                        <Spin spinning={loading}>
+                            <Card>
+                                <Row>
+                                    <Col span={12}>
+                                        <Card
+                                            title={
+                                                <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                                                    <Typography>
+                                                        {'New Upload'}
+                                                    </Typography>
+                                                </Row>
+                                            }>
 
-                                        <Form
-                                            layout={'horizontal'}
-                                            form={addDocform}
-                                            onFinish={async (values) => {
-                                                addPatientDoc(values)
-                                            }}>
-                                            <Form.Item
-                                                name="docGroupID"
-                                                label="Document Group" rules={[{ required: true, message: "Please Select Document Group" }]}>
-                                                <Select
-                                                    defaultValue={"-1"}
-                                                    style={{ width: 200 }}
-                                                    onChange={handleChangeDocGroup}
-                                                    options={groupList}
-                                                    placeholder="Select"
-                                                />
-                                            </Form.Item>
-                                            <Form.Item
-                                                name="docTypeID"
-                                                label="Document Type" rules={[{ required: true, message: "Please Select Document Type" }]}>
-                                                <Select
-                                                    // value={docType}
-                                                    style={{ width: 200 }}
-                                                    onChange={handleChangeDocType}
-                                                    options={invParameter}
-                                                    placeholder="Select"
-                                                />
-                                            </Form.Item>
-                                            <Row> 
+                                            <Form
+                                                layout={'horizontal'}
+                                                form={addDocform}
+                                                onFinish={async (values) => {
+                                                    addPatientDoc(values)
+                                                }}>
                                                 <Form.Item
-                                                    name="docBase64"
-                                                    getValueFromEvent={(v) => getBase64(v.file.originFileObj as RcFile, (url) => {
-                                                        addDocform.setFieldsValue({ docBase64: url })
-                                                        setDocName(v.file.name)
-                                                        //if (v.file.status === "done")
-                                                            updateDocList(v, url)
-                                                    })}
-                                                    label=""
-                                                    rules={[{ required: true, message: 'Please Attach Document' }]}
-                                                >
-                                                    <Upload
-                                                        maxCount={10}
-                                                    >
-                                                        <Button icon={<FileAddOutlined />}>Attach</Button>
-                                                    </Upload>
+                                                    name="docGroupID"
+                                                    label="Document Group" rules={[{ required: true, message: "Please Select Document Group" }]}>
+                                                    <Select
+                                                        defaultValue={"-1"}
+                                                        onSelect={() => addDocform.setFieldValue('docTypeID', "")}
+                                                        style={{ width: 200 }}
+                                                        onChange={handleChangeDocGroup}
+                                                        options={groupList}
+                                                        placeholder="Select"
+                                                    />
                                                 </Form.Item>
-                                                <Button htmlType='submit'>Submit</Button>
-                                            </Row>
+                                                <Form.Item
+                                                    name="docTypeID"
+                                                    label="Document Type" rules={[{ required: true, message: "Please Select Document Type" }]}>
+                                                    <Select
+                                                        // value={docType}
+                                                        defaultValue={"-1"}
+                                                        style={{ width: 200 }}
+                                                        onChange={handleChangeDocType}
+                                                        options={invParameter}
+                                                        placeholder="Select"
+                                                    />
+                                                </Form.Item>
+                                                <Row>
+                                                    <Form.Item
+                                                        name="docBase64"
+                                                        getValueFromEvent={(v) => getBase64(v.file.originFileObj as RcFile, (url) => {
+                                                            addDocform.setFieldsValue({ docBase64: url })
+                                                            setDocName(v.file.name)
+                                                            //if (v.file.status === "done")
+                                                            updateDocList(v, url)
+                                                        })}
+                                                        label=""
+                                                        rules={[{ required: true, message: 'Please Attach Document' }]}
+                                                    >
+                                                        <Upload
+                                                            maxCount={10}
+                                                        >
+                                                            <Button icon={<FileAddOutlined />}>Attach</Button>
+                                                        </Upload>
+                                                    </Form.Item>
+                                                </Row>
+                                                <Button type='primary' htmlType='submit'>Submit</Button>
 
-                                        </Form>
-                                    </Card>
-                                </Col>
-                                <Col span={12}>
-                                    <Card
-                                        style={{
-                                            height: 400,
-                                            overflow: 'auto',
-                                            padding: '0 16px',
-                                            border: '1px solid rgba(140, 140, 140, 0.35)',
-                                        }}
-                                        title={<><Space>
-                                            <Typography>Uploaded Documents</Typography>
-                                            <Button onClick={()=>getPatientDoc(2)}><DownloadOutlined /></Button>
+                                            </Form>
+                                        </Card>
+                                    </Col>
+                                    <Col span={12}>
+                                        <Card
+                                            style={{
+                                                height: 400,
+                                                overflow: 'auto',
+                                                padding: '0 16px',
+                                                border: '1px solid rgba(140, 140, 140, 0.35)',
+                                            }}
+                                            title={<><Space>
+                                                <Typography>Uploaded Documents</Typography>
+                                                <Button onClick={() => getPatientDoc(2)}><DownloadOutlined /></Button>
                                             </Space></>}>
-                                        {docList && <List
-                                            dataSource={docList}
-                                            renderItem={(item:any) => (
-                                                <Card style={{ boxShadow: '2px 2px 2px #4874dc', marginTop: 8 }} key={item.docID}>
-                                                    <Row style={{ alignItems: 'center', justifyContent: 'space-between' }}>
-                                                        <Row>
-                                                            <Image
-                                                                onClick={() => previewDoc(item)}
-                                                                preview={{
-                                                                    imageRender: () => (
-                                                                        <Image
-                                                                            width="50%"
-                                                                            src={imageUrl}
-                                                                            preview={false}
-                                                                        />
-                                                                    )
-                                                                }}
-                                                                width={40}
-                                                                height={40}
-                                                                style={{ borderRadius: 10 }}
-                                                                src={item.docExt == "pdf" ? "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/391px-PDF_file_icon.svg.png"
-                                                                    : item.docExt == "png" || item.docExt == "jpg" ? "https://img.freepik.com/free-photo/yellow-flower-green-background_1340-31703.jpg?t=st=1703678882~exp=1703682482~hmac=db2ea321b3844d6f0b22893020850a836e62bc82f64fc2dba66c956d77360baa&w=360"
-                                                                        : "noImage"
-                                                                }
-                                                            />
-                                                            <Typography style={{ marginLeft: 10 }}>{item.docName}</Typography>
+                                            {docList && <List
+                                                dataSource={docList}
+                                                renderItem={(item: any) => (
+                                                    <Card style={{ boxShadow: '2px 2px 2px #4874dc', marginTop: 8 }} key={item.docID}>
+                                                        <Row style={{ alignItems: 'center', justifyContent: 'space-between' }}>
+                                                            <Row>
+                                                                <Image
+                                                                    onClick={() => previewDoc(item)}
+                                                                    preview={{
+                                                                        imageRender: () => (
+                                                                            <Image
+                                                                                width="50%"
+                                                                                src={imageUrl}
+                                                                                preview={false}
+                                                                            />
+                                                                        )
+                                                                    }}
+                                                                    width={40}
+                                                                    height={40}
+                                                                    style={{ borderRadius: 10 }}
+                                                                    src={item.docExt == "pdf" ? "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/391px-PDF_file_icon.svg.png"
+                                                                        : item.docExt == "png" || item.docExt == "jpg" ? "https://img.freepik.com/free-photo/yellow-flower-green-background_1340-31703.jpg?t=st=1703678882~exp=1703682482~hmac=db2ea321b3844d6f0b22893020850a836e62bc82f64fc2dba66c956d77360baa&w=360"
+                                                                            : "noImage"
+                                                                    }
+                                                                />
+                                                                <Typography style={{ marginLeft: 10 }}>{item.docName}</Typography>
+                                                            </Row>
+                                                            <Button onClick={() => downloadDoc(item)}>Download</Button>
                                                         </Row>
-                                                        <Button onClick={() => downloadDoc(item)}>Download</Button>
-                                                    </Row>
-                                                </Card>
-                                            )}
-                                        />}
-                                    </Card>
-                                </Col>
-                            </Row>
-                        </Card>
+                                                    </Card>
+                                                )}
+                                            />}
+                                        </Card>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </Spin>
                     </div>
                     // <Descriptions
                     //     bordered
