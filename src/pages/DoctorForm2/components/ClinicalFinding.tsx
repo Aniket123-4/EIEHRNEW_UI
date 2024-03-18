@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Table, message, TimePicker } from 'antd';
+import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Table, message, TimePicker, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { getUserInLocalStorage } from '@/utils/common';
 import { requestAddDelPatientForDoctorOPIP } from '../services/api';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
+import { AudioOutlined } from '@ant-design/icons';
 
 
 const ClinicalFinding = ({ patientDetails, patientCaseID, onSaveSuccess, admNo }: any) => {
@@ -10,9 +12,8 @@ const ClinicalFinding = ({ patientDetails, patientCaseID, onSaveSuccess, admNo }
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const { verifiedUser } = getUserInLocalStorage();
-    const [isRecording, setisRecording] = useState(false);
-    const [note, setNote] = useState(null);
-    const [notesStore, setnotesStore] = useState([]);
+    const [note, setNote] = useState<string>("");
+
 
     const columns: ColumnsType<any> = [
         {
@@ -27,14 +28,26 @@ const ClinicalFinding = ({ patientDetails, patientCaseID, onSaveSuccess, admNo }
 
         }
     ];
+    
+    const {
+        transcript,
+        listening,
+        resetTranscript,
+        browserSupportsSpeechRecognition
+    } = useSpeechRecognition();
 
+    useEffect(() => {
+        // const prevValue=tabForm.getFieldValue("clinicalFinding") ? tabForm.getFieldValue("clinicalFinding") :""
+        tabForm.setFieldValue("clinicalFinding",transcript)
+    }, [transcript])
 
+    const startListening = () => SpeechRecognition.startListening({ continuous: true });
 
     const formView = () => {
 
-        useEffect(() => {
-            startRecordController();
-        }, [isRecording]);
+        // useEffect(() => {
+        //     startRecordController();
+        // }, [isRecording]);
         const onFinishPatForm = async (values: any) => {
             const params = {
                 "patientCaseID": patientCaseID,
@@ -126,87 +139,58 @@ const ClinicalFinding = ({ patientDetails, patientCaseID, onSaveSuccess, admNo }
 
         const handleChangeFilter = (value: any) => { }
 
-        const SpeechRecognition =
-            window.SpeechRecognition || window.webkitSpeechRecognition;
-        const microphone = new SpeechRecognition();
+        const onChangeNote = (value: any) => {
+            resetTranscript
+            //tabForm.setFieldValue("clinicalFinding",value)
+            console.log(transcript)
+        }
 
-        microphone.continuous = true;
-        microphone.interimResults = true;
-        microphone.lang = "en-US";
 
-        const startRecordController = () => {
-            if (isRecording) {
-                microphone.start();
-                microphone.onend = () => {
-                    console.log("continue..");
-                    microphone.start();
-                };
-            } else {
-                microphone.stop();
-                microphone.onend = () => {
-                    console.log("Stopped microphone on Click");
-                };
-            }
-            microphone.onstart = () => {
-                console.log("microphones on");
-            };
-
-            microphone.onresult = (event: any) => {
-                const recordingResult: any = Array.from(event.results)
-                    .map((result: any) => result[0])
-                    .map((result) => result.transcript)
-                    .join("");
-                console.log(recordingResult);
-                setNote(recordingResult);
-                microphone.onerror = (event: any) => {
-                    console.log(event.error);
-                };
-            };
-        };
-        const storeNote = () => {
-            console.log(notesStore,note,isRecording)
-            setnotesStore([...notesStore, note]); 
-            setNote("");
-        };
-
+        if (!browserSupportsSpeechRecognition) {
+            return <span>Browser doesn't support speech recognition.</span>;
+        }
         return (
-            <Form
-                form={tabForm}
-                onFinish={onFinishPatForm}
-                layout="vertical"
-                size={'small'}
-            >
-                <>
-                    <h1>Record Voice Notes</h1>
+            <>
+                <Form
+                    form={tabForm}
+                    onFinish={onFinishPatForm}
+                    layout="vertical"
+                    size={'small'}
+                >
                     <div>
-                        <div className="noteContainer">
-                            <h2>Record Note Here</h2>
-                            {isRecording ? <span>Recording... </span> : <span>Stopped </span>}
-                            <button className="button" onClick={storeNote} disabled={!note}>
-                                Save
-                            </button>
-                            <button onClick={() => setisRecording((prevState) => !prevState)}>
-                                Start/Stop
-                            </button>
-                            <p>{note}</p>
-                        </div>
-                        <div className="noteContainer">
-                            <h2>Notes Store</h2>
-                            **{notesStore.map((note) => (
-                                <p key={note}>{note}</p>
-                            ))}**
-                        </div>
+                        <Form.Item name="clinicalFinding"
+                            label={<Row >
+                                Complaint
+                                <p style={{ backgroundColor: 'lightgreen' }}>{listening ? 'Listening' : ''}</p>
+                                <Button
+                                    icon={<AudioOutlined color={listening ? 'red' : 'blue'} />}
+                                    onTouchStart={startListening}
+                                    onMouseDown={startListening}
+                                    onTouchEnd={SpeechRecognition.stopListening}
+                                    onMouseUp={SpeechRecognition.stopListening}
+                                ></Button>
+                                <Button type={'link'} onClick={resetTranscript}>Clear</Button>
+                            </Row>
+
+                            }>
+                            <Input.TextArea onChange={(e)=>{resetTranscript;onChangeNote(e.target.value)}} />
+
+                        </Form.Item>
+                        {/* <p>{listening ? 'Listening' : ''}</p>
+                        <Button
+                            icon={<AudioOutlined color={listening ? 'red' : 'blue'} />}
+                            onTouchStart={startListening}
+                            onMouseDown={startListening}
+                            onTouchEnd={SpeechRecognition.stopListening}
+                            onMouseUp={SpeechRecognition.stopListening}
+                        ></Button>
+                        <Button type={'link'} onClick={resetTranscript}>Clear</Button>*/}
                     </div>
-                </>
-
-
-
-                <Form.Item>
-                    <Button type="primary" loading={loading} htmlType="submit">
+                    <Button type="primary" loading={loading} htmlType='submit'>
                         Submit
                     </Button>
-                </Form.Item>
-            </Form >
+                </Form>
+            </>
         )
     }
 

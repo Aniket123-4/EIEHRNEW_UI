@@ -237,9 +237,9 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                     "alternateEmail": patientData1?.alternateEmail,
                     "dob": dayjs(patientData?.dob),
                     "genderID": patientData?.genderID,
-                    "civilStatusID": patientData?.civilStatusID,
-                    "bGroupID": patientData?.bGroupID,
-                    "religionID": patientData?.religionID,
+                    "civilStatusID": patientData?.civilStatusID ? patientData?.civilStatusID: "-1",
+                    "bGroupID": patientData?.bGroupID ? patientData?.bGroupID: "-1",
+                    "religionID": patientData?.religionID? patientData?.religionID : "-1",
                     "nationalityID": patientData?.nationalityID,
                     "birthPlace": patientData?.birthPlace,
                     "curHouseNo": patientData1?.curHouseNo,
@@ -252,6 +252,10 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                     "curMobileNo": patientData1?.curMobileNo,
                     "curPhoneCC": patientData1?.curPhoneCC,
                     "curPhoneNo": patientData1?.curPhoneNo,
+                    "curTehsilName": patientData1?.curTehsilName,
+                    "perTehsilName": patientData1?.perTehsilName,
+                    "perVillageName": patientData1?.perVillageName,
+                    "curVillageName": patientData1?.curVillageName,
 
                     "perHouseNo": patientData1?.perHouseNo,
                     "perAddress": patientData1?.perAddress,
@@ -1430,7 +1434,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                 </Col>
                                 <Col span={6}>
                                     <Form.Item
-                                        name="curvillage"
+                                        name="curVillageName"
                                         label="Village"
                                         rules={[{ required: false, message: 'Please Enter The Village' }]}
                                     >
@@ -1439,7 +1443,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                 </Col>
                                 <Col span={6}>
                                     <Form.Item
-                                        name="curtehsil"
+                                        name="curTehsilName"
                                         label="Tehsil"
                                         rules={[{ required: false, message: 'Please Enter The Tehsil' }]}
                                     >
@@ -1600,7 +1604,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                             </Col>
                                             <Col span={6}>
                                                 <Form.Item
-                                                    name="curvillage"
+                                                    name="perVillageName"
                                                     label="Village"
                                                     rules={[{ required: false, message: 'Please Enter The Village' }]}
                                                 >
@@ -1609,7 +1613,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                             </Col>
                                             <Col span={6}>
                                                 <Form.Item
-                                                    name="curtehsil"
+                                                    name="perTehsilName"
                                                     label="Tehsil"
                                                     rules={[{ required: false, message: 'Please Enter The Tehsil' }]}
                                                 >
