@@ -3,7 +3,7 @@ import {
     PageContainer,
     StepsForm,
 } from '@ant-design/pro-components';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Divider, Checkbox, Typography, Tabs, Upload, Table, Popconfirm, CollapseProps } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Divider, Checkbox, Typography, Tabs, Upload, Table, Popconfirm, CollapseProps, Collapse } from 'antd';
 
 import { useEffect, useRef, useState } from 'react';
 import { FormattedMessage, history, SelectLang, useIntl } from '@umijs/max';
@@ -12,7 +12,7 @@ import dayjs from 'dayjs';
 import { requestAddOnlinePatDoc, requestFileUpload, requestGetPatientSearch, requestPatientRegistration } from '../services/api';
 import { requestGetBloodGroup, requestGetCivilStatus, requestGetCountry, requestGetDistrict, requestGetDocType, requestGetGender, requestGetRelation, requestGetReligion, requestGetState } from '@/services/apiRequest/dropdowns';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
-import { PlusOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, PlusOutlined, RightOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { ColumnsType } from 'antd/es/table';
 
@@ -112,7 +112,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
         console.log(formattedDate);
         return formattedDate
     }
-    const onDocTypeSelect =  (v:any) => {
+    const onDocTypeSelect = (v: any) => {
         setSelectedDoc(v)
     };
     const getBase64 = async (img: RcFile, callback: (url: string) => void) => {
@@ -169,7 +169,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
         // setPatientDoc(response?.result2[0])
         // setPatientDocs(response?.result1[0])
 
-        if (response?.isSuccess&& response?.result.length>0) {
+        if (response?.isSuccess && response?.result.length > 0) {
             const patientData = response?.result[0]
             const patientData1 = response?.result1[0]
             const patientDoc = response?.result2[0]
@@ -237,9 +237,9 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                     "alternateEmail": patientData1?.alternateEmail,
                     "dob": dayjs(patientData?.dob),
                     "genderID": patientData?.genderID,
-                    "civilStatusID": patientData?.civilStatusID,
-                    "bGroupID": patientData?.bGroupID,
-                    "religionID": patientData?.religionID,
+                    "civilStatusID": patientData?.civilStatusID ? patientData?.civilStatusID: "-1",
+                    "bGroupID": patientData?.bGroupID ? patientData?.bGroupID: "-1",
+                    "religionID": patientData?.religionID? patientData?.religionID : "-1",
                     "nationalityID": patientData?.nationalityID,
                     "birthPlace": patientData?.birthPlace,
                     "curHouseNo": patientData1?.curHouseNo,
@@ -252,6 +252,10 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                     "curMobileNo": patientData1?.curMobileNo,
                     "curPhoneCC": patientData1?.curPhoneCC,
                     "curPhoneNo": patientData1?.curPhoneNo,
+                    "curTehsilName": patientData1?.curTehsilName,
+                    "perTehsilName": patientData1?.perTehsilName,
+                    "perVillageName": patientData1?.perVillageName,
+                    "curVillageName": patientData1?.curVillageName,
 
                     "perHouseNo": patientData1?.perHouseNo,
                     "perAddress": patientData1?.perAddress,
@@ -547,7 +551,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
     const addPatientReg = async (values: any) => {
         values['dob'] = convertDate(values.dob);
         values['isVIP'] = values.isVIP ? values.isVIP : false;
-        values['passIssueDate'] =values.passIssueDate? convertDate(values.passIssueDate) : '1900-01-01';
+        values['passIssueDate'] = values.passIssueDate ? convertDate(values.passIssueDate) : '1900-01-01';
         values['signature'] = values?.signature ? values.signature : '';
         values['photo'] = values?.photo ? values.photo : '';
         values['mName'] = values?.mName ? values.mName : ' ';
@@ -556,6 +560,8 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
         values['uidDocExt'] = patientDocUpload?.uidDocExt ? patientDocUpload.uidDocExt : "";
         values['uidDocID'] = patientDocUpload?.uidDocID ? patientDocUpload.uidDocID : 0;
         values['civilStatusID'] = values?.civilStatusID ? values.civilStatusID : ' ';
+        values['bGroupID'] = values?.bGroupID ? values.bGroupID : '-1';
+        values['birthPlace'] = values?.birthPlace ? values.birthPlace : ' ';
 
 
         try {
@@ -900,7 +906,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                 name={'col3'}
                                 label="Contact Name"
                                 rules={[{ required: false, message: 'Please Enter Contact Name' },
-                                {validator:validateCharacters}]}
+                                { validator: validateCharacters }]}
                             >
                                 <Input maxLength={30} placeholder="Please Enter Contact Name" />
                             </Form.Item>
@@ -1045,7 +1051,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                 name={'col3'}
                                 label="Contact Name"
                                 rules={[{ required: false, message: 'Please Enter Contact Name' },
-                                {validator:validateCharacters}]}
+                                { validator: validateCharacters }]}
                             >
                                 <Input maxLength={30} placeholder="Please Enter Contact Name" />
                             </Form.Item>
@@ -1147,7 +1153,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
     }
 
     const addPatientRegForm = () => {
-                return (
+        return (
             <PageContainer
                 style={{ width: '100%' }}
             // title={'Patient Registration'}
@@ -1166,7 +1172,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     {/* <Input style={{ width: 200, marginLeft: 10 }}></Input> */}
                                     <Search placeholder="Input Search Text"
                                         loading={loading}
-                                        onSearch={(v)=>getPatientSearch({patientNo:v})} enterButton />
+                                        onSearch={(v) => getPatientSearch({ patientNo: v })} enterButton />
                                 </Form.Item>
                             </Form>
                             {/* <Typography>Search by Patient No :</Typography>
@@ -1193,7 +1199,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         name="fName"
                                         label="First Name"
                                         rules={[{ required: true, message: 'Please enter First Name' },
-                                        {validator:validateCharacters}]}
+                                        { validator: validateCharacters }]}
                                     >
                                         <Input style={{ borderColor: 'blue' }} placeholder="Please enter First Name" />
                                     </Form.Item>
@@ -1203,7 +1209,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         name="mName"
                                         label="Middle Name"
                                         rules={[{ required: false, message: 'Please enter Middle Name' },
-                                        {validator:validateCharacters}]}
+                                        { validator: validateCharacters }]}
                                     >
                                         <Input placeholder="Please enter Middle Name" />
                                     </Form.Item>
@@ -1213,7 +1219,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         name="lName"
                                         label="Last Name"
                                         rules={[{ required: true, message: 'Please enter Last Name' },
-                                        {validator:validateCharacters}]}
+                                        { validator: validateCharacters }]}
                                     >
                                         <Input placeholder="Please enter Last Name" />
                                     </Form.Item>
@@ -1223,7 +1229,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         name="fatherName"
                                         label="Father Name"
                                         rules={[{ required: true, message: 'Please enter Father Name' },
-                                        {validator:validateCharacters}]}
+                                        { validator: validateCharacters }]}
                                     >
                                         <Input placeholder="Please enter Father Name" />
                                     </Form.Item>
@@ -1296,18 +1302,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="civilStatusID"
-                                        label="Marital Status"
-                                        rules={[{ required: false, message: 'Please choose the Civil Status' }]}
-                                    >
-                                        <Select
-                                            placeholder="Please choose the Civil Status"
-                                            options={civilStatus}
-                                        />
-                                    </Form.Item>
-                                </Col>
+
                                 <Col span={6}>
                                     <Form.Item
                                         name="dob"
@@ -1331,67 +1326,88 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     <Form.Item
                                         name="eMail"
                                         label="Email"
-                                        rules={[{ required: false, type: 'email', message: 'Please enter Email' }]}
+                                        rules={[{ required: true, type: 'email', message: 'Please enter Email' }]}
                                     >
                                         <Input maxLength={80} placeholder="Please enter Email" />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="alternateEmail"
-                                        label="Alternate Email"
-                                        rules={[{ required: false, type: 'email', message: 'Please enter an alternate Email' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please Enter Alternate Email" />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="bGroupID"
-                                        label="Blood Group"
-                                        rules={[{ required: true, message: 'Please Choose Blood Group' }]}
-                                    >
-                                        <Select
-                                            placeholder="Please Choose Blood Group"
-                                            options={bloodGroup}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="religionID"
-                                        label="Religion"
-                                        rules={[{ required: true, message: 'Please Choose Religion' }]}
-                                    >
-                                        <Select
-                                            placeholder="Please Choose Religion"
-                                            options={religion}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="nationalityID"
-                                        label="Nationality"
-                                        rules={[{ required: true, message: 'Please Choose Nationality' }]}
-                                    >
-                                        <Select
-                                            placeholder="Please Choose Nationality"
-                                            options={nationality}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="birthPlace"
-                                        label="Birth Place"
-                                        rules={[{ required: true, message: 'Please Enter The Birth Place' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please Enter The Birth Place" />
-                                    </Form.Item>
-                                </Col>
+
+                                <Collapse style={{width:'100%'}} items={[
+                                    {
+                                        key: '1',
+                                        label: 'More',
+                                        children: <Row style={{width:'100%'}}>
+                                            <Col span={6}>
+                                                <Form.Item
+                                                    name="civilStatusID"
+                                                    label="Marital Status"
+                                                    rules={[{ required: false, message: 'Please choose the Civil Status' }]}
+                                                >
+                                                    <Select
+                                                        placeholder="Please choose the Civil Status"
+                                                        options={civilStatus}
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Form.Item
+                                                    name="alternateEmail"
+                                                    label="Alternate Email"
+                                                    rules={[{ required: false, type: 'email', message: 'Please enter an alternate Email' }]}
+                                                >
+                                                    <Input maxLength={80} placeholder="Please Enter Alternate Email" />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Form.Item
+                                                    name="bGroupID"
+                                                    label="Blood Group"
+                                                    rules={[{ required: false, message: 'Please Choose Blood Group' }]}
+                                                >
+                                                    <Select
+                                                        placeholder="Please Choose Blood Group"
+                                                        options={bloodGroup}
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Form.Item
+                                                    name="religionID"
+                                                    label="Religion"
+                                                    rules={[{ required: false, message: 'Please Choose Religion' }]}
+                                                >
+                                                    <Select
+                                                        placeholder="Please Choose Religion"
+                                                        options={religion}
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Form.Item
+                                                    name="nationalityID"
+                                                    label="Nationality"
+                                                    rules={[{ required: false, message: 'Please Choose Nationality' }]}
+                                                >
+                                                    <Select
+                                                        placeholder="Please Choose Nationality"
+                                                        options={nationality}
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Form.Item
+                                                    name="birthPlace"
+                                                    label="Birth Place"
+                                                    rules={[{ required: false, message: 'Please Enter The Birth Place' }]}
+                                                >
+                                                    <Input maxLength={80} placeholder="Please Enter The Birth Place" />
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    }]} />
+
                             </Row>
-                                                    </Card>
+                        </Card>
                         <Divider orientation="left"><h4></h4></Divider>
                         <Card title={<Typography style={{ color: 'white', fontSize: 18 }}>
                             {"Current Address"}</Typography>}
@@ -1418,7 +1434,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                 </Col>
                                 <Col span={6}>
                                     <Form.Item
-                                        name="curvillage"
+                                        name="curVillageName"
                                         label="Village"
                                         rules={[{ required: false, message: 'Please Enter The Village' }]}
                                     >
@@ -1427,7 +1443,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                 </Col>
                                 <Col span={6}>
                                     <Form.Item
-                                        name="curtehsil"
+                                        name="curTehsilName"
                                         label="Tehsil"
                                         rules={[{ required: false, message: 'Please Enter The Tehsil' }]}
                                     >
@@ -1555,307 +1571,209 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                             </Row>
                         </Card>
                         <Divider orientation="left"><h4></h4></Divider>
-                        <Card title={<Space direction='horizontal'>
-                            {<Typography style={{ color: 'white', fontSize: 18 }}>
-                                {"Permanent Address"}</Typography>}
-                            <Checkbox style={{ color: 'white', fontSize: 14 }} onChange={onChange}>Same as Current</Checkbox>
-                        </Space>
-                        }
-                            style={{ boxShadow: '2px 2px 2px #4874dc' }}
-                            headStyle={{ backgroundColor: '#004080', border: 0 }}>
-                            <Row gutter={16}>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="perHouseNo"
-                                        label="HouseNo"
-                                        rules={[{ required: false, message: 'Please Enter The HouseNo' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please Enter The HouseNo" />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="perAddress"
-                                        label="Address"
-                                        rules={[{ required: false, message: 'Please Enter The Address' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please Enter The Address" />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="curvillage"
-                                        label="Village"
-                                        rules={[{ required: false, message: 'Please Enter The Village' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please Enter The Village" />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="curtehsil"
-                                        label="Tehsil"
-                                        rules={[{ required: false, message: 'Please Enter The Tehsil' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please Enter The Tehsil" />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="perPinCode"
-                                        label="PinCode"
-                                        rules={[{ required: false, message: 'Please Enter The PinCode' },
-                                        {
-                                            pattern: /^[0-9\b]+$/,
-                                            message: 'Please Enter a Valid Pincode',
-                                        }]}
-                                    >
-                                        <Input maxLength={6} placeholder="Please Enter The PinCode" />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="perStateID"
-                                        label="State"
-                                        rules={[{ required: false, message: 'Please Choose The State' }]}
-                                    >
-                                        <Select
-                                            placeholder="Please choose the State"
-                                            options={state}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="perDistrictID"
-                                        label="District"
-                                        rules={[{ required: false, message: 'Please Choose The District' }]}
-                                    >
-                                        <Select
-                                            placeholder="Please choose the District"
-                                            options={district}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="perCountryID"
-                                        label="Country"
-                                        rules={[{ required: false, message: 'Please Choose The District' }]}
-                                    >
-                                        <Select
-                                            placeholder="Please choose the District"
-                                            options={country}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col className="gutter-row" span={6}>
-                                    <Space.Compact>
-                                        <Form.Item
-                                            style={{ width: '20%' }}
-                                            initialValue={'+91'}
-                                            name="perMobileNoCC"
-                                            label="  CC"
-                                            rules={[{ required: false, message: 'Please enter Mobile number cc' }]}
-                                        >
-                                            <Input size={'middle'} placeholder="CC" />
+                        <Collapse
+                        expandIcon={({ isActive }) => <RightOutlined style={{color:'white',fontSize:18}} rotate={isActive ? 90 : 0} />}
+                        style={{ backgroundColor: '#004080' }}
+                            items={[
+                                {
+                                    key: '1',
+                                    label: <Space direction='horizontal'>
+                                        {<Typography style={{ color: 'white', fontSize: 18 }}>
+                                            {"Permanent Address"}</Typography>}
+                                        <Checkbox style={{ color: 'white', fontSize: 14 }} onChange={onChange}>Same as Current</Checkbox>
+                                    </Space>,
+                                    children:
+                                        <Row gutter={16}>
+                                            <Col span={6}>
+                                                <Form.Item
+                                                    name="perHouseNo"
+                                                    label="HouseNo"
+                                                    rules={[{ required: false, message: 'Please Enter The HouseNo' }]}
+                                                >
+                                                    <Input maxLength={80} placeholder="Please Enter The HouseNo" />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Form.Item
+                                                    name="perAddress"
+                                                    label="Address"
+                                                    rules={[{ required: false, message: 'Please Enter The Address' }]}
+                                                >
+                                                    <Input maxLength={80} placeholder="Please Enter The Address" />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Form.Item
+                                                    name="perVillageName"
+                                                    label="Village"
+                                                    rules={[{ required: false, message: 'Please Enter The Village' }]}
+                                                >
+                                                    <Input maxLength={80} placeholder="Please Enter The Village" />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Form.Item
+                                                    name="perTehsilName"
+                                                    label="Tehsil"
+                                                    rules={[{ required: false, message: 'Please Enter The Tehsil' }]}
+                                                >
+                                                    <Input maxLength={80} placeholder="Please Enter The Tehsil" />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Form.Item
+                                                    name="perPinCode"
+                                                    label="PinCode"
+                                                    rules={[{ required: false, message: 'Please Enter The PinCode' },
+                                                    {
+                                                        pattern: /^[0-9\b]+$/,
+                                                        message: 'Please Enter a Valid Pincode',
+                                                    }]}
+                                                >
+                                                    <Input maxLength={6} placeholder="Please Enter The PinCode" />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Form.Item
+                                                    name="perStateID"
+                                                    label="State"
+                                                    rules={[{ required: false, message: 'Please Choose The State' }]}
+                                                >
+                                                    <Select
+                                                        placeholder="Please choose the State"
+                                                        options={state}
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Form.Item
+                                                    name="perDistrictID"
+                                                    label="District"
+                                                    rules={[{ required: false, message: 'Please Choose The District' }]}
+                                                >
+                                                    <Select
+                                                        placeholder="Please choose the District"
+                                                        options={district}
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Form.Item
+                                                    name="perCountryID"
+                                                    label="Country"
+                                                    rules={[{ required: false, message: 'Please Choose The District' }]}
+                                                >
+                                                    <Select
+                                                        placeholder="Please choose the District"
+                                                        options={country}
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col className="gutter-row" span={6}>
+                                                <Space.Compact>
+                                                    <Form.Item
+                                                        style={{ width: '20%' }}
+                                                        initialValue={'+91'}
+                                                        name="perMobileNoCC"
+                                                        label="  CC"
+                                                        rules={[{ required: false, message: 'Please enter Mobile number cc' }]}
+                                                    >
+                                                        <Input size={'middle'} placeholder="CC" />
 
-                                        </Form.Item>
-                                        <Form.Item
-                                            style={{ width: '80%' }}
-                                            name="perMobileNo"
-                                            label="Mobile number"
-                                            rules={[
-                                                { required: false, type: 'string', message: 'Please enter mobile number' },
-                                                {
-                                                    pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
-                                                    message: 'Please enter a valid mobile number',
-                                                }
-                                            ]}
-                                        >
-                                            <Input maxLength={10} size={'middle'} placeholder="Please enter mobile number" />
-                                        </Form.Item>
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        style={{ width: '80%' }}
+                                                        name="perMobileNo"
+                                                        label="Mobile number"
+                                                        rules={[
+                                                            { required: false, type: 'string', message: 'Please enter mobile number' },
+                                                            {
+                                                                pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
+                                                                message: 'Please enter a valid mobile number',
+                                                            }
+                                                        ]}
+                                                    >
+                                                        <Input maxLength={10} size={'middle'} placeholder="Please enter mobile number" />
+                                                    </Form.Item>
 
-                                    </Space.Compact>
+                                                </Space.Compact>
 
-                                </Col>
-                                <Col className="gutter-row" span={6}>
-                                    <Space.Compact>
-                                        <Form.Item
-                                            style={{ width: '25%' }}
-                                            name="perPhoneCC"
-                                            initialValue={'0512'}
-                                            label="  CC"
-                                            rules={[{ required: false, message: 'Please Enter Phone Number CC' }]}
-                                        >
-                                            <Input size={'middle'} placeholder="CC" />
+                                            </Col>
+                                            <Col className="gutter-row" span={6}>
+                                                <Space.Compact>
+                                                    <Form.Item
+                                                        style={{ width: '25%' }}
+                                                        name="perPhoneCC"
+                                                        initialValue={'0512'}
+                                                        label="  CC"
+                                                        rules={[{ required: false, message: 'Please Enter Phone Number CC' }]}
+                                                    >
+                                                        <Input size={'middle'} placeholder="CC" />
 
-                                        </Form.Item>
-                                        <Form.Item
-                                            style={{ width: '75%' }}
-                                            name="perPhoneNo"
-                                            label="Phone number"
-                                            rules={[
-                                                { required: false, type: 'string', message: 'Please Enter Phone No' },
-                                                {
-                                                    pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
-                                                    message: 'Please enter a valid phone number',
-                                                }
-                                            ]}
-                                        >
-                                            <Input maxLength={10} size={'middle'} placeholder="Please Enter Phone No" />
-                                        </Form.Item>
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        style={{ width: '75%' }}
+                                                        name="perPhoneNo"
+                                                        label="Phone number"
+                                                        rules={[
+                                                            { required: false, type: 'string', message: 'Please Enter Phone No' },
+                                                            {
+                                                                pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
+                                                                message: 'Please enter a valid phone number',
+                                                            }
+                                                        ]}
+                                                    >
+                                                        <Input maxLength={10} size={'middle'} placeholder="Please Enter Phone No" />
+                                                    </Form.Item>
 
-                                    </Space.Compact>
+                                                </Space.Compact>
 
-                                </Col>
-                                {/* <Col span={6}>
-                                    <Form.Item
-                                        name="perPhoneAC"
-                                        label="PhoneAC"
-                                        rules={[{ required: false, message: 'Please Enter PhoneAC' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please enter PhoneAC" />
-                                    </Form.Item>
-                                </Col> */}
-                            </Row>
-                        </Card>
+                                            </Col>
+                                            {/* <Col span={6}>
+                                <Form.Item
+                                    name="perPhoneAC"
+                                    label="PhoneAC"
+                                    rules={[{ required: false, message: 'Please Enter PhoneAC' }]}
+                                >
+                                    <Input maxLength={80} placeholder="Please enter PhoneAC" />
+                                </Form.Item>
+                            </Col> */}
+                                        </Row>
+                                }
+                            ]} />
+                        <Divider orientation="left"><h4></h4></Divider>
+                        
+                        <Collapse
+                        expandIcon={({ isActive }) => <RightOutlined style={{color:'white',fontSize:18}} rotate={isActive ? 90 : 0} />}
+                        style={{ backgroundColor: '#004080' }}
+                            items={[
+                                {
+                                    key: '1',
+                                    label: <Space direction='horizontal'>
+                                        {<Typography style={{ color: 'white', fontSize: 18 }}>
+                                            {"Family Information"}</Typography>}
+                                        <Checkbox style={{ color: 'white', fontSize: 14 }} onChange={onChange}>Same as Current</Checkbox>
+                                    </Space>,
+                                    children:formList()
+                                }]}
+                                    />
                         <Divider orientation="left"><h4></h4></Divider>
 
-                        <Card title={<Space direction='horizontal'>
-                            <Typography style={{ color: 'white', fontSize: 18 }}>
-                                {"Family Information"}</Typography>
-                        </Space>
-                        }
-                            style={{ boxShadow: '2px 2px 2px #4874dc' }}
-                            headStyle={{ backgroundColor: '#004080', border: 0 }}>
-                            {formList()}
-                            {/* lstType_Patient && lstType_Patient.length > 0 &&  */}
-                        </Card>
-                        <Divider orientation="left"><h4></h4></Divider>
+                        <Collapse
+                        expandIcon={({ isActive }) => <RightOutlined style={{color:'white',fontSize:18}} rotate={isActive ? 90 : 0} />}
+                        style={{ backgroundColor: '#004080' }}
+                            items={[
+                                {
+                                    key: '1',
+                                    label: <Space direction='horizontal'>
+                                        {<Typography style={{ color: 'white', fontSize: 18 }}>
+                                            {"Emergency Contact"}</Typography>}
+                                        <Checkbox style={{ color: 'white', fontSize: 14 }} onChange={onChange}>Same as Current</Checkbox>
+                                    </Space>,
+                                    children:formList1()
+                                }]}
+                                    />
 
-                        <Card title={<Space direction='horizontal'>
-                            <Typography style={{ color: 'white', fontSize: 18 }}>
-                                {"Emergency Contact"}</Typography>
-                        </Space>
-                        }
-                            style={{ boxShadow: '2px 2px 2px #4874dc' }}
-                            headStyle={{ backgroundColor: '#004080', border: 0 }}>
-                            {formList1()}
-                            {/* <Row gutter={16}>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="col3"
-                                        label="ContactName"
-                                        rules={[{ required: false, message: 'Please Enter The PinCode' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please Enter The PinCode" />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="col1"
-                                        label="Relation"
-                                        rules={[{ required: false, message: 'Please Select The Relation with Patient' }]}
-                                    >
-                                        <Select
-                                            placeholder="Please Choose The Relation"
-                                            options={relation}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="col2"
-                                        label="ContactSerialNo"
-                                        rules={[{ required: false, message: 'Please Enter The ContactSerialNo' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please Enter The ContactSerialNo" />
-                                    </Form.Item>
-                                </Col>
-                                <Col className="gutter-row" span={6}>
-                                    <Space.Compact>
-                                        <Form.Item
-                                            style={{ width: '20%' }}
-                                            initialValue={'+91'}
-                                            name="col4"
-                                            label="  CC"
-                                            rules={[{ required: false, message: 'Please Enter Mobile Number cc' }]}
-                                        >
-                                            <Input size={'middle'} placeholder="CC" />
-
-                                        </Form.Item>
-                                        <Form.Item
-                                            style={{ width: '80%' }}
-                                            name="col5"
-                                            label="Mobile number"
-                                            rules={[
-                                                { required: false, type: 'string', message: 'Please enter mobile number' },
-                                                {
-                                                    pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
-                                                    message: 'Please enter a valid mobile number',
-                                                }
-                                            ]}
-                                        >
-                                            <Input maxLength={10} size={'middle'} placeholder="Please enter mobile number" />
-                                        </Form.Item>
-
-                                    </Space.Compact>
-
-                                </Col>
-                                <Col className="gutter-row" span={6}>
-                                    <Space.Compact>
-                                        <Form.Item
-                                            style={{ width: '25%' }}
-                                            name="col6"
-                                            initialValue={'0512'}
-                                            label="  CC"
-                                            rules={[{ required: false, message: 'Please Enter Phone Number CC' }]}
-                                        >
-                                            <Input size={'middle'} placeholder="CC" />
-
-                                        </Form.Item>
-                                        <Form.Item
-                                            style={{ width: '75%' }}
-                                            name="col8"
-                                            label="Phone number"
-                                            rules={[
-                                                { required: false, type: 'string', message: 'Please Enter Phone No' },
-                                                {
-                                                    pattern: /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
-                                                    message: 'Please Enter a Valid Phone Number',
-                                                }
-                                            ]}
-                                        >
-                                            <Input maxLength={10} size={'middle'} placeholder="Please Enter Phone No" />
-                                        </Form.Item>
-
-                                    </Space.Compact>
-
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="col7"
-                                        label="PhoneAC"
-                                        rules={[{ required: false, message: 'Please Enter PhoneAC' }]}
-                                    >
-                                        <Input maxLength={80} placeholder="Please Enter PhoneAC" />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        name="col9"
-                                        label="BloodGroup"
-                                        rules={[{ required: false, message: 'Please Enter BloodGroup' }]}
-                                    >
-                                        <Select
-                                            placeholder="Please Choose The BloodGroup"
-                                            options={bloodGroup}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                            </Row> */}
-                        </Card>
                         <Divider orientation="left"><h4></h4></Divider>
                         <Card title={<Space direction='horizontal'>
                             <Typography style={{ color: 'white', fontSize: 18 }}>
@@ -1891,10 +1809,10 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                             }
                                         ]}
                                     >
-                                        <Input disabled={selectedDoc==undefined || selectedDoc==-1} maxLength={16} placeholder="Please Enter The Doc Number" />
+                                        <Input disabled={selectedDoc == undefined || selectedDoc == -1} maxLength={16} placeholder="Please Enter The Doc Number" />
                                     </Form.Item>
                                 </Col>
-                                { <><Col span={6}>
+                                {<><Col span={6}>
                                     <Form.Item
                                         name="passIssueDate"
                                         label="Issue Date"

@@ -105,7 +105,8 @@ const BasicDetails = ({ patientBasicDetails = {},admNo }: any) => {
             }}>
                 <Space align="center" size={24}>
                     <Avatar size={164} icon={<UserOutlined />} />
-                    <QRCode  type="canvas" value={`${result1.patientNo}`} />
+                    {console.log(result1)}
+                    <QRCode  type="canvas" value={`${result1.patientNo}\n${result1.candName}\n${result1.email}`} />
                 </Space>
 
             </div>

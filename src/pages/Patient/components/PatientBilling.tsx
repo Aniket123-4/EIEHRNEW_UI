@@ -568,6 +568,16 @@ const TabBillReceipt = ({ patientBillData, patientData, tabChange }: any) => {
                 pagination={false}
                 loading={loading}
                 bordered
+                footer={()=>patientBill?.result2 &&<div style={{width:'40%'}} >
+                    <Row style={{ justifyContent: 'space-between',marginRight:40 }}>
+                        <Typography style={{}}>{'Total Net Amt'}</Typography>
+                    <Typography >{patientBill?.result2[0]?.totNetAmount}</Typography>
+                    </Row>
+                    <Row style={{ justifyContent: 'space-between',marginRight:40 }}>
+                        <Typography style={{}}>{'Total Received Amt'}</Typography>
+                    <Typography >{patientBill?.result2[0]?.actualPayAmt}</Typography>
+                    </Row>
+                </div>}
             />
         </>
     )

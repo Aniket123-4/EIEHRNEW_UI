@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { CloseOutlined, EditOutlined, FilterOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Modal, Descriptions, Typography } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, Modal, Descriptions, Typography, Badge } from 'antd';
 import { requestGetRateType, requestGetRoomType, requestGetUnit } from '@/services/apiRequest/dropdowns';
 
 import { Table, Tag } from 'antd';
@@ -113,6 +113,9 @@ const ItemStatus = React.forwardRef((props) => {
             filters: [{ text: '<100', value: 100 },
             { text: '<200', value: 200 },{ text: 'All', value: 1000000 }],
             onFilter: (value: number, record:any) => record.balanceQuantity<= value,
+            // defaultSortOrder: 'ascend',
+            sorter: (a, b) => a.balanceQuantity - b.balanceQuantity,
+            render: (text) => <Badge status={text>=100 ? "success" : text<100&&text>=50 ?"warning" :"error"} text={text}  />,
         },
         {
             title: 'BalQuantitySum',
@@ -121,9 +124,12 @@ const ItemStatus = React.forwardRef((props) => {
             filters: [{ text: '<100', value: 100 },
             { text: '<200', value: 200 },{ text: 'All', value: 1000000 }],
             onFilter: (value: number, record:any) => record.balanceQuantity<= value,
+            defaultSortOrder: 'ascend',
+            sorter: (a, b) => a.balQuantitySum - b.balQuantitySum,
+            render: (text) => <Tag color={text>=200 ? "success" : text<200&&text>=150 ?"warning" :"error"}>{text}</Tag>,
         },
         {
-            title: 'eslDate',
+            title: 'Expiry Date',
             dataIndex: 'eslDate',
             key: 'eslDate',
             render: (text) => <label>{moment(text).format('DD-MMM-YYYY')}</label>,
@@ -169,7 +175,10 @@ const ItemStatus = React.forwardRef((props) => {
             const response = await requestGetItemBalance(params);
             setLoading(false)
             if (response.isSuccess = true) {
-                setItemList(response?.result)
+                const data=response?.result.map((item) =>{
+                    return{...item,balQuantitySum:parseFloat(item.balQuantitySum)}
+                })
+                setItemList(data)
             } else {
                 message.error(response?.msg);
             }
@@ -190,10 +199,10 @@ const ItemStatus = React.forwardRef((props) => {
             
         >
             <Spin tip="Please wait..." spinning={loading} style={contentStyle}>
-                <Table pagination={{ pageSize: 6 }} 
+                <Table pagination={{ pageSize: 15 }} 
                 size='small' columns={columns}
                 // onChange={(v)=>console.log(v)}
-                dataSource={list} scroll={{ y: 257 }}/>
+                dataSource={list} scroll={{ y: 600 }}/>
             </Spin>
         </Card>
         // </PageContainer>

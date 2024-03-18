@@ -251,6 +251,7 @@ const AddDiseaseLink = () => {
                 setLoading(false)
                 if (msg?.isSuccess === true) {
                     message.success(msg.msg);
+                    getDiseaseLinkedList(diseaseID)
                     return;
                 } else {
                     message.error(msg.msg);
@@ -268,7 +269,7 @@ const AddDiseaseLink = () => {
         console.log(value)
         const i = itemList.findIndex(x => x.key === record.key)
         itemList[i] = { ...itemList[i], ...value }
-        await setItemList([...itemList])
+        // await setItemList([...itemList])
         console.log(itemList, i)
     }
     let timer: any;
@@ -301,10 +302,10 @@ const AddDiseaseLink = () => {
             // editable: true,
             render: (_: any, record: any) => <Input
                 onInputCapture={() => console.log("onInputCapture")}
-                onBlur={(e: any) => console.log("onBlur", e.target.value)}
+                // onBlur={(e: any) => console.log("onBlur", e.target.value)}
                 min={1}
                 type='number'
-                onChange={(e: any) => onChangeEdit({ "noOfDays": e.target.value }, record,)}
+                onBlur={(e: any) => onEditingRecord({ "noOfDays": e.target.value }, record,)}
                 size='small' disabled={record.isSuccess === false} defaultValue={record.noOfDays}></Input>,
         },
         {
@@ -314,7 +315,7 @@ const AddDiseaseLink = () => {
             width: '10%',
             editable: true,
             render: (_: any, record: any) => <Input min={1} size='small' type='number'
-                onChange={(e: any) => onChangeEdit({ "noOfTimesPerDay": e.target.value }, record,)}
+                onBlur={(e: any) => onEditingRecord({ "noOfTimesPerDay": e.target.value }, record,)}
                 disabled={record.isSuccess === false}
                 defaultValue={record.noOfTimesPerDay}></Input>,
         },
@@ -325,7 +326,7 @@ const AddDiseaseLink = () => {
             editable: true,
             width: '10%',
             render: (_: any, record: any) => <Input min={1} size='small' type='number'
-                onChange={(e: any) => onChangeEdit({ "qtyPerTimes": e.target.value }, record,)}
+                onBlur={(e: any) => onEditingRecord({ "qtyPerTimes": e.target.value }, record,)}
                 disabled={record.isSuccess === false} defaultValue={record.qtyPerTimes}></Input>,
         },
         {
@@ -335,7 +336,7 @@ const AddDiseaseLink = () => {
             width: '19%',
             editable: true,
             render: (_: any, record: any) => <TextArea size='small' autoSize
-                onChange={(e: any) => onChangeEdit({ "instruction": e.target.value }, record,)}
+                onBlur={(e: any) => onEditingRecord({ "instruction": e.target.value }, record,)}
                 disabled={record.isSuccess === false} defaultValue={record.instruction}></TextArea>,
         },
         {
@@ -345,7 +346,7 @@ const AddDiseaseLink = () => {
             width: '17%',
             editable: true,
             render: (_: any, record: any) => <TextArea size='small' autoSize
-                onChange={(e: any) => onChangeEdit({ "advice": e.target.value }, record,)}
+                onBlur={(e: any) => onEditingRecord({ "advice": e.target.value }, record,)}
                 disabled={record.isSuccess === false} defaultValue={record.advice}></TextArea>,
         },
         {
@@ -355,7 +356,7 @@ const AddDiseaseLink = () => {
             width: '15%',
             editable: true,
             render: (_: any, record: any) => <TextArea size='small' autoSize
-                onChange={(e: any) => onChangeEdit({ "diet": e.target.value }, record,)}
+            onBlur={(e: any) => onEditingRecord({ "diet": e.target.value }, record,)}
                 disabled={record.isSuccess === false} defaultValue={record.diet}></TextArea>,
         },
     ];

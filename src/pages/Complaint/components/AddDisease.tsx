@@ -93,7 +93,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                 // "isActive": isActive.toString(),
                 "sortOrder": 1,
                 "diseasesID": diseaseID,
-                "diseasesImage": diseaseDoc.docBase64,
+                "diseasesImage": diseaseDoc?.docBase64,
                 "formID": -1,
                 "type": type
 

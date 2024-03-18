@@ -8,9 +8,11 @@ import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { requestAddPatientBalanceBill, requestGetBalanceBill } from '../services/api';
 import moment from 'moment';
 import { convertDate } from '@/utils/helper';
+import dayjs from 'dayjs';
+import { dateFormat } from '@/utils/constant';
 
 
-
+const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 
@@ -20,6 +22,7 @@ const PatientPartialPharmacyBilling = ({ visible, onClose, onSaveSuccess, select
     const [current, setCurrent] = useState(0);
     const [capacity, setCapacity] = useState(1);
     const [form] = Form.useForm();
+    const [filterForm] = Form.useForm();
     const [loading, setLoading] = useState(false)
     const [patientList, setPatientList] = useState<any>([])
     const [balanceBillList, setBalanceBillList] = useState<any>([])
@@ -38,11 +41,12 @@ const PatientPartialPharmacyBilling = ({ visible, onClose, onSaveSuccess, select
 
 
     useEffect(() => {
-        getBalanceBill({ dateRange: ["1900-01-01 00:00:00", moment()] });
+        getBalanceBill({ dateRange: [moment().subtract(1, 'months'), moment()] });
         // getRateType();
     }, [])
 
     const getBalanceBill = async (values: any) => {
+        form.resetFields()
         values['fromDate'] = convertDate(values?.dateRange[0]);
         values['toDate'] = convertDate(values?.dateRange[1]);;
         const staticParams = {
@@ -70,7 +74,7 @@ const PatientPartialPharmacyBilling = ({ visible, onClose, onSaveSuccess, select
 
 
     const addComplaint = async (values: any) => {
-        const payAmt=balanceBillList.find((item:any)=>item.patientBillID===values.oldPatientBillID)
+        const payAmt = balanceBillList.find((item: any) => item.patientBillID === values.oldPatientBillID)
         console.log(values, payAmt);
         try {
             const staticParams = {
@@ -78,9 +82,9 @@ const PatientPartialPharmacyBilling = ({ visible, onClose, onSaveSuccess, select
                 "formID": -1,
                 "type": 1
             };
-            if(parseFloat(values.paidAmt)>parseFloat(payAmt.balanceAmt))
+            if (parseFloat(values.paidAmt) > parseFloat(payAmt.balanceAmt))
                 message.error("PLEASE ENTER LESS OR EQUAL TO BALANCE AMOUNT")
-            else{
+            else {
                 setLoading(true)
                 const msg = await requestAddPatientBalanceBill({ ...values, ...staticParams });
                 console.log(msg.msg, msg.isSuccess);
@@ -88,7 +92,8 @@ const PatientPartialPharmacyBilling = ({ visible, onClose, onSaveSuccess, select
                 if (msg.isSuccess === true) {
                     message.success(msg.msg);
                     form.resetFields();
-                    getBalanceBill({ dateRange: ["1900-01-01 00:00:00", moment()] })
+                    filterForm.setFieldValue("dateRange",[dayjs().subtract(1, 'months'), dayjs()])
+                    getBalanceBill({ dateRange: [moment().subtract(1, 'months'), moment()] })
                 } else {
                     message.error(msg.msg);
                 }
@@ -152,7 +157,7 @@ const PatientPartialPharmacyBilling = ({ visible, onClose, onSaveSuccess, select
                                     label="Pay Amt"
                                     rules={[{ required: true, message: 'Please Enter Amount to Pay' }]}
                                 >
-                                    <Input type='number' placeholder="Please Enter Amount to Pay" />
+                                    <Input min={1} type='number' placeholder="Please Enter Amount to Pay" />
                                 </Form.Item>
                             </Col>
                         </Row>
@@ -241,6 +246,34 @@ const PatientPartialPharmacyBilling = ({ visible, onClose, onSaveSuccess, select
 
         return (
             <Table
+                title={() => <Form
+                    ref={formRef}
+                    layout="horizontal"
+                    form={filterForm}
+                    onFinish={getBalanceBill}
+                    preserve={true}
+                    scrollToFirstError={true}
+                >
+                    <>
+                            <Row gutter={16}>
+                                <Form.Item
+                                    initialValue={[dayjs().subtract(1, 'months'), dayjs()]}
+                                    name="dateRange"
+                                    label="From - To Date"
+                                    rules={[{ required: true, message: 'Please select' }]}
+                                >
+                                    <RangePicker
+                                        defaultValue={[dayjs().subtract(1, 'months'), dayjs()]}
+                                        format={dateFormat}
+                                        style={{ width: "100%" }}
+                                    />
+                                </Form.Item>
+                                <Button style={{marginLeft:20}}  type="primary" htmlType="submit">
+                                    Filter
+                                </Button>
+                            </Row>
+                    </>
+                </Form>}
                 scroll={{ y: 180 }}
                 columns={columns}
                 size="small"

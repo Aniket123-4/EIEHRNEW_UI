@@ -38,7 +38,7 @@ interface DataType {
 const { Option } = Select;
 
 const dateFormat = 'YYYY/MM/DD';
-const inputStyle = { borderColor: 'blue',color:'black'};
+const inputStyle = { borderColor: 'blue', color: 'black' };
 
 const EditPatient = ({ visible, isEditable, }: any) => {
     const formRef = useRef<ProFormInstance>();
@@ -94,9 +94,9 @@ const EditPatient = ({ visible, isEditable, }: any) => {
     const contentStyle: React.CSSProperties = {
         // lineHeight: '260px',
         // textAlign: 'center',
-        
+
         color: 'black',
-        textShadow:'red',
+        textShadow: 'red',
 
         // marginTop: 60,
         // height: 350,
@@ -253,6 +253,10 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                         "perMobileNo": patientData1?.perMobileNo,
                         "perPhoneCC": patientData1?.perPhoneCC,
                         "perPhoneNo": patientData1?.perPhoneNo,
+                        "curTehsilName": patientData1?.curTehsilName,
+                        "perTehsilName": patientData1?.perTehsilName,
+                        "perVillageName": patientData1?.perVillageName,
+                        "curVillageName": patientData1?.curVillageName,
 
                         //"uidDocName": patientData1?.uidDocName,
                         "passIssueDate": dayjs(patientData1.passportIssueDate),
@@ -473,11 +477,11 @@ const EditPatient = ({ visible, isEditable, }: any) => {
             const res1 = await requestFileUpload(param1);
 
             if (res1.isSuccess == true)
-            setPatientDocUpload({
-                "uidDocID": res?.result['0']?.docID.split('_')[1],
-                "uidDocExt": ext,
-                "uidDocName": values.docName,
-            })
+                setPatientDocUpload({
+                    "uidDocID": res?.result['0']?.docID.split('_')[1],
+                    "uidDocExt": ext,
+                    "uidDocName": values.docName,
+                })
             else
                 message.error(res1.msg)
         }
@@ -488,7 +492,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
         values['uidDocExt'] = patientDocUpload?.uidDocExt ? patientDocUpload.uidDocExt : "";
         values['uidDocID'] = patientDocUpload?.uidDocID ? patientDocUpload.uidDocID : 0;
         values['passIssueDate'] = convertDate(values?.passIssueDate)
-        values['dob'] =convertDate( values?.dob);
+        values['dob'] = convertDate(values?.dob);
         console.log(values)
         let serviceFrom = convertDate(values.serviceFrom);
         try {
@@ -753,7 +757,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                 name={'col3'}
                                 label="Contact Name"
                                 rules={[{ required: false, message: 'Please Enter Contact Name' },
-                            {validator:validateCharacters}]}
+                                { validator: validateCharacters }]}
                             >
                                 <Input maxLength={30} placeholder="Please Enter Contact Name" />
                             </Form.Item>
@@ -898,7 +902,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                 name={'col3'}
                                 label="Contact Name"
                                 rules={[{ required: false, message: 'Please Enter Contact Name' },
-                            {validator:validateCharacters}]}
+                                { validator: validateCharacters }]}
                             >
                                 <Input maxLength={30} placeholder="Please Enter Contact Name" />
                             </Form.Item>
@@ -1031,7 +1035,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         name="fName"
                                         label="First Name"
                                         rules={[{ required: true, message: 'Please enter First Name' },
-                                    {validator:validateCharacters}]}
+                                        { validator: validateCharacters }]}
                                     >
                                         <Input style={inputStyle} placeholder="Please enter First Name" />
                                     </Form.Item>
@@ -1042,7 +1046,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         name="mName"
                                         label="Middle Name"
                                         rules={[{ required: false, message: 'Please enter Middle Name' },
-                                    {validator:validateCharacters}]}
+                                        { validator: validateCharacters }]}
                                     >
                                         <Input style={inputStyle} placeholder="Please enter Middle Name" />
                                     </Form.Item>
@@ -1053,7 +1057,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         name="lName"
                                         label="Last Name"
                                         rules={[{ required: true, message: 'Please enter Last Name' },
-                                    {validator:validateCharacters}]}
+                                        { validator: validateCharacters }]}
                                     >
                                         <Input style={inputStyle} placeholder="Please enter Last Name" />
                                     </Form.Item>
@@ -1064,7 +1068,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         name="fatherName"
                                         label="Father Name"
                                         rules={[{ required: true, message: 'Please enter Father Name' },
-                                    {validator:validateCharacters}]}
+                                        { validator: validateCharacters }]}
                                     >
                                         <Input style={inputStyle} placeholder="Please enter Father Name" />
                                     </Form.Item>
@@ -1115,7 +1119,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         name="motherNameML"
                                         label="Mother Name In Other Language"
                                         rules={[{ required: false, message: 'Please Enter Mother Name' },
-                                    {validator:validateCharacters}]}
+                                        { validator: validateCharacters }]}
                                     >
                                         <Input style={inputStyle} placeholder="Please enter Mother Name" />
                                     </Form.Item>
@@ -1310,6 +1314,24 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                 </Col>
                                 <Col span={6}>
                                     <Form.Item
+                                        name="curVillageName"
+                                        label="Village"
+                                        rules={[{ required: false, message: 'Please Enter The Village' }]}
+                                    >
+                                        <Input maxLength={80} placeholder="Please Enter The Village" />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={6}>
+                                    <Form.Item
+                                        name="curTehsilName"
+                                        label="Tehsil"
+                                        rules={[{ required: false, message: 'Please Enter The Tehsil' }]}
+                                    >
+                                        <Input maxLength={80} placeholder="Please Enter The Tehsil" />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={6}>
+                                    <Form.Item
                                         name="curCountryID"
                                         label="Country"
                                         rules={[{ required: false, message: 'Please Choose The District' }]}
@@ -1451,6 +1473,24 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                 </Col>
                                 <Col span={6}>
                                     <Form.Item
+                                        name="perVillageName"
+                                        label="Village"
+                                        rules={[{ required: false, message: 'Please Enter The Village' }]}
+                                    >
+                                        <Input maxLength={80} placeholder="Please Enter The Village" />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={6}>
+                                    <Form.Item
+                                        name="perTehsilName"
+                                        label="Tehsil"
+                                        rules={[{ required: false, message: 'Please Enter The Tehsil' }]}
+                                    >
+                                        <Input maxLength={80} placeholder="Please Enter The Tehsil" />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={6}>
+                                    <Form.Item
                                         name="perCountryID"
                                         label="Country"
                                         rules={[{ required: false, message: 'Please Choose The District' }]}
@@ -1461,6 +1501,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         />
                                     </Form.Item>
                                 </Col>
+
                                 <Col className="gutter-row" span={6}>
                                     <Space.Compact>
                                         <Form.Item
@@ -1544,7 +1585,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                             style={{ boxShadow: '2px 2px 2px #4874dc' }}
                             headStyle={{ backgroundColor: '#004080', border: 0 }}>
                             {formList1()}
-                            
+
                         </Card>
                         <Divider orientation="left"><h4></h4></Divider>
                         <Card title={<Space direction='horizontal'>
@@ -1626,7 +1667,7 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                         })}
                                         label="">
                                         <Upload
-                                            //onChange={onUpload}
+                                        //onChange={onUpload}
                                         >
                                             <Button icon={<UploadOutlined />}>Upload</Button>
                                         </Upload>

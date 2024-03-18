@@ -20,6 +20,7 @@ import DischargeSummary from './DischargeSummary';
 import Item from 'antd/es/list/Item';
 import moment from 'moment';
 import PrintReport from '@/components/Print/PrintReport';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -45,6 +46,13 @@ const DoctorPatientDetails = React.forwardRef((props) => {
     const [base64Data, setBase64Data] = useState<any>("");
     const [showPdf, setShowPdf] = useState<any>(false);
 
+    const {
+        transcript,
+        listening,
+        resetTranscript,
+        browserSupportsSpeechRecognition
+    } = useSpeechRecognition();
+
     const showPastCaseDrawer = () => {
         setOpenPastCaseDrawer(true);
     };
@@ -63,6 +71,7 @@ const DoctorPatientDetails = React.forwardRef((props) => {
 
         if (!response?.isSuccess) {
             message.error(response?.msg);
+            console.log(response);
         } else {
             message.success(response?.msg);
 
@@ -230,6 +239,7 @@ const DoctorPatientDetails = React.forwardRef((props) => {
 
             if (!response?.isSuccess) {
                 message.error(response?.msg);
+                console.log(response);
             }
         } catch (error) {
             setLoading(false)
@@ -258,6 +268,7 @@ const DoctorPatientDetails = React.forwardRef((props) => {
 
     const onChange = (key: string) => {
         console.log(key);
+        resetTranscript
     };
 
     const showModal = () => {

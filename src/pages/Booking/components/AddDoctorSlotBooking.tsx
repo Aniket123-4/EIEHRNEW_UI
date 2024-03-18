@@ -128,7 +128,12 @@ const AddDoctorSlotBooking = () => {
             name: "Slot 3",
             timeRange: "",
             week: [
-                
+
+                {
+                    id: "0",
+                    name: "All",
+                    selected: false
+                },
                 {
                     id: "1",
                     name: "Sun",
@@ -179,7 +184,7 @@ const AddDoctorSlotBooking = () => {
 
     const getSelectDay = (week: any, slotId: number) => {
         return week.filter((day: any) => {
-            return day.selected;
+            return day.selected &&day.id !='0';
         }).map((day: any) => {
             return {
                 rowID: day.id,
@@ -230,29 +235,29 @@ const AddDoctorSlotBooking = () => {
         }
         console.log({
             params
-        },values);
+        }, values);
 
 
-        // try {
-        //     setLoading(true)
-        //     const response = await requestAddPatDocAppointments(params);
-        //     setLoading(false)
-        //     console.log(response);
+        try {
+            setLoading(true)
+            const response = await requestAddPatDocAppointments(params);
+            setLoading(false)
+            console.log(response);
 
-        //     if (response?.isSuccess) {
-        //         message.success(response?.msg);
-        //         form.resetFields();
-        //         // if (investigationListRef.current) {
-        //         //     investigationListRef.current.getList();
-        //         // }
-        //     } else {
-        //         message.error(response?.msg);
-        //     }
-        // } catch (error) {
-        //     setLoading(false)
-        //     console.log({ error });
-        //     message.error(error);
-        // }
+            if (response?.isSuccess) {
+                message.success(response?.msg);
+                form.resetFields();
+                // if (investigationListRef.current) {
+                //     investigationListRef.current.getList();
+                // }
+            } else {
+                message.error(response?.msg);
+            }
+        } catch (error) {
+            setLoading(false)
+            console.log({ error });
+            message.error(error);
+        }
 
     }
 
@@ -302,6 +307,22 @@ const AddDoctorSlotBooking = () => {
     const onEditRecord = (data: any) => {
         // getInvParameter(data?.invParameterID)
     }
+    const setAllDays = (data: any, checked: any, day: any) => {
+        const formValues=form.getFieldValue("slots")
+        if (day.key == 0) {
+            const week = formValues[data].week.map((item: any) => {
+                if(checked == true) return { ...item, selected: true }
+                else return { ...item, selected: false }
+            })
+            const updated=formValues.map((item: any) => {
+                return(
+                    item.id==formValues[data].id ? {...item,week} :{...item}
+                )
+            })
+            console.log("slots", { week: week }, updated)
+            form.setFieldValue("slots",updated)
+        }
+    }
 
     const formList = () => {
         return (
@@ -330,7 +351,7 @@ const AddDoctorSlotBooking = () => {
                                                                 valuePropName="checked"
                                                                 label="aa"
                                                                 name={[day.name, 'selected']}>
-                                                                <Checkbox onChange={()=>form.setFieldValue(slots[0].week[7].selected,true)}>{slots[key]['week'][day.key]['name']}</Checkbox>
+                                                                <Checkbox onChange={(e) => setAllDays(name, e.target.checked, day)}>{slots[key]['week'][day.key]['name']}</Checkbox>
                                                             </Form.Item>
                                                         </Space>
                                                     ))}

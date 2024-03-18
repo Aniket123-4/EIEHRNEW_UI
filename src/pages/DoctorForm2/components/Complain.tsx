@@ -6,7 +6,8 @@ import { booleanValueForOption, dateFormat } from '@/utils/constant';
 import moment from 'moment';
 import { requestAddDelPatientForDoctorOPIP } from '../services/api';
 import { getUserInLocalStorage } from '@/utils/common';
-import { CloseOutlined } from '@ant-design/icons';
+import { AudioOutlined, CloseOutlined } from '@ant-design/icons';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 
 
 const Complain = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }: any) => {
@@ -45,8 +46,8 @@ const Complain = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }: 
             title: 'Delete',
             key: 'delete',
             render: (_, record) => <Row style={{ justifyContent: 'space-between' }}>
-                                    <CloseOutlined onClick={() => onFinishPatForm(record,true)} style={{ color: 'red' }} />
-                                    </Row>
+                <CloseOutlined onClick={() => onFinishPatForm(record, true)} style={{ color: 'red' }} />
+            </Row>
         }
 
     ];
@@ -57,6 +58,22 @@ const Complain = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }: 
         getComplaintType();
 
     }, [])
+    const {
+        transcript,
+        listening,
+        resetTranscript,
+        browserSupportsSpeechRecognition
+    } = useSpeechRecognition();
+    
+    useEffect(() => {
+        filterForm.setFieldValue("Complain",transcript)
+    }, [transcript])
+
+    const handleChangeFilter = (value: any) => { }
+
+    const startListening = () => {
+        SpeechRecognition.startListening({ continuous: true })
+    };
 
     const getComplaintType = async () => {
         const staticParams = {
@@ -74,17 +91,17 @@ const Complain = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }: 
             // console.log(dataMaskForDropdown)
         }
     }
-    const onFinishPatForm = async (values: any,isDelete:any=false) => {
+    const onFinishPatForm = async (values: any, isDelete: any = false) => {
         console.log(values)
         const date = moment(new Date()).format(dateFormat);
         const params = {
             "patientCaseID": patientCaseID,
             "admNo": admNo,
-            "col1": values?.complaintTypeID?values?.complaintTypeID:"",
-            "col2": values?.complain?values?.complain:"",
-            "col3": isDelete ? values?.admNo :"",
-            "col4": values?.isML ?"" + values?.isML:"",
-            "col5": values?.complaintML?values?.complaintML:"",
+            "col1": values?.complaintTypeID ? values?.complaintTypeID : "",
+            "col2": values?.complain ? values?.complain : "",
+            "col3": isDelete ? values?.admNo : "",
+            "col4": values?.isML ? "" + values?.isML : "",
+            "col5": values?.complaintML ? values?.complaintML : "",
             "col6": "",
             "col7": "",
             "col8": "",
@@ -169,12 +186,10 @@ const Complain = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }: 
         };
         /* eslint-enable no-template-curly-in-string */
 
-        
 
 
 
-        const handleChangeFilter = (value: any) => { }
-
+       
         return (
             <Form
                 form={filterForm}
@@ -210,8 +225,21 @@ const Complain = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }: 
                         </Form.Item>
                     </Col> */}
                     <Col span={6}>
-                        <Form.Item name="Complain" label="Complaint" rules={[{ required: false }]}>
-                            <Input placeholder="Please Enter" />
+                        <Form.Item name="Complain"
+                            label={<Row >
+                                Complaint 
+                                <p style={{backgroundColor:'lightgreen'}}>{listening ? 'Listening' : ''}</p>
+                                <Button
+                                    icon={<AudioOutlined color={listening ? 'red' : 'blue'} />}
+                                    onTouchStart={startListening}
+                                    onMouseDown={startListening}
+                                    onTouchEnd={SpeechRecognition.stopListening}
+                                    onMouseUp={SpeechRecognition.stopListening}
+                                ></Button>
+                                <Button type={'link'} onClick={resetTranscript}>Clear</Button>
+                            </Row>} rules={[{ required: false }]}>
+                                {console.log(transcript)}
+                            <Input.TextArea onChange={(e)=>e.target.value} placeholder="Please Enter" />
                         </Form.Item>
                     </Col>
                 </Row>
