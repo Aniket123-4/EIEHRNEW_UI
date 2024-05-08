@@ -84,7 +84,7 @@ const ReceptionSearch = React.forwardRef((props) => {
             title: 'Name',
             dataIndex: 'candName',
             key: 'candName',
-            fixed: 'left',
+            // fixed: 'left',
             width:'20%',
             render: (_, record) => <Row style={{justifyContent:'space-between'}}>
                 <Typography>{record?.candName}</Typography>
@@ -94,6 +94,7 @@ const ReceptionSearch = React.forwardRef((props) => {
         {
             title: 'Case No',
             dataIndex: 'patientCaseNo',
+            width:'20%',
             key: 'patientCaseNo',
         },
         // {
@@ -105,6 +106,7 @@ const ReceptionSearch = React.forwardRef((props) => {
         {
             title: 'DOB',
             dataIndex: 'dob',
+            
             key: 'dob',
         },
         {
@@ -301,7 +303,7 @@ const ReceptionSearch = React.forwardRef((props) => {
                         label="Preemp Type"
                         size={'middle'}
                         placeholder="Case Type"
-                        style={{ width: 300, marginTop: -10 }}
+                        style={{ width: 200, marginTop: -10 }}
                         options={preEmpType}
                         onChange={data => onSelectPreEmp(data)}
                     />
@@ -432,7 +434,7 @@ const ReceptionSearch = React.forwardRef((props) => {
                 size={'medium'}
             >
                 <Row gutter={16}>
-                    <Col span={24}>
+                    <Col span={24} xs={24} xl={12}>
                         <Form.Item name="fromToDate" label="From/To Date" rules={[{ required: false }]}>
                             <DatePicker.RangePicker
                                 format={dateFormat}
@@ -458,12 +460,12 @@ const ReceptionSearch = React.forwardRef((props) => {
                 </Row> */}
 
                 <Row gutter={16}>
-                    <Col span={12}>
+                    <Col span={12} xs={24} xl={12}>
                         <Form.Item name="patientCaseNo" label="Patient Case No" rules={[{ required: false }]}>
                             <Input />
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col span={12} xs={24} xl={12}>
                         <Form.Item name="patientNo" label="PatientNo" rules={[{ required: false }]}>
                             <Input />
                         </Form.Item>
@@ -471,13 +473,13 @@ const ReceptionSearch = React.forwardRef((props) => {
                 </Row>
 
                 <Row gutter={16}>
-                    <Col span={12}>
+                    <Col span={12} xs={24} xl={12}>
                         <Form.Item name="patientName" label="Patient Name" rules={[{ required: false }]}>
                             <Input />
                         </Form.Item>
 
                     </Col>
-                    <Col span={12}>
+                    <Col span={12} xs={24} xl={12}>
                         <Form.Item name="patientUIDNo" label="Patient UID No" rules={[{ required: false }]}>
                             <Input />
                         </Form.Item>
@@ -485,7 +487,7 @@ const ReceptionSearch = React.forwardRef((props) => {
                 </Row>
 
                 <Row gutter={16}>
-                    <Col span={12}>
+                    <Col span={12} xs={24} xl={12}>
                         <Form.Item name="caseTypeID" label="Case Type" rules={[{ required: false }]}>
                             <Select
                                 onChange={handleChangeFilter}
@@ -494,7 +496,7 @@ const ReceptionSearch = React.forwardRef((props) => {
                             />
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col span={12} xs={24} xl={12}>
                         <Form.Item name="sectionID" label="Specialization" rules={[{ required: false }]}>
                             <Select
                                 showSearch
@@ -507,7 +509,7 @@ const ReceptionSearch = React.forwardRef((props) => {
                 </Row>
 
                 <Row gutter={16}>
-                    <Col span={12}>
+                    <Col span={12} xs={24} xl={12}> 
                         <Form.Item name="consultantDocID" label="Doctor" rules={[{ required: false }]}>
                             <Select
                                 onChange={handleChangeFilter}
@@ -516,7 +518,7 @@ const ReceptionSearch = React.forwardRef((props) => {
                             />
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col span={12} xs={24} xl={12}>
                         <Form.Item name="patientFileNo" label="Patient File No" rules={[{ required: false }]}>
                             <InputNumber style={{ width: "100%" }} min={0} />
                         </Form.Item>
@@ -524,12 +526,12 @@ const ReceptionSearch = React.forwardRef((props) => {
                 </Row>
 
                 <Row gutter={16}>
-                    <Col span={12}>
+                    <Col span={12} xs={24} xl={12}>
                         <Form.Item name="patientMobile" label="Patient Mobile No" rules={[{ required: false }]}>
                             <Input />
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col span={12} xs={24} xl={12}>
                         <Form.Item name="patientPhone" label="Patient Phone No" rules={[{ required: false }]}>
                             <Input />
                         </Form.Item>
@@ -593,20 +595,20 @@ const ReceptionSearch = React.forwardRef((props) => {
         <>
             <div style={{ marginBottom: 10 }}>
                 <Row gutter={16}>
-                    <Col span={6}>
-                        <Card bodyStyle={{ padding: 10 }} bordered={false}>
+                    <Col span={6} xs={24} xl={6}>
+                        <Card bodyStyle={{ padding: 10, margin: "3px" }} bordered={false}>
                             <Row>
                                 <Col span={12}>
                                     <h3>Registration</h3>
                                 </Col>
-                                <Col span={12}>
+                                <Col span={12}> 
                                     <h3 style={{ textAlign: 'end' }}>{patientDailyCount?.patReg}</h3>
                                 </Col>
                             </Row>
                         </Card>
                     </Col>
-                    <Col span={6}>
-                        <Card bodyStyle={{ padding: 10 }} bordered={false}>
+                    <Col span={6} xs={24} xl={6}>
+                        <Card bodyStyle={{ padding: 10, margin: "3px"  }} bordered={false}>
                             <Row>
                                 <Col span={12}>
                                     <h3>New</h3>
@@ -617,8 +619,8 @@ const ReceptionSearch = React.forwardRef((props) => {
                             </Row>
                         </Card>
                     </Col>
-                    <Col span={6}>
-                        <Card bodyStyle={{ padding: 10 }} bordered={false}>
+                    <Col span={6} xs={24} xl={6}>
+                        <Card bodyStyle={{ padding: 10, margin: "3px"  }} bordered={false}>
                             <Row>
                                 <Col span={12}>
                                     <h3>Revisit</h3>
@@ -629,13 +631,13 @@ const ReceptionSearch = React.forwardRef((props) => {
                             </Row>
                         </Card>
                     </Col>
-                    <Col span={6}>
-                        <Card bodyStyle={{ padding: 10 }} bordered={false}>
+                    <Col span={6} xs={24} xl={6}>
+                        <Card bodyStyle={{ padding: 10, margin: "3px"  }} bordered={false}>
                             <Row>
                                 <Col span={12}>
                                     <h3>Checkout</h3>
                                 </Col>
-                                <Col span={12}>
+                                <Col span={12}> 
                                     <h3 style={{ textAlign: 'end' }}>{patientDailyCount?.patCheckOut}</h3>
                                 </Col>
                             </Row>
@@ -644,7 +646,7 @@ const ReceptionSearch = React.forwardRef((props) => {
                 </Row>
             </div>
             <Row gutter={8}>
-                <Col span={14}>
+                <Col span={14} xs={24} xl={14}>
 
                     <Card>
                         <Spin spinning={loadingCheckin} >
@@ -652,7 +654,7 @@ const ReceptionSearch = React.forwardRef((props) => {
                         </Spin>
                     </Card>
                 </Col>
-                <Col span={10}>
+                <Col span={10} xs={24} xl={10}>
                     <Card>
                         <Radio.Group options={options} onChange={onChange3} value={selectedType} />
                         <div style={{ marginTop: 20 }}>

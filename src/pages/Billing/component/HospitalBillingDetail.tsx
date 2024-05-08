@@ -210,7 +210,7 @@ const HospitalBillingDetail = ({ }: any) => {
                     <Card className="gutter-example">
                         <Row gutter={16}>
 
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={8} xs={24} xl={10}>
                                 <Form.Item
                                     initialValue={[dayjs().subtract(1, 'months'), dayjs()]}
                                     name="dateRange"
@@ -238,18 +238,19 @@ const HospitalBillingDetail = ({ }: any) => {
                 </>
             </Form>
             <Row gutter={16}>
-                <Col span={8}>
-                    <Card title="Total NetAmount" bordered={false}>
+                <Col span={8} xs={24} xl={8}>
+                    <Card title="Total NetAmount" bordered={false} style={{margin:'2px'}} >
                         {mainData?.netAmountVAT}
                     </Card>
                 </Col>
-                <Col span={8}>
-                    <Card title="Total GrossAmount" bordered={false}>
+                <Col span={8} xs={24} xl={8} >
+                    <Card title="Total GrossAmount" bordered={false} style={{margin:'2px'}}>
                         {mainData?.totFinalGrossAmount}
+                        
                     </Card>
                 </Col>
-                <Col span={8}>
-                    <Card title="GST" bordered={false}>
+                <Col span={8} xs={24} xl={8}>
+                    <Card title="GST" bordered={false} style={{margin:'2px'}}>
                         {mainData?.netAmountVAT}
                     </Card>
                 </Col>

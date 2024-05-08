@@ -164,7 +164,7 @@ const ItemList = ({ refresh, editRecord }: any) => {
             key: 'itemName',
             // render: (text) => <a>{text}</a>,
             editable: true,
-            // width: '35%',
+             width: '50%',
             ...getColumnSearchProps('itemName'),
 
         },
@@ -172,7 +172,7 @@ const ItemList = ({ refresh, editRecord }: any) => {
             title: 'Active',
             dataIndex: 'isActive',
             key: 'isActive',
-            // width: '15%',
+             width: '40%',
             render: (text: any) =>
                 <Tag color={text == true ? 'success' : 'error'}>{text == true ? 'Active' : 'InActive'}</Tag>,
             editable: true
@@ -182,12 +182,12 @@ const ItemList = ({ refresh, editRecord }: any) => {
             dataIndex: 'itemCode',
             key: 'itemCode',
             editable: true,
-            // width: '25%',
+             width: '50%',
         },
         {
             title: 'Action',
             key: 'action',
-            // width: '25%',
+             width: '40%',
             render: (_: any, record: any) => {
                 return (
                     <Typography.Link style={{ width: 100 }} disabled={editingKey !== ''} onClick={() => edit(record)}>
@@ -234,7 +234,7 @@ const ItemList = ({ refresh, editRecord }: any) => {
                 {itemList &&
                     <Spin tip="Please wait..." spinning={loading}>
                         <Table
-                            scroll={{ y: 300 }}
+                            scroll={{x:150, y: 300 }}
                             columns={columns}
                             dataSource={itemList}
                             size='small'

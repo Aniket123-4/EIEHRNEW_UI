@@ -487,7 +487,7 @@ const AddDiseaseLink = () => {
             title=" "
             style={{}}>
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-                <Card
+                <Card 
                     style={{ height: '100%', boxShadow: '2px 2px 2px #4874dc' }}
                     title={<Space>
                         <Typography>{"Link Disease Test/Medicine"}</Typography>

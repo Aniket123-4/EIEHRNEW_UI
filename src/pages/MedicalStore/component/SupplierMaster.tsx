@@ -107,7 +107,7 @@ const SupplierMaster = ({
                 {/* <Row> */}
 
 
-                    <Col className="gutter-row" span={16}>
+                    <Col className="gutter-row" span={16} xs={24} xl={12}>
                         <Form.Item
                             name="supplierName"
                             label="Supplier Name"
@@ -117,7 +117,7 @@ const SupplierMaster = ({
                             <Input placeholder="Please Enter Supplier Name" />
                         </Form.Item>
                     </Col>
-                    <Col className="gutter-row" span={16}>
+                    <Col className="gutter-row" span={16}xs={24} xl={12}>
                         <Form.Item
                             name="supplierCode"
                             label="Supplier Code"
@@ -126,7 +126,7 @@ const SupplierMaster = ({
                             <Input  placeholder="Please Enter Supplier Code" />
                         </Form.Item>
                     </Col>
-                    <Col className="gutter-row" span={16}>
+                    <Col className="gutter-row" span={16} xs={24} xl={12}>
                         <Form.Item
                             name="supplierAddress"
                             label="Supplier Address"
@@ -164,7 +164,7 @@ const SupplierMaster = ({
         <PageContainer title=" " style={{}}>
             <Space direction="horizontal" size="middle" style={{ display: "flex" }}>
                 <Row gutter={8}>
-                    <Col span={11}>
+                    <Col span={11} xs={24} xl={10}>
                         <Card
                             style={{ height: 480, boxShadow: "2px 2px 2px #4874dc" }}
                             title="New Item"
@@ -175,7 +175,7 @@ const SupplierMaster = ({
                         </Card>
 
                     </Col>
-                    <Col span={13}>
+                    <Col span={13} xs={24} xl={12}>
                         <SupplierList
                             refresh={loading}
                             editRecord={(data: any) => setEditField(data)}

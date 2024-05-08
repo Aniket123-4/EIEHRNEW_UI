@@ -182,7 +182,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                 <>
                     <div className="gutter-example">
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={6} xs={24} xl={6}>
                                 <Form.Item
                                     name="diseaseTypeName"
                                     label="Disease name"
@@ -192,7 +192,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                                     <Input size={'large'} placeholder="Please enter disease type name" />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={6} xs={24} xl={6}>
                                 <Form.Item
                                     name="diseaseTypeCode"
                                     label="Disease code"
@@ -201,7 +201,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                                     <Input size={'large'} placeholder="Please enter disease code" />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={6} xs={24} xl={6}>
                                 <Form.Item
                                     name="diseaseTypeID"
                                     label="Disease type"
@@ -228,7 +228,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
 
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={6} xs={24} xl={6}>
                                 <Form.Item
                                     name="diseasesImage"
                                     label="Select Image"
@@ -243,7 +243,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                             </Col>
 
                         </Row>
-                        <Col className="gutter-row" span={6}>
+                        <Col className="gutter-row" span={6} xs={24} xl={6}>
                             <Form.Item
                                 name="isActive"
                                 valuePropName="checked"

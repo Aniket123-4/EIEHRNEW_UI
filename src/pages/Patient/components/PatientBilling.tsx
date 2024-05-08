@@ -247,7 +247,7 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
                             <Row>
 
                                 <Col span={8}></Col>
-                                <Col span={8}>
+                                <Col span={8} xs={24} xl={8}>
                                     <label style={{ marginTop: 20 }}>Remark</label>
                                     <Input.TextArea rows={4} placeholder="maxLength is 200" value={remark} maxLength={200}
                                         onChange={onChangeRemark}
@@ -513,7 +513,7 @@ const TabBillReceipt = ({ patientBillData, patientData, tabChange }: any) => {
     return (
         <>
             <Row>
-                <Col span={8}>
+                <Col span={8} xs={24} xl={4}>
                     {/* <label>{'Bill No'}</label><br /> */}
                     <Form
                         form={form}
@@ -522,7 +522,7 @@ const TabBillReceipt = ({ patientBillData, patientData, tabChange }: any) => {
                             name={'Bill_No'}
                             label={'Bill No'}>
                             <Select
-                                style={{ width: '80%' }}
+                                //style={{ width: '80%' }}
                                 onChange={handleChangeFilter}
                                 placeholder={"Select"}
                                 options={patientBillNoData}
@@ -531,7 +531,7 @@ const TabBillReceipt = ({ patientBillData, patientData, tabChange }: any) => {
                     </Form>
 
                 </Col>
-                <Col span={2}>
+                <Col span={2} xs={24} xl={4}>
                     {patientBill?.result1?.length > 0 ?
                         <Popconfirm
                             title="Cancel Bill"
@@ -551,12 +551,12 @@ const TabBillReceipt = ({ patientBillData, patientData, tabChange }: any) => {
                         </Popconfirm> : null}
                     {base64Data && <PrintReport showModal={showPdf}
                         base64Data={base64Data} onCancel={handleCancel} onOk={handleCancel} />}
-
-                </Col>
-                <Col span={4}>
-                    {/* <label>{''}</label><br /> */}
                     <Button onClick={printReport} style={{ marginLeft: 5, }} icon={<PrinterOutlined />}></Button>
                 </Col>
+                {/* <Col span={4} xs={24} xl={4}>
+                    {/* <label>{''}</label><br /> 
+                    <Button onClick={printReport} style={{ marginLeft: 5, }} icon={<PrinterOutlined />}></Button>
+                </Col> */}
                 <Col span={8}></Col>
             </Row>
 
@@ -568,7 +568,8 @@ const TabBillReceipt = ({ patientBillData, patientData, tabChange }: any) => {
                 pagination={false}
                 loading={loading}
                 bordered
-                footer={()=>patientBill?.result2 &&<div style={{width:'40%'}} >
+                footer={()=>patientBill?.result2 &&
+                <Col  xs={24} xl={8} >
                     <Row style={{ justifyContent: 'space-between',marginRight:40 }}>
                         <Typography style={{}}>{'Total Net Amt'}</Typography>
                     <Typography >{patientBill?.result2[0]?.totNetAmount}</Typography>
@@ -577,7 +578,7 @@ const TabBillReceipt = ({ patientBillData, patientData, tabChange }: any) => {
                         <Typography style={{}}>{'Total Received Amt'}</Typography>
                     <Typography >{patientBill?.result2[0]?.actualPayAmt}</Typography>
                     </Row>
-                </div>}
+                </Col>}
             />
         </>
     )

@@ -159,6 +159,7 @@ const SupplierList = ({ refresh, editRecord }: any) => {
             title: 'Supplier Name',
             dataIndex: 'supplierName',
             key: 'supplierName',
+            width: '90px',
             ...getColumnSearchProps('supplierName'),
             // render: (text) => <a>{text}</a>,
         },
@@ -166,17 +167,19 @@ const SupplierList = ({ refresh, editRecord }: any) => {
             title: 'Supplier Code',
             dataIndex: 'supplierCode',
             key: 'supplierCode',
+            width: '90px',
         },
         {
             title: 'Supplier Address',
             dataIndex: 'supplierAddress',
             key: 'supplierAddress',
+            width: '90px',
         },
         {
             title: 'Active',
             dataIndex: 'isActive',
             key: 'isActive',
-            width: '15%',
+            width: '90px',
             render: (text: any) =>
                 <Tag color={text == true ? 'success' : 'error'}>{text == true ? 'Active' : 'InActive'}</Tag>,
             editable: true
@@ -184,7 +187,7 @@ const SupplierList = ({ refresh, editRecord }: any) => {
         {
             title: 'Action',
             key: 'action',
-            width: '14%',
+            width: '50px',
             render: (_: any, record: any) => {
                 return (
                     <Typography.Link style={{ width: 100 }} disabled={editingKey !== ''} onClick={() => edit(record)}>
@@ -218,7 +221,7 @@ const SupplierList = ({ refresh, editRecord }: any) => {
                 {supplierList &&
                     <Spin tip="Please wait..." spinning={loading}>
                         <Table
-                            scroll={{ y: 270 }}
+                            scroll={{x:350, y: 270 }}
                             columns={columns}
                             dataSource={supplierList}
                         // rowClassName="editable-row"

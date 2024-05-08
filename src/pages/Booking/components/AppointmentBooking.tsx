@@ -275,7 +275,7 @@ const AppointmentBooking = () => {
             <>
                 <>
                     <Row gutter={[8, 8]}>
-                        <Col span={12}>
+                        <Col span={12} xs={24} xl={12}>
                             <Card
                                 title="Booking Timing"
                                 style={{
@@ -296,9 +296,9 @@ const AppointmentBooking = () => {
                                                     backgroundColor: item?.isFree ? "white" : "#f5f5f5",
                                                 }}
                                             >
-                                                <Space>
-                                                    <div style={{ width: "30%" }}>
-                                                        <h2 style={{ marginTop: 5 }}>{item?.pTime}</h2>
+                                                <Row>
+                                                    <div>
+                                                        <h2 >{item?.pTime}</h2>
                                                     </div>
                                                     {!item?.isFree ?
                                                         <Tag color={item?.isFree ? "green" : "magenta"}>{item?.isFree ? "Free" : "Booked"}</Tag>
@@ -309,7 +309,7 @@ const AppointmentBooking = () => {
                                                         >
                                                             Book
                                                         </Button>}
-                                                </Space>
+                                                </Row>
                                             </Card>
                                         </List.Item>
                                         // </Card>
@@ -317,7 +317,7 @@ const AppointmentBooking = () => {
                                 />
                             </Card>
                         </Col>
-                        <Col span={12}>
+                        <Col span={12} xs={24} xl={12}>
                             <Card
                                 title="Patient Information"
                             >
@@ -353,7 +353,7 @@ const AppointmentBooking = () => {
                 >
 
                     <Row gutter={16}>
-                        <Col className="gutter-row" span={6}>
+                        <Col className="gutter-row" span={6} xs={24} xl={6}>
                             <Form.Item
                                 name="sectionId"
                                 label="Section"
@@ -389,7 +389,7 @@ const AppointmentBooking = () => {
                                     description={<div style={{
                                         marginTop: -15
                                     }}>
-                                        <Space >
+                                        <Row >
                                             {item?.time.map(slot => {
                                                 return (
                                                     <div
@@ -406,7 +406,7 @@ const AppointmentBooking = () => {
                                                     </div>
                                                 )
                                             })}
-                                        </Space>
+                                        </Row>
                                     </div>}
                                 />
                             </List.Item>
