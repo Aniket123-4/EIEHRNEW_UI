@@ -298,10 +298,10 @@ const AddInvService = () => {
                 <>
                     <div className="gutter-example">
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={8} xs={24} xl={8}>
                                 <Form.Item
                                     name="serviceName"
-                                    label="Battery of Test Name"
+                                    label="Battery TestName"
                                     rules={[{ required: true, message: 'Please enter service name' }]}
                                 // initialValue={institute}
                                 >
@@ -309,7 +309,7 @@ const AddInvService = () => {
                                 </Form.Item>
                             </Col>
 
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={8}xs={24} xl={8}>
                                 <Form.Item
                                     name="serviceFrom"
                                     label="Service From"
@@ -328,7 +328,7 @@ const AddInvService = () => {
                                     /> */}
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={8}xs={24} xl={8}>
                                 <Form.Item
                                     name="serviceTo"
                                     label="Service To"
@@ -344,7 +344,7 @@ const AddInvService = () => {
                             </Col>
 
 
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={8} xs={24} xl={8}>
                                 <Form.Item
                                     name="serviceCost"
                                     label="Cost"
@@ -353,7 +353,7 @@ const AddInvService = () => {
                                     <Input type='number' size={'large'} placeholder="Please enter cost" />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={8} xs={24} xl={8}>
                                 <Form.Item
                                     name="cgstPercent"
                                     rules={[
@@ -374,7 +374,7 @@ const AddInvService = () => {
                                         maxLength={3}/>
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={8} xs={24} xl={8}>
                                 <Form.Item
                                     name="sgstPercent"
                                     label="SGST %"
@@ -393,7 +393,7 @@ const AddInvService = () => {
                                 </Form.Item>
                             </Col>
                         </Row>
-                        <Col className="gutter-row" span={8}>
+                        <Col className="gutter-row" span={8} xs={24} xl={15}>
                             <Form.Item
                                 name="invParameter"
                                 valuePropName="checked"
@@ -406,7 +406,7 @@ const AddInvService = () => {
                                     onExpand={onExpand}
                                     loadData={onLoadData}
                                     height={140}
-                                    rootStyle={{ width: 400 }}
+                                    //rootStyle={{ width: 400 }}
                                     // defaultExpandedKeys={defExpandedKeys}
                                     // defaultCheckedKeys={defCheckedKeys}
                                     expandedKeys={defExpandedKeys}
@@ -432,11 +432,11 @@ const AddInvService = () => {
                             </Form.Item>
                         </Col>
                         <Col style={{ justifyContent: 'flex-end' }}>
-                            <Button style={{ padding: 5, width: 100, height: 40 }} type="primary" htmlType="submit">
+                            <Button style={{ padding: 5, width: 80, height: 40 }} type="primary" htmlType="submit">
                                 Submit
                             </Button>
                             <Button onClick={goBack}
-                                style={{ marginLeft: 10, padding: 5, width: 100, height: 40 }} type="default" >
+                                style={{ marginLeft: 10, padding: 5, width: 80, height: 40 }} type="default" >
                                 Cancel
                             </Button>
                         </Col>
@@ -452,11 +452,11 @@ const AddInvService = () => {
             style={{}}>
             <Space direction="horizontal">
                 <Row>
-                    <Col span={12}>
+                    <Col span={12} >
 
 
                         <Card
-                            style={{ width: '100%', height: '100%', boxShadow: '2px 2px 2px #4874dc' }}
+                            style={{  boxShadow: '2px 2px 2px #4874dc' }}
                             title="Create Investigation Service"
                         // extra={[
                         //     <Button key="rest" onClick={() => {

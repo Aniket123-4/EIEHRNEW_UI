@@ -881,11 +881,11 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
             })
         }
         return (
-            <>
+            <Col xs={24} xl={12}>
                 <Form
                     form={form1}
                 >
-                    <Row style={{ height: 120 }} gutter={16}>
+                    <Row gutter={16}>
                         {/* <Col span={6}>
                             <Form.Item
                                 name={'col2'}
@@ -901,7 +901,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                 <Input maxLength={1} placeholder="Please Enter The ContactSerialNo" />
                             </Form.Item>
                         </Col> */}
-                        <Col span={5}>
+                        <Col span={5} xs={24} xl={6}>
                             <Form.Item
                                 name={'col3'}
                                 label="Contact Name"
@@ -911,7 +911,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                 <Input maxLength={30} placeholder="Please Enter Contact Name" />
                             </Form.Item>
                         </Col>
-                        <Col span={5}>
+                        <Col span={5} xs={24} xl={6}>
                             <Form.Item
                                 name={'col1'}
                                 label="Relation"
@@ -923,7 +923,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                 />
                             </Form.Item>
                         </Col>
-                        <Col span={5}>
+                        <Col span={5} xs={24} xl={6}>
                             <Space.Compact>
                                 <Form.Item
                                     style={{ width: '25%' }}
@@ -953,7 +953,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                             </Space.Compact>
 
                         </Col>
-                        <Col span={5}>
+                        <Col span={5} xs={24} xl={6}>
                             <Space.Compact>
                                 <Form.Item
                                     style={{ width: '25%' }}
@@ -983,7 +983,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                             </Space.Compact>
 
                         </Col>
-                        <Col span={4}>
+                        <Col span={4} xs={24} xl={6}>
                             <Form.Item
                                 name={'col9'}
                                 label="BloodGroup"
@@ -1002,8 +1002,8 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                         </Col>
                     </Row>
                 </Form>
-                <Table pagination={false} columns={columns} dataSource={lstType_Patient} />
-            </>
+                {/* <Table pagination={false} columns={columns} dataSource={lstType_Patient} /> */}
+            </Col>
         )
     }
     const formList1 = () => {
@@ -1041,12 +1041,12 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
             })
         }
         return (
-            <>
+            <Col xs={24} xl={12}>
                 <Form
                     form={form2}
                 >
-                    <Row style={{ height: 120 }} gutter={16}>
-                        <Col span={5}>
+                    <Row  gutter={16}>
+                        <Col span={5} xs={24} xl={6}>
                             <Form.Item
                                 name={'col3'}
                                 label="Contact Name"
@@ -1056,7 +1056,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                 <Input maxLength={30} placeholder="Please Enter Contact Name" />
                             </Form.Item>
                         </Col>
-                        <Col span={5}>
+                        <Col span={5} xs={24} xl={6}>
                             <Form.Item
                                 name={'col1'}
                                 label="Relation"
@@ -1068,7 +1068,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                 />
                             </Form.Item>
                         </Col>
-                        <Col span={5}>
+                        <Col span={5} xs={24} xl={6}>
                             <Space.Compact>
                                 <Form.Item
                                     style={{ width: '25%' }}
@@ -1098,7 +1098,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                             </Space.Compact>
 
                         </Col>
-                        <Col span={5}>
+                        <Col span={5} xs={24} xl={6}>
                             <Space.Compact>
                                 <Form.Item
                                     style={{ width: '25%' }}
@@ -1128,7 +1128,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                             </Space.Compact>
 
                         </Col>
-                        <Col span={4}>
+                        <Col span={4} xs={24} xl={6}>
                             <Form.Item
                                 name={'col9'}
                                 label="BloodGroup"
@@ -1140,7 +1140,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                 />
                             </Form.Item>
                         </Col>
-                        <Col style={{ marginTop: 30 }} span={5}>
+                        <Col style={{ marginTop: 30 }} span={5} xs={24} xl={6}>
                             <Button onClick={addFamilyItem} type="primary">
                                 Add
                             </Button>
@@ -1148,7 +1148,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                     </Row>
                 </Form>
                 <Table pagination={false} columns={column1} dataSource={istType_Pat} />
-            </>
+            </Col>
         )
     }
 
@@ -1158,7 +1158,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                 style={{ width: '100%' }}
             // title={'Patient Registration'}
             >
-                <Card
+                <Card 
                     title={
                         <Row align={'middle'}>
                             <Form
@@ -1194,7 +1194,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                             {"Patient"}</Typography>} style={{ boxShadow: '2px 2px 2px #4874dc' }}
                             headStyle={{ backgroundColor: '#004080', border: 0 }}>
                             <Row gutter={16}>
-                                <Col span={6}>
+                                <Col span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="fName"
                                         label="First Name"
@@ -1204,7 +1204,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         <Input style={{ borderColor: 'blue' }} placeholder="Please enter First Name" />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
+                                <Col span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="mName"
                                         label="Middle Name"
@@ -1214,7 +1214,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         <Input placeholder="Please enter Middle Name" />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
+                                <Col span={6}xs={24} xl={6}>
                                     <Form.Item
                                         name="lName"
                                         label="Last Name"
@@ -1224,7 +1224,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         <Input placeholder="Please enter Last Name" />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
+                                <Col span={6}xs={24} xl={6}>
                                     <Form.Item
                                         name="fatherName"
                                         label="Father Name"
@@ -1234,7 +1234,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         <Input placeholder="Please enter Father Name" />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
+                                <Col span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="motherName"
                                         label="Mother Name"
@@ -1290,7 +1290,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         <Input placeholder="Please enter Mother Name" />
                                     </Form.Item>
                                 </Col> */}
-                                <Col span={6}>
+                                <Col span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="genderID"
                                         label="Gender"
@@ -1303,7 +1303,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     </Form.Item>
                                 </Col>
 
-                                <Col span={6}>
+                                <Col span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="dob"
                                         label="DOB"
@@ -1322,7 +1322,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     </Form.Item>
                                 </Col>
 
-                                <Col span={6}>
+                                <Col span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="eMail"
                                         label="Email"
@@ -1337,7 +1337,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         key: '1',
                                         label: 'More',
                                         children: <Row style={{width:'100%'}}>
-                                            <Col span={6}>
+                                            <Col span={6} xs={24} xl={6}>
                                                 <Form.Item
                                                     name="civilStatusID"
                                                     label="Marital Status"
@@ -1349,7 +1349,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                                     />
                                                 </Form.Item>
                                             </Col>
-                                            <Col span={6}>
+                                            <Col span={6} xs={24} xl={6}>
                                                 <Form.Item
                                                     name="alternateEmail"
                                                     label="Alternate Email"
@@ -1358,7 +1358,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                                     <Input maxLength={80} placeholder="Please Enter Alternate Email" />
                                                 </Form.Item>
                                             </Col>
-                                            <Col span={6}>
+                                            <Col span={6} xs={24} xl={6}> 
                                                 <Form.Item
                                                     name="bGroupID"
                                                     label="Blood Group"
@@ -1370,7 +1370,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                                     />
                                                 </Form.Item>
                                             </Col>
-                                            <Col span={6}>
+                                            <Col span={6} xs={24} xl={6}>
                                                 <Form.Item
                                                     name="religionID"
                                                     label="Religion"
@@ -1382,7 +1382,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                                     />
                                                 </Form.Item>
                                             </Col>
-                                            <Col span={6}>
+                                            <Col span={6} xs={24} xl={6}>
                                                 <Form.Item
                                                     name="nationalityID"
                                                     label="Nationality"
@@ -1394,7 +1394,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                                     />
                                                 </Form.Item>
                                             </Col>
-                                            <Col span={6}>
+                                            <Col span={6} xs={24} xl={6}>
                                                 <Form.Item
                                                     name="birthPlace"
                                                     label="Birth Place"
@@ -1414,7 +1414,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                             style={{ boxShadow: '2px 2px 2px #4874dc' }}
                             headStyle={{ backgroundColor: '#004080', border: 0 }}>
                             <Row gutter={16}>
-                                <Col span={6}>
+                                <Col span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="curHouseNo"
                                         label="HouseNo"
@@ -1423,7 +1423,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         <Input maxLength={80} placeholder="Please Enter The HouseNo" />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
+                                <Col span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="curAddress"
                                         label="Address"
@@ -1432,7 +1432,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         <Input maxLength={80} placeholder="Please Enter The Address" />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
+                                <Col span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="curVillageName"
                                         label="Village"
@@ -1441,7 +1441,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         <Input maxLength={80} placeholder="Please Enter The Village" />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
+                                <Col span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="curTehsilName"
                                         label="Tehsil"
@@ -1450,7 +1450,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         <Input maxLength={80} placeholder="Please Enter The Tehsil" />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
+                                <Col span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="curPinCode"
                                         label="PinCode"
@@ -1463,7 +1463,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         <Input maxLength={6} placeholder="Please Enter The PinCode" />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
+                                <Col span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="curStateID"
                                         label="State"
@@ -1475,7 +1475,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
+                                <Col span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="curDistrictID"
                                         label="District"
@@ -1487,7 +1487,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
+                                <Col span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="curCountryID"
                                         label="Country"
@@ -1499,7 +1499,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         />
                                     </Form.Item>
                                 </Col>
-                                <Col className="gutter-row" span={6}>
+                                <Col className="gutter-row" span={6} xs={24} xl={6}>
                                     <Space.Compact>
                                         <Form.Item
                                             style={{ width: '20%' }}
@@ -1529,7 +1529,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     </Space.Compact>
 
                                 </Col>
-                                <Col className="gutter-row" span={6}>
+                                <Col className="gutter-row" span={6} xs={24} xl={6}>
                                     <Space.Compact>
                                         <Form.Item
                                             style={{ width: '25%' }}
@@ -1584,7 +1584,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     </Space>,
                                     children:
                                         <Row gutter={16}>
-                                            <Col span={6}>
+                                            <Col span={6} xs={24} xl={6}>
                                                 <Form.Item
                                                     name="perHouseNo"
                                                     label="HouseNo"
@@ -1593,7 +1593,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                                     <Input maxLength={80} placeholder="Please Enter The HouseNo" />
                                                 </Form.Item>
                                             </Col>
-                                            <Col span={6}>
+                                            <Col span={6} xs={24} xl={6}>
                                                 <Form.Item
                                                     name="perAddress"
                                                     label="Address"
@@ -1602,7 +1602,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                                     <Input maxLength={80} placeholder="Please Enter The Address" />
                                                 </Form.Item>
                                             </Col>
-                                            <Col span={6}>
+                                            <Col span={6} xs={24} xl={6}>
                                                 <Form.Item
                                                     name="perVillageName"
                                                     label="Village"
@@ -1611,7 +1611,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                                     <Input maxLength={80} placeholder="Please Enter The Village" />
                                                 </Form.Item>
                                             </Col>
-                                            <Col span={6}>
+                                            <Col span={6} xs={24} xl={6}>
                                                 <Form.Item
                                                     name="perTehsilName"
                                                     label="Tehsil"
@@ -1620,7 +1620,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                                     <Input maxLength={80} placeholder="Please Enter The Tehsil" />
                                                 </Form.Item>
                                             </Col>
-                                            <Col span={6}>
+                                            <Col span={6} xs={24} xl={6}>
                                                 <Form.Item
                                                     name="perPinCode"
                                                     label="PinCode"
@@ -1633,7 +1633,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                                     <Input maxLength={6} placeholder="Please Enter The PinCode" />
                                                 </Form.Item>
                                             </Col>
-                                            <Col span={6}>
+                                            <Col span={6} xs={24} xl={6}>
                                                 <Form.Item
                                                     name="perStateID"
                                                     label="State"
@@ -1645,7 +1645,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                                     />
                                                 </Form.Item>
                                             </Col>
-                                            <Col span={6}>
+                                            <Col span={6} xs={24} xl={6}>
                                                 <Form.Item
                                                     name="perDistrictID"
                                                     label="District"
@@ -1657,7 +1657,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                                     />
                                                 </Form.Item>
                                             </Col>
-                                            <Col span={6}>
+                                            <Col span={6} xs={24} xl={6}>
                                                 <Form.Item
                                                     name="perCountryID"
                                                     label="Country"
@@ -1669,7 +1669,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                                     />
                                                 </Form.Item>
                                             </Col>
-                                            <Col className="gutter-row" span={6}>
+                                            <Col className="gutter-row" span={6} xs={24} xl={6}>
                                                 <Space.Compact>
                                                     <Form.Item
                                                         style={{ width: '20%' }}
@@ -1699,7 +1699,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                                 </Space.Compact>
 
                                             </Col>
-                                            <Col className="gutter-row" span={6}>
+                                            <Col className="gutter-row" span={6} xs={24} xl={6}>
                                                 <Space.Compact>
                                                     <Form.Item
                                                         style={{ width: '25%' }}
@@ -1783,7 +1783,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                             style={{ boxShadow: '2px 2px 2px #4874dc' }}
                             headStyle={{ backgroundColor: '#004080', border: 0 }}>
                             <Row gutter={16}>
-                                <Col span={6}>
+                                <Col span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="vUniqueID"
                                         label="Document Type"
@@ -1796,7 +1796,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         />
                                     </Form.Item>
                                 </Col>
-                                <Col span={6}>
+                                <Col span={6} xs={24} xl={6}>
                                     <Form.Item
 
                                         name="vUniqueName"
@@ -1812,7 +1812,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         <Input disabled={selectedDoc == undefined || selectedDoc == -1} maxLength={16} placeholder="Please Enter The Doc Number" />
                                     </Form.Item>
                                 </Col>
-                                {<><Col span={6}>
+                                {<><Col span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="passIssueDate"
                                         label="Issue Date"
@@ -1826,7 +1826,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                         />
                                     </Form.Item>
                                 </Col>
-                                    <Col span={6}>
+                                    <Col span={6} xs={24} xl={6}>
                                         <Form.Item
                                             name="passIssuePlace"
                                             label="Document Issue Place"
@@ -1837,7 +1837,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     </Col>
                                 </>}
                             </Row>
-                            <Col span={6}>
+                            <Col span={6} xs={24} xl={6}>
                                 <Upload
                                     onChange={onUpload}
                                 >
@@ -1845,7 +1845,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                 </Upload>
                             </Col>
                             <Divider></Divider>
-                            <Col span={6}>
+                            <Col span={6} xs={24} xl={6}>
                                 <Form.Item
                                     name="photo"
                                     getValueFromEvent={(v) => getBase64(v.file.originFileObj as RcFile, (url) => {
@@ -1867,7 +1867,7 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                     </Upload>
                                 </Form.Item>
                             </Col>
-                            <Col span={6}>
+                            <Col span={6} xs={24} xl={6}>
                                 <Form.Item
                                     name="signature"
                                     getValueFromEvent={(v) => getBase64(v.file.originFileObj as RcFile, (url) => {

@@ -331,7 +331,7 @@ const AddDoctorSlotBooking = () => {
                     initialValue={slots}
                     name="slots">
                     {(slotsData, { add, remove }) => (
-                        <Space style={{}}>
+                        <Row style={{}}>
 
                             {slotsData.map(({ key, name, ...restField }) => (
                                 <Card
@@ -340,12 +340,14 @@ const AddDoctorSlotBooking = () => {
                                     key={key}
                                 >
                                     {/* Nest Form.List */}
+                                    <Col xs={24} xl={8}>
                                     <Form.Item label="Week">
                                         <Form.List name={[name, 'week']}>
                                             {(weekData, subOpt) => (
                                                 <div style={{}}>
                                                     {weekData.map((day) => (
-                                                        <Space key={day.key} size={[8, 16]} wrap>
+                                                        <Row key={day.key} wrap>
+                                                            <Col xs={24} xl={8}>
                                                             <Form.Item
                                                                 noStyle
                                                                 valuePropName="checked"
@@ -353,24 +355,28 @@ const AddDoctorSlotBooking = () => {
                                                                 name={[day.name, 'selected']}>
                                                                 <Checkbox onChange={(e) => setAllDays(name, e.target.checked, day)}>{slots[key]['week'][day.key]['name']}</Checkbox>
                                                             </Form.Item>
-                                                        </Space>
+                                                            </Col>
+                                                        </Row>
                                                     ))}
                                                 </div>
                                             )}
                                         </Form.List>
                                     </Form.Item>
+                                    </Col>
+                                    <Col xs={24} xl={8}>
 
                                     <Form.Item label="From/To Time" name={[name, 'timeRange']} >
                                         <TimePicker.RangePicker
                                             style={{ width: "100%" }}
                                         />
                                     </Form.Item>
+                                    </Col>
 
 
 
                                 </Card>
                             ))}
-                        </Space>
+                        </Row>
                     )}
                 </Form.List>
             </>
@@ -390,7 +396,7 @@ const AddDoctorSlotBooking = () => {
                 <>
                     <div className="gutter-example">
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={6} xs={24} xl={6}>
                                 <Form.Item
                                     name="sectionId"
                                     label="Specialization"
@@ -409,7 +415,7 @@ const AddDoctorSlotBooking = () => {
                                     />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={6} xs={24} xl={6}>
                                 <Form.Item
                                     name="docUserID"
                                     label="Doctor"
@@ -426,7 +432,7 @@ const AddDoctorSlotBooking = () => {
                                 </Form.Item>
                             </Col>
 
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={8} xs={24} xl={6}>
                                 <Form.Item
                                     name="dateRange"
                                     label="From - To Date"
@@ -434,12 +440,12 @@ const AddDoctorSlotBooking = () => {
                                 >
                                     <RangePicker
                                         format={dateFormat}
-                                        style={{ width: "100%" }}
+                                        //style={{ width: "100%" }}
                                         size={'large'}
                                     />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={4}>
+                            <Col className="gutter-row" span={4} xs={24} xl={6}>
 
                                 <Form.Item
                                     label="No Of Slot Per Hrs"

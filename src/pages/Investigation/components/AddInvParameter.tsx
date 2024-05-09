@@ -241,7 +241,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                         <>
                             {lstType_Patient.map(({ key, name, ...restField }) => (
                                 <Row key={key} gutter={16} >
-                                    <Col className="gutter-row" span={8}>
+                                    <Col className="gutter-row" span={8} xs={24} xl={8} >
                                         <Form.Item
                                             {...restField}
                                             label="Patient Type"
@@ -251,7 +251,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                             <Input disabled placeholder="Patient Type" />
                                         </Form.Item>
                                     </Col>
-                                    <Col className="gutter-row" span={8}>
+                                    <Col className="gutter-row" span={8} xs={24} xl={8} >
 
                                         <Form.Item
                                             {...restField}
@@ -262,7 +262,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                             <InputNumber stringMode style={{ width: '100%' }} placeholder="Range From" />
                                         </Form.Item>
                                     </Col>
-                                    <Col className="gutter-row" span={8}>
+                                    <Col className="gutter-row" span={8} xs={24} xl={8} >
 
                                         <Form.Item
                                             {...restField}
@@ -296,7 +296,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                 <>
                     <div className="gutter-example">
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={6}  >
+                            <Col className="gutter-row" span={6} xs={24} xl={6} >
                                 <Form.Item
                                     name="invName"
                                     label="Name"
@@ -306,7 +306,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                 </Form.Item>
                             </Col>
 
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={6} xs={24} xl={6}>
                                 <Form.Item
                                     name="invGroupID"
                                     label="Group"
@@ -324,7 +324,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                 </Form.Item>
                             </Col>
 
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={6} xs={24} xl={6}>
                                 <Form.Item
                                     name="invCode"
                                     label="Code"
@@ -334,7 +334,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                 </Form.Item>
                             </Col>
 
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={6} xs={24} xl={6}>
                                 <Form.Item
                                     name="unitID"
                                     label="Unit"
@@ -377,7 +377,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                     <Input size={'large'} placeholder="Please enter" />
                                 </Form.Item>
                             </Col> */}
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={6} >
                                 <Form.Item
                                     name="isService"
                                     label=""
@@ -426,7 +426,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                 </Form.Item>
                             </Col>
                             {vatApplicable &&
-                                <Col className="gutter-row" span={6}>
+                                <Col className="gutter-row" span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="vatPercent"
                                         label="GST Percent"
@@ -445,7 +445,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                 </Col>}
 
                             {vatApplicable &&
-                                <Col className="gutter-row" span={6}>
+                                <Col className="gutter-row" span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="cgstPercent"
                                         label="CGST Percent"
@@ -464,7 +464,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                 </Col>}
 
                             {vatApplicable &&
-                                <Col className="gutter-row" span={6}>
+                                <Col className="gutter-row" span={6} xs={24} xl={6}>
                                     <Form.Item
                                         name="sgstPercent"
                                         label="SGST Percent"
@@ -482,7 +482,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                     </Form.Item>
                                 </Col>}
 
-                            <Col className="gutter-row" span={6}>
+                            <Col className="gutter-row" span={6} xs={24} xl={6} xs={24} xl={6} >
                                 <Form.Item
                                     name="invRate"
                                     label="Rate"

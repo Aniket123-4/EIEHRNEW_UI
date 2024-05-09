@@ -245,7 +245,7 @@ const ItemMaster = ({
           >
             <Input size={"large"} placeholder="Please Enter Supplier Address" />
           </Form.Item>
-          <Col span={5}>
+          <Col span={5} xs={24} xl={6}>
             <Form.Item
               name="isActive"
               rules={[{ required: true, message: "Please check" }]}
@@ -282,8 +282,8 @@ const ItemMaster = ({
           {showaddSuplier()}
           <div className="gutter-example">
             {/* <Row gutter={16}> */}
-            <Row gutter={16}>
-              <Col className="gutter-row" span={8}>
+            <Row gutter={16} >
+              <Col className="gutter-row" span={8} xs={24} xl={8}>
                 <Form.Item
                   // required={true}
                   name="itemName"
@@ -296,7 +296,7 @@ const ItemMaster = ({
                   <Input placeholder="Please Enter Item Name" />
                 </Form.Item>
               </Col>
-              <Col className="gutter-row" span={8}>
+              <Col className="gutter-row" span={8} xs={24} xl={8}>
                 <Form.Item
                   name="itemCode"
                   label="Item Code"
@@ -307,7 +307,7 @@ const ItemMaster = ({
                   <Input placeholder="Please Enter Item Code" />
                 </Form.Item>
               </Col>
-              <Col className="gutter-row" span={8}>
+              <Col className="gutter-row" span={8} xs={24} xl={8}>
                 <Form.Item
                   name="itemCatID"
                   label="Item Category"
@@ -327,7 +327,7 @@ const ItemMaster = ({
             </Row>
 
             <Row gutter={16}>
-              <Col className="gutter-row" span={8}>
+              <Col className="gutter-row" span={8}xs={24} xl={8}>
                 <Form.Item
                   name="itemNameML"
                   label="Name In Other Lang"
@@ -344,7 +344,7 @@ const ItemMaster = ({
                   />
                 </Form.Item>
               </Col>
-              <Col className="gutter-row" span={8}>
+              <Col className="gutter-row" span={8} xs={24} xl={8}>
                 <Form.Item
                   name="unitID"
                   label="Unit"
@@ -355,7 +355,7 @@ const ItemMaster = ({
                     optionFilterProp="children" options={unitList} placeholder="Select" />
                 </Form.Item>
               </Col>
-              <Col className="gutter-row" span={8}>
+              <Col className="gutter-row" span={8} xs={24} xl={8}>
                 <Form.Item
                   name="chemicalName"
                   label="Chemical Name"
@@ -366,7 +366,7 @@ const ItemMaster = ({
                   <Input placeholder="Please Enter Chemical Name" />
                 </Form.Item>
               </Col>
-              <Col className="gutter-row" span={8}>
+              <Col className="gutter-row" span={8} xs={24} xl={8}>
                 <Form.Item
                   name="supplierID"
                   label="Supplier"
@@ -403,7 +403,7 @@ const ItemMaster = ({
                   />
                 </Form.Item>
               </Col>
-              <Col className="gutter-row" span={8}>
+              <Col className="gutter-row" span={8}  xs={24} xl={8}>
                 <Form.Item
                   name="itemComment"
                   label="Comment"
@@ -420,7 +420,7 @@ const ItemMaster = ({
             </Row>
 
             <Row gutter={16} style={{ alignItems: "end" }}>
-              <Col className="gutter-row" span={6}>
+              <Col className="gutter-row" span={6}  xs={24} xl={8}>
                 <Form.Item
                   name="isVATApplicable"
                   label=""
@@ -439,7 +439,7 @@ const ItemMaster = ({
               </Col>
 
               {vatApplicable && (
-                <Col className="gutter-row" span={6}>
+                <Col className="gutter-row" span={6}  xs={24} xl={8}>
                   <Form.Item
                     name="cgstPercent"
                     label="CGST Percent"
@@ -464,7 +464,7 @@ const ItemMaster = ({
               )}
 
               {vatApplicable && (
-                <Col className="gutter-row" span={6}>
+                <Col className="gutter-row" span={6}  xs={24} xl={8}>
                   <Form.Item
                     name="sgstPercent"
                     label="SGST Percent"
@@ -489,7 +489,7 @@ const ItemMaster = ({
               )}
             </Row>
             <Row>
-              <Col span={5}>
+              <Col span={5}  xs={24} xl={8}>
                 <Form.Item
                   name="isActive"
                   // label="Is this a service"
@@ -527,9 +527,9 @@ const ItemMaster = ({
     <PageContainer title=" " style={{}}>
       <Space direction="horizontal" size="middle" style={{ display: "flex" }}>
         <Row gutter={8}>
-          <Col span={11}>
+          <Col span={13} xs={24} xl={11}>
             <Card
-              style={{ height: 480, boxShadow: "2px 2px 2px #4874dc" }}
+              style={{  boxShadow: "2px 2px 2px #4874dc"  }}
               title="Item Master"
             >
               <Spin tip="Please wait..." spinning={loading}>
@@ -538,8 +538,9 @@ const ItemMaster = ({
             </Card>
 
           </Col>
-          <Col span={13}>
+          <Col span={13} xs={24} xl={11}>
             <ItemList
+            
               refresh={loading}
               editRecord={(data: any) => setEditField(data)}
             /></Col>

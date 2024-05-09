@@ -89,6 +89,7 @@ const ItemStatus = React.forwardRef((props) => {
             title: 'Item Name',
             dataIndex: 'itemName',
             key: 'itemName',
+            width:'200px',
             render: (text) => <a>{text}</a>,
             filters: listFilter,
             // sorter: (a, b) => a.itemName.length - b.itemName.length,
@@ -98,11 +99,13 @@ const ItemStatus = React.forwardRef((props) => {
             title: 'Voucher No',
             dataIndex: 'voucherNo',
             key: 'voucherNo',
+            width:'100px'
         },
         {
             title: 'Unit',
             dataIndex: 'unitName',
             key: 'unitName',
+            width:'100px',
             filters: unitFilter,
             onFilter: (value: any, record:any) => record.unitID.indexOf(value) === 0,
         },
@@ -110,6 +113,7 @@ const ItemStatus = React.forwardRef((props) => {
             title: 'BalanceQuantity',
             dataIndex: 'balanceQuantity',
             key: 'balanceQuantity',
+            width:'100px',
             filters: [{ text: '<100', value: 100 },
             { text: '<200', value: 200 },{ text: 'All', value: 1000000 }],
             onFilter: (value: number, record:any) => record.balanceQuantity<= value,
@@ -118,9 +122,10 @@ const ItemStatus = React.forwardRef((props) => {
             render: (text) => <Badge status={text>=100 ? "success" : text<100&&text>=50 ?"warning" :"error"} text={text}  />,
         },
         {
-            title: 'BalQuantitySum',
+            title: 'BalQtySum',
             dataIndex: 'balQuantitySum',
             key: 'balQuantitySum',
+            width:'100px',
             filters: [{ text: '<100', value: 100 },
             { text: '<200', value: 200 },{ text: 'All', value: 1000000 }],
             onFilter: (value: number, record:any) => record.balanceQuantity<= value,
@@ -132,6 +137,7 @@ const ItemStatus = React.forwardRef((props) => {
             title: 'Expiry Date',
             dataIndex: 'eslDate',
             key: 'eslDate',
+            width:'100px',
             render: (text) => <label>{moment(text).format('DD-MMM-YYYY')}</label>,
             // render: (text) => <Typography>{dayjs().format('DD-MMM-YYYY')}</Typography>,
         },
@@ -202,7 +208,7 @@ const ItemStatus = React.forwardRef((props) => {
                 <Table pagination={{ pageSize: 15 }} 
                 size='small' columns={columns}
                 // onChange={(v)=>console.log(v)}
-                dataSource={list} scroll={{ y: 600 }}/>
+                dataSource={list} scroll={{x:600, y: 600 }}/>
             </Spin>
         </Card>
         // </PageContainer>

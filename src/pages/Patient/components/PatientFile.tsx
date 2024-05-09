@@ -440,7 +440,7 @@ const PatientFile = React.forwardRef((props) => {
                         <Spin spinning={loading}>
                             <Card>
                                 <Row>
-                                    <Col span={12}>
+                                    <Col span={12} xs={24} xl={6}>
                                         <Card
                                             title={
                                                 <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
