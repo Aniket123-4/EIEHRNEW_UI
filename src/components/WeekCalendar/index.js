@@ -157,7 +157,9 @@ const WeekCalendar = ({ showDetailsHandle }) => {
   const renderFooter = () => {
     const dateFormat = "MMM yyyy";
     return (
+      <Col xs={24} xl={6}>
       <div className="header row flex-middle">
+        
         <div className="col col-start">
           <Button
             className="icon"
@@ -168,6 +170,7 @@ const WeekCalendar = ({ showDetailsHandle }) => {
             Prev week
           </Button>
         </div>
+        
         {/* <div>{currentWeek}</div> */}
         <div className="col col-center">
           <span>{format(currentMonth, dateFormat)}</span>
@@ -181,6 +184,7 @@ const WeekCalendar = ({ showDetailsHandle }) => {
           Next week
         </Button>
       </div>
+      </Col>
     );
   };
   return (

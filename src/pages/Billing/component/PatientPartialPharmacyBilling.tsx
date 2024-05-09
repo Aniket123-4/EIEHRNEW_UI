@@ -136,7 +136,7 @@ const PatientPartialPharmacyBilling = ({ visible, onClose, onSaveSuccess, select
                 <>
                     <div className="gutter-example">
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={8}  >
+                            <Col className="gutter-row" span={8} xs={24} xl={8}  >
                                 <Form.Item
                                     // required={true}
                                     name="oldPatientBillID"
@@ -151,7 +151,7 @@ const PatientPartialPharmacyBilling = ({ visible, onClose, onSaveSuccess, select
                                     />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={8} xs={24} xl={8}     >
                                 <Form.Item
                                     name="paidAmt"
                                     label="Pay Amt"
@@ -192,53 +192,63 @@ const PatientPartialPharmacyBilling = ({ visible, onClose, onSaveSuccess, select
                 title: 'Patient Name',
                 key: 'patientName',
                 dataIndex: 'patientName',
+                width:'100px'
 
             },
             {
                 title: 'Mobile No',
                 key: 'mobileNo',
                 dataIndex: 'mobileNo',
+                width:'100px'
             },
             {
                 title: 'Email',
                 key: 'email',
                 dataIndex: 'email',
+                width:'100px'
 
             },
             {
                 title: 'ActualPayAmt',
                 key: 'actualPayAmt',
                 dataIndex: 'actualPayAmt',
+                width:'100px'
 
             },
             {
                 title: 'BalanceAmt',
                 key: 'balanceAmt',
                 dataIndex: 'balanceAmt',
+                width:'100px'
 
             },
             {
                 title: 'PatientNo',
                 key: 'patientNo',
                 dataIndex: 'patientNo',
+                width:'100px'
 
             },
             {
                 title: 'PatientCaseNo',
                 key: 'patientCaseNo',
                 dataIndex: 'patientCaseNo',
+                width:'100px'
 
             },
             {
                 title: 'PayDate',
                 key: 'payDate',
                 dataIndex: 'payDate',
+                width:'100px',
                 render: (text: any) => <Typography>{moment(text).format('DD MMM YYYY')}</Typography>
+                
 
             },
             {
                 title: 'Pay',
                 key: 'pay',
+                width:'100px',
                 render: (record: any) => <Button onClick={() => setEditField(record)}>{'Pay'}</Button>
             },
 
@@ -256,6 +266,7 @@ const PatientPartialPharmacyBilling = ({ visible, onClose, onSaveSuccess, select
                 >
                     <>
                             <Row gutter={16}>
+                                <Col xs={24} xl={8}>
                                 <Form.Item
                                     initialValue={[dayjs().subtract(1, 'months'), dayjs()]}
                                     name="dateRange"
@@ -268,6 +279,7 @@ const PatientPartialPharmacyBilling = ({ visible, onClose, onSaveSuccess, select
                                         style={{ width: "100%" }}
                                     />
                                 </Form.Item>
+                                </Col>
                                 <Button style={{marginLeft:20}}  type="primary" htmlType="submit">
                                     Filter
                                 </Button>

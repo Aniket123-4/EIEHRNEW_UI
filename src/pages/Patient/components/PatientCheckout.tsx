@@ -52,6 +52,7 @@ const PatientCheckOut = React.forwardRef((props) => {
             title: 'Patient No',
             dataIndex: 'patientNo',
             key: 'patientNo',
+            width:'100px',
             render: (text) => <a>{text}</a>,
             sorter: (a:any, b:any):any=> a.patientNo<b.patientNo,
         },
@@ -59,11 +60,13 @@ const PatientCheckOut = React.forwardRef((props) => {
             title: 'Patient Name',
             dataIndex: 'patName',
             key: 'patName',
+            width:'150px'
         },
         {
             title: 'Doctor Name',
             dataIndex: 'consultantDocName',
             key: 'consultantDocName',
+            width:'150px'
         },
         // {
         //     title: 'Patient FileNo',
@@ -74,22 +77,26 @@ const PatientCheckOut = React.forwardRef((props) => {
             title: 'Patient CaseNo',
             dataIndex: 'patientCaseNo',
             key: 'patientCaseNo',
+            width:'100px'
         },
         {
             title: 'Case Type',
             dataIndex: 'vPreEmpTypeName',
             key: 'vPreEmpTypeName',
+            width:'100px'
         },
         {
             title: 'Status',
             dataIndex: 'statusName',
             key: 'statusName',
+            width:'100px',
             render: (text) => <Tag color={text === "CHECK-IN" ? "success" : "error"}>{text}</Tag>,
         },
 
         {
             title: 'Action',
             key: 'action',
+            width:'100px',
             render: (_, record) => (
                 <Space size="middle">
                     <Button onClick={() => {
@@ -298,16 +305,18 @@ const PatientCheckOut = React.forwardRef((props) => {
         // style={{padding:0}}>
             <Card
             title={
-            <>
+            <Row>
+                <Col xs={24} xl={4}>
             <Select
-                style={{ width: 200 }}
+                //style={{ width: 200 }}
                 onChange={handleCheckType}
                 defaultValue={"2"}
                 options={[{ value: "1", label: "Check-Out List" }, { value: "2", label: "Check-In List" }]}
                 placeholder="Select"
             />
             {/* {mainType==2&&<Button onClick={updateBulkCaseCheckOut}>BulkCheckout</Button>} */}
-            </>}
+            </Col>
+            </Row>}
             style={{ boxShadow: '2px 2px 2px #4874dc'}}
             extra={
                 [<Row//align={'top'}
@@ -319,27 +328,32 @@ const PatientCheckOut = React.forwardRef((props) => {
                         initialValues={{
                             type: "1",
                         }}>
-                        <Space>
+                        <Row>
+                            <Col xs={24} xl={4}>
                             <Form.Item
                                 // style={{ paddingTop: 25 }}
                                 name={"fromToDate"}
                                 label="Date From/To">
                                 <DatePicker.RangePicker
                                     format={dateFormat}
-                                    style={{ width: "100%" }}
+                                    //style={{ width: "100%" }}
                                 />
                             </Form.Item>
+                            </Col>
+                            <Col xs={24} xl={4}>
                             <Form.Item
                                 // style={{ paddingTop: 25 }}
                                 name={"type"}
                                 label="Search by:">
                                 <Select
-                                    style={{ width: 160 }}
+                                    //style={{ width: 160 }}
                                     // onChange={handleCheckType}
                                     options={[{ value: "1", label: "PATIENT NO" }, { value: "2", label: "PATIENT CASE NO" }, { value: "3", label: "PATIENT NAME" }]}
                                     placeholder="Select"
                                 />
                             </Form.Item>
+                            </Col>
+                            <Col xs={24} xl={4}>
                             <Form.Item
                                 style={{ paddingTop: 30 }}
                                 name={"searchBy"}
@@ -347,9 +361,12 @@ const PatientCheckOut = React.forwardRef((props) => {
                                 rules={[{ required: false, message: 'Please Enter Some Text' }]}>
                                 <Input allowClear placeholder="Input Search Text"/>
                             </Form.Item>
+                            </Col>
+                            
                             <Button htmlType='submit' type='primary'>Search</Button>
                             <Button onClick={()=>{form.resetFields(); getList()}} type='primary' icon={<CloseOutlined />}/>
-                        </Space>
+                            
+                        </Row>
                     </Form>
                 </Row>
                 ]

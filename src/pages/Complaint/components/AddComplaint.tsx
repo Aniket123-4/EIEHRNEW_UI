@@ -142,7 +142,7 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
                 <>
                     <div className="gutter-example">
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={8}  >
+                            <Col className="gutter-row" span={8} xs={24} xl={9} >
                                 <Form.Item
                                     // required={true}
                                     name="complaintTypeName"
@@ -160,7 +160,7 @@ const AddComplaint = ({ visible, onClose, onSaveSuccess, selectedRows, institute
                                     <Input  maxLength={4} size={'large'}  placeholder="Please enter complaint typeId" />
                                 </Form.Item>
                             </Col> */}
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={8} xs={24} xl={9}>
                                 <Form.Item
                                     name="complaintTypeCode"
                                     label="Complaint Code"

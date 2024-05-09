@@ -115,8 +115,9 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
             >
                 {/* Basic Information */}
                 <>
-                    <Col span={100}>
+                    <Col span={100} xs={24} xl={6}>
                         <Row gutter={1}>
+                            
                             <Form.Item
                                 name="invName"
                                 label="Investigation name"
@@ -140,7 +141,7 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
                                 />
                             </Form.Item>
                         </Row>
-                        <Row gutter={1}>
+                        <Row gutter={1} >
                             <Form.Item
                                 name="invCode"
                                 label="investigation code"

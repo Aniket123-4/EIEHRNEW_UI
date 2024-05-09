@@ -287,16 +287,17 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
 
     return (
         <Card>
+            
             <Form
                 onFinish={onFinishPatForm}
                 form={form}
                 layout="vertical"
             >
-                <Space>
-
+                <Row gutter={8}>
+                    <Col xs={24} xl={7}>
                     <Form.Item name="Search" label="Search">
                         <Select
-                            style={{ width: 200 }}
+                            //style={{ width: 200 }}
                             showSearch
                             placeholder="Please Input For Search"
                             optionFilterProp="children"
@@ -310,34 +311,44 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
                             }))}
                         />
                     </Form.Item>
-
+                    </Col>
+                    <Col xs={24} xl={5}>
                     <Form.Item name="patientNo" label="Patient No" rules={[{ required: true }]}>
                         <Input allowClear maxLength={20} />
                     </Form.Item>
-                    <Form.Item>
+                    </Col>
+                    
+                    <Col xs={24} xl={2}>
+                    <Form.Item >
                         <Button style={{ marginTop: 28 }} type="primary" htmlType="submit">
                             Submit
                         </Button>
                     </Form.Item>
+                    </Col>
+                    <Col xs={24} xl={5}>
                     <Form.Item name="case" label="Case No" rules={[{ required: props.required ? props.required : false }]}>
                         <Select
-                            style={{ width: 200 }}
+                            //style={{ width: 200 }}
                             onChange={handleChangeCase}
                             options={caseChoice}
                             placeholder="Select"
                         />
                     </Form.Item>
+                    </Col>
+                    <Col xs={24} xl={5}>
                     <Form.Item name="AdmissionNo" label="Admission No" rules={[{ required: props.required ? props.required : false }]}>
                         <Select
-                            style={{ width: 200 }}
+                           // style={{ width: 200 }}
                             onChange={handleChangeAdmission}
                             labelInValue={true}
                             options={admissionNo}
                             placeholder="Select"
                         />
                     </Form.Item>
-                </Space>
+                    </Col>
+                </Row>
             </Form >
+            
             <>
                 {patientData && <Row>
                     <Col span={22}>

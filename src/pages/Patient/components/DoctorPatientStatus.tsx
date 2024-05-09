@@ -253,7 +253,8 @@ const DoctorPatientStatus = React.forwardRef(() => {
                 <Form
                     layout='vertical'
                     onFinish={getDoctorPatientList}>
-                    <Space style={{ alignItems: 'end' }}>
+                    <Row style={{ alignItems: 'end' }}>
+                    
                         <Form.Item name="fromDate" label="From Date" 
                         rules={[{ required: true, message: "Please Select Date" }]}>
                             <DatePicker
@@ -265,12 +266,14 @@ const DoctorPatientStatus = React.forwardRef(() => {
                                 getPopupContainer={(trigger) => trigger.parentElement!}
                             />
                         </Form.Item>
+                    
+                       <Col xs={24} xl={6}>
                         <Form.Item name="doctorID" label="Doctor"
                         initialValue={"-1"}
                             rules={[{ required: true, message: "Please Select Doctor" }]}>
                             <Select
                                 showSearch
-                                style={{ width: 200 }}
+                                //style={{ width: 200 }}
                                 placeholder="Select"
                                 filterOption={filterOption}
                                 notFoundContent={null}
@@ -280,13 +283,15 @@ const DoctorPatientStatus = React.forwardRef(() => {
                                 }))}
                             />
                         </Form.Item>
-
+                        </Col>
+                        <Col xs={24} xl={8}>
                         <Form.Item>
                             <Button type="primary" htmlType="submit">
                                 Fetch
                             </Button>
                         </Form.Item>
-                    </Space>
+                        </Col>
+                    </Row>
                 </Form>
             </div>
             <h2></h2>

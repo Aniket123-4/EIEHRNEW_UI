@@ -277,7 +277,7 @@ const DirectItemReceipt = ({
             title: 'SrNo.',
             dataIndex: 'col',
             key: 'col',
-            width: 12,
+            width: '30px',
             render: (text) => <a>{text}</a>,
             fixed: 'left',
         },
@@ -285,7 +285,7 @@ const DirectItemReceipt = ({
             title: 'Item ID',
             dataIndex: 'col2',
             key: 'col2',
-            width: 25,
+            width: "80px",
             render: (v) => <Select
                 style={{ backgroundColor: 'white' }}
                 size='small'
@@ -298,7 +298,7 @@ const DirectItemReceipt = ({
             title: 'Unit',
             dataIndex: 'col1',
             key: 'col1',
-            width: 18,
+            width: '80px',
             render: (v) =>
                 <Select
                     size='small'
@@ -311,25 +311,25 @@ const DirectItemReceipt = ({
             title: 'Quantity',
             key: 'col3',
             dataIndex: 'col3',
-            width: 15,
+            width: '50px',
         },
         {
             title: 'Item Rate',
             key: 'col4',
             dataIndex: 'col4',
-            width: 20,
+            width: '50px',
         },
         {
             title: 'ExpiryDate',
             key: 'col5',
             dataIndex: 'col5',
-            width: 20,
+            width: '80px',
             render: (text) => <Typography>{moment(text).format('DD MMM YYYY')}</Typography>,
         },
         {
             title: 'Action',
             key: 'action',
-            width: 15,
+            width: '50px',
             fixed: 'right',
             render: (_, record: any) =>
                 type_Pats.length >= 1 ? (
@@ -400,7 +400,7 @@ const DirectItemReceipt = ({
                             Item
                         </Typography>
                     </Col> */}
-                <Col span={24}>
+                <Col span={24} xs={24} xl={20}>
                         <Form.Item
                             name={'col2'}
                             label="Add Item"
@@ -418,7 +418,7 @@ const DirectItemReceipt = ({
                 </Row>
                 <Row style={{ marginTop: 20 }} gutter={4}>
                     
-                    <Col span={5}>
+                    <Col span={5} xs={24} xl={8}>
                         <Form.Item
                             name={'col1'}
                             label="Unit"
@@ -431,10 +431,10 @@ const DirectItemReceipt = ({
                         </Form.Item>
                     </Col>
                     
-                    <Col span={6}>
-                        <Space.Compact style={{ justifyContent: 'space-between', width: '60%' }}>
+                    <Col span={6} xs={24} xl={8}>
+                        <Space.Compact style={{ justifyContent: 'space-between'}}>
                             <Button style={{ marginTop: 30 }} onClick={() => updateQuantity('decQty')} icon={<MinusOutlined />} ></Button>
-                            <Form.Item style={{ width: '85%' }}
+                            <Form.Item 
                                 initialValue={1}
                                 name={'col3'}
                                 label="ItemQty"
@@ -450,7 +450,7 @@ const DirectItemReceipt = ({
                                 addonBefore={<MinusOutlined onClick={() => updateQuantity('decQty')} />}
                                 maxLength={3} placeholder="Quantity" /> */}
                     </Col>
-                    <Col span={4}>
+                    <Col span={4} xs={24} xl={8}>
                         <Form.Item
                             name={'col4'}
                             label="ItemRate"
@@ -461,7 +461,7 @@ const DirectItemReceipt = ({
                             <Input min={1} type='number' style={{ width: '100%' }} maxLength={10} placeholder="Please Enter Item Rate" />
                         </Form.Item>
                     </Col>
-                    <Col span={5}>
+                    <Col span={5} xs={24} xl={8}>
                         <Form.Item
                             name={'col5'}
                             label="Expiry Date"
@@ -474,7 +474,7 @@ const DirectItemReceipt = ({
                             />
                         </Form.Item>
                     </Col>
-                    <Col style={{ marginTop: 30 }} span={4}>
+                    <Col style={{ marginTop: 30 }} span={4} xs={24} xl={8}>
                         <Button onClick={addOneItem} type="primary">
                             Add
                         </Button>
@@ -529,8 +529,8 @@ const DirectItemReceipt = ({
             >
                 <>
                     <div className="gutter-example">
-                        <Row gutter={8}>
-                            <Col className="gutter-row" span={8}>
+                        <Row gutter={8} >
+                            <Col className="gutter-row" span={8} xs={24} xl={8}>
                                 <Form.Item
                                     name="issueVoucherNo"
                                     label="Receipt Voucher No"
@@ -541,7 +541,7 @@ const DirectItemReceipt = ({
                                     <Input placeholder="Please Enter VoucherNo" />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={8} xs={24} xl={8}>
                                 <Form.Item
                                     initialValue={dayjs()}
                                     name="issueDate"
@@ -556,7 +556,7 @@ const DirectItemReceipt = ({
                                     />
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={8}>
+                            <Col className="gutter-row" span={8} xs={24} xl={8}>
                                 <Form.Item
                                     name="supplierID"
                                     label="Supplier"
@@ -567,6 +567,7 @@ const DirectItemReceipt = ({
                                         },
                                     ]}
                                 >
+                                    
                                     <Select
                                         showSearch
                                         filterOption={filterOption}
@@ -622,10 +623,10 @@ const DirectItemReceipt = ({
         <PageContainer title=" " style={{}}>
             <Space direction="horizontal" size="middle" style={{ display: "flex" }}>
                 <Row gutter={8}>
-                    <Col span={13}>
+                    <Col span={13} xs={24} xl={11}>
                         <Card
                             headStyle={{ backgroundColor: '#004080', border: 0 }}
-                            style={{ height: 650, boxShadow: "2px 2px 2px #4874dc" }}
+                            style={{  boxShadow: "2px 2px 2px #4874dc" }}
                             title={<Space direction='horizontal'  style={{ alignItems: 'space-between' }}>
                             <Typography style={{color:'white',fontSize:18}}>Direct Item Receipt</Typography>
                         </Space>}
@@ -636,7 +637,7 @@ const DirectItemReceipt = ({
                         </Card>
 
                     </Col>
-                    <Col span={11}>
+                    <Col span={11} xs={24} xl={11}>
                         <DirectItemList
                             refresh={loading}
                             editRecord={(data: any) => setEditField(data)}
