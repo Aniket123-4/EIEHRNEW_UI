@@ -104,7 +104,7 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
                         },
                         {
                             key: '8',
-                            label: 'Civil Status',
+                            label: 'Marital Status',
                             children: result1?.civilStatusName
                         },
                         {
@@ -174,7 +174,7 @@ const PatientDetailsCommon = React.forwardRef((props: any) => {
                         },
                         {
                             key: '8',
-                            label: 'Civil Status',
+                            label: 'Marital Status',
                             children: result1?.civilStatusName
                         },
                         {

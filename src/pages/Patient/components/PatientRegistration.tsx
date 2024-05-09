@@ -1341,10 +1341,10 @@ const PatientRegistration = ({ visible, onClose, selectedRows, isEditable, onSav
                                                 <Form.Item
                                                     name="civilStatusID"
                                                     label="Marital Status"
-                                                    rules={[{ required: false, message: 'Please choose the Civil Status' }]}
+                                                    rules={[{ required: false, message: 'Please choose the Marital Status' }]}
                                                 >
                                                     <Select
-                                                        placeholder="Please choose the Civil Status"
+                                                        placeholder="Please choose the Marital Status"
                                                         options={civilStatus}
                                                     />
                                                 </Form.Item>

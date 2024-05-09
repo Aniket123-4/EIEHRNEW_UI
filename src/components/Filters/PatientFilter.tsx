@@ -269,7 +269,7 @@ const PatientFilter: React.FC = ({ visible, onClose, selectedRows, loading, onFi
                         />
                     </Form.Item>
 
-                    <Form.Item name="civilStatusID" label="Civil Status" rules={[{ required: false }]}>
+                    <Form.Item name="civilStatusID" label="Marital Status" rules={[{ required: false }]}>
                         <Select
                             onChange={handleChangeFilter}
                             options={civilStatusChoices}

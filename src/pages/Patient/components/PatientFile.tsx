@@ -123,7 +123,7 @@ const PatientFile = React.forwardRef((props) => {
             },
             {
                 key: '8',
-                label: 'Civil Status',
+                label: 'Marital Status',
                 children: result1?.civilStatusName
             },
             {

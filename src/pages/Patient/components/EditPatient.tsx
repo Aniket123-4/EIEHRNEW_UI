@@ -1190,11 +1190,11 @@ const EditPatient = ({ visible, isEditable, }: any) => {
                                     <Form.Item
                                         // initialValue={patient[0]?.civilStatusID}
                                         name="civilStatusID"
-                                        label="Civil Status"
-                                        rules={[{ required: false, message: 'Please choose the Civil Status' }]}
+                                        label="Marital Status"
+                                        rules={[{ required: false, message: 'Please choose the Marital Status' }]}
                                     >
                                         <Select style={inputStyle}
-                                            placeholder="Please choose the Civil Status"
+                                            placeholder="Please choose the Marital Status"
                                             options={civilStatus}
                                         />
                                     </Form.Item>

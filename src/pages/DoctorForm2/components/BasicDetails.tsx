@@ -60,7 +60,7 @@ const BasicDetails = ({ patientBasicDetails = {},admNo }: any) => {
         },
         {
             key: '8',
-            label: 'Civil Status',
+            label: 'Marital Status',
             children: result1?.civilStatusName
         },
         {
