@@ -4,15 +4,15 @@
 import React from 'react';
 import { ConfigProvider } from 'antd';
 
-import moment from 'D:/Projects/MSSPL/EIEHRNEW_UI/node_modules/dayjs';
-import 'D:/Projects/MSSPL/EIEHRNEW_UI/node_modules/dayjs/locale/bn-bd';
-import 'D:/Projects/MSSPL/EIEHRNEW_UI/node_modules/dayjs/locale/en';
-import 'D:/Projects/MSSPL/EIEHRNEW_UI/node_modules/dayjs/locale/fa';
-import 'D:/Projects/MSSPL/EIEHRNEW_UI/node_modules/dayjs/locale/id';
-import 'D:/Projects/MSSPL/EIEHRNEW_UI/node_modules/dayjs/locale/ja';
-import 'D:/Projects/MSSPL/EIEHRNEW_UI/node_modules/dayjs/locale/pt-br';
-import 'D:/Projects/MSSPL/EIEHRNEW_UI/node_modules/dayjs/locale/zh-cn';
-import 'D:/Projects/MSSPL/EIEHRNEW_UI/node_modules/dayjs/locale/zh-tw';
+import moment from 'D:/Projects/MSSPL/EIEHR_PROJECT/eiehrnew_ui/node_modules/dayjs';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/eiehrnew_ui/node_modules/dayjs/locale/bn-bd';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/eiehrnew_ui/node_modules/dayjs/locale/en';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/eiehrnew_ui/node_modules/dayjs/locale/fa';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/eiehrnew_ui/node_modules/dayjs/locale/id';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/eiehrnew_ui/node_modules/dayjs/locale/ja';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/eiehrnew_ui/node_modules/dayjs/locale/pt-br';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/eiehrnew_ui/node_modules/dayjs/locale/zh-cn';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/eiehrnew_ui/node_modules/dayjs/locale/zh-tw';
 import { RawIntlProvider, getLocale, getDirection , setIntl, getIntl, localeInfo, event, LANG_CHANGE_EVENT } from './localeExports';
 
 

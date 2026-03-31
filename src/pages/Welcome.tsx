@@ -59,11 +59,10 @@ const Welcome: React.FC = () => {
                 onChange={(value: any) => setPatientData(value)} /> : null}
 {getUserType() !== "Admin" && (
         <div style={{ textAlign: 'center', padding: '40px 0' }}>
-          <Title level={3}>Welcome to Vaidyaraj Madan Mohan Singh Portal</Title>
+          <Title level={3}>Welcome to Vaidhyaraj Madan Mohan Singh Portal</Title>
           <Text type="secondary">© 2026 MSSPL</Text>
         </div>
       )}
-
 
                 
                 {/* <ChatAssistant /> */}

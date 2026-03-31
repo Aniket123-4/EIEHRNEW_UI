@@ -766,7 +766,7 @@ const handleResendOTP = async () => {
             </Spin>
           </Content>
           <Footer style={footerStyle}>
-            <Text type="secondary">© 2024 Vaidyaraj Madan Mohan Singh Portal Portal. All rights reserved.</Text>
+            <Text type="secondary">© 2024 Vaidhyaraj Madan Mohan Singh Portal Portal. All rights reserved.</Text>
           </Footer>
         </Layout>
    

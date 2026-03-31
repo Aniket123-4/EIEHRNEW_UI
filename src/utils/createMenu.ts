@@ -155,6 +155,7 @@ import React from 'react';
 
 import { fetchMenuData } from "@/services/apiRequest/api";
 import { getPackageId, getUserInLocalStorage, setMenu } from "./common";
+import { ca } from 'date-fns/locale';
 
 const getModulePath = (name: string) => {
     const { verifiedUser }: any = getUserInLocalStorage();
@@ -198,6 +199,30 @@ const getModulePath = (name: string) => {
             return "/patient/DoctorPatientStatus";
         case "Item Master":
             return "/medicalStore/itemMaster";
+        case "Item Category Master":
+            return "/medicalStore/ItemCategoryMaster";
+        case "Unit Master":
+            return "/medicalStore/unitMaster";    
+            
+        case "Relation Master":
+            return "/master/relationMaster";
+            case "Religion Master":
+                return "/master/religionMaster";
+            case "Blood Group Master":
+                return "/master/bloodGroupMaster";
+            case "Marital Status Master":
+                return "/master/maritalStatusMaster";
+            case "Gender Master":
+                return "/master/genderMaster";
+            case "Document Type Master":
+                return "/master/DocumentTypeMaster";
+            case "State Master":
+                return "/master/StateMaster";
+            case "District Master":
+                return "/master/DistrictMaster";
+            case "Country Master":
+                return "/master/CountryMaster";               
+
         case "Direct Item Receipt":
             return "/medicalStore/directItemReciept";
         case "Item Status":
