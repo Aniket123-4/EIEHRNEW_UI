@@ -74,10 +74,58 @@ export default [
     name: 'master',
     path: '/master',
     routes: [
+
+
       {
         name: 'complaint master',
         path: '/master/addComplaint',
         component: './Complaint/components/AddComplaint',
+      },
+      {
+        name: 'relation master',
+        path: '/master/RelationMaster',
+        component: './Complaint/components/RelationMaster',
+      },
+      {
+        name: 'religion master',
+        path: '/master/ReligionMaster',
+        component: './Complaint/components/ReligionMaster',
+
+      },
+      {
+        name: 'blood group master',
+        path: '/master/BloodGroupMaster',
+        component: './Complaint/components/BloodGroupMaster',
+      },
+      {
+        name: 'marital status master',
+        path: '/master/MaritalStatusMaster',
+        component: './Complaint/components/MaritalStatusMaster',
+      },
+      {
+        name: 'gender master',
+        path: '/master/GenderMaster',
+        component: './Complaint/components/GenderMaster',
+      },
+      {
+        name: 'document type master',
+        path: '/master/DocumentTypeMaster',
+        component: './Complaint/components/DocumentTypeMaster',
+      },
+      {
+        name: 'state master',
+        path: '/master/StateMaster',
+        component: './Complaint/components/StateMaster',
+      },
+      {
+        name: 'city master',
+        path: '/master/DistrictMaster',
+        component: './Complaint/components/DistrictMaster',
+      },
+      {
+        name: 'country master',
+        path: '/master/CountryMaster',
+        component: './Complaint/components/CountryMaster',
       },
       {
         name: 'complaint list',
@@ -135,6 +183,16 @@ export default [
     name: 'Medical Store',
     path: '/medicalStore',
     routes: [
+      {
+        name: 'Unit Master',
+        path: '/medicalStore/unitMaster',
+        component: './MedicalStore/component/UnitMaster',
+      },
+      {
+        name: 'Item Category Master',
+        path: '/medicalStore/itemCategoryMaster',
+        component: './MedicalStore/component/ItemCategoryMaster',
+      },
       {
         name: 'Item Master',
         path: '/medicalStore/itemMaster',

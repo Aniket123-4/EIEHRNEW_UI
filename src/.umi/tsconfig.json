@@ -27,7 +27,7 @@
         "src/.umi/*"
       ],
       "@umijs/max": [
-        "D:\\Projects\\MSSPL\\EIEHR_PROJECT\\eiehrnew_ui\\node_modules\\umi"
+        "D:\\Projects\\MSSPL\\EIEHRNEW_UI\\node_modules\\umi"
       ],
       "@umijs/max/typings": [
         "src/.umi/typings"
