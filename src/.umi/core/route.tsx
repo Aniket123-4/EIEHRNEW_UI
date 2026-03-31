@@ -77,7 +77,7 @@ export async function getRoutes() {
 '67': React.lazy(() => import(/* webpackChunkName: "components__Print__PrintReport" */'@/components/Print/PrintReport.tsx')),
 '68': React.lazy(() => import(/* webpackChunkName: "p__CandidateDashboard" */'@/pages/CandidateDashboard.tsx')),
 '69': React.lazy(() => import(/* webpackChunkName: "p__404" */'@/pages/404.tsx')),
-'ant-design-pro-layout': React.lazy(() => import(/* webpackChunkName: "umi__plugin-layout__Layout" */'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/src/.umi/plugin-layout/Layout.tsx')),
+'ant-design-pro-layout': React.lazy(() => import(/* webpackChunkName: "umi__plugin-layout__Layout" */'D:/Projects/MSSPL/EIEHRNEW_UI/src/.umi/plugin-layout/Layout.tsx')),
 },
   };
 }
