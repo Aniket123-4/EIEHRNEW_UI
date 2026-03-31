@@ -88,7 +88,7 @@ export async function getRoutes() {
 '78': React.lazy(() => import(/* webpackChunkName: "components__Print__PrintReport" */'@/components/Print/PrintReport.tsx')),
 '79': React.lazy(() => import(/* webpackChunkName: "p__CandidateDashboard" */'@/pages/CandidateDashboard.tsx')),
 '80': React.lazy(() => import(/* webpackChunkName: "p__404" */'@/pages/404.tsx')),
-'ant-design-pro-layout': React.lazy(() => import(/* webpackChunkName: "umi__plugin-layout__Layout" */'D:/Projects/MSSPL/EIEHRNEW_UI/src/.umi/plugin-layout/Layout.tsx')),
+'ant-design-pro-layout': React.lazy(() => import(/* webpackChunkName: "umi__plugin-layout__Layout" */'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/src/.umi/plugin-layout/Layout.tsx')),
 },
   };
 }

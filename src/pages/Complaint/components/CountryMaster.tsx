@@ -145,7 +145,7 @@ const CountryMaster = () => {
                         <Input placeholder="Please Enter Nationality (e.g., INDIAN)" />
                     </Form.Item>
                 </Col>
-                <Col span={24}>
+                {/* <Col span={24}>
                     <Form.Item
                         name="isActive"
                         valuePropName="checked"
@@ -153,7 +153,7 @@ const CountryMaster = () => {
                     >
                         <Checkbox>Is Active</Checkbox>
                     </Form.Item>
-                </Col>
+                </Col> */}
                 <Form.Item>
                     <Space>
                         {/* <Button type="primary" htmlType="submit">

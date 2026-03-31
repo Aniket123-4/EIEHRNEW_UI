@@ -325,7 +325,7 @@ const InvServiceList = (props: any) => {
                     </span>
                 ) : (
                     <Typography.Link style={{ width: 100 }} 
-                    disabled={editingKey !== ''} 
+                    //disabled={editingKey !== ''} 
                     onClick={() =>{props?.onEditRecord(record.serviceID)} }>
                         Edit
                     </Typography.Link>

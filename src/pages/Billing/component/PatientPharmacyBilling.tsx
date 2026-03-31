@@ -748,14 +748,14 @@ const PatientPharmacyBilling: React.FC = () => {
             key: 'netAmount',
             dataIndex: 'netAmount',
         },
-        {
-            width: '8%',
-            title: 'Action',
-            key: 'action',
-            render: (_, record) => (
-                <Button danger size={'small'} onClick={() => { deleteBill(record) }} >Delete</Button>
-            ),
-        },
+        // {
+        //     width: '8%',
+        //     title: 'Action',
+        //     key: 'action',
+        //     render: (_, record) => (
+        //         <Button danger size={'small'} onClick={() => { deleteBill(record) }} >Delete</Button>
+        //     ),
+        // },
 
     ];
     const columns1 = [

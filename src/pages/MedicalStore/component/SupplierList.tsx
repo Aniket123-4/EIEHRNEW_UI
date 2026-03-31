@@ -190,7 +190,10 @@ const SupplierList = ({ refresh, editRecord }: any) => {
             width: '50px',
             render: (_: any, record: any) => {
                 return (
-                    <Typography.Link style={{ width: 100 }} disabled={editingKey !== ''} onClick={() => edit(record)}>
+                    <Typography.Link style={{ width: 100 }} 
+                    
+                    //disabled={editingKey !== ''}
+                     onClick={() => edit(record)}>
                         Edit
                     </Typography.Link>
                 );

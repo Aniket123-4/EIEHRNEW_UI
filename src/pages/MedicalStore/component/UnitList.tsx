@@ -33,7 +33,7 @@ const UnitList = ({ refresh, editRecord }: any) => {
         setLoading(true);
         const params = {
             unitID: -1,
-            isActive: 1,
+            isActive: -1,
             type: 1
         };
         const res = await requestGetUnit(params);
@@ -172,7 +172,7 @@ const UnitList = ({ refresh, editRecord }: any) => {
                 return (
                     <Typography.Link 
                         style={{ width: 100 }} 
-                        disabled={editingKey !== ''} 
+                        //disabled={editingKey !== ''} 
                         onClick={() => {
                             setEditingKey(record.unitID);
                             editRecord(record);

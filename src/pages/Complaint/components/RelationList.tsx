@@ -170,16 +170,16 @@ const RelationList = ({ refresh, editRecord }: any) => {
             ],
             onFilter: (value: any, record: RelationDataType) => record.relationType === value,
         },
-        {
-            title: 'Status',
-            dataIndex: 'isActive',
-            key: 'isActive',
-            width: '15%',
-            render: (isActive: boolean) =>
-                <Tag color={isActive === true ? 'success' : 'error'}>
-                    {isActive === true ? 'Active' : 'InActive'}
-                </Tag>,
-        },
+        // {
+        //     title: 'Status',
+        //     dataIndex: 'isActive',
+        //     key: 'isActive',
+        //     width: '15%',
+        //     render: (isActive: boolean) =>
+        //         <Tag color={isActive === true ? 'success' : 'error'}>
+        //             {isActive === true ? 'Active' : 'InActive'}
+        //         </Tag>,
+        // },
         {
             title: 'Action',
             key: 'action',
@@ -188,7 +188,7 @@ const RelationList = ({ refresh, editRecord }: any) => {
                 return (
                     <Typography.Link 
                         style={{ width: 100 }} 
-                        disabled={editingKey !== ''} 
+                    //    disabled={editingKey !== ''} 
                         onClick={() => {
                             setEditingKey(record.relationID);
                             editRecord(record);

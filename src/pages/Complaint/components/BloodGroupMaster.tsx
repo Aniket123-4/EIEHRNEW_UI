@@ -115,7 +115,7 @@ const BloodGroupMaster = () => {
                         <Input placeholder="Please Enter Blood Group Code (Optional)" />
                     </Form.Item>
                 </Col>
-                <Col span={24}>
+                {/* <Col span={24}>
                     <Form.Item
                         name="isActive"
                         valuePropName="checked"
@@ -123,7 +123,7 @@ const BloodGroupMaster = () => {
                     >
                         <Checkbox>Is Active</Checkbox>
                     </Form.Item>
-                </Col>
+                </Col> */}
                 <Form.Item>
                     <Space>
                         <Button type="primary" htmlType="submit">
