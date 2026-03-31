@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, InputRef } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Steps, theme, Spin, InputNumber, Card, InputRef, Typography } from 'antd';
 import { requestGetRateType, requestGetRoomType } from '@/services/apiRequest/dropdowns';
 import { requestAddComplaint, requestAddDisease, requestAddInvParameter, requestGetInvGroup, requestGetInvestigation } from '../services/api';
 import { requestGetInstituteList } from '@/pages/Institute/services/api';
@@ -220,8 +220,41 @@ const InvestigationList = React.forwardRef((props) => {
 
     return (
         <Card
-            title="Investigation List"
-            style={{ boxShadow: '2px 2px 2px #4874dc' }}
+            title={
+                        <div
+                          style={{
+                            width: '100%',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            margin: 0,
+                          }}
+                        >
+                          <Typography 
+                          
+                            style={{
+                              margin: 0,
+                              color: '#0050b3',           // dark blue text for good contrast
+                              fontWeight: 600,
+                              fontSize: '18px'
+                            }}
+                          >
+                           Investigation List
+                          </Typography>
+                     
+                        </div>
+                      }
+                      headStyle={{
+                        backgroundColor: '#e6f7ff',         // पूरा header background
+                        borderBottom: '1px solid #91d5ff',  // नीचे हल्की border (consistent look)
+                        padding: '12px 16px',               // header padding
+                        borderTopLeftRadius: '8px',
+                        borderTopRightRadius: '8px',
+                      }}
+                      bodyStyle={{
+                        padding: '16px 20px',               // body में थोड़ा बेहतर spacing
+                      }}
+                      
         >
             <div style={contentStyle}>
                 <Table columns={columns} dataSource={list} />

@@ -23,6 +23,7 @@ const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
     const [tabForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [vitals, setVitals] = useState<any>([]);
+    const [selectDate, setSelectDate] = useState<any>(dayjs());
     const { verifiedUser } = getUserInLocalStorage();
     const [lstType_Patient, setLstType_Patient] = useState([]);
 
@@ -86,7 +87,10 @@ const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
         {
             title: 'Delete',
             key: 'delete',
-            render: (_, record) => <CloseOutlined style={{ alignItems: 'center', color: 'red' }} onClick={() => onFinishPatForm(record, true)} />
+            render: (_, record) =>
+                <CloseOutlined style={{ alignItems: 'center', color: 'red' }}
+                    onClick={() => onFinishPatForm({ tab: [record] }, true)}
+                />
 
         }
 
@@ -103,30 +107,39 @@ const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
             "isActive": 1,
             "type": 1
         }
+        setLoading(true)
         const res = await requestGetVitalParameter(params);
 
         if (res.result.length > 0) {
             const dataMaskForDropdown = res?.result.map((item: any) => {
-                return { value: item.vitalParameterID, label: `${item.vitalParameterName}`, name: `${item.vitalParameterName}` }
+                return {
+                    value: item.vitalParameterID,
+                    label: `${item.vitalParameterName}`,
+                    name: `${item.vitalParameterName}`,
+                    ...item
+                }
             })
+            setLoading(false)
             console.log({ dataMaskForDropdown })
+
             setVitals(dataMaskForDropdown)
         }
+        setLoading(false)
     }
     const onFinishPatForm = async (value: any, isDelete: any = false) => {
         console.log(value)
         value?.tab.map(async (values: any, index: number) => {
-            const date = moment(values?.vitalDateTime).format(dateFormat);
-            console.log(value?.tab.length, index)
+            const date = moment(selectDate).format(dateFormat);
+            console.log(value?.tab.length, index, vitals)
             const params = {
                 "patientCaseID": patientCaseID,
                 "admNo": admNo,
-                "col1": values?.value ? values?.value : "",
+                "col1": isDelete ? values?.vitalParameterID : values?.value ? values?.value : "",
                 "col2": values?.vitalResult ? values?.vitalResult : "",
                 "col3": values?.vitalComment ? values?.vitalComment : "",
                 "col4": values?.vitalDescp ? values?.vitalDescp : "",
                 "col5": isDelete ? values?.admNo : "",
-                "col6": isDelete ? values?.vitalSerialNo : "",
+                "col6": values?.vitalParameterID ? values?.vitalParameterID : "",
                 "col7": "",
                 "col8": "",
                 "col9": "",
@@ -141,7 +154,7 @@ const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
                 "col18": "",
                 "col19": "",
                 "col20": "",
-                "col21": date,
+                "col21": selectDate,
                 "col22": date,
                 "isForDelete": isDelete,
                 "lstType_DocPatient": [
@@ -212,47 +225,63 @@ const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
     const formView = () => {
         const handleChangeFilter = (value: any) => { }
         return (
-            <Form
-                form={tabForm}
-                onFinish={onFinishPatForm}
-                layout="vertical"
-                size={'small'}
-            >
-                {vitals.length > 0 &&
-                    <Form.List initialValue={vitals} name={'tab'}>
-                        {(vital, { add, remove }) => (
-                            <div>
-                                <Col>
-                                    <Row style={{ justifyContent: 'space-between', marginBottom: 20, backgroundColor: 'lightgreen', padding: 10 }}>
-                                        <Col span={4}><Typography style={{ fontWeight: '700', fontSize: 16 }}>Vital Parameter</Typography></Col>
-                                        <Col span={4}><Typography style={{ fontWeight: '700', fontSize: 16 }}>Comment</Typography></Col>
-                                        <Col span={4}><Typography style={{ fontWeight: '700', fontSize: 16 }}>Date</Typography></Col>
-                                        <Col span={4}><Typography style={{ fontWeight: '700', fontSize: 16 }}>Result</Typography></Col>
-                                        <Col span={4}><Typography style={{ fontWeight: '700', fontSize: 16 }}>Description</Typography></Col>
-                                    </Row>
+            <>
+                <Form.Item
+                    initialValue={dayjs()}
+                    label="Select Date"
+                >
+                    <DatePicker
+                        onChange={(d: any) => setSelectDate(moment(d))}
+                        style={{ width: 200 }}
+                        defaultValue={dayjs()}
+                        format={dateFormat}
+                    />
+                </Form.Item>
+                <Form
+                    form={tabForm}
+                    onFinish={onFinishPatForm}
+                    layout="vertical"
+                    size={'small'}
+                >
+                    {vitals.length > 0 &&
+                        <Form.List initialValue={vitals} name={'tab'}>
+                            {(vital, { add, remove }) => (
+                                <div>
+                                    <Col>
+                                        <Row gutter={8} style={{ justifyContent: 'space-between', marginBottom: 20, backgroundColor: 'lightgreen', padding: 10 }}>
+                                            <Col span={1}><Typography style={{ fontWeight: '700', fontSize: 16 }}>Sr.</Typography></Col>
+                                            <Col span={5}><Typography style={{ fontWeight: '700', fontSize: 16 }}>Vital Parameter</Typography></Col>
+                                            <Col span={6}><Typography style={{ fontWeight: '700', fontSize: 16 }}>Result</Typography></Col>
+                                            {/* <Col span={4}><Typography style={{ fontWeight: '700', fontSize: 16 }}>Date</Typography></Col> */}
+                                            <Col span={6}><Typography style={{ fontWeight: '700', fontSize: 16 }}>Comment</Typography></Col>
+                                            <Col span={6}><Typography style={{ fontWeight: '700', fontSize: 16 }}>Description</Typography></Col>
+                                        </Row>
 
-                                    {vital.map(({ key, name, ...restField }) => (
-                                        <Row style={{ justifyContent: 'space-between' }}>
-                                            <Col span={4}>
-                                                <Form.Item
+                                        {vital.map(({ key, name, ...restField }) => (
+                                            <Row gutter={8} style={{ justifyContent: 'space-between', }}>
+                                                <Col span={1}>
+                                                    <Typography>{vitals[key]?.parameterType}</Typography>
+                                                </Col>
+                                                <Col span={5}>
+                                                    <Form.Item
+                                                        {...restField}
+                                                        label=""
+                                                        name={[name, 'vitalParameterID']}
+                                                        rules={[{ required: false, message: 'Vital Parameter' }]}
+                                                    >
+                                                        <Typography>{vitals[key].name}</Typography>
+                                                    </Form.Item>
+
+                                                </Col>
+                                                <Col span={6}><Form.Item
                                                     {...restField}
                                                     label=""
-                                                    name={[name, 'vitalParameterID']}
+                                                    name={[name, 'vitalResult']}
                                                     rules={[{ required: false, message: 'Vital Parameter' }]}
                                                 >
-                                                    <Typography>{vitals[key].name}</Typography>
-                                                </Form.Item>
-
-                                            </Col>
-                                            <Col span={4}><Form.Item
-                                                {...restField}
-                                                label=""
-                                                name={[name, 'vitalResult']}
-                                                rules={[{ required: false, message: 'Vital Parameter' }]}
-                                            >
-                                                <Input placeholder="" />
-                                            </Form.Item></Col>
-                                            <Col span={4}><Form.Item
+                                                    <Input placeholder="" />
+                                                </Form.Item></Col>
+                                                {/* <Col span={4}><Form.Item
                                                 {...restField}
                                                 initialValue={dayjs()}
                                                 label=""
@@ -264,33 +293,33 @@ const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
                                                     defaultValue={dayjs()}
                                                     format={dateFormat}
                                                 />
-                                            </Form.Item></Col>
-                                            <Col span={4}><Form.Item
-                                                {...restField}
-                                                label=""
-                                                name={[name, 'vitalComment']}
-                                                rules={[{ required: false, message: 'Vital Comment' }]}
-                                            >
-                                                <Input placeholder="" />
-                                            </Form.Item></Col>
-                                            <Col span={4}><Form.Item
-                                                {...restField}
-                                                label=""
-                                                name={[name, 'vitalDescp']}
-                                                rules={[{ required: false, message: 'Vital Description' }]}
-                                            >
-                                                <Input placeholder="" />
-                                            </Form.Item></Col>
-                                        </Row>
-                                    ))}
+                                            </Form.Item></Col> */}
+                                                <Col span={6}><Form.Item
+                                                    {...restField}
+                                                    label=""
+                                                    name={[name, 'vitalComment']}
+                                                    rules={[{ required: false, message: 'Vital Comment' }]}
+                                                >
+                                                    <Input placeholder="" />
+                                                </Form.Item></Col>
+                                                <Col span={6}><Form.Item
+                                                    {...restField}
+                                                    label=""
+                                                    name={[name, 'vitalDescp']}
+                                                    rules={[{ required: false, message: 'Vital Description' }]}
+                                                >
+                                                    <Input placeholder="" />
+                                                </Form.Item></Col>
+                                            </Row>
+                                        ))}
 
-                                </Col>
+                                    </Col>
 
-                            </div>
-                        )}
-                    </Form.List>}
+                                </div>
+                            )}
+                        </Form.List>}
 
-                {/* <Row gutter={16}>
+                    {/* <Row gutter={16}>
 
                     <Col span={6}>
                         <Form.Item name="vitalParameterID" label="Vital Parameter" rules={[{ required: true }]}>
@@ -329,12 +358,13 @@ const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
 
                 </Row> */}
 
-                <Form.Item>
-                    <Button type="primary" loading={loading} htmlType="submit">
-                        Submit
-                    </Button>
-                </Form.Item>
-            </Form >
+                    <Form.Item>
+                        <Button type="primary" loading={loading} htmlType="submit">
+                            Submit
+                        </Button>
+                    </Form.Item>
+                </Form >
+            </>
         )
     }
 
@@ -393,8 +423,10 @@ const VitalSign = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
     return (
         <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
             <Card>
+                <Spin spinning={loading}>
                 {formView()}
                 {/* {formList()} */}
+                </Spin>
             </Card>
             <Table
                 columns={columns}

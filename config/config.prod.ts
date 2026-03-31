@@ -12,8 +12,8 @@ export default defineConfig({
   define: {
     API_KEY: '',
     //BASE_URL: 'http://103.20.213.26:8078/api/', 
-    BASE_URL: 'http://103.12.1.132:8056/api/', 
-                           
+    BASE_URL: 'https://eiehrapi.mssplonline.com/api/', 
+  //BASE_URL: 'http://localhost:7285/api/',                     
   },
   /**
    * @name 开启 hash 模式

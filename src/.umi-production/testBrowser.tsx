@@ -3,14 +3,14 @@
 // DO NOT CHANGE IT MANUALLY!
 import React, { useEffect, useState } from 'react';
 import { ApplyPluginsType } from 'umi';
-import { renderClient, RenderClientOpts } from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/@umijs/renderer-react';
+import { renderClient, RenderClientOpts } from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/@umijs/renderer-react';
 import { createHistory } from './core/history';
 import { createPluginManager } from './core/plugin';
 import { getRoutes } from './core/route';
 import type { Location } from 'history';
 
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/src/global.less';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/src/global.tsx';
+import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/src/global.css';
+import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/src/global.tsx';
 import 'antd/dist/reset.css';
 const publicPath = '/';
 const runtimePublicPath = false;

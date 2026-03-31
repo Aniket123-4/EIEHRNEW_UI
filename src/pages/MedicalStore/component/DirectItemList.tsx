@@ -191,14 +191,14 @@ const DirectItemList = ({ refresh, editRecord }: any) => {
         >
             <Card
                 title={<Space direction='horizontal'  style={{ alignItems: 'space-between' }}>
-                    <Typography style={{color:'white',fontSize:18}}>Saved Voucher List</Typography>
+                    <Typography style={{color:'#0050b3',fontWeight:600,fontSize:18}}>Saved Voucher List</Typography>
                     <Radio.Group options={[{ label: 'Pending', value: '0' }, { label: 'Approved', value: '1' },]}
                         onChange={(value) => getDirectItemList(value.target.value)} defaultValue={'0'}
                         buttonStyle="solid"
                         optionType="button" />
                 </Space>}
                 style={{ height: 650, boxShadow: '2px 2px 2px #4874dc' }}
-                headStyle={{ backgroundColor: '#004080', border: 0 }}
+                headStyle={{ backgroundColor: '#e6f7ff', border: 0 }}
             >
                 {directItemList &&
                     <Spin tip="Please wait..." spinning={loading}>

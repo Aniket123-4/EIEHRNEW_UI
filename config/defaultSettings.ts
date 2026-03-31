@@ -15,7 +15,7 @@ const Settings: LayoutSettings & {
   fixedHeader: true,
   fixSiderbar: true,
   colorWeak: false,
-  title: 'EIEHR Portal',
+  title: 'Vaidyaraj Madan Mohan Singh Portal',
   pwa: true,
   iconfontUrl: '',
 };

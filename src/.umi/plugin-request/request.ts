@@ -6,8 +6,8 @@ import axios, {
   type AxiosRequestConfig,
   type AxiosResponse,
   type AxiosError,
-} from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/axios';
-import useUmiRequest, { UseRequestProvider } from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/@ahooksjs/use-request';
+} from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/axios';
+import useUmiRequest, { UseRequestProvider } from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/@umijs/plugins/node_modules/@ahooksjs/use-request';
 import { ApplyPluginsType } from 'umi';
 import { getPluginManager } from '../core/plugin';
 
@@ -26,7 +26,7 @@ import {
   PaginatedOptionsWithFormat,
   PaginatedParams,
   PaginatedResult,
-} from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/@ahooksjs/use-request/es/types';
+} from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/@umijs/plugins/node_modules/@ahooksjs/use-request/es/types';
 
 type ResultWithData< T = any > = { data?: T; [key: string]: any };
 

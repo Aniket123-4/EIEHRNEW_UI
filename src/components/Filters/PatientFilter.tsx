@@ -316,6 +316,9 @@ const PatientFilter: React.FC = ({ visible, onClose, selectedRows, loading, onFi
                             defaultValue={-1}
                         />
                     </Form.Item>
+                    <Form.Item name="village" label="Village" rules={[{ required: false }]}>
+                    <Input />
+                    </Form.Item>
                     <Form.Item name="patientMobileNo" label="Patient Mobile No" rules={[{ required: false }]}>
                         <Input />
                     </Form.Item>

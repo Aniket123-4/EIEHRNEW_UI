@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Card, Checkbox, Form, Input, InputNumber, InputRef, Popconfirm, Select, Space, Table, Tag, Typography, message } from 'antd';
+import { Button, Card, Checkbox, Form, Input, InputNumber, InputRef, Popconfirm, Select, Space, Spin, Table, Tag, Typography, message } from 'antd';
 import { requestAddDisease, requestDiseaseList, requestDiseaseTypeList, requestSpecialList } from '../services/api';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { SearchOutlined } from '@ant-design/icons';
@@ -127,16 +127,19 @@ const DiseaseList: React.FC = ({editRecord,refresh }:any) => {
             "isActive": "-1",
             "type": 1
         }
+        setLoading(true)
         const res = await requestDiseaseList(params);
+        setLoading(false)
         if (res.result.length > 0) {
             const dataMaskForDropdown = res?.result?.map((item: any, index: string) => {
-                return { key: index, ...item }
+                return { key: index, ...item,diseaseName: `${item.diseaseName}[${item.diseaseNameHindi}]`}
             })
             const dataMaskTypeId = res?.result?.map((item: any, index: string) => {
                 return { value:item.diseaseID,label:item.diseaseCodeICD}
             })
             setDiseaseList(dataMaskForDropdown)
             setDiseaseTypeList(dataMaskTypeId)
+            setLoading(false)
         }
     }
     const getDiseaseTypeList = async () => {
@@ -407,9 +410,48 @@ const DiseaseList: React.FC = ({editRecord,refresh }:any) => {
             // initialValues={{diseaseTypeID:diseaseList?.diseaseTypeID}}
             form={form}
             component={false}>
+                <Spin spinning={loading} >
             <Card
-                title="Disease List"
-                style={{ boxShadow: '2px 2px 2px #4874dc' }}
+                title={
+                    <div
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        margin: 0,
+                      }}
+                    >
+                      <Typography 
+                      
+                        style={{
+                          margin: 0,
+                          color: '#0050b3',           // dark blue text for good contrast
+                          fontWeight: 600,
+                          fontSize: '18px'
+                        }}
+                      >
+                        Disease List
+                      </Typography>
+                 
+                    </div>
+                  }
+                  headStyle={{
+                    backgroundColor: '#e6f7ff',         // पूरा header background
+                    borderBottom: '1px solid #91d5ff',  // नीचे हल्की border (consistent look)
+                    padding: '12px 16px',               // header padding
+                    borderTopLeftRadius: '8px',
+                    borderTopRightRadius: '8px',
+                  }}
+                  bodyStyle={{
+                    padding: '16px 20px',               // body में थोड़ा बेहतर spacing
+                  }}
+                  style={{
+                    borderRadius: '8px',
+                    overflow: 'hidden',                 // rounded corners clip न हो
+                    boxShadow: '0 3px 12px rgba(72, 116, 220, 0.18)',  // soft, modern shadow
+                    marginBottom: 24,                   // अगर multiple cards हैं तो नीचे space
+                  }}  
             >
                 <Table
                     size='small'
@@ -427,6 +469,7 @@ const DiseaseList: React.FC = ({editRecord,refresh }:any) => {
                     }}
                 />
             </Card>
+            </Spin>
         </Form>
     );
 };

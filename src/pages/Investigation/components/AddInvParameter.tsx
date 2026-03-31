@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message } from 'antd';
+import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, Typography } from 'antd';
 import { PageContainer, EditableProTable } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import InvestigationList from './InvestigationList';
@@ -519,8 +519,41 @@ const AddInvParameter = ({ visible, onClose, onSaveSuccess, selectedRows, instit
         >
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
                 <Card
-                    title="Create Investigation Test"
-                    style={{ boxShadow: '2px 2px 2px #4874dc' }}
+                    title={
+                        <div
+                          style={{
+                            width: '100%',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            margin: 0,
+                          }}
+                        >
+                          <Typography 
+                          
+                            style={{
+                              margin: 0,
+                              color: '#0050b3',           // dark blue text for good contrast
+                              fontWeight: 600,
+                              fontSize: '18px'
+                            }}
+                          >
+                          Create Investigation Test
+                          </Typography>
+                     
+                        </div>
+                      }
+                      headStyle={{
+                        backgroundColor: '#e6f7ff',         // पूरा header background
+                        borderBottom: '1px solid #91d5ff',  // नीचे हल्की border (consistent look)
+                        padding: '12px 16px',               // header padding
+                        borderTopLeftRadius: '8px',
+                        borderTopRightRadius: '8px',
+                      }}
+                      bodyStyle={{
+                        padding: '16px 20px',               // body में थोड़ा बेहतर spacing
+                      }}
+                     
                 >
                     <Spin tip="Please wait..." spinning={loading}>
                         <div style={contentStyle}>

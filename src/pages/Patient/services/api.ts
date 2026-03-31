@@ -12,6 +12,16 @@ export async function requestGetPatientSearch(body: any, options?: { [key: strin
     ...(options || {}),
   });
 }
+export async function requestGetSummaryList(body: any, options?: { [key: string]: any }) {
+  return request<any>('/Reports/AgeWisePatientDisease', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
 
 export async function requestPatientRegistration(body: any, options?: { [key: string]: any }) {
   return request<any>('AddUpdatePatient', {

@@ -215,8 +215,47 @@ const SupplierList = ({ refresh, editRecord }: any) => {
             component={false}
         >
             <Card
-                title="Supplier List"
-                style={{height:480,  boxShadow: '2px 2px 2px #4874dc' }}
+                title={
+                    <div
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        margin: 0,
+                      }}
+                    >
+                      <Typography 
+                      
+                        style={{
+                          margin: 0,
+                          color: '#0050b3',           // dark blue text for good contrast
+                          fontWeight: 600,
+                          fontSize: '18px'
+                        }}
+                      >
+                         Supplier List
+                      </Typography>
+                 
+                    </div>
+                  }
+                  headStyle={{
+                    backgroundColor: '#e6f7ff',         // पूरा header background
+                    borderBottom: '1px solid #91d5ff',  // नीचे हल्की border (consistent look)
+                    padding: '12px 16px',               // header padding
+                    borderTopLeftRadius: '8px',
+                    borderTopRightRadius: '8px',
+                  }}
+                  bodyStyle={{
+                    padding: '16px 20px',               // body में थोड़ा बेहतर spacing
+                  }}
+                  style={{
+                    borderRadius: '8px',
+                    overflow: 'hidden',                 // rounded corners clip न हो
+                    boxShadow: '0 3px 12px rgba(72, 116, 220, 0.18)',  // soft, modern shadow
+                    marginBottom: 24,                   // अगर multiple cards हैं तो नीचे space
+                  }} 
+                 
             >
                 {supplierList &&
                     <Spin tip="Please wait..." spinning={loading}>

@@ -90,7 +90,9 @@ const DoctorPatientDetails = React.forwardRef((props) => {
         {
             key: 'BASIC_INFORMATION',
             label: 'BASIC INFORMATION',
-            children: patientBasicDetails && <BasicDetails patientBasicDetails={patientBasicDetails} patientCaseID={patientCaseID} admNo={admNo} />,
+            children: patientBasicDetails && <BasicDetails 
+            patientDetails={patientDetails}
+            patientBasicDetails={patientBasicDetails} patientCaseID={patientCaseID} admNo={admNo} />,
         }, {
             key: 'GENERAL_INFORMATION',
             label: 'GENERAL INFORMATION',

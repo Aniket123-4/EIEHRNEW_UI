@@ -1,26 +1,30 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, TimePicker, Descriptions, Avatar, QRCode } from 'antd';
-import { PageContainer, EditableProTable } from '@ant-design/pro-components';
+import { Button, Space,Descriptions, Avatar, QRCode, Typography } from 'antd';
 import { history } from '@umijs/max';
-import { requestGetSection, requestGetUserList } from '@/services/apiRequest/dropdowns';
-import type { DatePickerProps, RadioChangeEvent } from 'antd';
 import { DatePicker, Radio } from 'antd';
-import { dateFormat } from '@/utils/constant';
-import { convertDate, convertTime } from '@/utils/helper';
-import dayjs from 'dayjs';
-import DoctorSlotBookingList from './DoctorSlotBookingList';
-import { ColumnsType } from 'antd/es/table';
 import { UserOutlined } from '@ant-design/icons';
 
 const { RangePicker } = DatePicker;
 
 
 
-const BasicDetails = ({ patientBasicDetails = {},admNo }: any) => {
+const BasicDetails = ({ patientBasicDetails = {}, patientDetails, admNo }: any) => {
 
-    console.log(patientBasicDetails);
 
     const result1 = patientBasicDetails?.result1[0];
+    const { result4 } = patientDetails;//disease
+    const { result5 } = patientDetails;//medicines
+    console.log(patientBasicDetails,result4,result5);
+    const qrData = `PatientNo: ${result1.patientNo}
+Candidate Name: ${result1.candName}
+Email: ${result1.email}
+
+Last Prescription: 
+
+Disease Name: ${result4[0].diseaseName}
+
+Medicines: 
+${result5.map((item:any)=>{return(`${item.drugName}  ${item.quantityPerDay}/Day ${item.qtyTimesPerDay}Times/Day\n`)})}`
 
     const basicDetails = [
         {
@@ -95,6 +99,18 @@ const BasicDetails = ({ patientBasicDetails = {},admNo }: any) => {
         // }
     ];
 
+    const downloadQRCode = () => {
+        const canvas = document.getElementById('myqrcode')?.querySelector<HTMLCanvasElement>('canvas');
+        if (canvas) {
+            const url = canvas.toDataURL();
+            const a = document.createElement('a');
+            a.download = 'QRCode.png';
+            a.href = url;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    };
     return (
         <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
             <div style={{
@@ -105,8 +121,10 @@ const BasicDetails = ({ patientBasicDetails = {},admNo }: any) => {
             }}>
                 <Space align="center" size={24}>
                     <Avatar size={164} icon={<UserOutlined />} />
-                    {console.log(result1)}
-                    <QRCode  type="canvas" value={`${result1.patientNo}\n${result1.candName}\n${result1.email}`} />
+                    <div id="myqrcode"><QRCode type="canvas" value={qrData} /></div>
+                    <Button type="primary" onClick={downloadQRCode}>
+                        Download
+                    </Button>
                 </Space>
 
             </div>

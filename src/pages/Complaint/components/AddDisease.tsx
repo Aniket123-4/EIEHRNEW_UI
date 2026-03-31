@@ -27,7 +27,7 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
     const [data, setData] = useState([]);
     const [diseaseID, setDiseaseID] = useState("-1");
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [diseaseDoc, addDiseaseDoc] = useState<any>("");
+    const [diseaseDoc, addDiseaseDoc] = useState<any>({docBase64:""});
 
 
 
@@ -187,9 +187,8 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                                     name="diseaseTypeName"
                                     label="Disease name"
                                     rules={[{ required: true, message: 'Please enter disease name' }]}
-                                // initialValue={institute}
                                 >
-                                    <Input size={'large'} placeholder="Please enter disease type name" />
+                                    <Input placeholder="Please enter disease type name" />
                                 </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={6} xs={24} xl={6}>
@@ -198,7 +197,16 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                                     label="Disease code"
                                     rules={[{ required: true, message: 'Please enter disease code' }]}
                                 >
-                                    <Input size={'large'} placeholder="Please enter disease code" />
+                                    <Input placeholder="Please enter disease code" />
+                                </Form.Item>
+                            </Col>
+                            <Col className="gutter-row" span={6} xs={24} xl={6}>
+                                <Form.Item
+                                    name="diseaseNameHindi"
+                                    label="Disease Name in Hindi"
+                                    rules={[{ required: true, message: 'Please enter diseaseName in hindi' }]}
+                                >
+                                    <Input placeholder="Please enter diseaseName in hindi" />
                                 </Form.Item>
                             </Col>
                             <Col className="gutter-row" span={6} xs={24} xl={6}>
@@ -210,7 +218,6 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                                     <Select
                                         showSearch
                                         filterOption={filterOption}
-                                        size={'large'}
                                         placeholder="Select Disease Type"
                                         options={diseaseType}
                                         dropdownRender={(menu) => (
@@ -228,7 +235,9 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
 
                                 </Form.Item>
                             </Col>
-                            <Col className="gutter-row" span={6} xs={24} xl={6}>
+                        </Row>
+                        <Row>
+                        <Col className="gutter-row" span={6} xs={24} xl={6}>
                                 <Form.Item
                                     name="diseasesImage"
                                     label="Select Image"
@@ -241,26 +250,26 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
                                     </Upload>
                                 </Form.Item>
                             </Col>
-
-                        </Row>
                         <Col className="gutter-row" span={6} xs={24} xl={6}>
                             <Form.Item
+                                label=" "
                                 name="isActive"
                                 valuePropName="checked"
                                 //initialValue={true}
                                 // rules={[{ required: false, message: 'Please select isActive' }]}
-                                label=""
                                 rules={[{ required: false, message: 'Please select' }]}
                             >
                                 <Checkbox>isActive</Checkbox>
                             </Form.Item>
                         </Col>
+                        
+                            </Row> 
                         <Col style={{ justifyContent: 'flex-end' }}>
-                            <Button style={{ padding: 5, width: 100, height: 40 }} type="primary" htmlType="submit">
+                            <Button  type="primary" htmlType="submit">
                                 Submit
                             </Button>
                             <Button onClick={goBack}
-                                style={{ marginLeft: 10, padding: 5, width: 100, height: 40 }} type="default" >
+                                style={{ marginLeft: 10}} type="default" >
                                 Cancel
                             </Button>
                         </Col>
@@ -321,8 +330,47 @@ const AddDisease = ({ visible, onClose, onSaveSuccess, selectedRows, instituteId
             style={{}}>
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
                 <Card
-                    style={{ height: '100%', boxShadow: '2px 2px 2px #4874dc' }}
-                    title="Create a new disease master"
+                   
+                    title={
+                        <div
+                          style={{
+                            width: '100%',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            margin: 0,
+                          }}
+                        >
+                          <Typography 
+                          
+                            style={{
+                              margin: 0,
+                              color: '#0050b3',           // dark blue text for good contrast
+                              fontWeight: 600,
+                              fontSize: '18px'
+                            }}
+                          >
+                            Create a new disease master
+                          </Typography>
+                     
+                        </div>
+                      }
+                      headStyle={{
+                        backgroundColor: '#e6f7ff',         // पूरा header background
+                        borderBottom: '1px solid #91d5ff',  // नीचे हल्की border (consistent look)
+                        padding: '12px 16px',               // header padding
+                        borderTopLeftRadius: '8px',
+                        borderTopRightRadius: '8px',
+                      }}
+                      bodyStyle={{
+                        padding: '16px 20px',               // body में थोड़ा बेहतर spacing
+                      }}
+                      style={{
+                        borderRadius: '8px',
+                        overflow: 'hidden',                 // rounded corners clip न हो
+                        boxShadow: '0 3px 12px rgba(72, 116, 220, 0.18)',  // soft, modern shadow
+                        marginBottom: 24,                   // अगर multiple cards हैं तो नीचे space
+                      }}  
                 // extra={[
                 //     <Button key="rest" onClick={() => {
                 //         history.push("/complaints/DiseaseList")

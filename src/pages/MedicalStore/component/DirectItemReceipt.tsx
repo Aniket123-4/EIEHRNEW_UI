@@ -625,10 +625,10 @@ const DirectItemReceipt = ({
                 <Row gutter={8}>
                     <Col span={13} xs={24} xl={11}>
                         <Card
-                            headStyle={{ backgroundColor: '#004080', border: 0 }}
-                            style={{  boxShadow: "2px 2px 2px #4874dc" }}
+                            headStyle={{ backgroundColor: '#e6f7ff', border: 0 }}
+                            style={{  boxShadow: "2px 2px 2px #0050b3" }}
                             title={<Space direction='horizontal'  style={{ alignItems: 'space-between' }}>
-                            <Typography style={{color:'white',fontSize:18}}>Direct Item Receipt</Typography>
+                            <Typography style={{color: '#0050b3',fontWeight: 600,fontSize:18}}>Direct Item Receipt</Typography>
                         </Space>}
                         >
                             <Spin tip="Please wait..." spinning={loading || loadingEdit}>

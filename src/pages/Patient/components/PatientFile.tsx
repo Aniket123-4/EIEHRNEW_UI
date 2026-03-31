@@ -89,7 +89,7 @@ const PatientFile = React.forwardRef((props) => {
             {
                 key: '1',
                 label: 'Patient No',
-                children: result1?.patientNo
+                children: result1?.patientNo,
             },
             {
                 key: '2',
@@ -286,7 +286,7 @@ const PatientFile = React.forwardRef((props) => {
     const addPatientDoc = async (values: any) => {
         var re = /(?:\.([^.]+))?$/;
         console.log(values, patientData, lstType_PatientDoc)
-        const lstType_PatientDoc1 = uniqueNames(lstType_PatientDoc, it => it.docName)
+        const lstType_PatientDoc1 = uniqueNames(lstType_PatientDoc, (it:any) => it.docName)
         const paramsOfDoc = {
             "patientID": patientData?.patientID,
             "patientCaseID": patientData?.patientCaseID,
@@ -341,7 +341,8 @@ const PatientFile = React.forwardRef((props) => {
                     const a = document.createElement('a');
                     a.style.display = 'none';
                     a.href = url;
-                    a.download = prompt("Enter filename and extension (e.g. myImage.jpg):", window.location.href.split('\/').pop() === "" ? window.location.hostname + ".html" : item.docName);
+                    a.download = prompt("Enter filename and extension (e.g. myImage.docx)") || 'default-filename.docx';
+                    // a.download = prompt("Enter filename and extension (e.g. myImage.jpg):", window.location.href.split('\/').pop() === "" ? window.location.hostname + ".html" : item.docName);
                     document.body.appendChild(a);
                     if (a.download !== "null") {
                         a.click();
@@ -366,7 +367,8 @@ const PatientFile = React.forwardRef((props) => {
                     const a = document.createElement('a');
                     a.style.display = 'none';
                     a.href = url;
-                    a.download = prompt("Enter filename and extension (e.g. myImage.jpg):", window.location.href.split('\/').pop() === "" ? window.location.hostname + ".html" : item.docName + ".zip");
+                   a.download = prompt("Enter filename and extension (e.g. myImage.docx)") || 'default-filename.docx';
+                    // a.download = prompt("Enter filename and extension (e.g. myImage.jpg):", window.location.href.split('\/').pop() === "" ? window.location.hostname + ".html" : item.docName + ".zip");
                     document.body.appendChild(a);
                     if (a.download !== "null") {
                         a.click();
@@ -381,188 +383,232 @@ const PatientFile = React.forwardRef((props) => {
         }
     }
 
-    return (
-        <Card>
-            {/* <Form
-                onFinish={onFinishPatForm}
-                form={form}
-                layout="vertical"
-            >
-                <Space>
-                    <Form.Item name="patientNo" label="Patient No" rules={[{ required: true }]}>
-                        <Input maxLength={20} />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button style={{ marginTop: 28 }} type="primary" htmlType="submit">
-                            Submit
-                        </Button>
-                    </Form.Item>
-                    <Form.Item name="case" label="Case No" rules={[{ required: false }]}>
-                        <Select
-                            style={{ width: 200 }}
-                            onChange={handleChangeCase}
-                            options={caseChoice}
-                            placeholder="Select"
-                        />
-                    </Form.Item>
-                </Space>
-            </Form > */}
-            <PatientDetailsCommon
-                patData={patientData}
-                onChange={(value: any) => setPatientData(value)} />
-            <>
-                {patientData &&
-                    <div>
-                        {/* <Row style={{ backgroundColor: 'lightgreen', padding: 5 }}>
-                            <Col span={5}>Name</Col>
-                            <Col span={5}>Date of Birth</Col>
-                            <Col span={4}>Blood Group</Col>
-                            <Col span={5}>Mobile No</Col>
-                            <Col span={5}>Phone No</Col>
-                        </Row>
-                        <Row style={{ padding: 5 }}>
-                            <Col span={5}>{patientData.candName}</Col>
-                            <Col span={5}>{patientData.dob}</Col>
-                            <Col span={4}>{patientData.bloodGroup}</Col>
-                            <Col span={5}>{patientData.curMobileNo}</Col>
-                            <Col span={5}>{patientData.curPhoneNo}</Col>
-                        </Row>
-                        <Row style={{ backgroundColor: 'lightgreen', padding: 5 }}>
-                            <Col span={5}>EmergencyContact</Col>
-                            <Col span={5}>Date of Birth</Col>
-                            <Col span={14}>Address</Col>
-                        </Row>
-                        <Row style={{ padding: 5 }}>
-                            <Col span={5}>{patientData.emerGencyName}</Col>
-                            <Col span={5}>{patientData.dob}</Col>
-                            <Col span={14}>{patientData.curAddress}</Col>
-                        </Row> */}
-                        <Spin spinning={loading}>
-                            <Card>
-                                <Row>
-                                    <Col span={12} xs={24} xl={6}>
-                                        <Card
-                                            title={
-                                                <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                                                    <Typography>
-                                                        {'New Upload'}
-                                                    </Typography>
-                                                </Row>
-                                            }>
+return (
+    <Card
+        style={{
+            borderRadius: 12,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+        }}
+        bodyStyle={{ padding: 16 }}
+    >
+        <PatientDetailsCommon
+            patData={patientData}
+            onChange={(value: any) => setPatientData(value)}
+        />
 
-                                            <Form
-                                                layout={'horizontal'}
-                                                form={addDocform}
-                                                onFinish={async (values) => {
-                                                    addPatientDoc(values)
-                                                }}>
-                                                <Form.Item
-                                                    name="docGroupID"
-                                                    label="Document Group" rules={[{ required: true, message: "Please Select Document Group" }]}>
-                                                    <Select
-                                                        defaultValue={"-1"}
-                                                        onSelect={() => addDocform.setFieldValue('docTypeID', "")}
-                                                        style={{ width: 200 }}
-                                                        onChange={handleChangeDocGroup}
-                                                        options={groupList}
-                                                        placeholder="Select"
-                                                    />
-                                                </Form.Item>
-                                                <Form.Item
-                                                    name="docTypeID"
-                                                    label="Document Type" rules={[{ required: true, message: "Please Select Document Type" }]}>
-                                                    <Select
-                                                        // value={docType}
-                                                        defaultValue={"-1"}
-                                                        style={{ width: 200 }}
-                                                        onChange={handleChangeDocType}
-                                                        options={invParameter}
-                                                        placeholder="Select"
-                                                    />
-                                                </Form.Item>
-                                                <Row>
-                                                    <Form.Item
-                                                        name="docBase64"
-                                                        getValueFromEvent={(v) => getBase64(v.file.originFileObj as RcFile, (url) => {
-                                                            addDocform.setFieldsValue({ docBase64: url })
-                                                            setDocName(v.file.name)
-                                                            //if (v.file.status === "done")
-                                                            updateDocList(v, url)
-                                                        })}
-                                                        label=""
-                                                        rules={[{ required: true, message: 'Please Attach Document' }]}
-                                                    >
-                                                        <Upload
-                                                            maxCount={10}
-                                                        >
-                                                            <Button icon={<FileAddOutlined />}>Attach</Button>
-                                                        </Upload>
-                                                    </Form.Item>
-                                                </Row>
-                                                <Button type='primary' htmlType='submit'>Submit</Button>
+        {patientData && (
+            <Spin spinning={loading}>
+                <div style={{ marginTop: 12 }}>
 
-                                            </Form>
-                                        </Card>
-                                    </Col>
-                                    <Col span={12}>
-                                        <Card
-                                            style={{
-                                                height: 400,
-                                                overflow: 'auto',
-                                                padding: '0 16px',
-                                                border: '1px solid rgba(140, 140, 140, 0.35)',
-                                            }}
-                                            title={<><Space>
-                                                <Typography>Uploaded Documents</Typography>
-                                                <Button onClick={() => getPatientDoc(2)}><DownloadOutlined /></Button>
-                                            </Space></>}>
-                                            {docList && <List
-                                                dataSource={docList}
-                                                renderItem={(item: any) => (
-                                                    <Card style={{ boxShadow: '2px 2px 2px #4874dc', marginTop: 8 }} key={item.docID}>
-                                                        <Row style={{ alignItems: 'center', justifyContent: 'space-between' }}>
-                                                            <Row>
-                                                                <Image
-                                                                    onClick={() => previewDoc(item)}
-                                                                    preview={{
-                                                                        imageRender: () => (
-                                                                            <Image
-                                                                                width="50%"
-                                                                                src={imageUrl}
-                                                                                preview={false}
-                                                                            />
-                                                                        )
-                                                                    }}
-                                                                    width={40}
-                                                                    height={40}
-                                                                    style={{ borderRadius: 10 }}
-                                                                    src={item.docExt == "pdf" ? "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/391px-PDF_file_icon.svg.png"
-                                                                        : item.docExt == "png" || item.docExt == "jpg" ? "https://img.freepik.com/free-photo/yellow-flower-green-background_1340-31703.jpg?t=st=1703678882~exp=1703682482~hmac=db2ea321b3844d6f0b22893020850a836e62bc82f64fc2dba66c956d77360baa&w=360"
-                                                                            : "noImage"
-                                                                    }
-                                                                />
-                                                                <Typography style={{ marginLeft: 10 }}>{item.docName}</Typography>
-                                                            </Row>
-                                                            <Button onClick={() => downloadDoc(item)}>Download</Button>
-                                                        </Row>
-                                                    </Card>
-                                                )}
-                                            />}
-                                        </Card>
-                                    </Col>
-                                </Row>
-                            </Card>
-                        </Spin>
-                    </div>
-                    // <Descriptions
-                    //     bordered
-                    //     size={'small'}
-                    //     items={patientData?.patentBasicDetails}
-                    // />
-                }
-            </>
-        </Card>
-    );
+                    {/* ================= UPLOAD SECTION ================= */}
+                    <Card
+                        title={
+                            <span style={{ color: "#000", fontWeight: 600 }}>
+                                📂 Upload New Document
+                            </span>
+                        }
+                        style={{
+                            borderRadius: 8,
+                            marginBottom: 20,
+                            borderBottom: "4px solid",
+                            borderImage:
+                                "linear-gradient(to right, #1677ff, #69c0ff) 1",
+                        }}
+                        headStyle={{
+                            background: "#e6f4ff",
+                            padding: "8px 16px",
+                        }}
+                        bodyStyle={{
+                            background: "#f9fbfd",
+                            padding: "12px 16px",
+                        }}
+                    >
+                        <Form
+                            layout="vertical"
+                            form={addDocform}
+                            onFinish={(values) => addPatientDoc(values)}
+                        >
+                            <Row gutter={12} align="bottom">
+
+                                <Col flex="1">
+                                    <Form.Item
+                                        name="docGroupID"
+                                        label="Document Group"
+                                        style={{ marginBottom: 8 }}
+                                        rules={[{ required: true }]}
+                                    >
+                                        <Select
+                                            size="middle"
+                                            placeholder="Select Group"
+                                            options={groupList}
+                                            onSelect={() =>
+                                                addDocform.setFieldValue(
+                                                    "docTypeID",
+                                                    ""
+                                                )
+                                            }
+                                            onChange={handleChangeDocGroup}
+                                        />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col flex="1">
+                                    <Form.Item
+                                        name="docTypeID"
+                                        label="Document Type"
+                                        style={{ marginBottom: 8 }}
+                                        rules={[{ required: true }]}
+                                    >
+                                        <Select
+                                            size="middle"
+                                            placeholder="Select Type"
+                                            options={invParameter}
+                                            onChange={handleChangeDocType}
+                                        />
+                                    </Form.Item>
+                                </Col>
+
+                                <Col flex="1">
+                                    <Form.Item
+                                        name="docBase64"
+                                        label="Attach Document"
+                                        style={{ marginBottom: 8 }}
+                                        getValueFromEvent={(v) =>
+                                            getBase64(
+                                                v.file.originFileObj as RcFile,
+                                                (url) => {
+                                                    addDocform.setFieldsValue({
+                                                        docBase64: url,
+                                                    });
+                                                    setDocName(v.file.name);
+                                                    updateDocList(v, url);
+                                                }
+                                            )
+                                        }
+                                        rules={[{ required: true }]}
+                                    >
+                                        <Upload
+                                            maxCount={10}
+                                            showUploadList={false}
+                                        >
+                                            <Button icon={<FileAddOutlined />}>
+                                                Upload
+                                            </Button>
+                                        </Upload>
+                                    </Form.Item>
+                                </Col>
+
+                                <Col>
+                                    <Button
+                                        type="primary"
+                                        htmlType="submit"
+                                        style={{ marginBottom: 8 }}
+                                    >
+                                        Submit
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </Form>
+                    </Card>
+
+                    {/* ================= DOCUMENT LIST SECTION ================= */}
+                    <Card
+                        title={
+                            <Row
+                                justify="space-between"
+                                align="middle"
+                                style={{ width: "100%" }}
+                            >
+                                <span
+                                    style={{
+                                        color: "#000",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    📑 Uploaded Documents
+                                </span>
+
+                                <Button
+                                    size="small"
+                                    type="primary"
+                                    icon={<DownloadOutlined />}
+                                    onClick={() => getPatientDoc(2)}
+                                >
+                                    Download All
+                                </Button>
+                            </Row>
+                        }
+                        style={{
+                            borderRadius: 8,
+                            borderBottom: "4px solid",
+                            borderImage:
+                                "linear-gradient(to right, #52c41a, #b7eb8f) 1",
+                        }}
+                        headStyle={{
+                            background: "#e6f4ff",
+                            padding: "8px 16px",
+                        }}
+                        bodyStyle={{
+                            padding: 12,
+                            maxHeight: 350,
+                            overflowY: "auto",
+                        }}
+                    >
+                        {docList && (
+                            <List
+                                size="small"
+                                dataSource={docList}
+                                renderItem={(item: any) => (
+                                    <List.Item
+                                        style={{
+                                            padding: "8px 4px",
+                                        }}
+                                    >
+                                        <Row
+                                            justify="space-between"
+                                            align="middle"
+                                            style={{ width: "100%" }}
+                                        >
+                                            <Space size={8}>
+                                                <Image
+                                                    width={32}
+                                                    height={32}
+                                                    preview={false}
+                                                    src={
+                                                        item.docExt === "pdf"
+                                                            ? "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/391px-PDF_file_icon.svg.png"
+                                                            : "https://cdn-icons-png.flaticon.com/512/337/337946.png"
+                                                    }
+                                                    onClick={() =>
+                                                        previewDoc(item)
+                                                    }
+                                                />
+                                                <Typography.Text>
+                                                    {item.docName}
+                                                </Typography.Text>
+                                            </Space>
+
+                                            <Button
+                                                size="small"
+                                                icon={<DownloadOutlined />}
+                                                onClick={() =>
+                                                    downloadDoc(item)
+                                                }
+                                            >
+                                                Download
+                                            </Button>
+                                        </Row>
+                                    </List.Item>
+                                )}
+                            />
+                        )}
+                    </Card>
+                </div>
+            </Spin>
+        )}
+    </Card>
+);
+
 });
 
 export default PatientFile;

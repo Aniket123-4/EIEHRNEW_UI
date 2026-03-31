@@ -319,63 +319,50 @@ const PatientCheckOut = React.forwardRef((props) => {
             </Row>}
             style={{ boxShadow: '2px 2px 2px #4874dc'}}
             extra={
-                [<Row//align={'top'}
+                <Form
+                    layout="vertical"
+                    form={form}
+                    onFinish={(value) => searchPatient(value, mainType)}
+                    initialValues={{ type: "1" }}
+                    style={{ marginBottom: 0 }}
                 >
-                    <Form
-                        layout='vertical'
-                        onFinish={(value) => searchPatient(value, mainType)}
-                        form={form}
-                        initialValues={{
-                            type: "1",
-                        }}>
-                        <Row>
-                            <Col xs={24} xl={4}>
-                            <Form.Item
-                                // style={{ paddingTop: 25 }}
-                                name={"fromToDate"}
-                                label="Date From/To">
-                                <DatePicker.RangePicker
-                                    format={dateFormat}
-                                    //style={{ width: "100%" }}
-                                />
+                    <Row gutter={[8, 8]} align="bottom">
+                        <Col xs={24} sm={12} md={8} lg={6} xl={5}>
+                            <Form.Item name="fromToDate" label="Date From/To">
+                                <DatePicker.RangePicker format={dateFormat} style={{ width: '100%' }} />
                             </Form.Item>
-                            </Col>
-                            <Col xs={24} xl={4}>
-                            <Form.Item
-                                // style={{ paddingTop: 25 }}
-                                name={"type"}
-                                label="Search by:">
-                                <Select
-                                    //style={{ width: 160 }}
-                                    // onChange={handleCheckType}
-                                    options={[{ value: "1", label: "PATIENT NO" }, { value: "2", label: "PATIENT CASE NO" }, { value: "3", label: "PATIENT NAME" }]}
-                                    placeholder="Select"
-                                />
+                        </Col>
+                        <Col xs={24} sm={12} md={8} lg={5} xl={4}>
+                            <Form.Item name="type" label="Search by:">
+                                <Select placeholder="Select" style={{ width: '100%' }}>
+                                    <Option value="1">PATIENT NO</Option>
+                                    <Option value="2">PATIENT CASE NO</Option>
+                                    <Option value="3">PATIENT NAME</Option>
+                                </Select>
                             </Form.Item>
-                            </Col>
-                            <Col xs={24} xl={4}>
-                            <Form.Item
-                                style={{ paddingTop: 30 }}
-                                name={"searchBy"}
-                                label=""
-                                rules={[{ required: false, message: 'Please Enter Some Text' }]}>
-                                <Input allowClear placeholder="Input Search Text"/>
+                        </Col>
+                        <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+                            <Form.Item name="searchBy" label=" ">
+                                <Input allowClear placeholder="Input Search Text" />
                             </Form.Item>
-                            </Col>
-                            
-                            <Button htmlType='submit' type='primary'>Search</Button>
-                            <Button onClick={()=>{form.resetFields(); getList()}} type='primary' icon={<CloseOutlined />}/>
-                            
-                        </Row>
-                    </Form>
-                </Row>
-                ]
+                        </Col>
+                        <Col xs={24} sm={12} md={8} lg={4} xl={3}>
+                            <Form.Item label=" ">
+                                <Button htmlType="submit" type="primary" block>Search</Button>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={12} md={8} lg={3} xl={2}>
+                            <Form.Item label=" ">
+                                <Button onClick={() => { form.resetFields(); getList(); }} icon={<CloseOutlined />} block />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                </Form>
             }
         >
             <Spin tip="Please wait..." spinning={loading} style={contentStyle}>
                 {model()}
                 <Table pagination={{ pageSize: 6 }} size='small' columns={columns} dataSource={list} scroll={{ y: 257 }}/>
-
             </Spin>
         </Card>
         // </PageContainer>

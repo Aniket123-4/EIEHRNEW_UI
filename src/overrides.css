@@ -1,0 +1,308 @@
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+}
+
+.colorWeak {
+  filter: invert(80%);
+}
+
+.ant-layout {
+  min-height: 100vh;
+}
+.ant-pro-sider.ant-layout-sider.ant-pro-sider-fixed {
+  left: unset;
+}
+
+canvas {
+  display: block;
+}
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+@media (max-width: 768px) {
+  .ant-table {
+    width: 100%;
+    overflow-x: auto;
+    &-thead > tr,
+    &-tbody > tr {
+      > th,
+      > td {
+        white-space: pre;
+        > span {
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+body .ant-form-item-label > label {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: #1f2937;          /* darker gray for better contrast */
+}
+
+body .ant-input,
+body .ant-picker,
+
+
+
+
+/* Cards & Collapse - cleaner look */
+body .ant-card {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+body .ant-card-head {
+  background-color: #004080;
+  border-bottom: none;
+}
+
+body .ant-card-head-title {
+  color: white;
+  font-size: 18px;
+}
+
+/* Collapse headers (for More, Permanent Address, Family sections) */
+body .ant-collapse-header {
+  background: #004080 !important;
+  color: white !important;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 8px 8px 0 0;
+}
+
+body .ant-collapse-content-box {
+  padding: 20px !important;
+}
+
+/* Optional: increase spacing in forms */
+body .ant-row {
+  margin-bottom: 16px;     /* more breathing room between rows */
+}
+
+/* ===== Force Bluish Gradient Header (Ant Design ProLayout) ===== */
+.ant-pro-layout .ant-pro-layout-header,
+.ant-pro-layout-header.ant-layout-header {
+  background: linear-gradient(135deg, #e6f0ff 0%, #f0f9ff 50%, #ffffff 100%) !important;
+  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.15) !important;
+  border-bottom: 1px solid #dbeafe !important;
+}
+
+/* Header inner content */
+.ant-pro-layout-header .ant-pro-layout-header-content {
+  background: transparent !important;
+}
+
+/* Right actions hover */
+.ant-pro-layout-header .umi-plugin-layout-right .umi-plugin-layout-action:hover {
+  background: rgba(37, 99, 235, 0.12) !important;
+}
+
+/* Bottom accent line */
+.ant-pro-layout-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, #2563eb, #22c55e);
+}
+
+/* ===== Sidebar Open Menu Gradient ===== */
+
+/* Open parent menu background */
+.ant-menu-submenu-open > .ant-menu-submenu-title {
+  background: linear-gradient(135deg, #e0ecff 0%, #f0f7ff 100%) !important;
+  border-radius: 8px;
+}
+
+/* Active menu item (selected child) */
+.ant-menu-item-selected {
+  background: linear-gradient(135deg, #2563eb 0%, #22c55e 100%) !important;
+  color: #fff !important;
+  border-radius: 8px;
+}
+
+/* Active child text color */
+.ant-menu-item-selected a,
+.ant-menu-item-selected span {
+  color: #fff !important;
+}
+
+/* Hover effect */
+.ant-menu-item:hover,
+.ant-menu-submenu-title:hover {
+  background: rgba(37, 99, 235, 0.08) !important;
+  border-radius: 8px;
+}
+/* Child arrow icon styling */
+.ant-menu-item .anticon-right {
+  color: #2563eb;
+  font-size: 12px;
+}
+/* Parent open background */
+.ant-menu-submenu-open > .ant-menu-submenu-title {
+  background: linear-gradient(135deg, #e0ecff 0%, #f0f7ff 100%) !important;
+  border-radius: 10px;
+  margin: 4px 8px;
+}
+
+/* Child selected background */
+.ant-menu-item-selected {
+  background: linear-gradient(135deg, #2563eb 0%, #22c55e 100%) !important;
+  color: #fff !important;
+  border-radius: 10px;
+  margin: 4px 12px;
+}
+
+/* Child hover */
+.ant-menu-item:hover {
+  background: rgba(37, 99, 235, 0.08) !important;
+  border-radius: 10px;
+}
+
+/* Text color white on active */
+.ant-menu-item-selected span,
+.ant-menu-item-selected a {
+  color: #fff !important;
+}
+.ant-menu-item::before,
+.ant-menu-submenu-title::before {
+  display: none !important;
+}
+
+/* ===== FIX AntD Pro Sidebar Blur / Overlay ===== */
+
+/* Remove default overlay effect */
+.ant-menu-item::before,
+.ant-menu-submenu-title::before {
+  display: none !important;
+}
+
+/* Parent open (submenu title) - dark bluish gradient */
+.ant-menu-submenu-open > .ant-menu-submenu-title {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%) !important;
+  color: #fff !important;
+  border-radius: 10px;
+  margin: 4px 8px;
+}
+
+/* Parent hover - dark hover (no blur) */
+.ant-menu-submenu-title:hover {
+  background: rgba(30, 58, 138, 0.15) !important;
+  border-radius: 10px;
+}
+
+/* Child selected - strong dark gradient */
+.ant-menu-item-selected {
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 60%, #22c55e 100%) !important;
+  color: #fff !important;
+  border-radius: 10px;
+  margin: 4px 12px;
+}
+
+/* Child hover - darker hover (no blur) */
+.ant-menu-item:hover {
+  background: rgba(37, 99, 235, 0.15) !important;
+  border-radius: 10px;
+}
+
+/* Text white on active */
+.ant-menu-item-selected span,
+.ant-menu-item-selected a,
+.ant-menu-submenu-open > .ant-menu-submenu-title span {
+  color: #fff !important;
+}
+
+/* Arrow icon color */
+.ant-menu-item .anticon-right {
+  color: #bfdbfe !important;
+}
+
+/* Remove AntD selected indicator bar */
+.ant-menu-item-selected::after {
+  display: none !important;
+}
+
+/* Recommended - light blue theme like your card header */
+.ant-table-thead > tr > th {
+  background-color: #e6f7ff !important;     /* very light blue */
+  color: #0050b3 !important;                /* dark blue text */
+  font-weight: 600 !important;
+  border-bottom: 1px solid #91d5ff !important;
+}
+
+/* Optional: hover effect on header cells */
+.ant-table-thead > tr > th:hover {
+  background-color: #d9ecff !important;
+}
+
+/* If you want slightly darker header */
+.ant-table-thead > tr > th {
+  background: linear-gradient(180deg, #e6f7ff 0%, #bae7ff 100%) !important;
+}
+ant-menu {
+  /* पूरा menu bar */
+}
+
+.ant-menu-item {
+  /* normal menu item */
+}
+
+.ant-menu-submenu-title {
+  /* submenu का title (arrow वाला हिस्सा) */
+  font-weight: bold;
+  color: black;
+}
+
+.ant-menu-submenu .ant-menu {
+  /* submenu के अंदर का menu */
+   font-weight: bold;
+   color: black;
+}
+
+.ant-menu-item-selected,
+.ant-menu-submenu-selected {
+  /* selected item/submenu */
+  background-color: #e6f7ff !important;
+  color: #1890ff !important;
+   font-weight: bold;
+}
+
+/* dark theme में override करना हो तो */
+.ant-menu-dark .ant-menu-item-selected {
+  background: #111d2c;
+}
+
+/* बहुत specific change चाहिए तो */
+.ant-menu-horizontal .ant-menu-item:hover,
+.ant-menu-horizontal .ant-menu-submenu:hover .ant-menu-submenu-title {
+  color: #ff4d4f;
+}

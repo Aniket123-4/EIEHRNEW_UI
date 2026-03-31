@@ -434,7 +434,23 @@ const AddDiseaseLink = () => {
         return (
             <Row>
                 <Card
-                    title="Medicine"
+                    title={<Typography   style={{
+                                                  margin: 0,
+                                                  color: '#0050b3',           // dark blue text for good contrast
+                                                  fontWeight: 600,
+                                                  fontSize: '18px'
+                                                }}
+                                              >
+                                              Medicine
+                                              </Typography>
+                                              } 
+                                              headStyle={{
+                        backgroundColor: '#e6f7ff',         // पूरा header background
+                        borderBottom: '1px solid #91d5ff',  // नीचे हल्की border (consistent look)
+                        padding: '12px 16px',               // header padding
+                        borderTopLeftRadius: '8px',
+                        borderTopRightRadius: '8px',
+                      }} 
                     style={{ width: '70%', boxShadow: '2px 2px 2px #4874dc' }}
                     extra={[]}
                 >
@@ -468,7 +484,23 @@ const AddDiseaseLink = () => {
                 </Card>
 
                 <Card
-                    title="Test Parameter"
+                    title={<Typography   style={{
+                                                  margin: 0,
+                                                  color: '#0050b3',           // dark blue text for good contrast
+                                                  fontWeight: 600,
+                                                  fontSize: '18px'
+                                                }}
+                                              >
+                                              Test Parameter
+                                              </Typography>
+                                              } 
+                                              headStyle={{
+                        backgroundColor: '#e6f7ff',         // पूरा header background
+                        borderBottom: '1px solid #91d5ff',  // नीचे हल्की border (consistent look)
+                        padding: '12px 16px',               // header padding
+                        borderTopLeftRadius: '8px',
+                        borderTopRightRadius: '8px',
+                      }}
                     style={{ width: '30%', boxShadow: '2px 2px 2px #4874dc' }}
                 >
                     <Col style={{ height: 500, overflow: 'auto' }}>

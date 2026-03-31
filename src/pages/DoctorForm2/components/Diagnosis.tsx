@@ -210,7 +210,7 @@ const Diagnosis = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
         const res = await requestDiseaseList(params);
         if (res.result.length > 0) {
             const dataMaskForDropdown = res?.result?.map((item: any, index: string) => {
-                return { value: item.diseaseID, label: item.diseaseName, title: item.diseasesImage }
+                return { value: item.diseaseID, label:`${item.diseaseName}[${item.diseaseNameHindi}]`, title: item.diseasesImage }
             })
             setDiseaseList(dataMaskForDropdown)
             // getDiseaseLinkedList(dataMaskForDropdown[0].value)
@@ -323,6 +323,7 @@ const Diagnosis = ({ patientDetails = {}, patientCaseID, onSaveSuccess, admNo }:
                     <Col span={12}>
                         <Form.Item name="DiseasesID" label="Disease" rules={[{ required: true }]}>
                             <Select
+                                dropdownStyle={{width:1000}}
                                 showSearch
                                 options={diseaseList}
                                 placeholder="Select"

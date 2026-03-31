@@ -248,17 +248,17 @@ const DoctorPatientStatus = React.forwardRef(() => {
         <>
             <div style={borderStyle}>
                 {model()}
-                <Typography
-                    style={labelStyle}>Filters</Typography>
+                <Typography style={labelStyle}>Filters</Typography>
                 <Form
                     layout='vertical'
                     onFinish={getDoctorPatientList}>
-                    <Row style={{ alignItems: 'end' }}>
+                        <Row gutter={16} style={{ alignItems: 'end' }}>
+                                    <Col span={6}>
                     
                         <Form.Item name="fromDate" label="From Date" 
                         rules={[{ required: true, message: "Please Select Date" }]}>
                             <DatePicker
-                                style={{ width: '100%' }}
+                                style={{ width: '100%', padding: '6px 5px !important' }}
                                 format={'DD MMM YYYY'}
                                 disabledDate={(current) => {
                                     return current && current >= dayjs();
@@ -266,14 +266,14 @@ const DoctorPatientStatus = React.forwardRef(() => {
                                 getPopupContainer={(trigger) => trigger.parentElement!}
                             />
                         </Form.Item>
-                    
+                    </Col>
                        <Col xs={24} xl={6}>
                         <Form.Item name="doctorID" label="Doctor"
                         initialValue={"-1"}
                             rules={[{ required: true, message: "Please Select Doctor" }]}>
                             <Select
                                 showSearch
-                                //style={{ width: 200 }}
+                                style={{ width: '100%'}}
                                 placeholder="Select"
                                 filterOption={filterOption}
                                 notFoundContent={null}

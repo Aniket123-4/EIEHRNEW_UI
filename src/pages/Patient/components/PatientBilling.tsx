@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { PageContainer, ProDescriptions } from '@ant-design/pro-components';
 import { Card, theme, Image, Divider, Space, Avatar, Typography, Row, Col, Table, Button, Tabs, Select, Modal, message, Input, Popconfirm, Form } from 'antd';
-import PatientDetailsCommon from './PatientDetailsCommon';
+import PatientDetailsCommon_BILLING from './PatientDetailsCommon_BILLING';
 import { requestAddPatientBill, requestGetPatientBill, requestGetPatientBillNo, requestGetPatientBillReport } from '../services/api';
 import { ColumnsType } from 'antd/es/table';
 import { PlayCircleFilled, PrinterOutlined } from '@ant-design/icons';
@@ -656,15 +656,19 @@ const PatientBilling: React.FC = () => {
                 direction="vertical"
                 style={{ display: 'flex' }}
             >
-                <PatientDetailsCommon
+                <PatientDetailsCommon_BILLING
                     patData={patientData}
                     onChange={onChangePatientData}
                 />
-                <Card title="Billing Details"
-                >
-                    <Tabs defaultActiveKey="1" items={tabItems} />
-
-                </Card>
+<Card title={<Typography.Text style={{ color: '#0050b3',  fontWeight: 600, fontSize: '18px' }}>Billing Details</Typography.Text>}headStyle={{
+                                    backgroundColor: '#e6f7ff',         // पूरा header background
+                                    borderBottom: '1px solid #91d5ff',  // नीचे हल्की border (consistent look)
+                                    padding: '12px 16px',               // header padding
+                                    borderTopLeftRadius: '8px',
+                                    borderTopRightRadius: '8px',
+                                  }}>
+    <Tabs defaultActiveKey="1" items={tabItems} />
+</Card>
             </Space>
 
         </PageContainer>

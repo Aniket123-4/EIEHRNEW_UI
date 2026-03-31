@@ -126,6 +126,7 @@ const HospitalBillingDetail = ({ }: any) => {
                 open={isModalOpen}
                 onCancel={handleCancel}
                 footer={[]}
+               
             >
                 <Table size='small' columns={modalColumns} dataSource={modalData?.lstPayBIllCompResp} pagination={false} />
             </Modal>

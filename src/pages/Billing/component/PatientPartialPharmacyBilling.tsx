@@ -302,7 +302,41 @@ const PatientPartialPharmacyBilling = ({ visible, onClose, onSaveSuccess, select
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
                 <Card
                     style={{ height: '100%', boxShadow: '2px 2px 2px #4874dc' }}
-                    title="Partial Pay Amt"
+                    title={
+                                                                        <div
+                                                                          style={{
+                                                                            width: '100%',
+                                                                            display: 'flex',
+                                                                            justifyContent: 'space-between',
+                                                                            alignItems: 'center',
+                                                                            margin: 0,
+                                                                          }}
+                                                                        >
+                                                                          <Typography 
+                                                                          
+                                                                            style={{
+                                                                              margin: 0,
+                                                                              color: '#0050b3',           // dark blue text for good contrast
+                                                                              fontWeight: 600,
+                                                                              fontSize: '18px'
+                                                                            }}
+                                                                          >
+                                                                         Partial Pay Amt
+                                                                          </Typography>
+                                                                     
+                                                                        </div>
+                                                                      }
+                                                                      headStyle={{
+                                                                        backgroundColor: '#e6f7ff',         // पूरा header background
+                                                                        borderBottom: '1px solid #91d5ff',  // नीचे हल्की border (consistent look)
+                                                                        padding: '12px 16px',               // header padding
+                                                                        borderTopLeftRadius: '8px',
+                                                                        borderTopRightRadius: '8px',
+                                                                      }}
+                                                                      bodyStyle={{
+                                                                        padding: '16px 20px',               // body में थोड़ा बेहतर spacing
+                                                                      }}
+                                                                  
                 // extra={[
                 //     <Button key="rest" onClick={() => {
                 //         history.push("/complaints/list")

@@ -4,15 +4,15 @@
 import React from 'react';
 import { ConfigProvider } from 'antd';
 
-import moment from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/dayjs';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/dayjs/locale/bn-bd';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/dayjs/locale/en';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/dayjs/locale/fa';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/dayjs/locale/id';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/dayjs/locale/ja';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/dayjs/locale/pt-br';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/dayjs/locale/zh-cn';
-import '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/dayjs/locale/zh-tw';
+import moment from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs';
+import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs/locale/bn-bd';
+import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs/locale/en';
+import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs/locale/fa';
+import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs/locale/id';
+import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs/locale/ja';
+import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs/locale/pt-br';
+import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs/locale/zh-cn';
+import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs/locale/zh-tw';
 import { RawIntlProvider, getLocale, getDirection , setIntl, getIntl, localeInfo, event, LANG_CHANGE_EVENT } from './localeExports';
 
 

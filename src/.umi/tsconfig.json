@@ -27,7 +27,7 @@
         "src/.umi/*"
       ],
       "@umijs/max": [
-        "/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/umi"
+        "G:\\JAYANT\\LatestProject\\Rohit\\HospitalManagement\\02-03-2026\\node_modules\\umi"
       ],
       "@umijs/max/typings": [
         "src/.umi/typings"

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, TimePicker, List, Avatar, Tag } from 'antd';
+import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, TimePicker, List, Avatar, Tag, Typography } from 'antd';
 import { PageContainer, EditableProTable, ProDescriptions } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import { requestGetSection, requestGetUserList } from '@/services/apiRequest/dropdowns';
@@ -348,8 +348,46 @@ const AppointmentBooking = () => {
         <PageContainer>
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
                 <Card
-                    title="Appointment Booking"
-                    style={{ boxShadow: '2px 2px 2px #4874dc' }}
+                    title={
+    <div
+      style={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        margin: 0,
+      }}
+    >
+      <Typography 
+      
+        style={{
+          margin: 0,
+          color: '#0050b3',           // dark blue text for good contrast
+          fontWeight: 600,
+          fontSize: '18px'
+        }}
+      >
+         Appointment Booking 
+      </Typography>
+ 
+    </div>
+  }
+  headStyle={{
+    backgroundColor: '#e6f7ff',         // पूरा header background
+    borderBottom: '1px solid #91d5ff',  // नीचे हल्की border (consistent look)
+    padding: '12px 16px',               // header padding
+    borderTopLeftRadius: '8px',
+    borderTopRightRadius: '8px',
+  }}
+  bodyStyle={{
+    padding: '16px 20px',               // body में थोड़ा बेहतर spacing
+  }}
+  style={{
+    borderRadius: '8px',
+    overflow: 'hidden',                 // rounded corners clip न हो
+    boxShadow: '0 3px 12px rgba(72, 116, 220, 0.18)',  // soft, modern shadow
+    marginBottom: 24,                   // अगर multiple cards हैं तो नीचे space
+  }} 
                 >
 
                     <Row gutter={16}>

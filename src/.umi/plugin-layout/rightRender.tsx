@@ -3,7 +3,7 @@
 // DO NOT CHANGE IT MANUALLY!
 import React from 'react';
 import { Avatar, version, Dropdown, Menu, Spin } from 'antd';
-import { LogoutOutlined } from '/Users/rahuldev/Documents/codebase/reactJs/msspl/eIEHRApp/node_modules/@ant-design/icons';
+import { LogoutOutlined } from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/@ant-design/icons';
 import { SelectLang } from '@@/plugin-locale';
 
 export function getRightRenderContent (opts: {

@@ -6,7 +6,7 @@ import { BarcodeOutlined, DownOutlined, FastBackwardOutlined, MinusOutlined, Pla
 import { TabsProps } from 'antd/lib';
 import moment from 'moment';
 import { dateFormat } from '@/utils/constant';
-import PatientDetailsCommon from '@/pages/Patient/components/PatientDetailsCommon';
+import PatientDetailsCommon_BILLING from '@/pages/Patient/components/PatientDetailsCommon_BILLING';
 import { requestAddPatientBill, requestGetPatientBillNo } from '@/pages/Patient/services/api';
 import { requestAddPatientPharmaBill, requestGetItemBalanceWithBaarCode, requestGetPatientPharmaBill, requestGetPatientPharmaBillReport } from '../services/api';
 import PrintReport from '@/components/Print/PrintReport';
@@ -1027,11 +1027,45 @@ const PatientPharmacyBilling: React.FC = () => {
                 direction="vertical"
                 style={{ display: 'flex' }}
             >
-                <PatientDetailsCommon
+                <PatientDetailsCommon_BILLING
                     patData={patientData}
                     onChange={onChangePatientData}
                 />
-                <Card title="Billing Details" 
+                <Card color='black' title={
+                                                    <div
+                                                      style={{
+                                                        width: '100%',
+                                                        display: 'flex',
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center',
+                                                        margin: 0,
+                                                      }}
+                                                    >
+                                                      <Typography 
+                                                      
+                                                        style={{
+                                                          margin: 0,
+                                                          color: '#0050b3',           // dark blue text for good contrast
+                                                          fontWeight: 600,
+                                                          fontSize: '18px'
+                                                        }}
+                                                      >
+                                                     Billing Details
+                                                      </Typography>
+                                                 
+                                                    </div>
+                                                  }
+                                                  headStyle={{
+                                                    backgroundColor: '#e6f7ff',         // पूरा header background
+                                                    borderBottom: '1px solid #91d5ff',  // नीचे हल्की border (consistent look)
+                                                    padding: '12px 16px',               // header padding
+                                                    borderTopLeftRadius: '8px',
+                                                    borderTopRightRadius: '8px',
+                                                  }}
+                                                  bodyStyle={{
+                                                    padding: '16px 20px',               // body में थोड़ा बेहतर spacing
+                                                  }}
+                                                  
                 extra={<Segmented 
                             style={{backgroundColor:'lightgreen'}} 
                             options={['Manual', 'Barcode']} 

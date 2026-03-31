@@ -361,10 +361,25 @@ const UserProfile = () => {
                         </Space.Compact>
                     </Form>
                     <Card
-                        title={<Space style={{ justifyContent: 'space-between', width: '95%' }}>
-                            <Typography>Appointment List</Typography>
+                        title={<Space style={{ justifyContent: 'space-between', width: '100%'  }}>
+                            <Typography style={{color:'#007f88',fontSize:18}}>Appointment List</Typography>
                             <Button onClick={() => printReport()}><DownloadOutlined /></Button></Space>}
-                        style={{ boxShadow: '2px 2px 2px #4874dc' }}
+                        headStyle={{
+    backgroundColor: '#e6f7ff',       // पूरा header background यहीं से set होता है
+    borderBottom: '1px solid #91d5ff', // नीचे border (optional लेकिन अच्छा लगता है)
+    padding: '12px 16px',             // header padding adjust
+    borderTopLeftRadius: '8px',       // optional: rounded corners
+    borderTopRightRadius: '8px' 
+    
+  }}
+  bodyStyle={{
+    padding: '16px',                  // body का padding
+  }}
+  style={{
+    borderRadius: '8px',
+    overflow: 'hidden',               // rounded corners सही दिखें
+    boxShadow: '0 2px 8px rgba(72, 116, 220, 0.15)', // soft shadow
+  }}
                     >
                         <Spin tip="Please wait..." spinning={loading}>
                             <Table

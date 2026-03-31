@@ -281,8 +281,37 @@ const DoctorPatientList = React.forwardRef((props) => {
     return (
         <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
             <Card
-                title="From - To Date"
-                style={{ boxShadow: '2px 2px 2px #4874dc' }}
+                title={
+    <Space
+      style={{
+        width: '100%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        margin: 0,                    // कोई extra margin न आए
+      }}
+    >
+      <Typography.Title level={4} style={{ margin: 0, color: '#0050b3' }}>
+       From - To Date
+      </Typography.Title>
+
+       
+    </Space>
+  }
+  headStyle={{
+    backgroundColor: '#e6f7ff',       // पूरा header background यहीं से set होता है
+    borderBottom: '1px solid #91d5ff', // नीचे border (optional लेकिन अच्छा लगता है)
+    padding: '12px 16px',             // header padding adjust
+    borderTopLeftRadius: '8px',       // optional: rounded corners
+    borderTopRightRadius: '8px',
+  }}
+  bodyStyle={{
+    padding: '16px',                  // body का padding
+  }}
+  style={{
+    borderRadius: '8px',
+    overflow: 'hidden',               // rounded corners सही दिखें
+    boxShadow: '0 2px 8px rgba(72, 116, 220, 0.15)', // soft shadow
+  }} 
             >
                 <Spin tip="Please wait..." spinning={loading}>
                     <div style={contentStyle}>
@@ -291,8 +320,38 @@ const DoctorPatientList = React.forwardRef((props) => {
                 </Spin>
             </Card>
             <Card
-                title={`Patient List (Total ${list?.length})`}
-                style={{ boxShadow: '2px 2px 2px #4874dc' }}
+                title={
+    <Space
+      style={{
+        width: '100%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        margin: 0,                    // कोई extra margin न आए
+      }}
+    >
+      <Typography.Title level={4} style={{ margin: 0, color: '#0050b3' }}>
+        Patient List (Total ${list?.length}) 
+      </Typography.Title>
+
+       
+    </Space>
+  }
+  headStyle={{
+    backgroundColor: '#e6f7ff',       // पूरा header background यहीं से set होता है
+    borderBottom: '1px solid #91d5ff', // नीचे border (optional लेकिन अच्छा लगता है)
+    padding: '12px 16px',             // header padding adjust
+    borderTopLeftRadius: '8px',       // optional: rounded corners
+    borderTopRightRadius: '8px',
+  }}
+  bodyStyle={{
+    padding: '16px',                  // body का padding
+  }}
+  style={{
+    borderRadius: '8px',
+    overflow: 'hidden',               // rounded corners सही दिखें
+    boxShadow: '0 2px 8px rgba(72, 116, 220, 0.15)', // soft shadow
+  }}
+   
                 extra={<Radio.Group options={[{ label: 'Seen Patient', value: '0' }, { label: 'Not Seen Patient', value: '1' },]}
                 onChange={(value) => setPatients(value.target.value)} 
                 value={seenPatients}

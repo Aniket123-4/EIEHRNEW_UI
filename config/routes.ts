@@ -208,6 +208,11 @@ export default [
         component: './Patient/components/NewTokenNo',
       },
       {
+        name: 'Token No',
+        path: '/patient/AgeWiseSummary',
+        component: './Patient/components/AgeWiseSummary',
+      },
+      {
         name: 'Patient CheckOut',
         path: '/patient/PatientCheckOut',
         component: './Patient/components/PatientCheckout',
@@ -358,10 +363,10 @@ export default [
     path: '/candidate-dashboard',
     component: './CandidateDashboard',
   },
-  {
-    path: '/igLogin',
-    component: './Patient/components/IGLogin',
-  },
+  // {
+  //   path: '/igLogin',
+  //   component: './Patient/components/IGLogin',
+  // },
   {
     path: '*',
     layout: false,

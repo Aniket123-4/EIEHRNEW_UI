@@ -6,6 +6,9 @@ import { getUserInLocalStorage, getUserType } from '@/utils/common';
 import { requestGetCandidateList } from './Candidate/services/api';
 import { AlipayOutlined, UserOutlined } from '@ant-design/icons';
 import PatientDetailsCommon from './Patient/components/PatientDetailsCommon';
+// import ChatAssistant from './ChatAssistant';
+// import ChatAssistant from '@/ChatAssistant';
+import { Button } from 'antd';
 const { Title, Text, Link } = Typography;
 
 const Welcome: React.FC = () => {
@@ -54,6 +57,16 @@ const Welcome: React.FC = () => {
       {getUserType() === "Admin" ? 
                 <PatientDetailsCommon patData={patientData}
                 onChange={(value: any) => setPatientData(value)} /> : null}
+{getUserType() !== "Admin" && (
+        <div style={{ textAlign: 'center', padding: '40px 0' }}>
+          <Title level={3}>Welcome to Vaidyaraj Madan Mohan Singh Portal</Title>
+          <Text type="secondary">© 2026 MSSPL</Text>
+        </div>
+      )}
+
+
+                
+                {/* <ChatAssistant /> */}
     </PageContainer>
   );
 };

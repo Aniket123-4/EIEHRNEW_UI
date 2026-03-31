@@ -139,6 +139,7 @@ const ItemMaster = ({
     const res = await requestAddItem({ ...values, ...staticParams });
     if (res.isSuccess == true) {
       message.success(res?.result[0]?.msg);
+        resetForm(); 
       form.resetFields();
       setVatApplicable(false)
       setLoading(false)
@@ -163,9 +164,15 @@ const ItemMaster = ({
     }
   };
   
-  const goBack = () => {
-    history.push("/");
-  };
+   const resetForm = () => {
+        form.resetFields();                 // Clear all form fields
+        setItemID("-1");           // Reset item ID
+        setIsActive(true);                   // Reset active status
+        form.setFieldsValue({                // Set default values
+            isActive: true
+        });
+    };
+
   const validateCharacters = (rule, value, callback) => {
     const regex = /^[A-Za-z\s]+$/;
     if (!regex.test(value)) {
@@ -508,7 +515,7 @@ const ItemMaster = ({
                   Submit
                 </Button>
                 <Button
-                  onClick={goBack}
+                  onClick={resetForm}
                   style={{ marginLeft: 10}}
                   type="default"
                 >
@@ -528,10 +535,22 @@ const ItemMaster = ({
       <Space direction="horizontal" size="middle" style={{ display: "flex" }}>
         <Row gutter={8}>
           <Col span={13} xs={24} xl={11}>
-            <Card
-              style={{  boxShadow: "2px 2px 2px #4874dc"  }}
-              title="Item Master"
-            >
+         
+               <Card
+                                                      style={{ 
+                                                          height: '100%', 
+                                                          boxShadow: '2px 2px 2px #0050b3',
+                                                      }}
+                                                      title={
+                                                          <span style={{ color: '#0050b3', fontWeight: 600 }}>
+                                                            Item Master
+                                                          </span>
+                                                      }
+                                                      headStyle={{ 
+                                                          backgroundColor: '#e6f7ff', 
+                                                          borderBottom: '1px solid #91d5ff',
+                                                      }}
+                                                  >
               <Spin tip="Please wait..." spinning={loading}>
                 <div>{addForm()}</div>
               </Spin>

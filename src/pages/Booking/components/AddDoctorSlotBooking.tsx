@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, TimePicker } from 'antd';
+import { Button, Col, Form, Input, Row, Select, theme, Spin, InputNumber, Card, Space, Modal, Checkbox, Divider, InputRef, Table, message, TimePicker, Typography } from 'antd';
 import { PageContainer, EditableProTable } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import { requestGetSection, requestGetUserList } from '@/services/apiRequest/dropdowns';
@@ -329,18 +329,35 @@ const AddDoctorSlotBooking = () => {
             <>
                 <Form.List
                     initialValue={slots}
-                    name="slots">
+                    name="slots" >
                     {(slotsData, { add, remove }) => (
                         <Row style={{}}>
 
                             {slotsData.map(({ key, name, ...restField }) => (
-                                <Card
-                                    size="small"
-                                    title={slots[key]['name']}
-                                    key={key}
+                                <Card style={{marginRight:'10px'}}
+                                title={
+                                        <span style={{
+                                            color: '#068eb8',
+                                            backgroundColor: '#e6f7ff',
+                                            padding: '4px 12px',
+                                            borderRadius: '4px',
+                                            display: 'inline-block',
+                                        }}>
+                                            {slots[key]?.name || 'Day'}
+                                        </span>
+                                    }
+                                    headStyle={{
+                                        backgroundColor: '#e6f7ff',
+                                        borderBottom: '1px solid #91d5ff',
+                                    }}
+                                    bodyStyle={{ padding: '12px' }}
+                                    // size="small"
+                                    // title={slots[key]['name']}
+                                    // key={key}
+                                    // style={{color:'black'}}
                                 >
                                     {/* Nest Form.List */}
-                                    <Col xs={24} xl={8}>
+                                    <Col xs={24} xl={8} >
                                     <Form.Item label="Week">
                                         <Form.List name={[name, 'week']}>
                                             {(weekData, subOpt) => (
@@ -363,7 +380,7 @@ const AddDoctorSlotBooking = () => {
                                         </Form.List>
                                     </Form.Item>
                                     </Col>
-                                    <Col xs={24} xl={8}>
+                                    <Col xs={24} xl={16}>
 
                                     <Form.Item label="From/To Time" name={[name, 'timeRange']} >
                                         <TimePicker.RangePicker
@@ -487,9 +504,48 @@ const AddDoctorSlotBooking = () => {
     return (
         <PageContainer>
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-                <Card
-                    title="Create Doctor Slot"
-                    style={{ boxShadow: '2px 2px 2px #4874dc' }}
+                <Card 
+                   title={
+    <div
+      style={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        margin: 0,
+      }}
+    >
+      <Typography 
+      
+        style={{
+          margin: 0,
+          color: '#0050b3',           // dark blue text for good contrast
+          fontWeight: 600,
+          fontSize: '18px'
+        }}
+      >
+        Create Doctor Slot
+      </Typography>
+ 
+    </div>
+  }
+  headStyle={{
+    backgroundColor: '#e6f7ff',         // पूरा header background
+    borderBottom: '1px solid #91d5ff',  // नीचे हल्की border (consistent look)
+    padding: '12px 16px',               // header padding
+    borderTopLeftRadius: '8px',
+    borderTopRightRadius: '8px',
+  }}
+  bodyStyle={{
+    padding: '16px 20px',               // body में थोड़ा बेहतर spacing
+  }}
+  style={{
+    borderRadius: '8px',
+    overflow: 'hidden',                 // rounded corners clip न हो
+    boxShadow: '0 3px 12px rgba(72, 116, 220, 0.18)',  // soft, modern shadow
+    marginBottom: 24,                   // अगर multiple cards हैं तो नीचे space
+  }}
+                   
                 >
                     <Spin tip="Please wait..." spinning={loading}>
                         <div style={contentStyle}>

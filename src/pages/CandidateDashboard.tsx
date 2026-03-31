@@ -347,7 +347,7 @@ const CandidateDashboard: React.FC = () => {
 
 
         {/* <div  hidden={true} id="printData">
-          <h2 style={{ color: "green" }}>EIEHR</h2>
+          <h2 style={{ color: "green" }}>Vaidyaraj Madan Mohan Singh Portal</h2>
           <table>
             <tbody>
               <tr>
