@@ -98,6 +98,8 @@ const onPermanentChange = (e: CheckboxChangeEvent) => {
         perMobileNo: values.curMobileNo || "",
         perPhoneCC: values.curPhoneCC || "0512",
         perPhoneNo: values.curPhoneNo || "",
+        pervillageName: values.curVillageName || "",    
+         perTehsilName: values.curTehsilName || "",
       });
     } else {
       form.setFieldsValue({
@@ -111,6 +113,8 @@ const onPermanentChange = (e: CheckboxChangeEvent) => {
         perMobileNo: "",
         perPhoneCC: "",
         perPhoneNo: "",
+        pervillageName: "",
+        perTehsilName: "",
       });
     }
   };
@@ -1356,7 +1360,7 @@ const onPermanentChange = (e: CheckboxChangeEvent) => {
                                     <Form.Item
                                         name="motherName"
                                         label="Mother Name"
-                                        rules={[{ required: false, message: 'Please enter Mother Name' },
+                                        rules={[{ required: true, message: 'Please enter Mother Name' },
                                         { validator: validateCharacters }]}
                                     >
                                         <Input placeholder="Please enter Mother Name" />
@@ -1435,7 +1439,7 @@ const onPermanentChange = (e: CheckboxChangeEvent) => {
                                             //     let customDate = moment().format("YYYY-MM-DD");
                                             //     return current && current > dayjs().subtract(12, 'year');
                                             // }}
-                                            getPopupContainer={(trigger) => trigger.parentElement!}
+                                            // getPopupContainer={(trigger) => trigger.parentElement!}
                                         />
                                     </Form.Item>
                                 </Col>

@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
       links={[
         {
           key: 'eIEHR',
-          title: 'Vaidyaraj Madan Mohan Singh Portal',
+          title: 'Vaidhyaraj Madan Mohan Singh Portal',
           href: 'https://google.com/',
           blankTarget: true,
         },

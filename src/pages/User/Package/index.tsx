@@ -115,7 +115,7 @@
 
 // //           </Row>
 // //         </Content>
-// //         <Footer style={footerStyle}>Vaidyaraj Madan Mohan Singh Portal</Footer>
+// //         <Footer style={footerStyle}>Vaidhyaraj Madan Mohan Singh Portal</Footer>
 // //       </Layout>
 // //     </Space>
 // //   )
@@ -472,7 +472,7 @@
 
 //         <Footer >
 //           <Text style={{ color: '#fff', opacity: 0.8 }}>
-//             © 2024 Vaidyaraj Madan Mohan Singh Portal. All rights reserved.
+//             © 2024 Vaidhyaraj Madan Mohan Singh Portal. All rights reserved.
 //           </Text>
 //         </Footer>
 //       </Layout>
@@ -979,7 +979,7 @@ const Package: React.FC = () => {
 
         <Footer >
           <Text style={{ color: '#fff', opacity: 0.6, fontSize: 12 }}>
-            © 2024 Vaidyaraj Madan Mohan Singh Portal
+            © 2024 Vaidhyaraj Madan Mohan Singh Portal
           </Text>
         </Footer>
       </Layout>

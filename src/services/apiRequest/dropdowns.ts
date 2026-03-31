@@ -12,6 +12,70 @@ export async function currentUser(options?: { [key: string]: any }) {
   });
 }
 
+// GENDER
+export async function requestAddUpdateGender(body: any) {
+  return request('/MasterForm/AddUpdateGender', {
+    method: 'POST',
+    data: body
+  });
+}
+
+// MARITAL STATUS (CIVIL STATUS)
+export async function requestAddUpdateCivilStatus(body: any) {
+  return request('/MasterForm/AddUpdateCivilStatus', {
+    method: 'POST',
+    data: body
+  });
+}
+
+// BLOOD GROUP
+export async function requestAddUpdateBloodGroup(body: any) {
+  return request('/MasterForm/AddUpdateBloodGroup', {
+    method: 'POST',
+    data: body
+  });
+}
+
+// RELIGION
+export async function requestAddUpdateReligion(body: any) {
+  return request('/MasterForm/AddUpdateReligion', {
+    method: 'POST',
+    data: body
+  });
+}
+
+// RELATION
+export async function requestAddUpdateRelation(body: any) {
+  return request('/MasterForm/AddUpdateRelation', {
+    method: 'POST',
+    data: body
+  });
+}
+
+// COUNTRY
+export async function requestAddUpdateCountry(body: any) {
+  return request('/MasterForm/AddUpdateCountry', {
+    method: 'POST',
+    data: body
+  });
+}
+
+// STATE
+export async function requestAddUpdateState(body: any) {
+  return request('/MasterForm/AddUpdateState', {
+    method: 'POST',
+    data: body
+  });
+}
+
+// DISTRICT
+export async function requestAddUpdateDistrict(body: any) {
+  return request('/MasterForm/AddUpdateDistrict', {
+    method: 'POST',
+    data: body
+  });
+}
+
 export async function requestGetGender(options?: { [key: string]: any }) {
   return request<any>('/Common/Getgender', {
     method: 'GET',
@@ -275,6 +339,24 @@ export async function requestAddItem(body: any={}, options?: { [key: string]: an
     ...(options || {}),
   });
 }
+
+// ITEM CATEGORY
+export async function requestAddUpdateItemCat(body:any){
+  return request('/MasterForm/AddUpdateItemCat',{
+    method:'POST',
+    data:body
+  })
+}
+
+
+// UNIT
+export async function requestAddUpdateUnit(body:any){
+  return request('/MasterForm/AddUpdateUnit',{
+    method:'POST',
+    data:body
+  })
+}
+
 export async function requestAddSupplier(body: any={}, options?: { [key: string]: any }) {
   return request<any>('InventoryForm/AddSupplier', {
     method: 'POST',
