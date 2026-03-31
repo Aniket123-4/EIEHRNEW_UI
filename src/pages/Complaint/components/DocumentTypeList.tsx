@@ -173,7 +173,7 @@ const DocumentTypeList = ({ refresh, editRecord }: any) => {
                 return (
                     <Typography.Link 
                         style={{ width: 100 }} 
-                        disabled={editingKey !== ''} 
+                        //disabled={editingKey !== ''} 
                         onClick={() => {
                             setEditingKey(record.uniqueID);
                             editRecord(record);

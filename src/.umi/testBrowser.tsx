@@ -3,14 +3,14 @@
 // DO NOT CHANGE IT MANUALLY!
 import React, { useEffect, useState } from 'react';
 import { ApplyPluginsType } from 'umi';
-import { renderClient, RenderClientOpts } from 'D:/Projects/MSSPL/EIEHRNEW_UI/node_modules/@umijs/renderer-react';
+import { renderClient, RenderClientOpts } from 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/node_modules/@umijs/renderer-react';
 import { createHistory } from './core/history';
 import { createPluginManager } from './core/plugin';
 import { getRoutes } from './core/route';
 import type { Location } from 'history';
 
-import 'D:/Projects/MSSPL/EIEHRNEW_UI/src/global.css';
-import 'D:/Projects/MSSPL/EIEHRNEW_UI/src/global.tsx';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/src/global.css';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/src/global.tsx';
 import 'antd/dist/reset.css';
 const publicPath = '/';
 const runtimePublicPath = false;

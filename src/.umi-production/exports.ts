@@ -4,20 +4,20 @@
 export { defineApp } from './core/defineApp'
 export type { RuntimeConfig } from './core/defineApp'
 // @umijs/renderer-*
-export { createBrowserHistory, createHashHistory, createMemoryHistory, Helmet, HelmetProvider, createSearchParams, generatePath, matchPath, matchRoutes, Navigate, NavLink, Outlet, resolvePath, useLocation, useMatch, useNavigate, useOutlet, useOutletContext, useParams, useResolvedPath, useRoutes, useSearchParams, useAppData, useClientLoaderData, useRouteProps, useSelectedRoutes, useServerLoaderData, renderClient, __getRoot, Link, useRouteData, __useFetcher, withRouter } from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/@umijs/renderer-react';
-export type {  History } from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/@umijs/renderer-react'
+export { createBrowserHistory, createHashHistory, createMemoryHistory, Helmet, HelmetProvider, createSearchParams, generatePath, matchPath, matchRoutes, Navigate, NavLink, Outlet, resolvePath, useLocation, useMatch, useNavigate, useOutlet, useOutletContext, useParams, useResolvedPath, useRoutes, useSearchParams, useAppData, useClientLoaderData, useRouteProps, useSelectedRoutes, useServerLoaderData, renderClient, __getRoot, Link, useRouteData, __useFetcher, withRouter } from 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/node_modules/@umijs/renderer-react';
+export type {  History } from 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/node_modules/@umijs/renderer-react'
 // umi/client/client/plugin
-export { ApplyPluginsType, PluginManager } from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/umi/client/client/plugin.js';
+export { ApplyPluginsType, PluginManager } from 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/node_modules/umi/client/client/plugin.js';
 export { history, createHistory } from './core/history';
 export { terminal } from './core/terminal';
 export const useServerInsertedHTML: Function = () => {};
 // plugins
-export { Access, useAccess, useAccessMarkedRoutes } from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/src/.umi-production/plugin-access';
-export { addLocale, setLocale, getLocale, getIntl, useIntl, injectIntl, formatMessage, FormattedMessage, getAllLocales, FormattedDate, FormattedDateParts, FormattedDisplayName, FormattedHTMLMessage, FormattedList, FormattedNumber, FormattedNumberParts, FormattedPlural, FormattedRelativeTime, FormattedTime, FormattedTimeParts, IntlProvider, RawIntlProvider, SelectLang } from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/src/.umi-production/plugin-locale';
-export { Provider, useModel } from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/src/.umi-production/plugin-model';
-export { useRequest, UseRequestProvider, request, getRequestInstance } from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/src/.umi-production/plugin-request';
+export { Access, useAccess, useAccessMarkedRoutes } from 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/src/.umi-production/plugin-access';
+export { addLocale, setLocale, getLocale, getIntl, useIntl, injectIntl, formatMessage, FormattedMessage, getAllLocales, FormattedDate, FormattedDateParts, FormattedDisplayName, FormattedHTMLMessage, FormattedList, FormattedNumber, FormattedNumberParts, FormattedPlural, FormattedRelativeTime, FormattedTime, FormattedTimeParts, IntlProvider, RawIntlProvider, SelectLang } from 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/src/.umi-production/plugin-locale';
+export { Provider, useModel } from 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/src/.umi-production/plugin-model';
+export { useRequest, UseRequestProvider, request, getRequestInstance } from 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/src/.umi-production/plugin-request';
 // plugins types.d.ts
-export * from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/src/.umi-production/plugin-access/types.d';
-export * from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/src/.umi-production/plugin-antd/types.d';
-export * from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/src/.umi-production/plugin-layout/types.d';
-export * from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/src/.umi-production/plugin-request/types.d';
+export * from 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/src/.umi-production/plugin-access/types.d';
+export * from 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/src/.umi-production/plugin-antd/types.d';
+export * from 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/src/.umi-production/plugin-layout/types.d';
+export * from 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/src/.umi-production/plugin-request/types.d';

@@ -380,7 +380,9 @@ const DiseaseList: React.FC = ({editRecord,refresh }:any) => {
                         </Popconfirm>
                     </span>
                 ) : (
-                    <Typography.Link style={{ width: 100 }} disabled={editingKey !== ''} onClick={() => edit(record)}>
+                    <Typography.Link style={{ width: 100 }} 
+                    //disabled={editingKey !== ''} 
+                    onClick={() => edit(record)}>
                         Edit
                     </Typography.Link>
                 );

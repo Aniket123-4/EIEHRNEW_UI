@@ -169,7 +169,7 @@ const StateMaster = () => {
                         <Input placeholder="Please Enter State Code" maxLength={5} style={{ textTransform: 'uppercase' }} />
                     </Form.Item>
                 </Col>
-                <Col span={24}>
+                {/* <Col span={24}>
                     <Form.Item
                         name="isActive"
                         valuePropName="checked"
@@ -177,7 +177,7 @@ const StateMaster = () => {
                     >
                         <Checkbox>Is Active</Checkbox>
                     </Form.Item>
-                </Col>
+                </Col> */}
                 <Form.Item>
                     <Space>
                         <Button type="primary" htmlType="submit">

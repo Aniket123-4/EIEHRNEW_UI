@@ -12,7 +12,7 @@ export default defineConfig({
   define: {
     API_KEY: 'js3jhkj4n2kjnd',   
     BASE_URL: 'https://eiehrapi.mssplonline.com/api/', 
-        //BASE_URL: 'http://localhost:7285/api/',                     
+        // BASE_URL: 'http://localhost:7285/api/',                     
    
       // BASE_URL: 'https://localhost:7181/api/', 
     // BASE_URL: 'https://ecscapi.mssplonline.in/api/',

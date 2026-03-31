@@ -171,21 +171,21 @@ const CountryList = ({ refresh, editRecord }: any) => {
             width: '25%',
             ...getColumnSearchProps('nationality'),
         },
-        {
-            title: 'Status',
-            dataIndex: 'isActive',
-            key: 'isActive',
-            width: '15%',
-            render: (isActive: boolean) =>
-                <Tag color={isActive === true ? 'success' : 'error'}>
-                    {isActive === true ? 'Active' : 'InActive'}
-                </Tag>,
-            filters: [
-                { text: 'Active', value: true },
-                { text: 'InActive', value: false },
-            ],
-            onFilter: (value: any, record: any) => record.isActive === value,
-        },
+        // {
+        //     title: 'Status',
+        //     dataIndex: 'isActive',
+        //     key: 'isActive',
+        //     width: '15%',
+        //     render: (isActive: boolean) =>
+        //         <Tag color={isActive === true ? 'success' : 'error'}>
+        //             {isActive === true ? 'Active' : 'InActive'}
+        //         </Tag>,
+        //     filters: [
+        //         { text: 'Active', value: true },
+        //         { text: 'InActive', value: false },
+        //     ],
+        //     onFilter: (value: any, record: any) => record.isActive === value,
+        // },
         {
             title: 'Action',
             key: 'action',
@@ -194,7 +194,7 @@ const CountryList = ({ refresh, editRecord }: any) => {
                 return (
                     <Typography.Link 
                         style={{ width: 100 }} 
-                        disabled={editingKey !== ''} 
+                      //  disabled={editingKey !== ''} 
                         onClick={() => {
                             setEditingKey(record.countryID);
                             editRecord(record);

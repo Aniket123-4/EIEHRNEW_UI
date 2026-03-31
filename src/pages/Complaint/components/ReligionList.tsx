@@ -153,16 +153,16 @@ const ReligionList = ({ refresh, editRecord }: any) => {
             key: 'religionCode',
             width: '30%',
         },
-        {
-            title: 'Status',
-            dataIndex: 'isActive',
-            key: 'isActive',
-            width: '15%',
-            render: (isActive: boolean) =>
-                <Tag color={isActive === true ? 'success' : 'error'}>
-                    {isActive === true ? 'Active' : 'InActive'}
-                </Tag>,
-        },
+        // {
+        //     title: 'Status',
+        //     dataIndex: 'isActive',
+        //     key: 'isActive',
+        //     width: '15%',
+        //     render: (isActive: boolean) =>
+        //         <Tag color={isActive === true ? 'success' : 'error'}>
+        //             {isActive === true ? 'Active' : 'InActive'}
+        //         </Tag>,
+        // },
         {
             title: 'Action',
             key: 'action',
@@ -171,7 +171,7 @@ const ReligionList = ({ refresh, editRecord }: any) => {
                 return (
                     <Typography.Link 
                         style={{ width: 100 }} 
-                        disabled={editingKey !== ''} 
+                        //disabled={editingKey !== ''} 
                         onClick={() => {
                             setEditingKey(record.religionID);
                             editRecord(record);

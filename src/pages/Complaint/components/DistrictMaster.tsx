@@ -206,14 +206,14 @@ const DistrictMaster = () => {
                         <Input placeholder="Please Enter District Code (Optional)" />
                     </Form.Item>
                 </Col>
-                <Col span={24}>
+                {/* <Col span={24}>
                     <Form.Item
                         name="isActive"
                         valuePropName="checked"
                     >
                         <Checkbox>Is Active</Checkbox>
                     </Form.Item>
-                </Col>
+                </Col> */}
                 <Form.Item>
                     <Space>
                         <Button type="primary" htmlType="submit" loading={loading}>

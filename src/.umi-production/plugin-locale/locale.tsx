@@ -4,15 +4,15 @@
 import React from 'react';
 import { ConfigProvider } from 'antd';
 
-import moment from 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs';
-import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs/locale/bn-bd';
-import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs/locale/en';
-import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs/locale/fa';
-import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs/locale/id';
-import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs/locale/ja';
-import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs/locale/pt-br';
-import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs/locale/zh-cn';
-import 'G:/JAYANT/LatestProject/Rohit/HospitalManagement/02-03-2026/node_modules/dayjs/locale/zh-tw';
+import moment from 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/node_modules/dayjs';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/node_modules/dayjs/locale/bn-bd';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/node_modules/dayjs/locale/en';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/node_modules/dayjs/locale/fa';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/node_modules/dayjs/locale/id';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/node_modules/dayjs/locale/ja';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/node_modules/dayjs/locale/pt-br';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/node_modules/dayjs/locale/zh-cn';
+import 'D:/Projects/MSSPL/EIEHR_PROJECT/EIEHRNEW_UI/node_modules/dayjs/locale/zh-tw';
 import { RawIntlProvider, getLocale, getDirection , setIntl, getIntl, localeInfo, event, LANG_CHANGE_EVENT } from './localeExports';
 
 

@@ -201,17 +201,17 @@ const DistrictList = ({ refresh, editRecord }: any) => {
       width: '25%',
     },
 
-    {
-      title: 'Status',
-      dataIndex: 'isActive',
-      key: 'isActive',
-      width: '15%',
-      render: (isActive: boolean) => (
-        <Tag color={isActive ? 'success' : 'error'}>
-          {isActive ? 'Active' : 'Inactive'}
-        </Tag>
-      ),
-    },
+    // {
+    //   title: 'Status',
+    //   dataIndex: 'isActive',
+    //   key: 'isActive',
+    //   width: '15%',
+    //   render: (isActive: boolean) => (
+    //     <Tag color={isActive ? 'success' : 'error'}>
+    //       {isActive ? 'Active' : 'Inactive'}
+    //     </Tag>
+    //   ),
+    // },
 
     {
       title: 'Action',
@@ -219,7 +219,7 @@ const DistrictList = ({ refresh, editRecord }: any) => {
       width: '10%',
       render: (_: any, record: any) => (
         <Typography.Link
-          disabled={editingKey !== ''}
+         // disabled={editingKey !== ''}
           onClick={() => {
             setEditingKey(record.districtID);
             editRecord(record);

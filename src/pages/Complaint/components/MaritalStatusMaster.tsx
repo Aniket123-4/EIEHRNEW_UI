@@ -129,7 +129,7 @@ const MaritalStatusMaster = () => {
                         <Input placeholder="Please Enter Marital Status Code (Optional)" />
                     </Form.Item>
                 </Col>
-                <Col span={24}>
+                {/* <Col span={24}>
                     <Form.Item
                         name="isActive"
                         valuePropName="checked"
@@ -137,7 +137,7 @@ const MaritalStatusMaster = () => {
                     >
                         <Checkbox>Is Active</Checkbox>
                     </Form.Item>
-                </Col>
+                </Col> */}
                 <Form.Item>
                     <Space>
                         <Button type="primary" htmlType="submit">

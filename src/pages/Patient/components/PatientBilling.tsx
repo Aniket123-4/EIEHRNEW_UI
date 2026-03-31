@@ -61,14 +61,14 @@ const TabGenerateBill = ({ patientBillData, patientData }: any) => {
             dataIndex: 'netAmount',
 
         },
-        {
-            title: 'Action',
-            key: 'action',
-            width: '10%',
-            render: (_, record) => (
-                <Button danger size={'small'} onClick={() => { deleteBill(record) }} >Delete</Button>
-            ),
-        },
+        // {
+        //     title: 'Action',
+        //     key: 'action',
+        //     width: '10%',
+        //     render: (_, record) => (
+        //         <Button danger size={'small'} onClick={() => { deleteBill(record) }} >Delete</Button>
+        //     ),
+        // },
 
     ];
 

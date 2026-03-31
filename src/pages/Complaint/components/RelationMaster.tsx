@@ -148,7 +148,7 @@ const RelationMaster = () => {
                         </Select>
                     </Form.Item>
                 </Col>
-                <Col span={24}>
+                {/* <Col span={24}>
                     <Form.Item
                         name="isActive"
                         valuePropName="checked"
@@ -156,7 +156,7 @@ const RelationMaster = () => {
                     >
                         <Checkbox>Is Active</Checkbox>
                     </Form.Item>
-                </Col>
+                </Col> */}
                 <Form.Item>
                     <Space>
                         <Button type="primary" htmlType="submit">
